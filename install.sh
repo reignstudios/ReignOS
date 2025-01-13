@@ -79,8 +79,9 @@ pactl set-default-sink <sink_name>
 pacman -S acpi acpid powertop power-profiles-daemon
 pacman -S python-gobject
 
-# install apps
+# install apps/tools
 pacman -S nano
+pacman -S dmidecode udev
 
 # install steam
 nano /etc/pacman.conf
