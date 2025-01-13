@@ -36,8 +36,9 @@ namespace Launcher.Core
                 { "CUSTOM_REFRESH_RATES", "30,60,120" },
                 { "STEAM_DISPLAY_REFRESH_LIMITS", "30,60,120" }
             };
-            const string launchCmd = "runuser -u gamer -- cage -- steam -bigpicture -steamdeck";
-            ProcessUtil.Run("bash", $"-c \"{launchCmd}\"", enviromentVars:envVars, wait:false);// start Cage with Steam in console mode
+            const string launchCmd = "cage -- steam -bigpicture -steamdeck";
+            const string launchUserCmd = $"su - gamer -c \"{launchCmd}\"";
+            ProcessUtil.Run("bash", $"-c \"{launchUserCmd}\"", enviromentVars:envVars, wait:false);// start Cage with Steam in console mode
             //ProcessUtil.Run("wlr-randr", "--output eDP-1 --transform 90", wait:true);// tell wayland/cage to rotate screen
             //ProcessUtil.Run("unclutter", "-idle 3", wait:false);// hide cursor after 3 seconds
         }
