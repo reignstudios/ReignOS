@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Launcher.Core
+namespace ReignOS.Core
 {
     public static class ProcessUtil
     {
