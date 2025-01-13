@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HidSharp;
+using Launcher.Core.Hardware;
 
 namespace Launcher.Core
 {
@@ -18,21 +19,42 @@ namespace Launcher.Core
 
     public static class Service
     {
-        private static object threadLock = new object();
+        public static HardwareType hardwareType { get; private set; }
+
+        /*private static object threadLock = new object();
         private static Thread? thread;
-        private static ServiceState state;
+        private static ServiceState state;*/
 
         public static void Start()
         {
-            string result = ProcessUtil.Run("dmidecode", "-s system-product-name");
-            Console.WriteLine("Product: " + result);
+            // detect system hardware
+            try
+            {
+                string productName = ProcessUtil.Run("dmidecode", "-s system-product-name");
+                Console.WriteLine("Product: " + productName);
+                if (productName == "Claw A1M") hardwareType = HardwareType.MSI_Claw_A1M;
+                else if (productName.StartsWith("Claw ")) hardwareType = HardwareType.MSI_Claw;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Failed to get system hardware");
+                Console.Write(e);
+            }
+            Console.WriteLine("Known hardware detection: " + hardwareType.ToString());
 
-            // detect MSI-Claw gamepad
-            var device = DeviceList.Local.GetHidDeviceOrNull(0x0DB0, 0x1901);//MSI Claw
-			if (device != null)
-			{
-				Console.WriteLine("MSI-Claw gamepad found");
-			}
+            // detect device & configure hardware
+            try
+            {
+                foreach (var device in DeviceList.Local.GetHidDevices())
+                {
+                    MSI_Claw.Configure(device);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Failed to get device hardware");
+                Console.Write(e);
+            }
 
             /*state = ServiceState.Starting;
             thread = new Thread(BackgroundThread);
@@ -45,7 +67,7 @@ namespace Launcher.Core
             //lock (threadLock) state = ServiceState.ShuttingDown;
         }
 
-        private static void BackgroundThread(object? arg)
+        /*private static void BackgroundThread(object? arg)
         {
             lock (threadLock) if (state != ServiceState.ShuttingDown) state = ServiceState.Running;
             while (state == ServiceState.Running)
@@ -54,7 +76,7 @@ namespace Launcher.Core
             }
 
             EXIT: state = ServiceState.ShutDown;
-        }
+        }*/
 
 
         /*private static void OnResume()
