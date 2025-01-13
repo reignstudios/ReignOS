@@ -36,7 +36,8 @@ namespace Launcher.Core
                 { "CUSTOM_REFRESH_RATES", "30,60,120" },
                 { "STEAM_DISPLAY_REFRESH_LIMITS", "30,60,120" }
             };
-            ProcessUtil.Run("bash", "-c \"cage -- unclutter -idle 3 & steam -bigpicture -steamdeck\"", enviromentVars:envVars, wait:false);// start Cage with Steam in console mode
+            const string launchCmd = "runuser -u cage -- unclutter -idle 3 & steam -bigpicture -steamdeck";
+            ProcessUtil.Run("bash", $"-c \"{launchCmd}\"", enviromentVars:envVars, wait:false);// start Cage with Steam in console mode
             //ProcessUtil.Run("wlr-randr", "--output eDP-1 --transform 90", wait:true);// tell wayland/cage to rotate screen
             //ProcessUtil.Run("unclutter", "-idle 3", wait:false);// hide cursor after 3 seconds
         }
@@ -48,7 +49,8 @@ namespace Launcher.Core
                 { "CUSTOM_REFRESH_RATES", "30,60,120" },
                 { "STEAM_DISPLAY_REFRESH_LIMITS", "30,60,120" }
             };
-            ProcessUtil.Run("bash", "-c \"gamescope -e -f --adaptive-sync -- steam -bigpicture -steamdeck\"", enviromentVars:envVars, wait:false);// start Gamescope with Steam in console mode, VRR
+            const string launchCmd = "runuser -u gamescope -e -f --adaptive-sync -- steam -bigpicture -steamdeck";
+            ProcessUtil.Run("bash", $"-c \"{launchCmd}\"", enviromentVars:envVars, wait:false);// start Gamescope with Steam in console mode, VRR
         }
     }
 }
