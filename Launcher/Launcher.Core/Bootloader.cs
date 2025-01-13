@@ -38,7 +38,7 @@ namespace Launcher.Core
             };*/
 
             const string launchCmd = "cage -- steam -bigpicture -steamdeck";
-            const string launchUserCmd = $"runuser -u gamer -- {launchCmd}";
+            const string launchUserCmd = $"su - gamer -c \"{launchCmd}\"";
             string result = ProcessUtil.Run("bash", $"-c \"{launchUserCmd}\"", enviromentVars:null, wait:false);// start Cage with Steam in console mode
             Console.WriteLine(result);
 
