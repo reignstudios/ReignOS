@@ -31,15 +31,14 @@ namespace Launcher.Core
 
         private static void StartCompositor_Cage()
         {
-            ProcessUtil.Run("unclutter", "-idle 3", wait:false);// hide cursor after 3 seconds
-            //ProcessUtil.Run("wlr-randr", "--output eDP-1 --transform 90", wait:true);// tell wayland/cage to rotate screen
-
             var envVars = new Dictionary<string, string>()
             {
                 { "CUSTOM_REFRESH_RATES", "30,60,120" },
                 { "STEAM_DISPLAY_REFRESH_LIMITS", "30,60,120" }
             };
             ProcessUtil.Run("bash", "cage -- steam -bigpicture -steamdeck", enviromentVars:envVars, wait:false);// start Cage with Steam in console mode
+            //ProcessUtil.Run("wlr-randr", "--output eDP-1 --transform 90", wait:true);// tell wayland/cage to rotate screen
+            ProcessUtil.Run("unclutter", "-idle 3", wait:false);// hide cursor after 3 seconds
         }
 
         private static void StartCompositor_Gamescope()
