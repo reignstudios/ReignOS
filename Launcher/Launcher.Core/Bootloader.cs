@@ -39,7 +39,7 @@ namespace Launcher.Core
                 { "CUSTOM_REFRESH_RATES", "30,60,120" },
                 { "STEAM_DISPLAY_REFRESH_LIMITS", "30,60,120" }
             };
-            ProcessUtil.Run("cage", "-- steam -bigpicture -steamdeck", enviromentVars:envVars, wait:false);// start Cage with Steam in console mode
+            ProcessUtil.Run("bash", "cage -- steam -bigpicture -steamdeck", enviromentVars:envVars, wait:false);// start Cage with Steam in console mode
         }
 
         private static void StartCompositor_Gamescope()
@@ -49,7 +49,7 @@ namespace Launcher.Core
                 { "CUSTOM_REFRESH_RATES", "30,60,120" },
                 { "STEAM_DISPLAY_REFRESH_LIMITS", "30,60,120" }
             };
-            ProcessUtil.Run("gamescope", "-e -f --adaptive-sync -- steam -bigpicture -steamdeck", enviromentVars:envVars, wait:false);// start Gamescope with Steam in console mode, VRR
+            ProcessUtil.Run("bash", "gamescope -e -f --adaptive-sync -- steam -bigpicture -steamdeck", enviromentVars:envVars, wait:false);// start Gamescope with Steam in console mode, VRR
         }
     }
 }
