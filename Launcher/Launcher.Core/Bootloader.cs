@@ -38,7 +38,8 @@ namespace Launcher.Core
             };
             const string launchCmd = "cage -- steam -bigpicture -steamdeck";
             const string launchUserCmd = $"su - gamer -c \"{launchCmd}\"";
-            ProcessUtil.Run("bash", $"-c \"{launchUserCmd}\"", enviromentVars:envVars, wait:false);// start Cage with Steam in console mode
+            string result = ProcessUtil.Run("bash", $"-c \"{launchUserCmd}\"", enviromentVars:envVars, wait:false);// start Cage with Steam in console mode
+            Console.WriteLine(result);
             //ProcessUtil.Run("wlr-randr", "--output eDP-1 --transform 90", wait:true);// tell wayland/cage to rotate screen
             //ProcessUtil.Run("unclutter", "-idle 3", wait:false);// hide cursor after 3 seconds
         }
