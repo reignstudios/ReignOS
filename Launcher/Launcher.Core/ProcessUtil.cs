@@ -15,6 +15,7 @@ namespace Launcher.Core
             {
                 process.StartInfo.FileName = name;
                 process.StartInfo.Arguments = args;
+                process.StartInfo.RedirectStandardOutput = true;
                 process.Start();
                 process.WaitForExit();
                 return process.StandardOutput.ReadToEnd();
