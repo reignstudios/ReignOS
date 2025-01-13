@@ -31,20 +31,30 @@ namespace Launcher.Core
 
         private static void StartCompositor_Cage()
         {
-            /*var envVars = new Dictionary<string, string>()
+            //Environment.GetEnvironmentVariables();
+
+            var envVars = new Dictionary<string, string>()
             {
                 { "CUSTOM_REFRESH_RATES", "30,60,120" },
                 { "STEAM_DISPLAY_REFRESH_LIMITS", "30,60,120" }
-            };*/
+            };
 
             //const string launchCmd = "cage -- steam -bigpicture -steamdeck";
             //const string launchUserCmd = $"su - gamer -c \"{launchCmd}\"";
             //string result = ProcessUtil.Run("bash", $"-c \"{launchUserCmd}\"", enviromentVars:null, wait:false);// start Cage with Steam in console mode
             //Console.WriteLine(result);
 
+            string gamerUserVars = ProcessUtil.Run("su", "- gamer -c \"printenv\"");
+            var gamerUserVarsValues = gamerUserVars.Split(Environment.NewLine);
+            foreach (var v in gamerUserVarsValues)
+            {
+                var values = v.Split('=');
+                if (values.Length >= 2) envVars.Add(values[0], values[1]);
+            }
+
             const string launchCmd = "cage -- steam -bigpicture -steamdeck";
             //const string launchUserCmd = $"-c \"{launchCmd}\"";
-            string result = ProcessUtil.Run("su", $"- gamer -c \"{launchCmd}\"", enviromentVars:null, wait:true);// start Cage with Steam in console mode
+            string result = ProcessUtil.Run("su", $"- gamer -c \"{launchCmd}\"", enviromentVars:envVars, wait:true);// start Cage with Steam in console mode
             Console.WriteLine(result);
 
             //ProcessUtil.Run("wlr-randr", "--output eDP-1 --transform 90", wait:true);// tell wayland/cage to rotate screen
