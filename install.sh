@@ -183,7 +183,7 @@ systemctl start power-profiles-daemon
 pacman -S unclutter
 ```start.sh
 unclutter -idle 3 & #NOTE: makes cursor go away after 3 seconds
-wlr-randr --output eDP-1 --transform 90 --adaptive-sync
+wlr-randr --output eDP-1 --transform 90 --adaptive-sync enabled
 # optional enable overlay: MANGOHUD=1 steam -bigpicture -steamdeck
 steam -bigpicture -steamdeck
 ```
