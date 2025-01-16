@@ -46,5 +46,25 @@ internal class Program
             Console.WriteLine("Failed to get device hardware");
             Console.Write(e);
         }
+
+        // run events
+        var time = DateTime.Now;
+        while (true)
+        {
+            // update time
+            var lastTime = time;
+            time = DateTime.Now;
+            var timeSpan = time - lastTime;
+
+            // detect possible resume from sleep
+            bool resumeFromSleep = false;
+            if (timeSpan.TotalSeconds >= 3) resumeFromSleep = true;
+
+            // update devices
+            if (MSI_Claw.isEnabled) MSI_Claw.Update(resumeFromSleep);
+
+            // sleep thread
+            Thread.Sleep(1000);
+        }
     }
 }
