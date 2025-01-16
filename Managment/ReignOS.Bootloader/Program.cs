@@ -20,7 +20,7 @@ internal class Program
         {
             serviceProcess.StartInfo.UseShellExecute = false;
             serviceProcess.StartInfo.FileName = "sudo";
-            serviceProcess.StartInfo.Arguments = "-S ReignOS.Service";
+            serviceProcess.StartInfo.Arguments = "-S ./ReignOS.Service";
             serviceProcess.StartInfo.RedirectStandardInput = true;
             serviceProcess.StartInfo.RedirectStandardOutput = true;
             serviceProcess.StartInfo.RedirectStandardError = true;
@@ -108,7 +108,7 @@ internal class Program
             { "STEAM_DISPLAY_REFRESH_LIMITS", "30,60,120" }
         };*/
 
-        string result = ProcessUtil.Run("cage", "steam -bigpicture -steamdeck", enviromentVars:null, wait:true);// start Cage with Steam in console mode
+        string result = ProcessUtil.Run("cage", "-- steam -bigpicture -steamdeck", enviromentVars:null, wait:true);// start Cage with Steam in console mode
         Console.WriteLine(result);
         //ProcessUtil.Run("wlr-randr", "--output eDP-1 --transform 90", wait:true);// tell wayland/cage to rotate screen
         //ProcessUtil.Run("unclutter", "-idle 3", wait:false);// hide cursor after 3 seconds
@@ -121,8 +121,7 @@ internal class Program
             { "CUSTOM_REFRESH_RATES", "30,60,120" },
             { "STEAM_DISPLAY_REFRESH_LIMITS", "30,60,120" }
         };
-        const string launchCmd = "runuser -u gamer -- gamescope -e -f --adaptive-sync -- steam -bigpicture -steamdeck";
-        string result = ProcessUtil.Run("bash", $"-c \"{launchCmd}\"", enviromentVars:envVars, wait:true);// start Gamescope with Steam in console mode, VRR
+        string result = ProcessUtil.Run("gamescope", "-e -f --adaptive-sync -- steam -bigpicture -steamdeck", enviromentVars:envVars, wait:true);// start Gamescope with Steam in console mode, VRR
         Console.WriteLine(result);
     }
 }
