@@ -12,11 +12,11 @@
     <ProjectReference Include="..\ReignOS.Core\ReignOS.Core.csproj" />
   </ItemGroup>
 
-  <Target Name="CopyService" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+  <Target Name="CopyService" AfterTargets="Publish" Condition="'$(Configuration)' == 'Release'">
     <ItemGroup>
-      <FilesToCopy Include="$(MSBuildProjectDirectory)/../ReignOS.Service/bin/Release/linux-x64/publish/*.*" />
+      <FilesToCopy Include="$(MSBuildProjectDirectory)/../ReignOS.Service/bin/Release/net8.0/$(RuntimeIdentifier)/publish/*.*" />
     </ItemGroup>
-    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(PublishDir)" />
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(PublishDir)" SkipUnchangedFiles="true" />
   </Target>
 
 </Project>
