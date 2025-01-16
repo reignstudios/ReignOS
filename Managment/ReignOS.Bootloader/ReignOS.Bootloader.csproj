@@ -14,7 +14,7 @@
 
   <Target Name="CopyService" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
     <ItemGroup>
-      <FilesToCopy Include="$(MSBuildProjectDirectory)/../ReignOS.Service/bin/Release/net8.0/*.*" />
+      <FilesToCopy Include="$(MSBuildProjectDirectory)/../ReignOS.Service/bin/Release/linux-x64/publish/*.*" />
     </ItemGroup>
     <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(PublishDir)" />
   </Target>
