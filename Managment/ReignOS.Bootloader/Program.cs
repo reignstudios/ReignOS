@@ -12,10 +12,10 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("ReignOS.Bootloader started");
+        Log.WriteLine("Bootloader started");
 
         // kill service if its currently running
-        //ProcessUtil.Kill("ReignOS.Service");
+        ProcessUtil.Kill("ReignOS.Service", true);
         
         // start service
         using var serviceProcess = new Process();
@@ -36,7 +36,7 @@ internal class Program
                         serviceProcess.StandardInput.WriteLine("gamer");
                         serviceProcess.StandardInput.Flush();
                     }
-                    Console.WriteLine(args.Data);
+                    Log.WriteLine(args.Data);
                 }
             };
             serviceProcess.ErrorDataReceived += (sender, args) =>
@@ -48,7 +48,7 @@ internal class Program
                         serviceProcess.StandardInput.WriteLine("gamer");
                         serviceProcess.StandardInput.Flush();
                     }
-                    Console.WriteLine(args.Data);
+                    Log.WriteLine(args.Data);
                 }
             };
             serviceProcess.Start();
@@ -61,7 +61,7 @@ internal class Program
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Log.WriteLine(e);
             goto SHUTDOWN;
         }
 
@@ -89,30 +89,32 @@ internal class Program
         }
         catch (Exception e)
         {
-            Console.WriteLine("Failed to start compositor");
-            Console.WriteLine(e);
+            Log.WriteLine("Failed to start compositor");
+            Log.WriteLine(e);
         }
 
         // stop service
         SHUTDOWN:;
         if (serviceProcess != null && !serviceProcess.HasExited)
         {
+            Log.WriteLine("Killing service");
             serviceProcess.Kill();
         }
     }
     
     private static void StartCompositor_Cage()
     {
-        /*var envVars = new Dictionary<string, string>()
+        var envVars = new Dictionary<string, string>()
         {
             { "CUSTOM_REFRESH_RATES", "30,60,120" },
             { "STEAM_DISPLAY_REFRESH_LIMITS", "30,60,120" }
-        };*/
+        };
 
-        string result = ProcessUtil.Run("cage", "-- steam -bigpicture -steamdeck", enviromentVars:null, wait:true);// start Cage with Steam in console mode
-        Console.WriteLine(result);
-        //ProcessUtil.Run("wlr-randr", "--output eDP-1 --transform 90", wait:true);// tell wayland/cage to rotate screen
-        //ProcessUtil.Run("unclutter", "-idle 3", wait:false);// hide cursor after 3 seconds
+        string launchArg = "steam -bigpicture -steamdeck";
+        launchArg += " & unclutter -idle 3";// hide mouse after 3 seconds
+        //launchArg += " & wlr-randr --output eDP-1 --transform 90 --adaptive-sync enabled";// TODO: rotate screen or enable VRR
+        string result = ProcessUtil.Run("cage", "-- " + launchArg, enviromentVars:envVars, wait:true);// start Cage with Steam in console mode
+        Log.WriteLine(result);
     }
 
     private static void StartCompositor_Gamescope()
@@ -123,6 +125,6 @@ internal class Program
             { "STEAM_DISPLAY_REFRESH_LIMITS", "30,60,120" }
         };
         string result = ProcessUtil.Run("gamescope", "-e -f --adaptive-sync -- steam -bigpicture -steamdeck", enviromentVars:envVars, wait:true);// start Gamescope with Steam in console mode, VRR
-        Console.WriteLine(result);
+        Log.WriteLine(result);
     }
 }

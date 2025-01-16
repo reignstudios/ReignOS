@@ -16,22 +16,22 @@ internal class Program
     
     static void Main(string[] args)
     {
-        Console.WriteLine("ReignOS.Service started");
+        Log.WriteLine("Service started");
         
         // detect system hardware
         try
         {
             string productName = ProcessUtil.Run("dmidecode", "-s system-product-name");
-            Console.WriteLine("Product: " + productName);
+            Log.WriteLine("Product: " + productName);
             if (productName == "Claw A1M") hardwareType = HardwareType.MSI_Claw_A1M;
             else if (productName.StartsWith("Claw ")) hardwareType = HardwareType.MSI_Claw;
         }
         catch (Exception e)
         {
-            Console.WriteLine("Failed to get system hardware");
+            Log.WriteLine("Failed to get system hardware");
             Console.Write(e);
         }
-        Console.WriteLine("Known hardware detection: " + hardwareType.ToString());
+        Log.WriteLine("Known hardware detection: " + hardwareType.ToString());
 
         // detect device & configure hardware
         try
@@ -43,7 +43,7 @@ internal class Program
         }
         catch (Exception e)
         {
-            Console.WriteLine("Failed to get device hardware");
+            Log.WriteLine("Failed to get device hardware");
             Console.Write(e);
         }
 

@@ -27,7 +27,7 @@ public static class MSI_Claw
     private static bool EnableMode(HidDevice device, Mode mode)
     {
         if (!device.TryOpen(out var hidStream)) return false;
-        Console.WriteLine("MSI-Claw gamepad found");
+        Log.WriteLine("MSI-Claw gamepad found");
 			
         using (hidStream)
         {
@@ -44,7 +44,7 @@ public static class MSI_Claw
                 writeBuf[i++] = 0;
                 writeBuf[i++] = 0;
                 hidStream.Write(writeBuf);
-                Console.WriteLine("MSI-Claw gamepad mode set");
+                Log.WriteLine("MSI-Claw gamepad mode set");
                 isEnabled = true;
                 return true;
             }
