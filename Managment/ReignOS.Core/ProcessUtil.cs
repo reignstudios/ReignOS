@@ -33,5 +33,14 @@ namespace ReignOS.Core
                 }
             }
         }
+
+        public static void Kill(string name)
+        {
+            foreach (var process in Process.GetProcessesByName(name))
+            {
+                process.Kill();
+                process.Dispose();
+            }
+        }
     }
 }

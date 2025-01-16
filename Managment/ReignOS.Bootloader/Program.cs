@@ -13,6 +13,9 @@ internal class Program
     static void Main(string[] args)
     {
         Console.WriteLine("ReignOS.Bootloader started");
+
+        // kill service if its currently running
+        ProcessUtil.Kill("ReignOS.Service");
         
         // start service
         using var serviceProcess = new Process();
@@ -55,8 +58,6 @@ internal class Program
             
             serviceProcess.BeginOutputReadLine();
             serviceProcess.BeginErrorReadLine();
-            
-            serviceProcess.WaitForExit();
         }
         catch (Exception e)
         {
