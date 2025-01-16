@@ -10,14 +10,12 @@ enum Compositor
 
 internal class Program
 {
-    private static Process serviceProcess;
-    
     static void Main(string[] args)
     {
         Console.WriteLine("ReignOS.Bootloader started");
         
         // start service
-        serviceProcess = new Process();
+        using var serviceProcess = new Process();
         try
         {
             serviceProcess.StartInfo.UseShellExecute = false;
@@ -63,6 +61,7 @@ internal class Program
         catch (Exception e)
         {
             Console.WriteLine(e);
+            goto SHUTDOWN;
         }
 
         // start compositor
@@ -93,7 +92,12 @@ internal class Program
             Console.WriteLine(e);
         }
 
-        serviceProcess.Dispose();
+        // stop service
+        SHUTDOWN:;
+        if (serviceProcess != null && !serviceProcess.HasExited)
+        {
+            serviceProcess.Kill();
+        }
     }
     
     private static void StartCompositor_Cage()
