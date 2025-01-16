@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReignOS.Core", "ReignOS.Core\ReignOS.Core.csproj", "{4180BDC3-C61A-4D52-97E0-BB04A6DF3301}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReignOS.Bootloader", "ReignOS.Bootloader\ReignOS.Bootloader.csproj", "{DF7643EC-2110-4CD8-BA7F-AC78E9617D3D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FB7A85ED-B4D7-4846-B994-2E1583EA884F} = {FB7A85ED-B4D7-4846-B994-2E1583EA884F}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReignOS.Service", "ReignOS.Service\ReignOS.Service.csproj", "{FB7A85ED-B4D7-4846-B994-2E1583EA884F}"
 EndProject
