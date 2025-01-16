@@ -15,7 +15,7 @@ internal class Program
         Console.WriteLine("ReignOS.Bootloader started");
 
         // kill service if its currently running
-        ProcessUtil.Kill("ReignOS.Service");
+        //ProcessUtil.Kill("ReignOS.Service");
         
         // start service
         using var serviceProcess = new Process();
