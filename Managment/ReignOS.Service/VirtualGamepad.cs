@@ -1,11 +1,12 @@
 namespace ReignOS.Service;
+
 using System;
 using System.Runtime.InteropServices;
 
-using __u16 = UInt16;
-using __u32 = UInt32;
-using __s16 = Int16;
-using __s32 = Int32;
+using __u16 = System.UInt16;
+using __u32 = System.UInt32;
+using __s16 = System.Int16;
+using __s32 = System.Int32;
 
 public unsafe static class VirtualGamepad
 {

@@ -16,7 +16,7 @@ public static class MSI_Claw
     }
 
     public static bool isEnabled { get; private set; }
-    private static HidDevice? device;
+    private static HidDevice device;
 
     public static void Configure(HidDevice device)
     {

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 public static class ProcessUtil
 {
-    public static string Run(string name, string args, Dictionary<string,string>? enviromentVars = null, bool wait = true, bool asAdmin = false)
+    public static string Run(string name, string args, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false)
     {
         using (var process = new Process())
         {

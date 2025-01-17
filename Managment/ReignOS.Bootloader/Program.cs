@@ -1,6 +1,9 @@
 ﻿namespace ReignOS.Bootloader;
-using ReignOS.Core;
+
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using ReignOS.Core;
 
 enum Compositor
 {

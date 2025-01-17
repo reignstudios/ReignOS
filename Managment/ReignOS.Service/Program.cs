@@ -1,4 +1,8 @@
 ﻿namespace ReignOS.Service;
+
+using System;
+using System.Reflection;
+using System.Threading;
 using ReignOS.Core;
 using ReignOS.Core.Hardware;
 using HidSharp;
@@ -17,6 +21,7 @@ internal class Program
     static void Main(string[] args)
     {
         Log.WriteLine("Service started");
+        LibraryResolver.Init(Assembly.GetExecutingAssembly());
         
         // detect system hardware
         try

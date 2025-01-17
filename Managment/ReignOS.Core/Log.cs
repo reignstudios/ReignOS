@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 public static class Log
 {
-    public static void WriteLine(string? message)
+    public static void WriteLine(string message)
     {
         Console.WriteLine("ReignOS: " + message);
     }
 
-    public static void WriteLine(object? o)
+    public static void WriteLine(object o)
     {
         if (o != null) WriteLine(o.ToString());
     }
