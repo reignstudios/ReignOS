@@ -1,4 +1,5 @@
-namespace ReignOS.Core.Hardware;
+namespace ReignOS.Service.Hardware;
+using ReignOS.Core;
 
 using HidSharp;
 
@@ -59,6 +60,10 @@ public static class MSI_Claw
         if (resumeFromSleep)
         {
             if (device != null) EnableMode(device, Mode.XInput);
+        }
+        else
+        {
+            // TODO: get F15 and F16 buttons and relay them to VirtualGamepad
         }
     }
 }

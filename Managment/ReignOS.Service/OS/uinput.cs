@@ -14,11 +14,16 @@ public unsafe static class uinput
     
     public const int UINPUT_MAX_NAME_SIZE = 80;
     public const int BUS_USB = 0x03;
+    
     public const int UI_DEV_CREATE = 0x5501;
     public const int UI_SET_EVBIT = 0x40045564;
+    public const int UI_DEV_DESTROY = 0x5502;
+    public const int UI_SET_KEYBIT = 0x40045565;
+    
+    public const int EV_SYN = 0x00;
+    public const int SYN_REPORT = 0;
     
     public const int EV_KEY = 0x1;
-    public const int UI_SET_KEYBIT = 0x40045565;
     
     public const int BTN_MODE = 0x13c;
     public const int BTN_A = 0x130;
@@ -31,10 +36,6 @@ public unsafe static class uinput
     public const int BTN_THUMBR = 0x13e;
     public const int BTN_TL = 0x136;
     public const int BTN_TR = 0x137;
-    public const int BTN_SOUTH = 0x130;
-    public const int BTN_EAST = 0x131;
-    public const int BTN_NORTH = 0x133;
-    public const int BTN_WEST = 0x134;
     
     public const int ABS_MAX = 0x3f;
     public const int ABS_CNT = (ABS_MAX+1);

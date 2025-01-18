@@ -25,6 +25,9 @@ public unsafe static class c
     [DllImport(lib)]
     public static extern int open(byte *__file, int __oflag);
     
+    [DllImport(lib)]
+    public static extern int close(int __fd);
+    
     [DllImport("ReignOS.Service.Native.so", EntryPoint = "ioctl_var_arg0")]
     public static extern int ioctl(int __fd, UIntPtr __request);
     

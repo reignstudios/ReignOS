@@ -1,10 +1,10 @@
 ﻿namespace ReignOS.Service;
+using ReignOS.Core;
+using ReignOS.Service.Hardware;
 
 using System;
 using System.Reflection;
 using System.Threading;
-using ReignOS.Core;
-using ReignOS.Core.Hardware;
 using HidSharp;
 
 enum HardwareType
@@ -16,12 +16,17 @@ enum HardwareType
 
 internal class Program
 {
+    private static bool exit;
     public static HardwareType hardwareType { get; private set; }
     
     static void Main(string[] args)
     {
         Log.WriteLine("Service started");
+        Console.CancelKeyPress += ExitEvent;
         LibraryResolver.Init(Assembly.GetExecutingAssembly());
+        
+        // init virtual gamepad
+        VirtualGamepad.Init();
         
         // detect system hardware
         try
@@ -34,7 +39,7 @@ internal class Program
         catch (Exception e)
         {
             Log.WriteLine("Failed to get system hardware");
-            Console.Write(e);
+            Log.WriteLine(e);
         }
         Log.WriteLine("Known hardware detection: " + hardwareType.ToString());
 
@@ -49,12 +54,12 @@ internal class Program
         catch (Exception e)
         {
             Log.WriteLine("Failed to get device hardware");
-            Console.Write(e);
+            Log.WriteLine(e);
         }
 
         // run events
         var time = DateTime.Now;
-        while (true)
+        while (!exit)
         {
             // update time
             var lastTime = time;
@@ -69,7 +74,16 @@ internal class Program
             if (MSI_Claw.isEnabled) MSI_Claw.Update(resumeFromSleep);
 
             // sleep thread
-            Thread.Sleep(1000);
+            Thread.Sleep(1000 / 30);
         }
+        
+        // shutdown
+        VirtualGamepad.Dispose();
+    }
+
+    private static void ExitEvent(object sender, ConsoleCancelEventArgs e)
+    {
+        e.Cancel = true;
+        exit = true;
     }
 }

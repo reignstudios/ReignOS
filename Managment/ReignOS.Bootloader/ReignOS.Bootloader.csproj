@@ -9,7 +9,7 @@
     <ProjectReference Include="..\ReignOS.Core\ReignOS.Core.csproj" />
   </ItemGroup>
 
-  <Target Name="CopyService" AfterTargets="Publish" Condition="'$(Configuration)' == 'Release'">
+  <Target Name="CopyService" AfterTargets="Publish">
     <ItemGroup>
       <FilesToCopy Include="$(MSBuildProjectDirectory)/../ReignOS.Service/bin/Release/net8.0/$(RuntimeIdentifier)/publish/*.*" />
     </ItemGroup>

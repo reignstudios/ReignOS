@@ -1,9 +1,11 @@
 ﻿namespace ReignOS.Bootloader;
+using ReignOS.Core;
 
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using ReignOS.Core;
+using System.Runtime.InteropServices;
+using System.Reflection;
 
 enum Compositor
 {
@@ -13,9 +15,20 @@ enum Compositor
 
 internal class Program
 {
+    private const int SIGINT = 2;
+    
+    [DllImport("libc.so", SetLastError = true, EntryPoint = "kill")]
+    private static extern int kill(int pid, int sig);
+    
+    private static int SoftKillService(Process process)
+    {
+        return kill(SIGINT, process.Id);
+    }
+    
     static void Main(string[] args)
     {
         Log.WriteLine("Bootloader started");
+        LibraryResolver.Init(Assembly.GetExecutingAssembly());
 
         // kill service if its currently running
         ProcessUtil.Kill("ReignOS.Service", true);
@@ -101,7 +114,7 @@ internal class Program
         if (serviceProcess != null && !serviceProcess.HasExited)
         {
             Log.WriteLine("Killing service");
-            serviceProcess.Kill();
+            if (SoftKillService(serviceProcess) != 0) serviceProcess.Kill();
         }
     }
     
