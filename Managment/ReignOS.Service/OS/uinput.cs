@@ -3,39 +3,71 @@ namespace ReignOS.Service.OS;
 using System;
 using System.Runtime.InteropServices;
 
+using __u16 = System.UInt16;
+using __u32 = System.UInt32;
+using __s16 = System.Int16;
+using __s32 = System.Int32;
+
 public unsafe static class uinput
 {
     public const string lib = "libuinput.so";
-
-    public const int O_WRONLY = 01;
-    public const int O_NONBLOCK = 04000;
     
-    public const byte UINPUT_IOCTL_BASE = (byte)'U';
-    public const uint _IOC_NONE = 0U;
-    public const uint _IOC_WRITE = 1U;
-    public const uint _IOC_READ = 2U;
-
-    private static uint _IOW<T>(byte type, uint nr)//, int size)
+    public const int UINPUT_MAX_NAME_SIZE = 80;
+    public const int BUS_USB = 0x03;
+    public const int UI_DEV_CREATE = 0x5501;
+    public const int UI_SET_EVBIT = 0x40045564;
+    
+    public const int EV_KEY = 0x1;
+    public const int UI_SET_KEYBIT = 0x40045565;
+    
+    public const int BTN_MODE = 0x13c;
+    public const int BTN_A = 0x130;
+    public const int BTN_B = 0x131;
+    public const int BTN_X = 0x133;
+    public const int BTN_Y = 0x134;
+    public const int BTN_START = 0x13b;
+    public const int BTN_SELECT = 0x13a;
+    public const int BTN_THUMBL = 0x13d;
+    public const int BTN_THUMBR = 0x13e;
+    public const int BTN_TL = 0x136;
+    public const int BTN_TR = 0x137;
+    public const int BTN_SOUTH = 0x130;
+    public const int BTN_EAST = 0x131;
+    public const int BTN_NORTH = 0x133;
+    public const int BTN_WEST = 0x134;
+    
+    public const int ABS_MAX = 0x3f;
+    public const int ABS_CNT = (ABS_MAX+1);
+    
+    [StructLayout(LayoutKind.Sequential)]
+    public struct input_id
     {
-        
-    }
+        public __u16 bustype;
+        public __u16 vendor;
+        public __u16 product;
+        public __u16 version;
+    };
 
-    private static uint _IOC<T>(uint dir, byte type, uint nr, UIntPtr size)
+    [StructLayout(LayoutKind.Sequential)]
+    public struct uinput_user_dev
     {
-        return (((dir) << _IOC_DIRSHIFT) |
-         ((type) << _IOC_TYPESHIFT) |
-         ((nr) << _IOC_NRSHIFT) |
-         ((size) << _IOC_SIZESHIFT));
-    }
-
-    private static UIntPtr _IOC_TYPECHECK<T>()
-    {
-        return (UIntPtr)Marshal.SizeOf<T>();
+        public fixed byte name[UINPUT_MAX_NAME_SIZE];
+        public input_id id;
+        public __u32 ff_effects_max;
+        public fixed __s32 absmax[ABS_CNT];
+        public fixed __s32 absmin[ABS_CNT];
+        public fixed __s32 absfuzz[ABS_CNT];
+        public fixed __s32 absflat[ABS_CNT];
     }
     
-    [DllImport(lib)]
-    public static extern int open(char *__file, int __oflag);
-    
-    [DllImport(lib)]
-    public static extern int ioctl(int __fd, UIntPtr __request);
+    [StructLayout(LayoutKind.Sequential)]
+    public struct input_event
+    {
+        public c.timeval time;
+        //#define input_event_sec time.tv_sec
+        //#define input_event_usec time.tv_usec
+        public __u16 type;
+        public __u16 code;
+        public __s32 value;
+    };
 }

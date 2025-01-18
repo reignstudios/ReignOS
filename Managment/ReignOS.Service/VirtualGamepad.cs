@@ -1,52 +1,39 @@
 namespace ReignOS.Service;
+using ReignOS.Service.OS;
+using ReignOS.Core;
 
 using System;
-using System.Runtime.InteropServices;
-
-using __u16 = System.UInt16;
-using __u32 = System.UInt32;
-using __s16 = System.Int16;
-using __s32 = System.Int32;
+using System.Text;
 
 public unsafe static class VirtualGamepad
 {
-    private const string lib = "libuinput.so";
-    
-    [DllImport(lib)]
-    private static extern int uinput_open();
+    private static int fd;
 
-    public const int UINPUT_MAX_NAME_SIZE = 80;
-    public const int ABS_MAX = 0x3f;
-    public const int ABS_CNT = (ABS_MAX+1);
-    
-    [StructLayout(LayoutKind.Sequential)]
-    struct input_id
-    {
-        __u16 bustype;
-        __u16 vendor;
-        __u16 product;
-        __u16 version;
-    };
-
-    [StructLayout(LayoutKind.Sequential)]
-    struct uinput_user_dev
-    {
-        public fixed byte name[UINPUT_MAX_NAME_SIZE];
-        public input_id id;
-        public __u32 ff_effects_max;
-        public fixed __s32 absmax[ABS_CNT];
-        public fixed __s32 absmin[ABS_CNT];
-        public fixed __s32 absfuzz[ABS_CNT];
-        public fixed __s32 absflat[ABS_CNT];
-    }
-    
     public static void Init()
+    {
+        // open uinput
+        uinput.uinput_user_dev uidev;
+        byte[] uinputPath = Encoding.UTF8.GetBytes("/dev/uinput");
+        fixed (byte* uinputPathPtr = uinputPath) fd = c.open(uinputPathPtr, c.O_WRONLY | c.O_NONBLOCK);
+        if (fd < 0)
+        {
+            Log.WriteLine("Could not open uinput");
+            return;
+        }
+        
+        // Setup the uinput device
+        c.ioctl(fd, uinput.UI_SET_EVBIT, uinput.EV_KEY);
+        c.ioctl(fd, uinput.UI_SET_KEYBIT, uinput.BTN_A);
+        c.ioctl(fd, uinput.UI_SET_KEYBIT, uinput.BTN_MODE);
+    }
+
+    public static void Dispose()
     {
         
     }
 }
 
-/*
+/* evtest info for real Xbox-One gamepad
 Input driver version is 1.0.1
    Input device ID: bus 0x3 vendor 0x45e product 0x2ea version 0x301
    Input device name: "Microsoft X-Box One S pad"
