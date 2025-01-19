@@ -10,12 +10,11 @@ public unsafe static class VirtualGamepad
 {
     private static int handle;
     private static bool UI_DEV_created;
-    private static uinput.input_event e;
+    private static input.input_event e;
 
     public static void Init()
     {
         // open uinput
-        uinput.uinput_user_dev uidev;
         byte[] uinputPath = Encoding.UTF8.GetBytes("/dev/uinput");
         fixed (byte* uinputPathPtr = uinputPath) handle = c.open(uinputPathPtr, c.O_WRONLY | c.O_NONBLOCK);
         if (handle < 0)
@@ -25,28 +24,28 @@ public unsafe static class VirtualGamepad
         }
         
         // setup device IDs (matches Xbox-One-S controller [needed by Steam])
-        //snprintf(uidev.name, UINPUT_MAX_NAME_SIZE, "ReignOS Virtual Gamepad");
+        input.uinput_user_dev uidev;
         byte[] name = Encoding.ASCII.GetBytes("ReignOS Virtual Gamepad");
         fixed (byte* namePtr = name) Buffer.MemoryCopy(namePtr, uidev.name, name.Length, name.Length);
-        uidev.id.bustype = uinput.BUS_USB;
+        uidev.id.bustype = input.BUS_USB;
         uidev.id.vendor  = 0x45e;
         uidev.id.product = 0x2ea;
         uidev.id.version = 0x301;
         
         // setup device features
-        c.ioctl(handle, uinput.UI_SET_EVBIT, uinput.EV_KEY);
-        c.ioctl(handle, uinput.UI_SET_KEYBIT, uinput.BTN_MODE);
+        c.ioctl(handle, input.UI_SET_EVBIT, input.EV_KEY);
+        c.ioctl(handle, input.UI_SET_KEYBIT, input.BTN_MODE);
         
-        c.ioctl(handle, uinput.UI_SET_KEYBIT, uinput.BTN_A);
-        c.ioctl(handle, uinput.UI_SET_KEYBIT, uinput.BTN_B);
-        c.ioctl(handle, uinput.UI_SET_KEYBIT, uinput.BTN_X);
-        c.ioctl(handle, uinput.UI_SET_KEYBIT, uinput.BTN_Y);
+        c.ioctl(handle, input.UI_SET_KEYBIT, input.BTN_A);
+        c.ioctl(handle, input.UI_SET_KEYBIT, input.BTN_B);
+        c.ioctl(handle, input.UI_SET_KEYBIT, input.BTN_X);
+        c.ioctl(handle, input.UI_SET_KEYBIT, input.BTN_Y);
         
-        c.ioctl(handle, uinput.UI_SET_KEYBIT, uinput.BTN_START);
-        c.ioctl(handle, uinput.UI_SET_KEYBIT, uinput.BTN_SELECT);
+        c.ioctl(handle, input.UI_SET_KEYBIT, input.BTN_START);
+        c.ioctl(handle, input.UI_SET_KEYBIT, input.BTN_SELECT);
         
-        c.write(handle, &uidev, (UIntPtr)Marshal.SizeOf<uinput.uinput_user_dev>());
-        if (c.ioctl(handle, uinput.UI_DEV_CREATE) != 0)
+        c.write(handle, &uidev, (UIntPtr)Marshal.SizeOf<input.uinput_user_dev>());
+        if (c.ioctl(handle, input.UI_DEV_CREATE) != 0)
         {
             Log.WriteLine("Error creating uinput device");
             c.close(handle);
@@ -60,15 +59,15 @@ public unsafe static class VirtualGamepad
     {
         if (handle != 0)
         {
-            if (UI_DEV_created) c.ioctl(handle, uinput.UI_DEV_DESTROY);
+            if (UI_DEV_created) c.ioctl(handle, input.UI_DEV_DESTROY);
             c.close(handle);
             handle = 0;
         }
     }
     
-    private static void StartWrites()
+    public static void StartWrites()
     {
-        var e = new uinput.input_event();
+        var e = new input.input_event();
         c.gettimeofday(&e.time, null);
         VirtualGamepad.e = e;
     }
@@ -76,18 +75,18 @@ public unsafe static class VirtualGamepad
     public static void WriteButton(int button, bool pressed)
     {
         var e = VirtualGamepad.e;
-        e.type = uinput.EV_KEY;
+        e.type = input.EV_KEY;
         e.code = (ushort)button;
         e.value = pressed ? 1 : 0;
-        c.write(handle, &e, (UIntPtr)Marshal.SizeOf<uinput.input_event>());
+        c.write(handle, &e, (UIntPtr)Marshal.SizeOf<input.input_event>());
     }
     
     public static void EndWrites()
     {
         var e = VirtualGamepad.e;
-        e.type = uinput.EV_SYN;
-        e.code = uinput.SYN_REPORT;
-        c.write(handle, &e, (UIntPtr)Marshal.SizeOf<uinput.input_event>());
+        e.type = input.EV_SYN;
+        e.code = input.SYN_REPORT;
+        c.write(handle, &e, (UIntPtr)Marshal.SizeOf<input.input_event>());
     }
 }
 

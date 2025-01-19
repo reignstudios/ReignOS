@@ -78,7 +78,8 @@ internal class Program
         }
         
         // shutdown
-        VirtualGamepad.Dispose();
+        MSI_Claw.Dispose();
+        VirtualGamepad.Dispose();   
     }
 
     private static void ExitEvent(object sender, ConsoleCancelEventArgs e)

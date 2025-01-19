@@ -8,12 +8,11 @@ using __u32 = System.UInt32;
 using __s16 = System.Int16;
 using __s32 = System.Int32;
 
-public unsafe static class uinput
+public unsafe static class input
 {
-    public const string lib = "libuinput.so";
-    
     public const int UINPUT_MAX_NAME_SIZE = 80;
     public const int BUS_USB = 0x03;
+    public const uint EVIOCGID = 0x80084502;
     
     public const int UI_DEV_CREATE = 0x5501;
     public const int UI_SET_EVBIT = 0x40045564;
@@ -24,6 +23,10 @@ public unsafe static class uinput
     public const int SYN_REPORT = 0;
     
     public const int EV_KEY = 0x1;
+    
+    public const int KEY_A = 30;
+    public const int KEY_F15 = 185;
+    public const int KEY_F16 = 186;
     
     public const int BTN_MODE = 0x13c;
     public const int BTN_A = 0x130;

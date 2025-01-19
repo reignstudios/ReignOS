@@ -1,7 +1,8 @@
 namespace ReignOS.Service.Hardware;
 using ReignOS.Core;
-
+using ReignOS.Service.OS;
 using HidSharp;
+using System.Threading;
 
 public static class MSI_Claw
 {
@@ -18,11 +19,26 @@ public static class MSI_Claw
 
     public static bool isEnabled { get; private set; }
     private static HidDevice device;
+    private static KeyboardInput keyboardInput;
 
     public static void Configure(HidDevice device)
     {
         if (device.VendorID != 0x0DB0 || device.ProductID != 0x1901) return;
-        if (EnableMode(device, Mode.XInput)) MSI_Claw.device = device;
+        if (EnableMode(device, Mode.XInput))
+        {
+            MSI_Claw.device = device;
+            keyboardInput = new KeyboardInput();
+            keyboardInput.Init(0x1, 0x1);
+        }
+    }
+    
+    public static void Dispose()
+    {
+        if (keyboardInput != null)
+        {
+            keyboardInput.Dispose();
+            keyboardInput = null;
+        }
     }
 
     private static bool EnableMode(HidDevice device, Mode mode)
@@ -64,6 +80,39 @@ public static class MSI_Claw
         else
         {
             // TODO: get F15 and F16 buttons and relay them to VirtualGamepad
+            if (keyboardInput != null && keyboardInput.ReadNextKey(out ushort key, out bool pressed))
+            {
+                if (key == input.KEY_F15)
+                {
+                    // relay left menu button
+                    VirtualGamepad.StartWrites();
+                    VirtualGamepad.WriteButton(input.BTN_MODE, pressed);
+                    VirtualGamepad.EndWrites();
+                }
+                else if (key == input.KEY_F16 && !pressed)
+                {
+                    // hold guide
+                    VirtualGamepad.StartWrites();
+                    VirtualGamepad.WriteButton(input.BTN_MODE, true);
+                    VirtualGamepad.EndWrites();
+                    
+                    // tap A
+                    Thread.Sleep(100);
+                    VirtualGamepad.StartWrites();
+                    VirtualGamepad.WriteButton(input.BTN_A, true);
+                    VirtualGamepad.EndWrites();
+                    
+                    Thread.Sleep(100);
+                    VirtualGamepad.StartWrites();
+                    VirtualGamepad.WriteButton(input.BTN_A, false);
+                    VirtualGamepad.EndWrites();
+                    
+                    // release guide
+                    VirtualGamepad.StartWrites();
+                    VirtualGamepad.WriteButton(input.BTN_MODE, false);
+                    VirtualGamepad.EndWrites();
+                }
+            }
         }
     }
 }

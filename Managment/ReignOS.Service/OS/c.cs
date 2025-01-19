@@ -12,6 +12,7 @@ public unsafe static class c
 {
     public const string lib = "libc.so";
 
+    public const int O_RDONLY = 00;
     public const int O_WRONLY = 01;
     public const int O_NONBLOCK = 04000;
     
@@ -31,12 +32,18 @@ public unsafe static class c
     [DllImport("ReignOS.Service.Native.so", EntryPoint = "ioctl_var_arg0")]
     public static extern int ioctl(int __fd, UIntPtr __request);
     
-    [DllImport("ReignOS.Service.Native.so", EntryPoint = "ioctl_var_arg1")]
+    [DllImport("ReignOS.Service.Native.so", EntryPoint = "ioctl_var_arg1_int")]
     public static extern int ioctl(int __fd, UIntPtr __request, int var_args);
+    
+    [DllImport("ReignOS.Service.Native.so", EntryPoint = "ioctl_var_arg1_void")]
+    public static extern int ioctl(int __fd, UIntPtr __request, void* var_args);
     
     [DllImport(lib)]
     public static extern int gettimeofday(timeval* __tv, void* __tz);
     
     [DllImport(lib)]
     public static extern ssize_t write(int __fd, void* __buf, size_t __n);
+    
+    [DllImport(lib)]
+    public static extern ssize_t read(int __fd, void *__buf, size_t __nbytes);
 }
