@@ -18,7 +18,6 @@ public static class MSI_Claw
 
     public static bool isEnabled { get; private set; }
     private static HidDevice device;
-    private static KeyboardInput keyboardInput;
 
     public static void Configure()
     {
@@ -33,17 +32,17 @@ public static class MSI_Claw
         Log.WriteLine("MSI-Claw gamepad found");
         if (EnableMode(Mode.XInput))
         {
-            keyboardInput = new KeyboardInput();
-            keyboardInput.Init("AT Translated Set 2 keyboard", true, 0x1, 0x1);
+            Program.keyboardInput = new KeyboardInput();
+            Program.keyboardInput.Init("AT Translated Set 2 keyboard", true, 0, 0);
         }
     }
     
     public static void Dispose()
     {
-        if (keyboardInput != null)
+        if (device != null)
         {
-            keyboardInput.Dispose();
-            keyboardInput = null;
+            device.Dispose();
+            device = null;
         }
     }
 
@@ -70,25 +69,22 @@ public static class MSI_Claw
         return true;
     }
 
-    public static void Update(bool resumeFromSleep)
+    public static void Update(bool resumeFromSleep, ushort key, bool keyPressed)
     {
         if (resumeFromSleep)
         {
             if (device != null) EnableMode(Mode.XInput);
         }
-        else
+        else if (!keyPressed)
         {
             // relay OEM buttons to virtual gamepad input
-            if (keyboardInput != null && keyboardInput.ReadNextKey(out ushort key, out bool pressed))
+            if (key == input.KEY_F15)
             {
-                if (key == input.KEY_F15 && !pressed)
-                {
-                    VirtualGamepad.Write_TriggerLeftSteamMenu();
-                }
-                else if (key == input.KEY_F16 && !pressed)
-                {
-                    VirtualGamepad.Write_TriggerRightSteamMenu();
-                }
+                VirtualGamepad.Write_TriggerLeftSteamMenu();
+            }
+            else if (key == input.KEY_F16)
+            {
+                VirtualGamepad.Write_TriggerRightSteamMenu();
             }
         }
     }

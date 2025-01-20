@@ -7,4 +7,4 @@
 unclutter -idle 3 &
 
 # start steam
-steam -gamepadui -steamdeck
+steam -bigpicture -steamdeck

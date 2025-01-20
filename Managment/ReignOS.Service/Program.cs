@@ -26,6 +26,8 @@ internal class Program
     private static bool exit;
     public static HardwareType hardwareType { get; private set; }
 
+    public static KeyboardInput keyboardInput;
+
     private static void BindSignalEvents()
     {
         Console.CancelKeyPress += ExitEvent;
@@ -71,6 +73,10 @@ internal class Program
             Log.WriteLine(e);
         }
 
+        // if no hardware has known keyboard find generic one
+        keyboardInput = new KeyboardInput();
+        keyboardInput.Init(null, false, 0, 0);
+
         // run events
         Log.WriteLine("Running events...");
         var time = DateTime.Now;
@@ -85,8 +91,14 @@ internal class Program
             bool resumeFromSleep = false;
             if (timeSpan.TotalSeconds >= 3) resumeFromSleep = true;
 
+            // update keyboard
+            keyboardInput.ReadNextKey(out ushort key, out bool keyPressed);
+
+            // update volume
+            // TODO:
+
             // update devices
-            if (MSI_Claw.isEnabled) MSI_Claw.Update(resumeFromSleep);
+            if (MSI_Claw.isEnabled) MSI_Claw.Update(resumeFromSleep, key, keyPressed);
 
             // sleep thread
             Thread.Sleep(1000 / 30);
@@ -95,7 +107,8 @@ internal class Program
         // shutdown
         Log.WriteLine("Shutting down...");
         MSI_Claw.Dispose();
-        VirtualGamepad.Dispose();   
+        VirtualGamepad.Dispose();
+        keyboardInput.Dispose();
     }
 
     private static void SignalCloseEvent(int signal)
