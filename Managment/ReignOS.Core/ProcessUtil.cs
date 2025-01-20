@@ -60,7 +60,7 @@ public static class ProcessUtil
     {
         if (asAdmin)
         {
-            Run("pkill", name, out exitCode, wait:true, asAdmin:true);
+            Run("pkill", $"\"{name}\"", out exitCode, wait:true, asAdmin:true);
         }
         else
         {
