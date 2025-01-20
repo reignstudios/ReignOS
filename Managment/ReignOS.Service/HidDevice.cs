@@ -101,7 +101,7 @@ public unsafe class HidDevice
         {
             foreach (int handle in handles)
             {
-                if (handle != 0) c.close(handle);
+                if (handle >= 0) c.close(handle);
             }
             handles = null;
         }

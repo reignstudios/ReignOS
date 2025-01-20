@@ -8,9 +8,10 @@ namespace ReignOS.Service
 {
     static unsafe class NativeUtils
     {
-        public static void ZeroMemory(byte* buffer, int size)
+        public static void ZeroMemory(void* buffer, int size)
         {
-            for (int i = 0; i < size; ++i) buffer[i] = 0;
+            byte* data = (byte*)buffer;
+            for (int i = 0; i < size; ++i) data[i] = 0;
         }
     }
 }

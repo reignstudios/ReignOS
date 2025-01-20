@@ -32,10 +32,10 @@ public static class MSI_Claw
         }
         
         Log.WriteLine("MSI-Claw gamepad found");
-        if (EnableMode(Mode.XInput))
+        //if (EnableMode(Mode.XInput))
         {
-            keyboardInput = new KeyboardInput();
-            keyboardInput.Init("AT Translated Set 2 keyboard", true, 0x1, 0x1);
+            //keyboardInput = new KeyboardInput();
+            //keyboardInput.Init("AT Translated Set 2 keyboard", true, 0x1, 0x1);
         }
     }
     
