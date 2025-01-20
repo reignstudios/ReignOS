@@ -76,6 +76,7 @@ internal class Program
         }
         
         // shutdown
+        Log.WriteLine("Shutting down...");
         MSI_Claw.Dispose();
         VirtualGamepad.Dispose();   
     }
