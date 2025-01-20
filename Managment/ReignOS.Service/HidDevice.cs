@@ -60,6 +60,7 @@ public unsafe class HidDevice
                 {
                     Log.WriteLine("Report Descriptor:");
                     for (i = 0; i < reportDesc.size; i++) Log.Write(reportDesc.value[i].ToString("x"));
+                    Console.WriteLine();
                 }
             }
             
@@ -82,7 +83,7 @@ public unsafe class HidDevice
             }
             else
             {
-                Log.WriteLine("HID PhysicalLocation: ", buffer);
+                Log.WriteLine("HID Physical Location: ", buffer);
             }
             
             // device found

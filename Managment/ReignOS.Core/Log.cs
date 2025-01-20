@@ -32,12 +32,12 @@ public static class Log
     {
         Console.Write("ReignOS: " + header);
         int i = 0;
-        byte c = nativeText[0];
+        char c = (char)nativeText[0];
         while (c != '\0')
         {
             Console.Write(c);
             i++;
-            c = nativeText[i];
+            c = (char)nativeText[i];
         }
         Console.WriteLine();
     }
