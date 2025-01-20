@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # start steam
-steam -bigpicture -steamdeck
+steam -tenfoot -steamdeck -steamos3
