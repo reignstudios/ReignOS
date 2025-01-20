@@ -22,10 +22,14 @@ unset GAMESCOPE_WAYLAND_DISPLAY
 #unset LIBEI_SOCKET
 #unset STEAM_MANGOAPP_PRESETS_SUPPORTED
 
-printenv &
+# print env vars
+#printenv &
 
 # start steam
 steam -bigpicture -steamdeck
+#STEAM_PID=$!
+#wait $STEAM_PID
+
 # -steamos or -steamos3 (this starts making it try to update SteamOS incorrectly for a generic distro)
 # -gamepadui (newer)
 # -tenfoot (older)

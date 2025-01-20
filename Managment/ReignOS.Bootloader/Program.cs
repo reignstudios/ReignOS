@@ -114,7 +114,7 @@ internal class Program
         {
             Log.WriteLine("Soft Killing service");
             ProcessUtil.KillSoft("ReignOS.Service", true, out int exitCode);
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
 
             Log.WriteLine("Hard Killing service (just in case)");
             serviceProcess.Kill();
