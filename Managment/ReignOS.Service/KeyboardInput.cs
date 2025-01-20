@@ -21,7 +21,7 @@ public unsafe class KeyboardInput : IDisposable
             // open keyboard
             string path = "/dev/input/event" + i.ToString();
             byte[] pathEncoded = Encoding.UTF8.GetBytes(path);
-            fixed (byte* uinputPathPtr = pathEncoded) handle = c.open(uinputPathPtr, c.O_RDONLY);
+            fixed (byte* uinputPathPtr = pathEncoded) handle = c.open(uinputPathPtr, c.O_RDONLY | c.O_NONBLOCK);
             if (handle < 0) continue;
             
             // validate hardware
