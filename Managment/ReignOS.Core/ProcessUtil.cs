@@ -16,20 +16,22 @@ public static class ProcessUtil
         {
             if (asAdmin)
             {
+                process.StartInfo.UseShellExecute = false;
                 process.StartInfo.FileName = "sudo";
                 process.StartInfo.Arguments = $"-S -- {name} {args}";
                 process.StartInfo.RedirectStandardInput = true;
-                process.StartInfo.UseShellExecute = false;
             }
             else
             {
                 process.StartInfo.FileName = name;
                 process.StartInfo.Arguments = args;
             }
+
             if (enviromentVars != null)
             {
                 foreach (var v in enviromentVars) process.StartInfo.EnvironmentVariables[v.Key] = v.Value;
             }
+
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardError = true;
             process.Start();
@@ -38,7 +40,6 @@ public static class ProcessUtil
             {
                 process.StandardInput.WriteLine("gamer");
                 process.StandardInput.Flush();
-                process.StandardInput.Close();
             }
 
             if (wait)

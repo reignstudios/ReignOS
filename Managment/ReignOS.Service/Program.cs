@@ -56,6 +56,7 @@ internal class Program
         }
 
         // run events
+        Log.WriteLine("Running events...");
         var time = DateTime.Now;
         while (!exit)
         {
