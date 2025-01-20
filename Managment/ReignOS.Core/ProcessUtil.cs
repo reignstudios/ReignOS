@@ -19,6 +19,7 @@ public static class ProcessUtil
                 process.StartInfo.FileName = "sudo";
                 process.StartInfo.Arguments = $"-S -- {name} {args}";
                 process.StartInfo.RedirectStandardInput = true;
+                process.StartInfo.UseShellExecute = false;
             }
             else
             {
@@ -37,6 +38,7 @@ public static class ProcessUtil
             {
                 process.StandardInput.WriteLine("gamer");
                 process.StandardInput.Flush();
+                process.StandardInput.Close();
             }
 
             if (wait)
