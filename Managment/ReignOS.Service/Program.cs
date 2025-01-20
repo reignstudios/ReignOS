@@ -16,22 +16,32 @@ enum HardwareType
 
 internal class Program
 {
-    [DllImport("libc", SetLastError = true)]
-    private static extern int signal(int sig, Action<IntPtr> handler);
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate void SignalHandler(int signal);
+
+    [DllImport("libc.so", SetLastError = true)]
+    private static extern int signal(int sig, SignalHandler handler);
     private const int SIGINT = 2;
 
     private static bool exit;
     public static HardwareType hardwareType { get; private set; }
+
+    private static void BindSignalEvents()
+    {
+        Console.CancelKeyPress += ExitEvent;
+        var signalHandler = new SignalHandler(SignalCloseEvent);
+        signal(SIGINT, SignalCloseEvent);
+    }
     
     static void Main(string[] args)
     {
         Log.prefix = "ReignOS.Service: ";
         Log.WriteLine("Service started");
+
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-        Console.CancelKeyPress += ExitEvent;
-        signal(SIGINT, SignalCloseEvent);
         LibraryResolver.Init(Assembly.GetExecutingAssembly());
-        
+        BindSignalEvents();
+
         // init virtual gamepad
         VirtualGamepad.Init();
         
@@ -88,8 +98,9 @@ internal class Program
         VirtualGamepad.Dispose();   
     }
 
-    private static void SignalCloseEvent(nint obj)
+    private static void SignalCloseEvent(int signal)
     {
+        Log.WriteLine("SignalCloseEvent: " + signal.ToString());
         exit = true;
     }
 
