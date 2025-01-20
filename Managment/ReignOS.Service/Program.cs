@@ -4,6 +4,7 @@ using ReignOS.Service.Hardware;
 
 using System;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 enum HardwareType
@@ -15,6 +16,10 @@ enum HardwareType
 
 internal class Program
 {
+    [DllImport("libc", SetLastError = true)]
+    private static extern int signal(int sig, Action<IntPtr> handler);
+    private const int SIGINT = 2;
+
     private static bool exit;
     public static HardwareType hardwareType { get; private set; }
     
@@ -24,6 +29,7 @@ internal class Program
         Log.WriteLine("Service started");
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         Console.CancelKeyPress += ExitEvent;
+        signal(SIGINT, SignalCloseEvent);
         LibraryResolver.Init(Assembly.GetExecutingAssembly());
         
         // init virtual gamepad
@@ -80,6 +86,11 @@ internal class Program
         Log.WriteLine("Shutting down...");
         MSI_Claw.Dispose();
         VirtualGamepad.Dispose();   
+    }
+
+    private static void SignalCloseEvent(nint obj)
+    {
+        exit = true;
     }
 
     private static void ExitEvent(object sender, ConsoleCancelEventArgs e)
