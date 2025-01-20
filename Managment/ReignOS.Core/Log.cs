@@ -10,7 +10,7 @@ public static class Log
 {
     public static void Write(string message)
     {
-        Console.Write(message);
+        Console.Write("ReignOS: " + message);
     }
 
     public static void Write(object o)

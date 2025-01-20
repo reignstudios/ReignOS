@@ -19,7 +19,6 @@ public unsafe class HidDevice
         for (int i = 0; i != 32; ++i)
         {
             // open keyboard
-            input.uinput_user_dev uidev;
             string path = "/dev/hidraw" + i.ToString();
             byte[] uinputPath = Encoding.UTF8.GetBytes(path);
             int handle;
@@ -32,63 +31,62 @@ public unsafe class HidDevice
             if (info.vendor == vendorID && info.product == productID)
             {
                 Log.WriteLine($"HID device found type:{BusType(info.bustype)} vendorID:{vendorID} productID:{productID} path:{path}");
-                break;
-            }
-            
-            // get Report Descriptor Size
-            int descSize = 0;
-            if (c.ioctl(handle, hid.HIDIOCGRDESCSIZE, &descSize) < 0)
-            {
-                descSize = 0;
-                Log.WriteLine("Failed: HIDIOCGRDESCSIZE");
-            }
-            else
-            {
-                Log.WriteLine($"Report Descriptor Size: {descSize}");
-            }
+                handles.Add(handle);
 
-            // get Report Descriptor
-            if (descSize > 0)
-            {
-                var reportDesc = new hid.hidraw_report_descriptor();
-                reportDesc.size = (uint)descSize;
-                if (c.ioctl(handle, hid.HIDIOCGRDESC, &reportDesc) < 0)
+                // get Report Descriptor Size
+                int descSize = 0;
+                if (c.ioctl(handle, hid.HIDIOCGRDESCSIZE, &descSize) < 0)
                 {
-                    Log.WriteLine("Failed: HIDIOCGRDESC");
+                    descSize = 0;
+                    Log.WriteLine("Failed: HIDIOCGRDESCSIZE");
                 }
                 else
                 {
-                    Log.WriteLine("Report Descriptor:");
-                    for (i = 0; i < reportDesc.size; i++) Log.Write(reportDesc.value[i].ToString("x"));
-                    Console.WriteLine();
+                    Log.WriteLine($"Report Descriptor Size: {descSize}");
                 }
-            }
-            
-            // get name
-            NativeUtils.ZeroMemory(buffer, bufferSize);
-            if (c.ioctl(handle, hid.HIDIOCGRAWNAME_256, buffer) < 0)
-            {
-                Log.WriteLine("Failed: HIDIOCGRAWNAME");
-            }
-            else
-            {
-                Log.WriteLine("HID Name: ", buffer);
-            }
 
-            // get physical location
-            NativeUtils.ZeroMemory(buffer, bufferSize);
-            if (c.ioctl(handle, hid.HIDIOCGRAWPHYS_256, buffer) < 0)
-            {
-                Log.WriteLine("Failed: HIDIOCGRAWPHYS");
-            }
-            else
-            {
-                Log.WriteLine("HID Physical Location: ", buffer);
-            }
+                // get Report Descriptor
+                if (descSize > 0)
+                {
+                    var reportDesc = new hid.hidraw_report_descriptor();
+                    reportDesc.size = (uint)descSize;
+                    if (c.ioctl(handle, hid.HIDIOCGRDESC, &reportDesc) < 0)
+                    {
+                        Log.WriteLine("Failed: HIDIOCGRDESC");
+                    }
+                    else
+                    {
+                        Log.Write("Report Descriptor:");
+                        for (i = 0; i < reportDesc.size; i++) Console.Write(reportDesc.value[i].ToString("x"));
+                        Console.WriteLine();
+                    }
+                }
             
-            // device found
-            handles.Add(handle);
-            if (!openAll) return true;
+                // get name
+                NativeUtils.ZeroMemory(buffer, bufferSize);
+                if (c.ioctl(handle, hid.HIDIOCGRAWNAME_256, buffer) < 0)
+                {
+                    Log.WriteLine("Failed: HIDIOCGRAWNAME");
+                }
+                else
+                {
+                    Log.WriteLine("HID Name: ", buffer);
+                }
+
+                // get physical location
+                NativeUtils.ZeroMemory(buffer, bufferSize);
+                if (c.ioctl(handle, hid.HIDIOCGRAWPHYS_256, buffer) < 0)
+                {
+                    Log.WriteLine("Failed: HIDIOCGRAWPHYS");
+                }
+                else
+                {
+                    Log.WriteLine("HID Physical Location: ", buffer);
+                }
+
+                if (!openAll) return true;
+                continue;// don't close this handle
+            }
             
             // close
             CONTINUE: c.close(handle);

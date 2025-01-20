@@ -36,6 +36,7 @@ public unsafe class KeyboardInput : IDisposable
                 NativeUtils.ZeroMemory(buffer, bufferSize);
                 if (c.read(infoHandle, buffer, bufferSize - 1) < 0) goto CONTINUE;
                 string deviceName = Marshal.PtrToStringAnsi((IntPtr)buffer);
+                Log.WriteLine("deviceName: " + deviceName);
                 if (deviceName == name)
                 {
                     Log.WriteLine($"Keyboard event device found name:'{name}' path:{path}");
