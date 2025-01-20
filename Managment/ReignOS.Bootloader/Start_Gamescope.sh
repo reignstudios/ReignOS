@@ -1,5 +1,8 @@
 #!/bin/bash
 
 # start steam
-steam -tenfoot -steamdeck
-# other options: -steamos3
+steam -gamepadui -steamdeck
+# -steamos3 (this starts making it try to update SteamOS incorrectly)
+# -gamepadui (newer UI)
+# -tenfoot (older UI)
+# -bigpicture (oldest UI)
