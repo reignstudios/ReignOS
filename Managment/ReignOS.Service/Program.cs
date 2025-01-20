@@ -100,7 +100,12 @@ internal class Program
 
     private static void SignalCloseEvent(int signal)
     {
-        if (signal == SIGINT) exit = true;
+        Log.WriteLine("SignalCloseEvent: " + signal.ToString());
+        if (signal == SIGINT)
+        {
+            exit = true;
+            Log.WriteLine("Exit event");
+        }
     }
 
     private static void ExitEvent(object sender, ConsoleCancelEventArgs e)
