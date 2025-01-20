@@ -120,7 +120,7 @@ internal class Program
         if (serviceProcess != null && !serviceProcess.HasExited)
         {
             Log.WriteLine("Soft Killing service");
-            if (SoftKillService(serviceProcess) != 0)
+            if (SoftKillService(serviceProcess) < 0)
             {
                 Log.WriteLine("Hard Killing service");
                 serviceProcess.Kill();

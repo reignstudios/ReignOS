@@ -34,7 +34,7 @@ public static class MSI_Claw
         if (EnableMode(Mode.XInput))
         {
             keyboardInput = new KeyboardInput();
-            keyboardInput.Init(0x1, 0x1);
+            keyboardInput.Init("AT Translated Set 2 keyboard", true, 0x1, 0x1);
         }
     }
     

@@ -65,7 +65,7 @@ public unsafe class HidDevice
             }
             
             // get name
-            ZeroMemory(buffer, bufferSize);
+            NativeUtils.ZeroMemory(buffer, bufferSize);
             if (c.ioctl(handle, hid.HIDIOCGRAWNAME_256, buffer) < 0)
             {
                 Log.WriteLine("Failed: HIDIOCGRAWNAME");
@@ -76,7 +76,7 @@ public unsafe class HidDevice
             }
 
             // get physical location
-            ZeroMemory(buffer, bufferSize);
+            NativeUtils.ZeroMemory(buffer, bufferSize);
             if (c.ioctl(handle, hid.HIDIOCGRAWPHYS_256, buffer) < 0)
             {
                 Log.WriteLine("Failed: HIDIOCGRAWPHYS");
@@ -119,11 +119,6 @@ public unsafe class HidDevice
             case input.BUS_VIRTUAL: return "Virtual";  
             default: return "Other";
         }
-    }
-
-    private static void ZeroMemory(byte* buffer, int size)
-    {
-        for (int i = 0; i < size; ++i) buffer[i] = 0;
     }
 
     public bool WriteData(byte[] data, int offset, int size)
