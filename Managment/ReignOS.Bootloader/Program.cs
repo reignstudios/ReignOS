@@ -17,16 +17,6 @@ enum Compositor
 
 internal class Program
 {
-    private const int SIGINT = 2;
-    
-    [DllImport("libc.so", SetLastError = true, EntryPoint = "kill")]
-    private static extern int kill(int pid, int sig);
-    
-    private static int SoftKillService(Process process)
-    {
-        return kill(SIGINT, process.Id);
-    }
-    
     static void Main(string[] args)
     {
         Log.prefix = "ReignOS.Bootloader: ";
@@ -35,7 +25,7 @@ internal class Program
         LibraryResolver.Init(Assembly.GetExecutingAssembly());
 
         // kill service if its currently running
-        ProcessUtil.Kill("ReignOS.Service", true);
+        ProcessUtil.KillHard("ReignOS.Service", true, out _);
         
         // start service
         using var serviceProcess = new Process();
@@ -123,10 +113,12 @@ internal class Program
         if (serviceProcess != null && !serviceProcess.HasExited)
         {
             Log.WriteLine("Soft Killing service");
-            if (SoftKillService(serviceProcess) < 0)
+            ProcessUtil.KillSoft("ReignOS.Service", true, out int exitCode);
+            if (exitCode != 0)
             {
                 Log.WriteLine("Hard Killing service");
                 serviceProcess.Kill();
+                ProcessUtil.KillHard("ReignOS.Service", true, out exitCode);
             }
         }
     }
@@ -148,7 +140,7 @@ internal class Program
         string launchArg = "steam -bigpicture -steamdeck";
         launchArg += " & unclutter -idle 3";// hide mouse after 3 seconds
         //launchArg += " & wlr-randr --output eDP-1 --transform 90 --adaptive-sync enabled";// TODO: rotate screen or enable VRR
-        string result = ProcessUtil.Run("cage", "-- " + launchArg, enviromentVars:envVars, wait:true);// start Cage with Steam in console mode
+        string result = ProcessUtil.Run("cage", "-- " + launchArg, out _, enviromentVars:envVars, wait:true);// start Cage with Steam in console mode
         Log.WriteLine(result);
     }
 
@@ -159,7 +151,7 @@ internal class Program
             { "CUSTOM_REFRESH_RATES", "30,60,120" },
             { "STEAM_DISPLAY_REFRESH_LIMITS", "30,60,120" }
         };
-        string result = ProcessUtil.Run("gamescope", "-e -f --adaptive-sync -- steam -bigpicture -steamdeck", enviromentVars:envVars, wait:true);// start Gamescope with Steam in console mode, VRR
+        string result = ProcessUtil.Run("gamescope", "-e -f --adaptive-sync -- steam -bigpicture -steamdeck", out _, enviromentVars:envVars, wait:true);// start Gamescope with Steam in console mode, VRR
         Log.WriteLine(result);
     }
 }

@@ -32,7 +32,7 @@ internal class Program
         // detect system hardware
         try
         {
-            string productName = ProcessUtil.Run("dmidecode", "-s system-product-name");
+            string productName = ProcessUtil.Run("dmidecode", "-s system-product-name", out _);
             Log.WriteLine("Product: " + productName.TrimEnd());
             if (productName == "Claw A1M") hardwareType = HardwareType.MSI_Claw_A1M;
             else if (productName.StartsWith("Claw ")) hardwareType = HardwareType.MSI_Claw;

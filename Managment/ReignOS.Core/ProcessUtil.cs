@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 public static class ProcessUtil
 {
-    public static string Run(string name, string args, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false)
+    public static string Run(string name, string args, out int exitCode, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false)
     {
         using (var process = new Process())
         {
@@ -42,6 +42,7 @@ public static class ProcessUtil
             if (wait)
             {
                 process.WaitForExit();
+                exitCode = process.ExitCode;
                 var builder = new StringBuilder();
                 builder.Append(process.StandardOutput.ReadToEnd());
                 builder.Append(process.StandardError.ReadToEnd());
@@ -49,24 +50,31 @@ public static class ProcessUtil
             }
             else
             {
+                exitCode = 0;
                 return string.Empty;
             }
         }
     }
 
-    public static void Kill(string name, bool asAdmin)
+    public static void KillHard(string name, bool asAdmin, out int exitCode)
     {
         if (asAdmin)
         {
-            Run(name, "", null, wait:true, asAdmin:true);
+            Run("pkill", name, out exitCode, wait:true, asAdmin:true);
         }
         else
         {
+            exitCode = 0;
             foreach (var process in Process.GetProcessesByName(name))
             {
                 process.Kill();
                 process.Dispose();
             }
         }
+    }
+
+    public static void KillSoft(string name, bool asAdmin, out int exitCode)
+    {
+        Run("pkill", "-SIGINT " + name, out exitCode, wait:true, asAdmin:asAdmin);
     }
 }
