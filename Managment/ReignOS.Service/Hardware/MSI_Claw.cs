@@ -26,9 +26,9 @@ public static class MSI_Claw
         if (!device.Init(0x0DB0, 0x1901, true))
         {
             Log.WriteLine("WTF");
-            device.Dispose();
-            device = null;
-            return;
+            //device.Dispose();
+            //device = null;
+            //return;
         }
         
         Log.WriteLine("MSI-Claw gamepad found");
@@ -73,7 +73,7 @@ public static class MSI_Claw
 
     public static void Update(bool resumeFromSleep)
     {
-        if (resumeFromSleep)
+        /*if (resumeFromSleep)
         {
             if (device != null) EnableMode(Mode.XInput);
         }
@@ -91,6 +91,6 @@ public static class MSI_Claw
                     VirtualGamepad.Write_TriggerRightSteamMenu();
                 }
             }
-        }
+        }*/
     }
 }

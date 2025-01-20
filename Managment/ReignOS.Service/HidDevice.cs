@@ -11,8 +11,8 @@ public unsafe class HidDevice
     
     public bool Init(ushort vendorID, ushort productID, bool openAll)
     {
-        const int bufferSize = 256;
-        byte* buffer = stackalloc byte[bufferSize];
+        //const int bufferSize = 256;
+        //byte* buffer = stackalloc byte[bufferSize];
         handles = new List<int>();
         
         // scan devices
@@ -33,7 +33,7 @@ public unsafe class HidDevice
                 Log.WriteLine($"HID device found type:{BusType(info.bustype)} vendorID:{vendorID} productID:{productID} path:{path}");
                 handles.Add(handle);
 
-                // get Report Descriptor Size
+                /*// get Report Descriptor Size
                 int descSize = 0;
                 if (c.ioctl(handle, hid.HIDIOCGRDESCSIZE, &descSize) < 0)
                 {
@@ -60,7 +60,7 @@ public unsafe class HidDevice
                         for (i = 0; i < reportDesc.size; i++) Console.Write(reportDesc.value[i].ToString("x"));
                         Console.WriteLine();
                     }
-                }
+                }*/
             
                 /*// get name
                 NativeUtils.ZeroMemory(buffer, bufferSize);
