@@ -101,9 +101,9 @@ internal class Program
         {
             switch (compositor)
             {
-                case Compositor.None: Thread.Sleep(3000);
+                case Compositor.None: Thread.Sleep(6000);
                     Log.WriteLine("No Compositor specified");
-                    break;// sleep for 3 seconds to allow for service bootup testing
+                    break;// sleep for 6 seconds to allow for service bootup testing
 
                 case Compositor.Cage: StartCompositor_Cage(); break;
                 case Compositor.Gamescope: StartCompositor_Gamescope(); break;

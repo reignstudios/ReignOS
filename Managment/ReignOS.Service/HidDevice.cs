@@ -56,7 +56,7 @@ public unsafe class HidDevice
                     }
                     else
                     {
-                        Log.Write("Report Descriptor:");
+                        Log.Write("Report Descriptor: ");
                         for (i = 0; i < reportDesc.size; i++) Console.Write(reportDesc.value[i].ToString("x"));
                         Console.WriteLine();
                     }
