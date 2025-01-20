@@ -116,9 +116,9 @@ internal class Program
             ProcessUtil.KillSoft("ReignOS.Service", true, out int exitCode);
             Thread.Sleep(2000);
 
-            //Log.WriteLine("Hard Killing service");
-            //serviceProcess.Kill();
-            //ProcessUtil.KillHard("ReignOS.Service", true, out exitCode);
+            Log.WriteLine("Hard Killing service (just in case)");
+            serviceProcess.Kill();
+            ProcessUtil.KillHard("ReignOS.Service", true, out exitCode);
         }
     }
 

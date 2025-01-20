@@ -109,6 +109,7 @@ internal class Program
 
     private static void ExitEvent(object sender, ConsoleCancelEventArgs e)
     {
+        Log.WriteLine("Console Exit event");
         e.Cancel = true;
         exit = true;
     }
