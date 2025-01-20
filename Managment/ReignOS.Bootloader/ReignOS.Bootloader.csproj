@@ -9,6 +9,15 @@
     <ProjectReference Include="..\ReignOS.Core\ReignOS.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Start_Cage.sh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Start_Gamescope.sh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <Target Name="CopyService" AfterTargets="Publish">
     <ItemGroup>
       <FilesToCopy Include="$(MSBuildProjectDirectory)/../ReignOS.Service/bin/Release/net8.0/$(RuntimeIdentifier)/publish/*.*" />
