@@ -75,6 +75,6 @@ public static class ProcessUtil
 
     public static void KillSoft(string name, bool asAdmin, out int exitCode)
     {
-        Run("pkill", "-SIGINT " + name, out exitCode, wait:true, asAdmin:asAdmin);
+        Run("pkill", $"-SIGINT \"{name}\"", out exitCode, wait:true, asAdmin:asAdmin);
     }
 }
