@@ -20,7 +20,9 @@ internal class Program
     
     static void Main(string[] args)
     {
+        Log.prefix = "ReignOS.Service: ";
         Log.WriteLine("Service started");
+        AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         Console.CancelKeyPress += ExitEvent;
         LibraryResolver.Init(Assembly.GetExecutingAssembly());
         
@@ -82,5 +84,11 @@ internal class Program
     {
         e.Cancel = true;
         exit = true;
+    }
+
+    private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        if (e != null) Log.WriteLine($"Unhandled exception: {e}");
+        else Log.WriteLine("Unhandled exception: Unknown");
     }
 }

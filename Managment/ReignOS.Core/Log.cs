@@ -8,9 +8,12 @@ using System.Threading.Tasks;
 
 public static class Log
 {
+    public static object lockObj = new object();
+    public static string prefix = "ReignOS: ";
+
     public static void Write(string message)
     {
-        Console.Write("ReignOS: " + message);
+        lock (lockObj) Console.Write(prefix + message);
     }
 
     public static void Write(object o)
@@ -20,7 +23,7 @@ public static class Log
     
     public static void WriteLine(string message)
     {
-        Console.WriteLine("ReignOS: " + message);
+        lock (lockObj) Console.WriteLine(prefix + message);
     }
 
     public static void WriteLine(object o)
@@ -30,15 +33,18 @@ public static class Log
     
     public unsafe static void WriteLine(string header, byte* nativeText)
     {
-        Console.Write("ReignOS: " + header);
-        int i = 0;
-        char c = (char)nativeText[0];
-        while (c != '\0')
+        lock (lockObj)
         {
-            Console.Write(c);
-            i++;
-            c = (char)nativeText[i];
+            Console.Write(prefix + header);
+            int i = 0;
+            char c = (char)nativeText[0];
+            while (c != '\0')
+            {
+                Console.Write(c);
+                i++;
+                c = (char)nativeText[i];
+            }
+            Console.WriteLine();
         }
-        Console.WriteLine();
     }
 }

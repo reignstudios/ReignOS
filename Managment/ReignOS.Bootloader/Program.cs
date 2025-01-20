@@ -29,7 +29,9 @@ internal class Program
     
     static void Main(string[] args)
     {
+        Log.prefix = "ReignOS.Bootloader: ";
         Log.WriteLine("Bootloader started");
+        AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         LibraryResolver.Init(Assembly.GetExecutingAssembly());
 
         // kill service if its currently running
@@ -54,7 +56,7 @@ internal class Program
                         serviceProcess.StandardInput.WriteLine("gamer");
                         serviceProcess.StandardInput.Flush();
                     }
-                    Console.WriteLine(args.Data);
+                    lock (Log.lockObj) Console.WriteLine(args.Data);
                 }
             };
             serviceProcess.ErrorDataReceived += (sender, args) =>
@@ -66,7 +68,7 @@ internal class Program
                         serviceProcess.StandardInput.WriteLine("gamer");
                         serviceProcess.StandardInput.Flush();
                     }
-                    Console.WriteLine(args.Data);
+                    lock (Log.lockObj) Console.WriteLine(args.Data);
                 }
             };
             serviceProcess.Start();
@@ -101,8 +103,9 @@ internal class Program
         {
             switch (compositor)
             {
-                case Compositor.None: Thread.Sleep(6000);
-                    Log.WriteLine("No Compositor specified");
+                case Compositor.None:
+                    Log.WriteLine("No Compositor specified (sleeping)");
+                    Thread.Sleep(6000);
                     break;// sleep for 6 seconds to allow for service bootup testing
 
                 case Compositor.Cage: StartCompositor_Cage(); break;
@@ -127,7 +130,13 @@ internal class Program
             }
         }
     }
-    
+
+    private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        if (e != null) Log.WriteLine($"Unhandled exception: {e}");
+        else Log.WriteLine("Unhandled exception: Unknown");
+    }
+
     private static void StartCompositor_Cage()
     {
         var envVars = new Dictionary<string, string>()
