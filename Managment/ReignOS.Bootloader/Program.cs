@@ -54,7 +54,7 @@ internal class Program
                         serviceProcess.StandardInput.WriteLine("gamer");
                         serviceProcess.StandardInput.Flush();
                     }
-                    Log.WriteLine(args.Data);
+                    Console.WriteLine(args.Data);
                 }
             };
             serviceProcess.ErrorDataReceived += (sender, args) =>
@@ -66,7 +66,7 @@ internal class Program
                         serviceProcess.StandardInput.WriteLine("gamer");
                         serviceProcess.StandardInput.Flush();
                     }
-                    Log.WriteLine(args.Data);
+                    Console.WriteLine(args.Data);
                 }
             };
             serviceProcess.Start();
@@ -101,7 +101,10 @@ internal class Program
         {
             switch (compositor)
             {
-                case Compositor.None: Thread.Sleep(2000); break;// sleep for 2 seconds to allow for service testing
+                case Compositor.None: Thread.Sleep(3000);
+                    Log.WriteLine("No Compositor specified");
+                    break;// sleep for 3 seconds to allow for service bootup testing
+
                 case Compositor.Cage: StartCompositor_Cage(); break;
                 case Compositor.Gamescope: StartCompositor_Gamescope(); break;
             }
@@ -116,8 +119,12 @@ internal class Program
         SHUTDOWN:;
         if (serviceProcess != null && !serviceProcess.HasExited)
         {
-            Log.WriteLine("Killing service");
-            if (SoftKillService(serviceProcess) != 0) serviceProcess.Kill();
+            Log.WriteLine("Soft Killing service");
+            if (SoftKillService(serviceProcess) != 0)
+            {
+                Log.WriteLine("Hard Killing service");
+                serviceProcess.Kill();
+            }
         }
     }
     
