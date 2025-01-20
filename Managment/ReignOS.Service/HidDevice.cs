@@ -11,8 +11,8 @@ public unsafe class HidDevice
     
     public bool Init(ushort vendorID, ushort productID, bool openAll)
     {
-        //const int bufferSize = 256;
-        //byte* buffer = stackalloc byte[bufferSize];
+        const int bufferSize = 256;
+        byte* buffer = stackalloc byte[bufferSize];
         handles = new List<int>();
         
         // scan devices
@@ -62,7 +62,7 @@ public unsafe class HidDevice
                     }
                 }*/
             
-                /*// get name
+                // get name
                 NativeUtils.ZeroMemory(buffer, bufferSize);
                 if (c.ioctl(handle, hid.HIDIOCGRAWNAME_256, buffer) < 0)
                 {
@@ -71,10 +71,10 @@ public unsafe class HidDevice
                 else
                 {
                     Log.WriteLine("HID Name: ", buffer);
-                }*/
+                }
 
                 // get physical location
-                /*NativeUtils.ZeroMemory(buffer, bufferSize);
+                NativeUtils.ZeroMemory(buffer, bufferSize);
                 if (c.ioctl(handle, hid.HIDIOCGRAWPHYS_256, buffer) < 0)
                 {
                     Log.WriteLine("Failed: HIDIOCGRAWPHYS");
@@ -82,7 +82,7 @@ public unsafe class HidDevice
                 else
                 {
                     Log.WriteLine("HID Physical Location: ", buffer);
-                }*/
+                }
 
                 if (!openAll) return true;
                 continue;// don't close this handle
