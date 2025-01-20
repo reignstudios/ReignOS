@@ -97,11 +97,14 @@ internal class Program
             // update keyboard
             keyboardInput.ReadNextKey(out ushort key, out bool keyPressed);
 
-            // update volume
-            // TODO:
-
             // update devices
             if (MSI_Claw.isEnabled) MSI_Claw.Update(resumeFromSleep, key, keyPressed);
+
+            // update volume
+            // TODO
+
+            // handle special close steam events
+            // TODO
 
             // sleep thread
             Thread.Sleep(1000 / 30);

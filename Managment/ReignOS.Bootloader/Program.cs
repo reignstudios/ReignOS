@@ -130,11 +130,6 @@ internal class Program
 
     private static void StartCompositor_Cage()
     {
-        /*var envVars = new Dictionary<string, string>()
-        {
-            { "CUSTOM_REFRESH_RATES", "30,60,120" },
-            { "STEAM_DISPLAY_REFRESH_LIMITS", "30,60,120" }
-        };*/
         ProcessUtil.Run("chmod", "+x ./Start_Cage.sh", out _, wait:true);
         string result = ProcessUtil.Run("cage", "-- ./Start_Cage.sh", out _, enviromentVars:null, wait:true);// start Cage with Steam in console mode
         Log.WriteLine(result);
@@ -142,14 +137,8 @@ internal class Program
 
     private static void StartCompositor_Gamescope()
     {
-        //var envVars = new Dictionary<string, string>()
-        //{
-        //    { "CUSTOM_REFRESH_RATES", "30,60,120" },
-        //    { "STEAM_DISPLAY_REFRESH_LIMITS", "30,60,120" }
-        //};
         ProcessUtil.Run("chmod", "+x ./Start_Gamescope.sh", out _, wait:true);
-        // Other Options: -e
-        string result = ProcessUtil.Run("gamescope-ex", "-e -f --adaptive-sync -- ./Start_Gamescope.sh", out _, enviromentVars:null, wait:true);// start Gamescope with Steam in console mode, VRR
+        string result = ProcessUtil.Run("gamescope", "-e -f --adaptive-sync -- ./Start_Gamescope.sh", out _, enviromentVars:null, wait:true);// start Gamescope with Steam in console mode, VRR
         Log.WriteLine(result);
     }
 }
