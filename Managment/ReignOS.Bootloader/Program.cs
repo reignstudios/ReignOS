@@ -136,9 +136,9 @@ internal class Program
             { "STEAM_DISPLAY_REFRESH_LIMITS", "30,60,120" }
         };
 
-        string launchArg = "steam -bigpicture -steamdeck";
-        launchArg += " & unclutter -idle 3";// hide mouse after 3 seconds
-        //launchArg += " & wlr-randr --output eDP-1 --transform 90 --adaptive-sync enabled";// TODO: rotate screen or enable VRR
+        string launchArg = "unclutter -idle 3 &";// hide mouse after 3 seconds
+        //launchArg += " wlr-randr --output eDP-1 --transform 90 --adaptive-sync enabled &";// TODO: rotate screen or enable VRR
+        launchArg += " steam -bigpicture -steamdeck";
         string result = ProcessUtil.Run("cage", "-- " + launchArg, out _, enviromentVars:envVars, wait:true);// start Cage with Steam in console mode
         Log.WriteLine(result);
     }
