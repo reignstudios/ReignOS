@@ -6,9 +6,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Reflection;
+using System.Threading;
 
 enum Compositor
 {
+    None,
     Cage,
     Gamescope
 }
@@ -82,7 +84,7 @@ internal class Program
         }
 
         // start compositor
-        var compositor = Compositor.Cage;
+        var compositor = Compositor.None;
         foreach (string arg in args)
         {
             if (arg == "--cage")
@@ -99,6 +101,7 @@ internal class Program
         {
             switch (compositor)
             {
+                case Compositor.None: Thread.Sleep(2000); break;// sleep for 2 seconds to allow for service testing
                 case Compositor.Cage: StartCompositor_Cage(); break;
                 case Compositor.Gamescope: StartCompositor_Gamescope(); break;
             }
