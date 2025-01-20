@@ -32,35 +32,6 @@ public unsafe class HidDevice
             {
                 Log.WriteLine($"HID device found type:{BusType(info.bustype)} vendorID:{vendorID} productID:{productID} path:{path}");
                 handles.Add(handle);
-
-                /*// get Report Descriptor Size
-                int descSize = 0;
-                if (c.ioctl(handle, hid.HIDIOCGRDESCSIZE, &descSize) < 0)
-                {
-                    descSize = 0;
-                    Log.WriteLine("Failed: HIDIOCGRDESCSIZE");
-                }
-                else
-                {
-                    Log.WriteLine($"Report Descriptor Size: {descSize}");
-                }
-
-                // get Report Descriptor
-                if (descSize > 0)
-                {
-                    var reportDesc = new hid.hidraw_report_descriptor();
-                    reportDesc.size = (uint)descSize;
-                    if (c.ioctl(handle, hid.HIDIOCGRDESC, &reportDesc) < 0)
-                    {
-                        Log.WriteLine("Failed: HIDIOCGRDESC");
-                    }
-                    else
-                    {
-                        Log.Write("Report Descriptor: ");
-                        for (i = 0; i < reportDesc.size; i++) Console.Write(reportDesc.value[i].ToString("x"));
-                        Console.WriteLine();
-                    }
-                }*/
             
                 // get name
                 NativeUtils.ZeroMemory(buffer, bufferSize);

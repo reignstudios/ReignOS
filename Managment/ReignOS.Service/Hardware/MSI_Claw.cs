@@ -31,10 +31,10 @@ public static class MSI_Claw
         }
         
         Log.WriteLine("MSI-Claw gamepad found");
-        //if (EnableMode(Mode.XInput))
+        if (EnableMode(Mode.XInput))
         {
-            //keyboardInput = new KeyboardInput();
-            //keyboardInput.Init("AT Translated Set 2 keyboard", true, 0x1, 0x1);
+            keyboardInput = new KeyboardInput();
+            keyboardInput.Init("AT Translated Set 2 keyboard", true, 0x1, 0x1);
         }
     }
     
@@ -72,7 +72,7 @@ public static class MSI_Claw
 
     public static void Update(bool resumeFromSleep)
     {
-        /*if (resumeFromSleep)
+        if (resumeFromSleep)
         {
             if (device != null) EnableMode(Mode.XInput);
         }
@@ -90,6 +90,6 @@ public static class MSI_Claw
                     VirtualGamepad.Write_TriggerRightSteamMenu();
                 }
             }
-        }*/
+        }
     }
 }
