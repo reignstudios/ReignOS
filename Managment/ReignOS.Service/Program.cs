@@ -74,8 +74,11 @@ internal class Program
         }
 
         // if no hardware has known keyboard find generic one
-        keyboardInput = new KeyboardInput();
-        keyboardInput.Init(null, false, 0, 0);
+        if (keyboardInput == null)
+        {
+            keyboardInput = new KeyboardInput();
+            keyboardInput.Init(null, false, 0, 0);
+        }
 
         // run events
         Log.WriteLine("Running events...");
