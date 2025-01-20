@@ -135,13 +135,7 @@ internal class Program
             { "CUSTOM_REFRESH_RATES", "30,60,120" },
             { "STEAM_DISPLAY_REFRESH_LIMITS", "30,60,120" }
         };*/
-
-        //string launchArg = "unclutter -idle 3 &";// hide mouse after 3 seconds
-        ////launchArg += " wlr-randr --output eDP-1 --transform 90 --adaptive-sync enabled &";// TODO: rotate screen or enable VRR
-        //launchArg += " steam -bigpicture -steamdeck";
-        //string result = ProcessUtil.Run("cage", "-- " + launchArg, out _, enviromentVars:envVars, wait:true);// start Cage with Steam in console mode
-        //Log.WriteLine(result);
-
+        ProcessUtil.Run("chmod", "+x ./Start_Cage.sh", out _, wait:true);
         string result = ProcessUtil.Run("cage", "-- ./Start_Cage.sh", out _, enviromentVars:null, wait:true);// start Cage with Steam in console mode
         Log.WriteLine(result);
     }
@@ -153,9 +147,7 @@ internal class Program
         //    { "CUSTOM_REFRESH_RATES", "30,60,120" },
         //    { "STEAM_DISPLAY_REFRESH_LIMITS", "30,60,120" }
         //};
-        //string result = ProcessUtil.Run("gamescope", "-e -f --adaptive-sync -- steam -bigpicture -steamdeck", out _, enviromentVars:envVars, wait:true);// start Gamescope with Steam in console mode, VRR
-        //Log.WriteLine(result);
-
+        ProcessUtil.Run("chmod", "+x ./Start_Gamescope.sh", out _, wait:true);
         string result = ProcessUtil.Run("gamescope", "-e -f --adaptive-sync -- ./Start_Gamescope.sh", out _, enviromentVars:null, wait:true);// start Gamescope with Steam in console mode, VRR
         Log.WriteLine(result);
     }
