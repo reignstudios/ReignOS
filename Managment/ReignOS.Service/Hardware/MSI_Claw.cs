@@ -25,9 +25,9 @@ public static class MSI_Claw
         device = new HidDevice();
         if (!device.Init(0x0DB0, 0x1901, true))
         {
-            device.Dispose();
-            device = null;
-            return;
+            //device.Dispose();
+            //device = null;
+            //return;
         }
         
         Log.WriteLine("MSI-Claw gamepad found");
