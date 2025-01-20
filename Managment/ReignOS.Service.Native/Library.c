@@ -1,4 +1,4 @@
-#include <fcntl.h>
+#include <sys/ioctl.h>
 
 int ioctl_var_arg0(int __fd, unsigned long int __request)
 {
