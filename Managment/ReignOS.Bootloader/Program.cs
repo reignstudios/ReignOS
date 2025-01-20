@@ -138,7 +138,7 @@ internal class Program
     private static void StartCompositor_Gamescope()
     {
         ProcessUtil.Run("chmod", "+x ./Start_Gamescope.sh", out _, wait:true);
-        string result = ProcessUtil.Run("gamescope", "-e -f --adaptive-sync -- ./Start_Gamescope.sh", out _, enviromentVars:null, wait:true);// start Gamescope with Steam in console mode, VRR
+        string result = ProcessUtil.Run("gamescopesteam", "-e -f --adaptive-sync -- ./Start_Gamescope.sh", out _, enviromentVars:null, wait:true);// start Gamescope with Steam in console mode, VRR
         Log.WriteLine(result);
     }
 }
