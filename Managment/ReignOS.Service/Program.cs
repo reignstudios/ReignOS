@@ -5,7 +5,6 @@ using ReignOS.Service.Hardware;
 using System;
 using System.Reflection;
 using System.Threading;
-using HidSharp;
 
 enum HardwareType
 {
@@ -46,10 +45,7 @@ internal class Program
         // detect device & configure hardware
         try
         {
-            foreach (var device in DeviceList.Local.GetHidDevices())
-            {
-                MSI_Claw.Configure(device);
-            }
+            MSI_Claw.Configure();
         }
         catch (Exception e)
         {

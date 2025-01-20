@@ -14,6 +14,7 @@ public unsafe static class c
 
     public const int O_RDONLY = 00;
     public const int O_WRONLY = 01;
+    public const int O_RDWR = 02;
     public const int O_NONBLOCK = 04000;
     
     [StructLayout(LayoutKind.Sequential)]

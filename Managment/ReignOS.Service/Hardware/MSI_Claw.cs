@@ -1,7 +1,6 @@
 namespace ReignOS.Service.Hardware;
 using ReignOS.Core;
 using ReignOS.Service.OS;
-using HidSharp;
 using System.Threading;
 
 public static class MSI_Claw
@@ -21,12 +20,19 @@ public static class MSI_Claw
     private static HidDevice device;
     private static KeyboardInput keyboardInput;
 
-    public static void Configure(HidDevice device)
+    public static void Configure()
     {
-        if (device.VendorID != 0x0DB0 || device.ProductID != 0x1901) return;
-        if (EnableMode(device, Mode.XInput))
+        device = new HidDevice();
+        if (!device.Init(0x0DB0, 0x1901, true))
         {
-            MSI_Claw.device = device;
+            device.Dispose();
+            device = null;
+            return;
+        }
+        
+        Log.WriteLine("MSI-Claw gamepad found");
+        if (EnableMode(Mode.XInput))
+        {
             keyboardInput = new KeyboardInput();
             keyboardInput.Init(0x1, 0x1);
         }
@@ -41,76 +47,47 @@ public static class MSI_Claw
         }
     }
 
-    private static bool EnableMode(HidDevice device, Mode mode)
+    private static bool EnableMode(Mode mode)
     {
-        if (!device.TryOpen(out var hidStream)) return false;
-        Log.WriteLine("MSI-Claw gamepad found");
-			
-        using (hidStream)
+        int i = 0;
+        var buffer = new byte[8];
+        buffer[i++] = 15;// report id
+        buffer[i++] = 0;
+        buffer[i++] = 0;
+        buffer[i++] = 60;
+        buffer[i++] = 36;// we want to switch mode
+        buffer[i++] = (byte)mode;// mode
+        buffer[i++] = 0;
+        buffer[i++] = 0;
+        if (!device.WriteData(buffer, 0, buffer.Length))
         {
-            try
-            {
-                int i = 0;
-                var writeBuf = new byte[8];
-                writeBuf[i++] = 15;// report id
-                writeBuf[i++] = 0;
-                writeBuf[i++] = 0;
-                writeBuf[i++] = 60;
-                writeBuf[i++] = 36;// we want to switch mode
-                writeBuf[i++] = (byte)mode;// mode
-                writeBuf[i++] = 0;
-                writeBuf[i++] = 0;
-                hidStream.Write(writeBuf);
-                Log.WriteLine("MSI-Claw gamepad mode set");
-                isEnabled = true;
-                return true;
-            }
-            catch { }
+            Log.WriteLine("FAILED: To set MSI-Claw gamepad mode");
+            return false;
         }
-
-        return false;
+        
+        Log.WriteLine("MSI-Claw gamepad mode set");
+        isEnabled = true;
+        return true;
     }
 
     public static void Update(bool resumeFromSleep)
     {
         if (resumeFromSleep)
         {
-            if (device != null) EnableMode(device, Mode.XInput);
+            if (device != null) EnableMode(Mode.XInput);
         }
         else
         {
-            // TODO: get F15 and F16 buttons and relay them to VirtualGamepad
+            // relay OEM buttons to virtual gamepad input
             if (keyboardInput != null && keyboardInput.ReadNextKey(out ushort key, out bool pressed))
             {
-                if (key == input.KEY_F15)
+                if (key == input.KEY_F15 && !pressed)
                 {
-                    // relay left menu button
-                    VirtualGamepad.StartWrites();
-                    VirtualGamepad.WriteButton(input.BTN_MODE, pressed);
-                    VirtualGamepad.EndWrites();
+                    VirtualGamepad.Write_TriggerLeftSteamMenu();
                 }
                 else if (key == input.KEY_F16 && !pressed)
                 {
-                    // hold guide
-                    VirtualGamepad.StartWrites();
-                    VirtualGamepad.WriteButton(input.BTN_MODE, true);
-                    VirtualGamepad.EndWrites();
-                    
-                    // tap A
-                    Thread.Sleep(100);
-                    VirtualGamepad.StartWrites();
-                    VirtualGamepad.WriteButton(input.BTN_A, true);
-                    VirtualGamepad.EndWrites();
-                    
-                    Thread.Sleep(100);
-                    VirtualGamepad.StartWrites();
-                    VirtualGamepad.WriteButton(input.BTN_A, false);
-                    VirtualGamepad.EndWrites();
-                    
-                    // release guide
-                    VirtualGamepad.StartWrites();
-                    VirtualGamepad.WriteButton(input.BTN_MODE, false);
-                    VirtualGamepad.EndWrites();
+                    VirtualGamepad.Write_TriggerRightSteamMenu();
                 }
             }
         }

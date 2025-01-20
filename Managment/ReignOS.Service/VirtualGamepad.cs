@@ -5,6 +5,7 @@ using ReignOS.Core;
 using System;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 public unsafe static class VirtualGamepad
 {
@@ -45,7 +46,7 @@ public unsafe static class VirtualGamepad
         c.ioctl(handle, input.UI_SET_KEYBIT, input.BTN_SELECT);
         
         c.write(handle, &uidev, (UIntPtr)Marshal.SizeOf<input.uinput_user_dev>());
-        if (c.ioctl(handle, input.UI_DEV_CREATE) != 0)
+        if (c.ioctl(handle, input.UI_DEV_CREATE) < 0)
         {
             Log.WriteLine("Error creating uinput device");
             c.close(handle);
@@ -87,6 +88,44 @@ public unsafe static class VirtualGamepad
         e.type = input.EV_SYN;
         e.code = input.SYN_REPORT;
         c.write(handle, &e, (UIntPtr)Marshal.SizeOf<input.input_event>());
+    }
+
+    public static void Write_TriggerLeftSteamMenu()
+    {
+        // press
+        StartWrites();
+        WriteButton(input.BTN_MODE, true);
+        EndWrites();
+        
+        // release
+        Thread.Sleep(100);
+        StartWrites();
+        WriteButton(input.BTN_MODE, false);
+        EndWrites();
+    }
+
+    public static void Write_TriggerRightSteamMenu()
+    {
+        // hold guide
+        StartWrites();
+        WriteButton(input.BTN_MODE, true);
+        EndWrites();
+                    
+        // tap A
+        Thread.Sleep(100);
+        StartWrites();
+        WriteButton(input.BTN_A, true);
+        EndWrites();
+                    
+        Thread.Sleep(100);
+        StartWrites();
+        WriteButton(input.BTN_A, false);
+        EndWrites();
+                    
+        // release guide
+        StartWrites();
+        WriteButton(input.BTN_MODE, false);
+        EndWrites();
     }
 }
 

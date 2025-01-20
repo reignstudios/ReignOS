@@ -11,8 +11,12 @@ using __s32 = System.Int32;
 public unsafe static class input
 {
     public const int UINPUT_MAX_NAME_SIZE = 80;
-    public const int BUS_USB = 0x03;
     public const uint EVIOCGID = 0x80084502;
+    
+    public const int BUS_USB = 0x03;
+    public const int BUS_HIL = 0x04;
+    public const int BUS_BLUETOOTH = 0x05;
+    public const int BUS_VIRTUAL = 0x06;
     
     public const int UI_DEV_CREATE = 0x5501;
     public const int UI_SET_EVBIT = 0x40045564;

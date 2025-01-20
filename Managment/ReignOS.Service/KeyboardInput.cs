@@ -12,6 +12,7 @@ public unsafe class KeyboardInput : IDisposable
     
     public void Init(ushort vendorID, ushort productID)
     {
+        // scan devices
         for (int i = 0; i != 32; ++i)
         {
             // open keyboard
@@ -23,12 +24,15 @@ public unsafe class KeyboardInput : IDisposable
             
             // validate hardware
             input.input_id id;
-            if (c.ioctl(handle, input.EVIOCGID, &id) != 0) continue;
+            if (c.ioctl(handle, input.EVIOCGID, &id) < 0) goto CONTINUE;
             if (id.vendor == vendorID && id.product == productID)
             {
                 Log.WriteLine($"Keyboard event device found vendorID:{vendorID} productID:{productID} path:{path}");
                 break;
             }
+            
+            // close
+            CONTINUE: c.close(handle);
         }
     }
     
@@ -44,7 +48,7 @@ public unsafe class KeyboardInput : IDisposable
     public bool ReadNextKey(out ushort key, out bool pressed)
     {
         var e = new input.input_event();
-        if (c.read(handle, &e, (UIntPtr)Marshal.SizeOf<input.input_event>()) != 0)
+        if (c.read(handle, &e, (UIntPtr)Marshal.SizeOf<input.input_event>()) < 0)
         {
             key = 0;
             pressed = false;
