@@ -47,13 +47,14 @@ internal class Program
         BindSignalEvents();
 
         // install SteamOS3 scripts
-        string srcPath = "./SteamOS3/steamos-polkit-helpers/";
+        string processPath = Path.GetDirectoryName(Environment.ProcessPath);
+        string srcPath = Path.Combine(processPath, "SteamOS3/steamos-polkit-helpers/");
         string dstPath = "/usr/bin/steamos-polkit-helpers/";
         InstallScript(Path.Combine(srcPath, "jupiter-biosupdate"), Path.Combine(dstPath, "jupiter-biosupdate"));
         InstallScript(Path.Combine(srcPath, "steamos-select-branch"), Path.Combine(dstPath, "steamos-select-branch"));
         InstallScript(Path.Combine(srcPath, "steamos-update"), Path.Combine(dstPath, "steamos-update"));
 
-        srcPath = "./SteamOS3/";
+        srcPath = Path.Combine(processPath, "SteamOS3/");
         dstPath = "/usr/bin/";
         InstallScript(Path.Combine(srcPath, "jupiter-biosupdate"), Path.Combine(dstPath, "jupiter-biosupdate"));
         InstallScript(Path.Combine(srcPath, "steam-http-loader"), Path.Combine(dstPath, "steam-http-loader"));
