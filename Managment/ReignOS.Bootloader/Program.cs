@@ -49,13 +49,13 @@ internal class Program
                     }
                     else if (value.Contains("SET_VOLUME_DOWN"))
                     {
-                        ProcessUtil.Run("amixer", "set Master 10%-", out _);
-                        ProcessUtil.Run("beep", "", out _);
+                        ProcessUtil.Run("amixer", "set Master 5%-", out _);
+                        //ProcessUtil.Run("beep", "", out _);
                     }
                     else if (value.Contains("SET_VOLUME_UP"))
                     {
-                        ProcessUtil.Run("amixer", "set Master 10%+", out _);
-                        ProcessUtil.Run("beep", "", out _);
+                        ProcessUtil.Run("amixer", "set Master 5%+", out _);
+                        //ProcessUtil.Run("beep", "", out _);
                     }
                     lock (Log.lockObj) Console.WriteLine(value);
                 }
@@ -144,7 +144,7 @@ internal class Program
     private static void StartCompositor_Cage()
     {
         ProcessUtil.Run("chmod", "+x ./Start_Cage.sh", out _, wait:true);
-        string result = ProcessUtil.Run("cage", "-d -s -- ./Start_Cage.sh", out _, enviromentVars:null, wait:true);// start Cage with Steam in console mode
+        string result = ProcessUtil.Run("cage", "-s -- ./Start_Cage.sh", out _, enviromentVars:null, wait:true);// start Cage with Steam in console mode
         Log.WriteLine(result);
     }
 
