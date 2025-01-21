@@ -124,6 +124,7 @@ internal class Program
 
         // stop service
         SHUTDOWN:;
+        ProcessUtil.KillHard("udiskie", true, out _);
         if (serviceProcess != null && !serviceProcess.HasExited)
         {
             Log.WriteLine("Soft Killing service");
