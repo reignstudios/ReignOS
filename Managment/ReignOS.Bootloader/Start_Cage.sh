@@ -8,3 +8,6 @@ unclutter -idle 3 &
 
 # start steam
 steam -bigpicture -steamdeck
+
+# close unclutter
+echo "gamer" | sudo pkill "unclutter"
