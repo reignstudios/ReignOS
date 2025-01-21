@@ -121,13 +121,13 @@ internal class Program
             // update volume
             if (key == input.KEY_VOLUMEDOWN)
             {
-                ProcessUtil.Run("amixer", "set Master 10%-", out _);
-                ProcessUtil.Run("beep", "", out _);
+                ProcessUtil.Run("su", " - \"gamer\" -- amixer set Master 10%-", out _);
+                ProcessUtil.Run("su", " - \"gamer\" -- beep", out _);
             }
             else if (key == input.KEY_VOLUMEUP)
             {
-                ProcessUtil.Run("amixer", "set Master 10%+", out _);
-                ProcessUtil.Run("beep", "", out _);
+                ProcessUtil.Run("su", " - \"gamer\" -- amixer set Master 10%+", out _);
+                ProcessUtil.Run("su", " - \"gamer\" -- beep", out _);
             }
 
             // handle special close steam events
