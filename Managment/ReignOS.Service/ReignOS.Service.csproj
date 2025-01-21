@@ -14,6 +14,33 @@
       <Folder Include="SteamOS3\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="SteamOS3\jupiter-biosupdate">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="SteamOS3\steam-http-loader">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="SteamOS3\steamos-polkit-helpers\jupiter-biosupdate">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="SteamOS3\steamos-polkit-helpers\steamos-select-branch">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="SteamOS3\steamos-polkit-helpers\steamos-update">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="SteamOS3\steamos-select-branch">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="SteamOS3\steamos-session-select">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="SteamOS3\steamos-update">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
     <Target Name="BuildNativeLibrary" AfterTargets="Publish">
         <Exec Command="gcc -O2 -shared -fPIC -o $(PublishDir)/ReignOS.Service.Native.so $(MSBuildProjectDirectory)/../ReignOS.Service.Native/Library.c" />
     </Target>
