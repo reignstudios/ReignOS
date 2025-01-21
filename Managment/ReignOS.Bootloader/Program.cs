@@ -41,24 +41,36 @@ internal class Program
             {
                 if (args != null && args.Data != null)
                 {
-                    if (args.Data.Contains("[sudo] password for"))
+                    string value = args.Data;
+                    if (value.Contains("[sudo] password for"))
                     {
                         serviceProcess.StandardInput.WriteLine("gamer");
                         serviceProcess.StandardInput.Flush();
                     }
-                    lock (Log.lockObj) Console.WriteLine(args.Data);
+                    else if (value.Contains("SET_VOLUME_DOWN"))
+                    {
+                        ProcessUtil.Run("amixer", "set Master 10%-", out _);
+                        ProcessUtil.Run("beep", "", out _);
+                    }
+                    else if (value.Contains("SET_VOLUME_UP"))
+                    {
+                        ProcessUtil.Run("amixer", "set Master 10%+", out _);
+                        ProcessUtil.Run("beep", "", out _);
+                    }
+                    lock (Log.lockObj) Console.WriteLine(value);
                 }
             };
             serviceProcess.ErrorDataReceived += (sender, args) =>
             {
                 if (args != null && args.Data != null)
                 {
-                    if (args.Data.Contains("[sudo] password for"))
+                    string value = args.Data;
+                    if (value.Contains("[sudo] password for"))
                     {
                         serviceProcess.StandardInput.WriteLine("gamer");
                         serviceProcess.StandardInput.Flush();
                     }
-                    lock (Log.lockObj) Console.WriteLine(args.Data);
+                    lock (Log.lockObj) Console.WriteLine(value);
                 }
             };
             serviceProcess.Start();
