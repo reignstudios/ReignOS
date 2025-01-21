@@ -63,6 +63,7 @@ public static class ProcessUtil
         catch (Exception e)
         {
             exitCode = 0;
+            Log.WriteLine(e.Message);
             return e.Message;
         }
     }

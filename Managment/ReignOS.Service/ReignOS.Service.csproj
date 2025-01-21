@@ -10,6 +10,10 @@
       <ProjectReference Include="..\ReignOS.Core\ReignOS.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="SteamOS3\" />
+    </ItemGroup>
+
     <Target Name="BuildNativeLibrary" AfterTargets="Publish">
         <Exec Command="gcc -O2 -shared -fPIC -o $(PublishDir)/ReignOS.Service.Native.so $(MSBuildProjectDirectory)/../ReignOS.Service.Native/Library.c" />
     </Target>

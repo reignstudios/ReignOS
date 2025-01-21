@@ -4,6 +4,7 @@ using ReignOS.Service.Hardware;
 using ReignOS.Service.OS;
 
 using System;
+using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -44,6 +45,21 @@ internal class Program
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         LibraryResolver.Init(Assembly.GetExecutingAssembly());
         BindSignalEvents();
+
+        // install SteamOS3 scripts
+        string srcPath = "./SteamOS3/steamos-polkit-helpers/";
+        string dstPath = "/usr/bin/steamos-polkit-helpers/";
+        InstallScript(Path.Combine(srcPath, "jupiter-biosupdate"), Path.Combine(dstPath, "jupiter-biosupdate"));
+        InstallScript(Path.Combine(srcPath, "steamos-select-branch"), Path.Combine(dstPath, "steamos-select-branch"));
+        InstallScript(Path.Combine(srcPath, "steamos-update"), Path.Combine(dstPath, "steamos-update"));
+
+        srcPath = "./SteamOS3/";
+        dstPath = "/usr/bin/";
+        InstallScript(Path.Combine(srcPath, "jupiter-biosupdate"), Path.Combine(dstPath, "jupiter-biosupdate"));
+        InstallScript(Path.Combine(srcPath, "steam-http-loader"), Path.Combine(dstPath, "steam-http-loader"));
+        InstallScript(Path.Combine(srcPath, "steamos-select-branch"), Path.Combine(dstPath, "steamos-select-branch"));
+        InstallScript(Path.Combine(srcPath, "steamos-session-select"), Path.Combine(dstPath, "steamos-session-select"));
+        InstallScript(Path.Combine(srcPath, "steamos-update"), Path.Combine(dstPath, "steamos-update"));
 
         // init virtual gamepad
         VirtualGamepad.Init();
@@ -147,5 +163,19 @@ internal class Program
     {
         if (e != null) Log.WriteLine($"Unhandled exception: {e}");
         else Log.WriteLine("Unhandled exception: Unknown");
+    }
+
+    private static void InstallScript(string srcPath, string dstPath)
+    {
+        try
+        {
+            File.Copy(srcPath, dstPath, true);
+        }
+        catch (Exception e)
+        {
+            Log.WriteLine(e.Message);
+        }
+
+        ProcessUtil.Run("chmod", $"+x \"{dstPath}\"", out _);
     }
 }

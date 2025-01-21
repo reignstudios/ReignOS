@@ -36,6 +36,11 @@ genfstab -U /mnt >> /mnt/etc/fstab
 # Chroot into the Installed System
 arch-chroot /mnt
 
+# install apps/tools
+pacman -S nano
+pacman -S dmidecode udev
+pacman -S python
+
 # install Wayland and XWayland support
 pacman -S xorg-server-xwayland wayland wayland-protocols
 pacman -S xorg-xev xbindkeys xorg-xinput xorg-xmodmap
@@ -79,10 +84,6 @@ pactl set-default-sink <sink_name>
 # install power managment
 pacman -S acpi acpid powertop power-profiles-daemon
 pacman -S python-gobject
-
-# install apps/tools
-pacman -S nano
-pacman -S dmidecode udev
 
 # install steam
 nano /etc/pacman.conf
