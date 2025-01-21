@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # disable environment vars telling Steam to behave like a Deck (we want to keep exit Steam menu options)
-unset GAMESCOPE_WAYLAND_DISPLAY
+#unset GAMESCOPE_WAYLAND_DISPLAY
 #unset SRT_URLOPEN_PREFER_STEAM
 #unset STEAM_GAME_DISPLAY_0
 #unset STEAM_MANGOAPP_HORIZONTAL_SUPPORTED
@@ -26,7 +26,7 @@ unset GAMESCOPE_WAYLAND_DISPLAY
 #printenv &
 
 # start steam
-steam -bigpicture -steamdeck
+steam -bigpicture -steamdeck -steamos3
 #STEAM_PID=$!
 #wait $STEAM_PID
 
