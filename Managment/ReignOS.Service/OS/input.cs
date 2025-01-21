@@ -29,6 +29,8 @@ public unsafe static class input
     public const int EV_KEY = 0x1;
     
     public const int KEY_A = 30;
+    public const int KEY_VOLUMEDOWN = 114;
+    public const int KEY_VOLUMEUP = 115;
     public const int KEY_F15 = 185;
     public const int KEY_F16 = 186;
     

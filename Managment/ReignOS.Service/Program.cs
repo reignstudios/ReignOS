@@ -1,6 +1,7 @@
 ﻿namespace ReignOS.Service;
 using ReignOS.Core;
 using ReignOS.Service.Hardware;
+using ReignOS.Service.OS;
 
 using System;
 using System.Reflection;
@@ -101,10 +102,19 @@ internal class Program
             if (MSI_Claw.isEnabled) MSI_Claw.Update(resumeFromSleep, key, keyPressed);
 
             // update volume
-            // TODO
+            if (key == input.KEY_VOLUMEDOWN)
+            {
+                ProcessUtil.Run("amixer", "set Master 10%-", out _);
+                ProcessUtil.Run("beep", "", out _);
+            }
+            else if (key == input.KEY_VOLUMEUP)
+            {
+                ProcessUtil.Run("amixer", "set Master 10%+", out _);
+                ProcessUtil.Run("beep", "", out _);
+            }
 
             // handle special close steam events
-            // TODO
+            // TODO: invoke "steam -shutdown" if you hold Alt+F4 or Guide+B for more than 4 seconds
 
             // sleep thread
             Thread.Sleep(1000 / 30);

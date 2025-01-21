@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# disable environment vars telling Steam to behave like a Deck (we want to keep exit Steam menu options)
+# gamescope enables these.
+# Disabling GAMESCOPE_WAYLAND_DISPLAY disables "Switch to Desktop"
 #unset GAMESCOPE_WAYLAND_DISPLAY
 #unset SRT_URLOPEN_PREFER_STEAM
 #unset STEAM_GAME_DISPLAY_0

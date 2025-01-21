@@ -70,7 +70,8 @@ pacman -S network-manager-applet nm-connection-editor
 pacman -S alsa-utils alsa-plugins
 pacman -S sof-firmware
 pacman -S pipewire pipewire-pulse pipewire-alsa pipewire-jack
-# TODO: "amixer set Master 5%+" or "amixer set Master 5%-" needs to be called by C# app using libinput
+# NOTE: "amixer set Master 5%+" or "amixer set Master 5%-" needs to be called by C# app using libinput
+sudo pacman -S beep # call "beep to play current volume level"
 
 pactl list sinks short
 pactl set-default-sink <sink_name>

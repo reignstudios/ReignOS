@@ -12,50 +12,58 @@ public static class ProcessUtil
 {
     public static string Run(string name, string args, out int exitCode, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false)
     {
-        using (var process = new Process())
+        try
         {
-            if (asAdmin)
+            using (var process = new Process())
             {
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.FileName = "sudo";
-                process.StartInfo.Arguments = $"-S -- {name} {args}";
-                process.StartInfo.RedirectStandardInput = true;
-            }
-            else
-            {
-                process.StartInfo.FileName = name;
-                process.StartInfo.Arguments = args;
-            }
+                if (asAdmin)
+                {
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.FileName = "sudo";
+                    process.StartInfo.Arguments = $"-S -- {name} {args}";
+                    process.StartInfo.RedirectStandardInput = true;
+                }
+                else
+                {
+                    process.StartInfo.FileName = name;
+                    process.StartInfo.Arguments = args;
+                }
 
-            if (enviromentVars != null)
-            {
-                foreach (var v in enviromentVars) process.StartInfo.EnvironmentVariables[v.Key] = v.Value;
-            }
+                if (enviromentVars != null)
+                {
+                    foreach (var v in enviromentVars) process.StartInfo.EnvironmentVariables[v.Key] = v.Value;
+                }
 
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardError = true;
-            process.Start();
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.RedirectStandardError = true;
+                process.Start();
 
-            if (asAdmin)
-            {
-                process.StandardInput.WriteLine("gamer");
-                process.StandardInput.Flush();
-            }
+                if (asAdmin)
+                {
+                    process.StandardInput.WriteLine("gamer");
+                    process.StandardInput.Flush();
+                }
 
-            if (wait)
-            {
-                process.WaitForExit();
-                exitCode = process.ExitCode;
-                var builder = new StringBuilder();
-                builder.Append(process.StandardOutput.ReadToEnd());
-                builder.Append(process.StandardError.ReadToEnd());
-                return builder.ToString();
+                if (wait)
+                {
+                    process.WaitForExit();
+                    exitCode = process.ExitCode;
+                    var builder = new StringBuilder();
+                    builder.Append(process.StandardOutput.ReadToEnd());
+                    builder.Append(process.StandardError.ReadToEnd());
+                    return builder.ToString();
+                }
+                else
+                {
+                    exitCode = 0;
+                    return string.Empty;
+                }
             }
-            else
-            {
-                exitCode = 0;
-                return string.Empty;
-            }
+        }
+        catch (Exception e)
+        {
+            exitCode = 0;
+            return e.Message;
         }
     }
 
