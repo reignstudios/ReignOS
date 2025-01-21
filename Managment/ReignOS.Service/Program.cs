@@ -119,17 +119,11 @@ internal class Program
             if (MSI_Claw.isEnabled) MSI_Claw.Update(resumeFromSleep, key, keyPressed);
 
             // update volume
-            if (key == input.KEY_VOLUMEDOWN)
+            if (keyPressed)
             {
-                //ProcessUtil.Run("su", " - \"gamer\" -- amixer set Master 10%-", out _);
-                //ProcessUtil.Run("su", " - \"gamer\" -- beep", out _);
-                Console.WriteLine("SET_VOLUME_DOWN");
-            }
-            else if (key == input.KEY_VOLUMEUP)
-            {
-                //ProcessUtil.Run("su", " - \"gamer\" -- amixer set Master 10%+", out _);
-                //ProcessUtil.Run("su", " - \"gamer\" -- beep", out _);
-                Console.WriteLine("SET_VOLUME_UP");
+                // send signal to bootloader
+                if (key == input.KEY_VOLUMEDOWN) Console.WriteLine("SET_VOLUME_DOWN");
+                else if (key == input.KEY_VOLUMEUP) Console.WriteLine("SET_VOLUME_UP");
             }
 
             // handle special close steam events
