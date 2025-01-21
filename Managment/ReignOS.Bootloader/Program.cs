@@ -74,6 +74,7 @@ internal class Program
             Log.WriteLine(e);
             goto SHUTDOWN;
         }
+        Thread.Sleep(1000);// give service a sec to config anything needed before launching compositor
 
         // start compositor
         var compositor = Compositor.None;
