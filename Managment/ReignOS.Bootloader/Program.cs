@@ -12,7 +12,8 @@ enum Compositor
 {
     None,
     Cage,
-    Gamescope
+    Gamescope,
+    Labwc
 }
 
 internal class Program
@@ -23,6 +24,10 @@ internal class Program
         Log.WriteLine("Bootloader started");
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         LibraryResolver.Init(Assembly.GetExecutingAssembly());
+
+        // start auto mounting service
+        ProcessUtil.KillHard("udiskie", true, out _);
+        ProcessUtil.Run("udiskie", "--no-tray", out _, wait:false);
 
         // kill service if its currently running
         ProcessUtil.KillHard("ReignOS.Service", true, out _);
@@ -92,14 +97,9 @@ internal class Program
         var compositor = Compositor.None;
         foreach (string arg in args)
         {
-            if (arg == "--cage")
-            {
-                compositor = Compositor.Cage;
-            }
-            else if (arg == "--gamescope")
-            {
-                compositor = Compositor.Gamescope;
-            }
+            if (arg == "--cage") compositor = Compositor.Cage;
+            else if (arg == "--gamescope") compositor = Compositor.Gamescope;
+            else if (arg == "--labwc") compositor = Compositor.Labwc;
         }
 
         try
@@ -113,6 +113,7 @@ internal class Program
 
                 case Compositor.Cage: StartCompositor_Cage(); break;
                 case Compositor.Gamescope: StartCompositor_Gamescope(); break;
+                case Compositor.Labwc: StartCompositor_Labwc(); break;
             }
         }
         catch (Exception e)
@@ -144,7 +145,7 @@ internal class Program
     private static void StartCompositor_Cage()
     {
         ProcessUtil.Run("chmod", "+x ./Start_Cage.sh", out _, wait:true);
-        string result = ProcessUtil.Run("cage", "-s -- ./Start_Cage.sh", out _, enviromentVars:null, wait:true);// start Cage with Steam in console mode
+        string result = ProcessUtil.Run("cage", "-d -s -- ./Start_Cage.sh", out _, enviromentVars:null, wait:true);// start Cage with Steam in console mode
         Log.WriteLine(result);
     }
 
@@ -152,6 +153,12 @@ internal class Program
     {
         ProcessUtil.Run("chmod", "+x ./Start_Gamescope.sh", out _, wait:true);
         string result = ProcessUtil.Run("gamescope", "-e -f --adaptive-sync -- ./Start_Gamescope.sh", out _, enviromentVars:null, wait:true);// start Gamescope with Steam in console mode, VRR
+        Log.WriteLine(result);
+    }
+
+    private static void StartCompositor_Labwc()
+    {
+        string result = ProcessUtil.Run("labwc", "--session steam", out _, enviromentVars:null, wait:true);// start Labwc with Steam in desktop mode
         Log.WriteLine(result);
     }
 }

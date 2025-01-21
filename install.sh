@@ -64,6 +64,7 @@ pacman -S xf86-video-intel
 #install compositors
 pacman -S wlr-randr
 pacman -S wlroots
+pacman -S labwc
 pacman -S cage
 pacman -S gamescope
 
@@ -84,6 +85,11 @@ pactl set-default-sink <sink_name>
 # install power managment
 pacman -S acpi acpid powertop power-profiles-daemon
 pacman -S python-gobject
+
+# auto mount drives
+sudo pacman -S udiskie udisks2
+sudo nano /etc/udev/rules.d/99-automount.rules
+# ADD LINE: ACTION=="add", SUBSYSTEM=="block", ENV{ID_FS_TYPE}!="", RUN+="/usr/bin/udisksctl mount -b $env{DEVNAME}"
 
 # install steam
 nano /etc/pacman.conf
@@ -179,6 +185,13 @@ systemctl start acpid
 systemctl enable power-profiles-daemon
 systemctl start power-profiles-daemon
 
+# start auto mount
+sudo udevadm control --reload-rules
+sudo systemctl start udisks2
+sudo systemctl enable udisks2
+udiskie --no-tray & # run this in Bootloader
+# NOTE: After auto-mounting a new drive run: sudo chown -R gamer:gamer /run/media/gamer/<disk-label>
+
 # reboot and login into gamer/gamer user
 
 # launch steam Cage
@@ -195,6 +208,9 @@ cage start.sh
 gamescope -e --fullscreen --adaptive-sync --steam -- steam -steamdeck
 
 NOTE: -bigpicture is older UI while -tenfoot is newer supposadly
+
+# launch Labwc (used to launch steam in windowed mode and close on exit)
+labwc --session steam
 
 # TODO: send key events over dbus
 xdotool # for X11
