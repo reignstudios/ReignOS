@@ -5,11 +5,11 @@ Before=shutdown.target poweroff.target reboot.target
 
 [Service]
 Type=oneshot
-ExecStart=/bin/true
-ExecStop=/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/CheckUpdates.sh
+ExecStart=/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/CheckUpdates.sh
 User=gamer
 RemainAfterExit=yes
 TimeoutStopSec=infinity
+KillMode=none
 
 [Install]
 WantedBy=multi-user.target
