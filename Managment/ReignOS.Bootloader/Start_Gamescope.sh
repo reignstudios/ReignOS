@@ -35,3 +35,6 @@ steam -bigpicture -steamdeck -steamos3
 # -gamepadui (newer)
 # -tenfoot (older)
 # -bigpicture (oldest)
+
+# run post kill
+./PostKill.sh &

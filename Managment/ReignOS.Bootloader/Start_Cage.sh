@@ -11,3 +11,6 @@ steam -bigpicture -steamdeck
 
 # close unclutter
 echo "gamer" | sudo pkill "unclutter"
+
+# run post kill
+./PostKill.sh &
