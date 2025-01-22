@@ -4,5 +4,7 @@
 ./ReignOS.Bootloader $@
 
 # run post updater
-chmod +x ./CheckUpdates.sh
-./CheckUpdates.sh
+if ! [[ "$@" =~ --no-update ]]; then
+	chmod +x ./CheckUpdates.sh
+	./CheckUpdates.sh
+fi
