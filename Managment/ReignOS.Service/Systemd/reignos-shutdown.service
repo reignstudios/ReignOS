@@ -8,7 +8,7 @@ Type=oneshot
 ExecStart=/home/gamer/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/CheckUpdates.sh
 User=gamer
 RemainAfterExit=yes
-TimeoutStartSec=0
+TimeoutStartSec=infinity
 
 [Install]
 WantedBy=multi-user.target
