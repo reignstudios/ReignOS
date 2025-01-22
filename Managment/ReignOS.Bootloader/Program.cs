@@ -21,7 +21,7 @@ internal class Program
     static void Main(string[] args)
     {
         Log.prefix = "ReignOS.Bootloader: ";
-        Log.WriteLine("Bootloader started");
+        Log.WriteLine("Bootloader started: " + VersionInfo.version);
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         LibraryResolver.Init(Assembly.GetExecutingAssembly());
 
@@ -139,6 +139,8 @@ internal class Program
             serviceProcess.Kill();
             ProcessUtil.KillHard("ReignOS.Service", true, out exitCode);
         }
+
+        Environment.ExitCode = 9;// use to tell Launch.sh it can run updates
     }
 
     private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

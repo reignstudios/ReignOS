@@ -40,16 +40,23 @@ internal class Program
     static void Main(string[] args)
     {
         Log.prefix = "ReignOS.Service: ";
-        Log.WriteLine("Service started");
+        Log.WriteLine("Service started: " + VersionInfo.version);
 
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         LibraryResolver.Init(Assembly.GetExecutingAssembly());
         BindSignalEvents();
 
-        // install SteamOS3 scripts
+        // install Systemd services
         string processPath = Path.GetDirectoryName(Environment.ProcessPath);
-        string srcPath = Path.Combine(processPath, "SteamOS3/steamos-polkit-helpers/");
-        string dstPath = "/usr/bin/steamos-polkit-helpers/";
+        string srcPath = Path.Combine(processPath, "Systemd");
+        string dstPath = "/etc/systemd/system/";
+        InstallService(Path.Combine(srcPath, "reignos-shutdown.service"), Path.Combine(dstPath, "reignos-shutdown.service"));
+        ProcessUtil.Run("systemctl", "daemon-reload", out _, wait:true);// reload installed services
+        ProcessUtil.Run("systemctl", "enable reignos-shutdown.service", out _, wait:true);
+
+        // install SteamOS3 scripts
+        srcPath = Path.Combine(processPath, "SteamOS3/steamos-polkit-helpers/");
+        dstPath = "/usr/bin/steamos-polkit-helpers/";
         InstallScript(Path.Combine(srcPath, "jupiter-biosupdate"), Path.Combine(dstPath, "jupiter-biosupdate"));
         InstallScript(Path.Combine(srcPath, "steamos-select-branch"), Path.Combine(dstPath, "steamos-select-branch"));
         InstallScript(Path.Combine(srcPath, "steamos-update"), Path.Combine(dstPath, "steamos-update"));
@@ -95,7 +102,7 @@ internal class Program
         if (keyboardInput == null)
         {
             keyboardInput = new KeyboardInput();
-            keyboardInput.Init(null, false, 0, 0);
+            keyboardInput.Init(null, false, 0, 0);// TODO: update to just load default keyboard
         }
 
         // run events
@@ -160,6 +167,18 @@ internal class Program
     {
         if (e != null) Log.WriteLine($"Unhandled exception: {e}");
         else Log.WriteLine("Unhandled exception: Unknown");
+    }
+
+    private static void InstallService(string srcPath, string dstPath)
+    {
+        try
+        {
+            File.Copy(srcPath, dstPath, true);
+        }
+        catch (Exception e)
+        {
+            Log.WriteLine(e.Message);
+        }
     }
 
     private static void InstallScript(string srcPath, string dstPath)

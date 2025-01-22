@@ -2,7 +2,10 @@
 
 # run bootloader
 ./ReignOS.Bootloader $@
+exit_code=$?
 
 # run post updater
-chmod +x ./CheckUpdates.sh
-./CheckUpdates.sh
+if [ $exit_code -eq 9 ]; then
+	chmod +x ./CheckUpdates.sh
+	./CheckUpdates.sh
+fi

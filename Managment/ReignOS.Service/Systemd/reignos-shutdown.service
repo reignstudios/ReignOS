@@ -1,0 +1,14 @@
+[Unit]
+Description=ReignOS Pre-Shutdown tasks
+DefaultDependencies=no
+Before=shutdown.target halt.target poweroff.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/gamer/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/CheckUpdates.sh
+User=gamer
+RemainAfterExit=yes
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target
