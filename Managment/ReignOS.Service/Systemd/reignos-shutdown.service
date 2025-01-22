@@ -11,8 +11,6 @@ User=gamer
 RemainAfterExit=yes
 TimeoutStopSec=infinity
 KillMode=none
-StandardOutput=null
-StandardError=null
 
 [Install]
 WantedBy=multi-user.target

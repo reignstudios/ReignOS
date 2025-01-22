@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# make sure ReignOS Managment stuff isn't running
-echo "Killing ReignOS Managment..."
-echo "gamer" | sudo pkill "ReignOS.ControlCenter"
-echo "gamer" | sudo pkill "ReignOS.Service"
-echo "gamer" | sudo pkill "ReignOS.Bootloader"
-
 # make sure steam is shutdown
 echo "Shutting down Steam..."
 steam -Shutdown
@@ -20,6 +14,14 @@ while pgrep -x "steam" > /dev/null; do
         break
     fi
 done
+
+# make sure ReignOS Managment stuff isn't running
+sleep 5
+echo "Killing ReignOS Managment..."
+echo "gamer" | sudo pkill "ReignOS.ControlCenter"
+echo "gamer" | sudo pkill "ReignOS.Service"
+echo "gamer" | sudo pkill "ReignOS.Bootloader"
+sleep 5
 
 # update Arch
 echo ""
