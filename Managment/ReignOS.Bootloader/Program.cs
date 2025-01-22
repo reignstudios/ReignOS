@@ -20,6 +20,8 @@ internal class Program
 {
     static void Main(string[] args)
     {
+        int exitCode = 9;// run updates on exit
+
         Log.prefix = "ReignOS.Bootloader: ";
         Log.WriteLine("Bootloader started: " + VersionInfo.version);
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -99,11 +101,13 @@ internal class Program
 
         // start compositor
         var compositor = Compositor.None;
+        bool useControlCenter = false;
         foreach (string arg in args)
         {
             if (arg == "--gamescope") compositor = Compositor.Gamescope;
             else if (arg == "--cage") compositor = Compositor.Cage;
             else if (arg == "--labwc") compositor = Compositor.Labwc;
+            else if (arg == "--use-controlcenter") useControlCenter = true;
         }
 
         try
@@ -127,8 +131,11 @@ internal class Program
         }
 
         // start control center
-        string result = ProcessUtil.Run("cage", "./ReignOS.ControlCenter", out _, wait:true);// start ControlCenter
-        Log.WriteLine(result);
+        if (useControlCenter)
+        {
+            string result = ProcessUtil.Run("cage", "./ReignOS.ControlCenter", out exitCode, wait:true);// start ControlCenter
+            Log.WriteLine(result);
+        }
 
         // stop service
         SHUTDOWN:;
@@ -136,15 +143,15 @@ internal class Program
         if (serviceProcess != null && !serviceProcess.HasExited)
         {
             Log.WriteLine("Soft Killing service");
-            ProcessUtil.KillSoft("ReignOS.Service", true, out int exitCode);
+            ProcessUtil.KillSoft("ReignOS.Service", true, out _);
             Thread.Sleep(1000);
 
             Log.WriteLine("Hard Killing service (just in case)");
             serviceProcess.Kill();
-            ProcessUtil.KillHard("ReignOS.Service", true, out exitCode);
+            ProcessUtil.KillHard("ReignOS.Service", true, out _);
         }
 
-        Environment.ExitCode = 9;// use to tell Launch.sh it can run updates
+        Environment.ExitCode = exitCode;
     }
 
     private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

@@ -8,9 +8,9 @@ exit_code=$?
 if [ $exit_code -eq 9 ]; then
 	chmod +x ./CheckUpdates.sh
 	./CheckUpdates.sh
-fi
 
-# shutdown
-echo ""
-echo "ReignOS (shutting down)..."
-poweroff
+	# shutdown
+	echo ""
+	echo "ReignOS (shutting down)..."
+	poweroff
+fi
