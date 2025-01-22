@@ -1,8 +1,5 @@
 #!/bin/bash
 
-echo "YAHOO..."
-sleep 5
-
 # make sure ReignOS Managment stuff isn't running
 echo "Killing ReignOS Managment..."
 echo "gamer" | sudo pkill "ReignOS.ControlCenter"
