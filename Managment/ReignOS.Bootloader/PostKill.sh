@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # give stuff a little time to close
-sleep 3
+sleep 5
 
 # kill compositors if they're stuck
 echo "Killing compositors"
