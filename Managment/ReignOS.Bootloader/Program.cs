@@ -26,6 +26,7 @@ internal class Program
         LibraryResolver.Init(Assembly.GetExecutingAssembly());
 
         // ensure permissions
+        ProcessUtil.Run("chmod", "+x ./CheckUpdates.sh", out _, wait:false, asAdmin:false);
         ProcessUtil.Run("chown", "gamer:gamer ./CheckUpdates.sh", out _, wait:false, asAdmin:true);
 
         // start auto mounting service

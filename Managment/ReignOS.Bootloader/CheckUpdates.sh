@@ -35,8 +35,3 @@ git pull
 cd Managment
 echo "ReignOS Building packages..."
 dotnet publish -r linux-x64 -c Release
-
-# shutdown
-echo ""
-echo "ReignOS Pre-Shutdown done (shutting down)..."
-poweroff
