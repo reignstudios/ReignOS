@@ -25,6 +25,9 @@ internal class Program
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         LibraryResolver.Init(Assembly.GetExecutingAssembly());
 
+        // ensure permissions
+        ProcessUtil.Run("chown", "gamer:gamer ./CheckUpdates.sh", out _, wait:false, asAdmin:true);
+
         // start auto mounting service
         ProcessUtil.KillHard("udiskie", true, out _);
         ProcessUtil.Run("udiskie", "--no-tray", out _, wait:false);

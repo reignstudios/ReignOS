@@ -68,6 +68,7 @@ internal class Program
         InstallService(Path.Combine(srcPath, "reignos-shutdown.service"), Path.Combine(dstPath, "reignos-shutdown.service"));
         ProcessUtil.Run("systemctl", "daemon-reload", out _, wait:true);// reload installed services
         ProcessUtil.Run("systemctl", "enable reignos-shutdown.service", out _, wait:true);
+        ProcessUtil.Run("systemctl", "start reignos-shutdown.service", out _, wait:true);
 
         // install SteamOS3 scripts
         srcPath = Path.Combine(processPath, "SteamOS3/steamos-polkit-helpers/");

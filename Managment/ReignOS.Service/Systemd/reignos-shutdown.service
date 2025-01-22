@@ -1,7 +1,7 @@
 [Unit]
 Description=ReignOS Pre-Shutdown tasks
 DefaultDependencies=no
-Before=shutdown.target halt.target poweroff.target
+Before=shutdown.target halt.target poweroff.target reboot.target
 
 [Service]
 Type=oneshot
