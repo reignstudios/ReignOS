@@ -46,6 +46,21 @@ internal class Program
         LibraryResolver.Init(Assembly.GetExecutingAssembly());
         BindSignalEvents();
 
+        // detect system hardware
+        try
+        {
+            string productName = ProcessUtil.Run("dmidecode", "-s system-product-name", out _);
+            Log.WriteLine("Product: " + productName.TrimEnd());
+            if (productName == "Claw A1M") hardwareType = HardwareType.MSI_Claw_A1M;
+            else if (productName.StartsWith("Claw ")) hardwareType = HardwareType.MSI_Claw;
+        }
+        catch (Exception e)
+        {
+            Log.WriteLine("Failed to get system hardware");
+            Log.WriteLine(e);
+        }
+        Log.WriteLine("Known hardware detection: " + hardwareType.ToString());
+
         // install Systemd services
         string processPath = Path.GetDirectoryName(Environment.ProcessPath);
         string srcPath = Path.Combine(processPath, "Systemd");
@@ -71,21 +86,6 @@ internal class Program
 
         // init virtual gamepad
         VirtualGamepad.Init();
-        
-        // detect system hardware
-        try
-        {
-            string productName = ProcessUtil.Run("dmidecode", "-s system-product-name", out _);
-            Log.WriteLine("Product: " + productName.TrimEnd());
-            if (productName == "Claw A1M") hardwareType = HardwareType.MSI_Claw_A1M;
-            else if (productName.StartsWith("Claw ")) hardwareType = HardwareType.MSI_Claw;
-        }
-        catch (Exception e)
-        {
-            Log.WriteLine("Failed to get system hardware");
-            Log.WriteLine(e);
-        }
-        Log.WriteLine("Known hardware detection: " + hardwareType.ToString());
 
         // detect device & configure hardware
         try
@@ -171,6 +171,7 @@ internal class Program
 
     private static void InstallService(string srcPath, string dstPath)
     {
+        Log.WriteLine("Installing service: " + dstPath);
         try
         {
             File.Copy(srcPath, dstPath, true);
@@ -183,8 +184,11 @@ internal class Program
 
     private static void InstallScript(string srcPath, string dstPath)
     {
+        Log.WriteLine("Installing script: " + dstPath);
         try
         {
+            string path = Path.GetDirectoryName(dstPath);
+            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
             File.Copy(srcPath, dstPath, true);
         }
         catch (Exception e)
