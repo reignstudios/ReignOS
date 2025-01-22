@@ -1,0 +1,44 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
+             x:Class="ReignOS.ControlCenter.Views.MainView">
+
+	<Grid>
+		<TextBlock Text="Control Center" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="32" FontWeight="Bold" Margin="4,25,4,4"/>
+		<Separator HorizontalAlignment="Center" VerticalAlignment="Top" Margin="150,70,150,0"/>
+		<Button Content="⚙" FontSize="32" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4" Width="64" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+		
+		<StackPanel Margin="4,95,4,50" Background="#202020" Orientation="Horizontal">
+			<Button HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128">
+				<Grid Margin="0">
+					<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
+					<TextBlock Text="Gamescope" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
+				</Grid>
+			</Button>
+
+			<Button HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128">
+				<Grid Margin="0">
+					<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
+					<TextBlock Text="Cage" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
+				</Grid>
+			</Button>
+
+			<Button HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#603000">
+				<Grid Margin="0">
+					<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
+					<TextBlock Text="Labwc" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
+				</Grid>
+			</Button>
+		</StackPanel>
+
+		<StackPanel Margin="4" Height="42" VerticalAlignment="Bottom" Background="#000040" Orientation="Horizontal">
+			<Button Content="Sleep" Margin="4,0"/>
+			<Button Content="Restart" Margin="4,0"/>
+			<Button Content="Shutdown" Margin="4,0"/>
+			<Button Content="Check Updates" Margin="32,0,4,0"/>
+			<Button Content="Exit to Terminal" Margin="4,0"/>
+		</StackPanel>
+	</Grid>
+</UserControl>

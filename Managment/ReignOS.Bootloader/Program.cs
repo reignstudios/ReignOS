@@ -20,6 +20,8 @@ internal class Program
 {
     static void Main(string[] args)
     {
+        bool checkUpdates = true;
+
         Log.prefix = "ReignOS.Bootloader: ";
         Log.WriteLine("Bootloader started");
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -100,6 +102,7 @@ internal class Program
             if (arg == "--cage") compositor = Compositor.Cage;
             else if (arg == "--gamescope") compositor = Compositor.Gamescope;
             else if (arg == "--labwc") compositor = Compositor.Labwc;
+            else if (arg == "--no-update") checkUpdates = false;
         }
 
         try
@@ -135,6 +138,13 @@ internal class Program
             serviceProcess.Kill();
             ProcessUtil.KillHard("ReignOS.Service", true, out exitCode);
         }
+
+        // run update checker
+        if (checkUpdates)
+        {
+            ProcessUtil.Run("chmod", "+x ./CheckUpdates.sh", out _, wait:true);
+            ProcessUtil.Run("CheckUpdates.sh", "", out _, wait:false);
+        }
     }
 
     private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -146,20 +156,20 @@ internal class Program
     private static void StartCompositor_Cage()
     {
         ProcessUtil.Run("chmod", "+x ./Start_Cage.sh", out _, wait:true);
-        string result = ProcessUtil.Run("cage", "-d -s -- ./Start_Cage.sh", out _, enviromentVars:null, wait:true);// start Cage with Steam in console mode
+        string result = ProcessUtil.Run("cage", "-d -s -- ./Start_Cage.sh", out _, wait:true);// start Cage with Steam in console mode
         Log.WriteLine(result);
     }
 
     private static void StartCompositor_Gamescope()
     {
         ProcessUtil.Run("chmod", "+x ./Start_Gamescope.sh", out _, wait:true);
-        string result = ProcessUtil.Run("gamescope", "-e -f --adaptive-sync --hdr-enabled --framerate-limit -- ./Start_Gamescope.sh", out _, enviromentVars:null, wait:true);// start Gamescope with Steam in console mode, VRR
+        string result = ProcessUtil.Run("gamescope", "-e -f --adaptive-sync --hdr-enabled --framerate-limit -- ./Start_Gamescope.sh", out _, wait:true);// start Gamescope with Steam in console mode, VRR
         Log.WriteLine(result);
     }
 
     private static void StartCompositor_Labwc()
     {
-        string result = ProcessUtil.Run("labwc", "--session steam", out _, enviromentVars:null, wait:true);// start Labwc with Steam in desktop mode
+        string result = ProcessUtil.Run("labwc", "--session -- steam -nobigpicture", out _, wait:true);// start Labwc with Steam in desktop mode
         Log.WriteLine(result);
     }
 }

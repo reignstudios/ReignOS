@@ -1,3 +1,5 @@
+# Test Dual booting on MSI-Claw using MicroSD with https://neosmart.net/EasyBCD/
+
 # to fix missing install
 # boot back into USB image
 lsblk
@@ -17,6 +19,8 @@ fdisk -l
 fdisk /dev/nvme0n1
 # TODO: create partition table
 #((512 * 1024 * 1024) / 512) + 2048 = 1050624 [first partition offset size at 512mb in sections]
+# When creating EFI /dev/nvme0n1p1 partition. Hit 't' then '1' to mark as EFI partition (this is needed for some tools)
+# when done configuring partion hit 'w' to write changes
 
 # format partitions
 sudo mkfs.vfat -F 32 /dev/nvme0n1p1
@@ -35,6 +39,12 @@ genfstab -U /mnt >> /mnt/etc/fstab
 
 # Chroot into the Installed System
 arch-chroot /mnt
+
+# install GPU power suspend states (are these needed? IDK if they're)
+#sudo nano /boot/loader/entries/arch.conf
+#i915.enable_dc=2 i915.enable_psr=1
+# amdgpu.dpm=1 amdgpu.ppfeaturemask=0xffffffff amdgpu.dc=1
+# nouveau.pstate=1
 
 # install apps/tools
 pacman -S nano

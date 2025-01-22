@@ -10,6 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="CheckUpdates.sh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Start_Cage.sh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -24,5 +27,12 @@
     </ItemGroup>
     <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(PublishDir)" SkipUnchangedFiles="true" />
   </Target>
+
+    <Target Name="CopyControlCenter" AfterTargets="Publish">
+	    <ItemGroup>
+		    <FilesToCopy Include="$(MSBuildProjectDirectory)/../ReignOS.ControlCenter/bin/Release/net8.0/$(RuntimeIdentifier)/publish/*.*" />
+	    </ItemGroup>
+	    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(PublishDir)" SkipUnchangedFiles="true" />
+    </Target>
 
 </Project>

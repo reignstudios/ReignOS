@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReignOS.Bootloader", "Reign
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReignOS.Service", "ReignOS.Service\ReignOS.Service.csproj", "{FB7A85ED-B4D7-4846-B994-2E1583EA884F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReignOS.ControlCenter", "ReignOS.ControlCenter\ReignOS.ControlCenter.csproj", "{07AC4644-F676-4B18-9585-46E7A3FCE528}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,10 @@ Global
 		{FB7A85ED-B4D7-4846-B994-2E1583EA884F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB7A85ED-B4D7-4846-B994-2E1583EA884F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB7A85ED-B4D7-4846-B994-2E1583EA884F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07AC4644-F676-4B18-9585-46E7A3FCE528}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07AC4644-F676-4B18-9585-46E7A3FCE528}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07AC4644-F676-4B18-9585-46E7A3FCE528}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07AC4644-F676-4B18-9585-46E7A3FCE528}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
