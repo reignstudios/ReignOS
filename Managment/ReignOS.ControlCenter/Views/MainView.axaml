@@ -38,7 +38,7 @@
 			<Button Content="Restart" Margin="4,0"/>
 			<Button Content="Shutdown" Margin="4,0"/>
 			<Button Content="Check Updates" Margin="32,0,4,0"/>
-			<Button Content="Exit to Terminal" Margin="4,0"/>
+			<Button Content="Exit to Terminal" Margin="4,0" Click="ExitButton_Click"/>
 		</StackPanel>
 	</Grid>
 </UserControl>
