@@ -1,10 +1,19 @@
 #!/bin/bash
 
+# block until shutdown
+if [ "$1" = "-wait-shutdown" ]; then
+    dbus-monitor --system "type='signal',interface='org.freedesktop.login1.Manager',member='PrepareForShutdown'" | while read -r line; do
+        if [[ $line == *"boolean true"* ]]; then
+            sleep 1
+        fi
+    done
+fi
+
 # make sure steam is shutdown
 echo "Shutting down Steam..."
 steam -Shutdown
 counter=0
-while pgrep -x "steam" > /dev/null; do
+while pgrep "steam" >/dev/null; do
     echo "Waiting for Steam to close..."
     sleep 1
     counter=$((counter + 1))
@@ -16,7 +25,8 @@ while pgrep -x "steam" > /dev/null; do
 done
 
 # make sure ReignOS Managment stuff isn't running
-while pgrep -x "ReignOS.Bootloader" > /dev/null; do
+echo "Waiting for ReignOS Managment to exit..."
+while pgrep "ReignOS.Bootloader" >/dev/null; do
     echo "Waiting for ReignOS.Bootloader to close..."
     sleep 1
     counter=$((counter + 1))
