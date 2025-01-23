@@ -11,7 +11,7 @@ run_updates() {
         counter=$((counter + 1))
         if [ "$counter" -ge "10" ]; then
             echo "Timeout reached. Force closing Steam..."
-            echo "gamer" | sudo pkill "steam"
+            echo "gamer" | sudo -S pkill "steam"
             break
         fi
     done
@@ -24,9 +24,9 @@ run_updates() {
         counter=$((counter + 1))
         if [ "$counter" -ge "10" ]; then
             echo "Timeout reached. Force closing ReignOS Managment..."
-            echo "gamer" | sudo pkill "ReignOS.ControlCenter"
-            echo "gamer" | sudo pkill "ReignOS.Service"
-            echo "gamer" | sudo pkill "ReignOS.Bootloader"
+            echo "gamer" | sudo -S pkill "ReignOS.ControlCenter"
+            echo "gamer" | sudo -S pkill "ReignOS.Service"
+            echo "gamer" | sudo -S pkill "ReignOS.Bootloader"
             break
         fi
     done
@@ -34,7 +34,7 @@ run_updates() {
     # update Arch
     echo ""
     echo "ReignOS Updating Arch..."
-    echo "gamer" | sudo pacman -Syu --noconfirm
+    echo "gamer" | sudo -S pacman -Syu --noconfirm
 
     # update ReignOS Git package
     echo ""
@@ -49,7 +49,7 @@ run_updates() {
 
 # block until shutdown
 if [ "$1" = "-wait-shutdown" ]; then
-    echo "gamer" | sudo dbus-monitor --system "type='signal',interface='org.freedesktop.login1.Manager',member='PrepareForShutdown'" | \
+    echo "gamer" | sudo -S dbus-monitor --system "type='signal',interface='org.freedesktop.login1.Manager',member='PrepareForShutdown'" | \
         while IFS= read -r line; do
             if [[ "$line" == *"boolean true"* ]]; then
                 echo "Shutdown signal received"

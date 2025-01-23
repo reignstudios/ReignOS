@@ -4,10 +4,10 @@
 sleep 5
 
 # kill apps if stuck
-echo "gamer" | sudo pkill "steam"
+echo "gamer" | sudo -S pkill "steam"
 
 # kill compositors if they're stuck
 echo "Killing compositors"
-echo "gamer" | sudo pkill "gamescope"
-echo "gamer" | sudo pkill "cage"
-echo "gamer" | sudo pkill "labwc"
+echo "gamer" | sudo -S pkill "gamescope"
+echo "gamer" | sudo -S pkill "cage"
+echo "gamer" | sudo -S pkill "labwc"

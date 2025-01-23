@@ -6,7 +6,7 @@ systemd-inhibit --what=shutdown --who="ReignOS" --why="Pre Shutdown" -- ./CheckU
 ./ReignOS.Bootloader $@
 exit_code=$?
 
-echo "gamer" | sudo pkill "systemd-inhibit"
+echo "gamer" | sudo -S pkill "systemd-inhibit"
 
 # run post updater
 #if [ $exit_code -eq 9 ]; then
