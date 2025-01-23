@@ -49,13 +49,15 @@ run_updates() {
 
 # block until shutdown
 if [ "$1" = "-wait-shutdown" ]; then
-    dbus-monitor --system "type='signal',interface='org.freedesktop.login1.Manager',member='PrepareForShutdown'" | while read -r line; do
-        if [[ $line == *"boolean true"* ]]; then
-            echo "Shutdown signal received"
-            run_updates
-            break
-        fi
-    done
+    dbus-monitor --system "type='signal',interface='org.freedesktop.login1.Manager',member='PrepareForShutdown'" | {
+            while IFS= read -r line; do
+                if grep -q "member=PrepareForShutdown" <<< "$line" && grep -q "boolean true" <<< "$line"; then
+                    echo "Shutdown signal received"
+                    run_updates
+                    break
+                fi
+            done
+        }
 else
     run_updates
 fi
