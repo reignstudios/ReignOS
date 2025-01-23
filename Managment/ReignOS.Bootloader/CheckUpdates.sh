@@ -49,7 +49,7 @@ run_updates() {
 
 # block until shutdown
 if [ "$1" = "-wait-shutdown" ]; then
-    dbus-monitor --system "type='signal',interface='org.freedesktop.login1.Manager',member='PrepareForShutdown'" | \
+    echo "gamer" | sudo dbus-monitor --system "type='signal',interface='org.freedesktop.login1.Manager',member='PrepareForShutdown'" | \
         while IFS= read -r line; do
             if [[ "$line" == *"boolean true"* ]]; then
                 echo "Shutdown signal received"
