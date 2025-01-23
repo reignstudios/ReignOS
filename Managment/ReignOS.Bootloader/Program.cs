@@ -30,6 +30,7 @@ internal class Program
         // ensure permissions
         ProcessUtil.Run("chmod", "+x ./CheckUpdates.sh", out _, wait:false, asAdmin:false);
         ProcessUtil.Run("chown", "gamer:gamer ./CheckUpdates.sh", out _, wait:false, asAdmin:true);
+        ProcessUtil.Run("chmod", "+x ./PostKill.sh", out _, wait:false, asAdmin:false);
 
         // start auto mounting service
         ProcessUtil.KillHard("udiskie", true, out _);
