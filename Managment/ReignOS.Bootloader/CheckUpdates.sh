@@ -3,7 +3,7 @@
 run_updates() {
     # make sure steam is shutdown
     echo "Shutting down Steam..."
-    steam -Shutdown
+    sudo -u gamer -N -- steam -shutdown
     counter=0
     while pgrep "steam" >/dev/null; do
         echo "Waiting for Steam to close..."
@@ -49,6 +49,7 @@ run_updates() {
 
 # block until shutdown
 if [ "$1" = "-wait-shutdown" ]; then
+    export -f run_updates
     echo "gamer" | sudo -S dbus-monitor --system "type='signal',interface='org.freedesktop.login1.Manager',member='PrepareForShutdown'" | \
         while IFS= read -r line; do
             if [[ "$line" == *"boolean true"* ]]; then
@@ -60,3 +61,5 @@ if [ "$1" = "-wait-shutdown" ]; then
 else
     run_updates
 fi
+
+exit 0
