@@ -3,8 +3,9 @@
 # block until shutdown
 if [ "$1" = "-wait-shutdown" ]; then
     dbus-monitor --system "type='signal',interface='org.freedesktop.login1.Manager',member='PrepareForShutdown'" | while read -r line; do
+        sleep 1
         if [[ $line == *"boolean true"* ]]; then
-            sleep 1
+            break
         fi
     done
 fi
