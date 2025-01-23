@@ -1,6 +1,6 @@
 #!/bin/bash
 
-systemd-inhibit --what=shutdown --who="ReignOS" --why="Pre Shutdown" -- ./CheckUpdates.sh -wait-shutdown &
+echo "gamer" | sudo systemd-inhibit --what=shutdown --who="ReignOS" --why="Pre Shutdown" -- ./CheckUpdates.sh -wait-shutdown &
 
 # run bootloader
 ./ReignOS.Bootloader $@
