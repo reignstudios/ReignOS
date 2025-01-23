@@ -95,7 +95,7 @@ pactl list sinks short
 pactl set-default-sink <sink_name>
 
 # install power managment
-pacman -S acpi acpid powertop tlp #power-profiles-daemon (less feature complete)
+pacman -S acpi acpid powertop power-profiles-daemon # tlp (other power option)
 pacman -S python-gobject
 
 # auto mount drives
@@ -194,11 +194,11 @@ systemctl --user start pipewire-pulse
 systemctl enable acpid
 systemctl start acpid
 
-#systemctl enable power-profiles-daemon
-#systemctl start power-profiles-daemon
+systemctl enable power-profiles-daemon
+systemctl start power-profiles-daemon
 
-sudo systemctl enable tlp
-sudo systemctl start tlp
+#sudo systemctl enable tlp
+#sudo systemctl start tlp
 
 # start auto mount
 sudo udevadm control --reload-rules

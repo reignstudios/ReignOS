@@ -14,3 +14,4 @@ echo "gamer" | sudo pkill "unclutter"
 
 # run post kill
 ./PostKill.sh &
+exit 0

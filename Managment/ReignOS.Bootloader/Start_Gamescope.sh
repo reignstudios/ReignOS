@@ -38,3 +38,4 @@ steam -bigpicture -steamdeck -steamos3
 
 # run post kill
 ./PostKill.sh &
+exit 0

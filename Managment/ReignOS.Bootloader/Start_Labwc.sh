@@ -8,3 +8,4 @@ steam -nobigpicture
 
 # run post kill
 ./PostKill.sh &
+exit 0
