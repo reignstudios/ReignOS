@@ -1,8 +1,12 @@
 #!/bin/bash
 
+systemd-inhibit --what=shutdown --who="ReignOS" --why="Preventing shutdown" sleep infinity &
+
 # run bootloader
 ./ReignOS.Bootloader $@
 exit_code=$?
+
+echo "gamer" | sudo pkill "systemd-inhibit"
 
 # run post updater
 if [ $exit_code -eq 9 ]; then
