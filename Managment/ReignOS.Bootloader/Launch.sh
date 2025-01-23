@@ -1,6 +1,6 @@
 #!/bin/bash
 
-systemd-inhibit --what=shutdown --who="ReignOS" --why="Preventing shutdown" sleep infinity -- steam -shutdown &
+systemd-inhibit --what=shutdown --who="ReignOS" --why="Preventing shutdown" -- steam -shutdown &
 
 # run bootloader
 ./ReignOS.Bootloader $@
