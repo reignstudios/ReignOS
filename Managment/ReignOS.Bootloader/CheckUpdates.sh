@@ -16,12 +16,18 @@ while pgrep -x "steam" > /dev/null; do
 done
 
 # make sure ReignOS Managment stuff isn't running
-sleep 5
-echo "Killing ReignOS Managment..."
-echo "gamer" | sudo pkill "ReignOS.ControlCenter"
-echo "gamer" | sudo pkill "ReignOS.Service"
-echo "gamer" | sudo pkill "ReignOS.Bootloader"
-sleep 5
+while pgrep -x "ReignOS.Bootloader" > /dev/null; do
+    echo "Waiting for ReignOS.Bootloader to close..."
+    sleep 1
+    counter=$((counter + 1))
+    if [ "$counter" -ge "10" ]; then
+        echo "Timeout reached. Force closing ReignOS Managment..."
+        echo "gamer" | sudo pkill "ReignOS.ControlCenter"
+        echo "gamer" | sudo pkill "ReignOS.Service"
+        echo "gamer" | sudo pkill "ReignOS.Bootloader"
+        break
+    fi
+done
 
 # update Arch
 echo ""

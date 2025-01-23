@@ -11,7 +11,7 @@ arch-chroot /mnt
 iwctl device list
 iwctl station wlan0 scan
 iwctl station wlan0 get-networks
-iwctl station wlan0 connect Radiation-5G
+iwctl station wlan0 connect <SSID>
 iwctl station wlan0 show
 
 # create partitions
@@ -42,9 +42,11 @@ arch-chroot /mnt
 
 # install GPU power suspend states (are these needed? IDK if they're)
 #sudo nano /boot/loader/entries/arch.conf
-#i915.enable_dc=2 i915.enable_psr=1
+# add to the end of 'options'
+i915.enable_dc=2 i915.enable_psr=1
 # amdgpu.dpm=1 amdgpu.ppfeaturemask=0xffffffff amdgpu.dc=1
 # nouveau.pstate=1
+# mem_sleep_default=deep (this can cause some systems to fail to wake)
 
 # install apps/tools
 pacman -S nano
@@ -93,7 +95,7 @@ pactl list sinks short
 pactl set-default-sink <sink_name>
 
 # install power managment
-pacman -S acpi acpid powertop power-profiles-daemon
+pacman -S acpi acpid powertop tlp #power-profiles-daemon (less feature complete)
 pacman -S python-gobject
 
 # auto mount drives
@@ -192,8 +194,11 @@ systemctl --user start pipewire-pulse
 systemctl enable acpid
 systemctl start acpid
 
-systemctl enable power-profiles-daemon
-systemctl start power-profiles-daemon
+#systemctl enable power-profiles-daemon
+#systemctl start power-profiles-daemon
+
+sudo systemctl enable tlp
+sudo systemctl start tlp
 
 # start auto mount
 sudo udevadm control --reload-rules
