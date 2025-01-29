@@ -89,4 +89,19 @@ public static class ProcessUtil
     {
         Run("pkill", $"-SIGINT \"{name}\"", out exitCode, wait:true, asAdmin:asAdmin);
     }
+
+    public static void Wait(string name, int seconds)
+    {
+        var time = DateTime.Now;
+        do
+        {
+            bool isAlive = false;
+            foreach (var process in Process.GetProcessesByName(name))
+            {
+                isAlive = true;
+                process.Dispose();
+            }
+            if (!isAlive) break;
+        } while ((DateTime.Now - time).TotalSeconds < seconds);
+    }
 }

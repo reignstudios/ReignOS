@@ -106,6 +106,9 @@ internal class Program
             keyboardInput.Init(null, false, 0, 0);// TODO: update to just load default keyboard
         }
 
+        // start Dbus monitor
+        DbusMonitor.Init();
+
         // run events
         Log.WriteLine("Running events...");
         var time = DateTime.Now;
@@ -143,6 +146,7 @@ internal class Program
         
         // shutdown
         Log.WriteLine("Shutting down...");
+        DbusMonitor.Shutdown();
         MSI_Claw.Dispose();
         VirtualGamepad.Dispose();
         keyboardInput.Dispose();
