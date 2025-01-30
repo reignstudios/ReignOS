@@ -28,7 +28,7 @@ sudo mkfs.ext4 /dev/nvme0n1p2
 
 # mount partitions
 mount /dev/nvme0n1p2 /mnt
-mount /mnt/boot /mnt
+mkdir -p /mnt/boot
 mount /dev/nvme0n1p1 /mnt/boot
 
 #install linux firmware
@@ -40,85 +40,23 @@ genfstab -U /mnt >> /mnt/etc/fstab
 # Chroot into the Installed System
 arch-chroot /mnt
 
-# install GPU power suspend states (are these needed? IDK if they're)
-#sudo nano /boot/loader/entries/arch.conf
-# add to the end of 'options'
-i915.enable_dc=2 i915.enable_psr=1
-# amdgpu.dpm=1 amdgpu.ppfeaturemask=0xffffffff amdgpu.dc=1
-# nouveau.pstate=1
-# mem_sleep_default=deep (this can cause some systems to fail to wake)
-acpi_osi=Linux
-
-# install apps/tools
-pacman -S nano
-pacman -S dmidecode udev
-pacman -S python
-
-# install Wayland and XWayland support
-pacman -S xorg-server-xwayland wayland wayland-protocols
-pacman -S xorg-xev xbindkeys xorg-xinput xorg-xmodmap
-
-# install Wayland graphics drivers
-pacman -S mesa
-pacman -S lib32-mesa
-pacman -S libva-intel-driver intel-media-driver
-pacman -S intel-ucode
-pacman -S vulkan-intel
-pacman -S lib32-vulkan-icd-loader lib32-libglvnd
-
-pacman -S intel-gpu-tools # amdgpu-tools nvidia-smi
-
-# install X11
-pacman -S xorg xorg-server xorg-xinit xorg-xterm
-
-# install X11 drivers
-pacman -S xf86-video-intel
-
-#install compositors
-pacman -S wlr-randr
-pacman -S wlroots
-pacman -S labwc
-pacman -S cage
-pacman -S gamescope
-
-# install network
-pacman -S dhcpcd dhclient networkmanager iwd netctl iproute2 wireless_tools wpa_supplicant dialog
-pacman -S network-manager-applet nm-connection-editor
-
-# install audio
-pacman -S alsa-utils alsa-plugins
-pacman -S sof-firmware
-pacman -S pipewire pipewire-pulse pipewire-alsa pipewire-jack
-# NOTE: "amixer set Master 5%+" or "amixer set Master 5%-" needs to be called by C# app using libinput
-sudo pacman -S beep # call "beep to play current volume level"
-
-pactl list sinks short
-pactl set-default-sink <sink_name>
-
-# install power managment
-pacman -S acpi acpid powertop power-profiles-daemon # tlp (other power option)
-pacman -S python-gobject
-
-# auto mount drives
-sudo pacman -S udiskie udisks2
-sudo nano /etc/udev/rules.d/99-automount.rules
-# ADD LINE: ACTION=="add", SUBSYSTEM=="block", ENV{ID_FS_TYPE}!="", RUN+="/usr/bin/udisksctl mount -b $env{DEVNAME}"
-
-# install steam
+# add mirror list
 nano /etc/pacman.conf
 # uncomment existing lines...
 # [multilib]
 # Include = /etc/pacman.d/mirrorlist
 pacman -Syy
-pacman -S steam
-pacman -S mangohud
-# select 1: gnu-free-fonts
-# select 3: vulkan-intel (or what the GPU is)
-# select 3: vulkan-intel 32-bit (or what the GPU is)
-pacman -S lib32-libxcomposite lib32-libxrandr lib32-libgcrypt lib32-libpulse lib32-gtk2
-pacman -S vulkan-tools
-pacman -S egl-wayland
-pacman -S xdg-desktop-portal xdg-desktop-portal-gtk
+
+# install nano
+pacman -S nano
+
+# install network
+pacman -S dhcpcd dhclient networkmanager iwd netctl iproute2 wireless_tools wpa_supplicant dialog
+pacman -S network-manager-applet nm-connection-editor
+systemctl enable iwd
+systemctl enable dhcpcd
+systemctl enable NetworkManager
+systemctl enable wpa_supplicant
 
 # configure timezone
 ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
@@ -127,18 +65,18 @@ locale-gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
 
 # setup hostname
-echo "gamestation" > /etc/hostname
+echo "reignos" > /etc/hostname
 nano /etc/hosts
 # add these lines...
 # 127.0.0.1   localhost
 # ::1         localhost
-# 127.0.1.1   gamestation.localdomain gamestation
+# 127.0.1.1   reignos.localdomain reignos
 
 # install systemd
 bootctl install
 nano /boot/loader/entries/arch.conf
 # add these lines...
-# title Game Station
+# title ReignOS
 # linux /vmlinuz-linux
 # initrd /initramfs-linux.img
 # options root=/dev/nvme0n1p2 rw
@@ -171,27 +109,55 @@ reboot
 # mkinitcpio -P
 # chmod 666 /dev/dri/*
 
-# start network service
-systemctl enable iwd
-systemctl start iwd
 
-systemctl enable dhcpcd
-systemctl start dhcpcd
 
-systemctl enable NetworkManager
-systemctl start NetworkManager
 
-systemctl enable wpa_supplicant
-systemctl start wpa_supplicant
 
-# start audio service
+# install apps/tools
+pacman -S dmidecode udev python
+
+# install Wayland and XWayland support
+pacman -S xorg-server-xwayland wayland wayland-protocols
+pacman -S xorg-xev xbindkeys xorg-xinput xorg-xmodmap
+
+# install X11
+pacman -S xorg xorg-server xorg-xinit xterm
+
+# install Wayland graphics drivers
+pacman -S mesa lib32-mesa
+pacman -S libva-intel-driver intel-media-driver intel-ucode vulkan-intel lib32-vulkan-intel intel-gpu-tools
+pacman -S libva-mesa-driver lib32-libva-mesa-driver amd-ucode vulkan-radeon lib32-vulkan-radeon radeontop
+pacman -S nvidia nvidia-utils lib32-nvidia-utils #libva-vdpau-driver lib32-libva-vdpau-driver
+pacman -S vulkan-icd-loader lib32-vulkan-icd-loader lib32-libglvnd
+pacman -S vulkan-tools egl-wayland
+
+# install X11 drivers
+pacman -S xf86-video-intel xf86-video-amdgpu
+
+#install compositors
+pacman -S wlr-randr
+pacman -S wlroots
+pacman -S labwc
+pacman -S cage
+pacman -S gamescope
+
+# install audio
+pacman -S alsa-utils alsa-plugins
+pacman -S sof-firmware
+pacman -S pipewire pipewire-pulse pipewire-alsa pipewire-jack
+# NOTE: "amixer set Master 5%+" or "amixer set Master 5%-" needs to be called by C# app using libinput
+#sudo pacman -S beep # call "beep to play current volume level"
+
 systemctl --user enable pipewire
 systemctl --user start pipewire
 
 systemctl --user enable pipewire-pulse
 systemctl --user start pipewire-pulse
 
-# start power services
+# install power managment
+pacman -S acpi acpid powertop power-profiles-daemon # tlp (other power option)
+pacman -S python-gobject
+
 systemctl enable acpid
 systemctl start acpid
 
@@ -201,12 +167,46 @@ systemctl start power-profiles-daemon
 #sudo systemctl enable tlp
 #sudo systemctl start tlp
 
+# install GPU power suspend states (are these needed? IDK if they're)
+nano /boot/loader/entries/arch.conf
+# add to the end of 'options'
+i915.enable_dc=2 i915.enable_psr=1
+amdgpu.dpm=1 amdgpu.ppfeaturemask=0xffffffff amdgpu.dc=1
+# nouveau.pstate=1
+# mem_sleep_default=deep (this can cause some systems to fail to wake)
+acpi_osi=Linux
+
+# /etc/modprobe.d/nvidia.conf
+options nvidia-drm modeset=1
+
+#/etc/modprobe.d/99-nvidia.conf
+options nvidia NVreg_DynamicPowerManagement=0x02
+
+# auto mount drives
+sudo pacman -S udiskie udisks2
+sudo nano /etc/udev/rules.d/99-automount.rules
+# ADD LINE: ACTION=="add", SUBSYSTEM=="block", ENV{ID_FS_TYPE}!="", RUN+="/usr/bin/udisksctl mount -b $env{DEVNAME}"
+
 # start auto mount
 sudo udevadm control --reload-rules
-sudo systemctl start udisks2
 sudo systemctl enable udisks2
+sudo systemctl start udisks2
 udiskie --no-tray & # run this in Bootloader
 # NOTE: After auto-mounting a new drive run: sudo chown -R gamer:gamer /run/media/gamer/<disk-label>
+
+# install steam
+pacman -S lib32-libxcomposite lib32-libxrandr lib32-libgcrypt lib32-pipewire lib32-libpulse lib32-gtk2
+pacman -S gnutls lib32-gnutls openal lib32-openal sqlite lib32-sqlite libcurl-compat lib32-libcurl-compat
+pacman -S xdg-desktop-portal xdg-desktop-portal-gtk
+pacman -S mangohud
+pacman -S steam
+# select 1: gnu-free-fonts
+# select 3: vulkan-intel (or what the GPU is)
+# select 3: vulkan-intel 32-bit (or what the GPU is)
+
+# dev tools
+pacman -S base-devel dotnet-sdk-8.0 git git-lfs
+#dotnet publish -r linux-x64 -c Release
 
 # reboot and login into gamer/gamer user
 

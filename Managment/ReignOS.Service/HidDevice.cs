@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 public unsafe class HidDevice
 {
-    private List<int> handles;
+    public List<int> handles;
     
     public bool Init(ushort vendorID, ushort productID, bool openAll)
     {

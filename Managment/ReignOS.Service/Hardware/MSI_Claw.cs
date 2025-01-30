@@ -22,7 +22,7 @@ public static class MSI_Claw
     public static void Configure()
     {
         device = new HidDevice();
-        if (!device.Init(0x0DB0, 0x1901, true))
+        if (!device.Init(0x0DB0, 0x1901, true) || device.handles.Count == 0)
         {
             device.Dispose();
             device = null;
