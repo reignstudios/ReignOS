@@ -1,4 +1,4 @@
-namespace ReignOS.Service;
+namespace ReignOS.Bootloader;
 using ReignOS.Core;
 using System;
 using System.Text.RegularExpressions;

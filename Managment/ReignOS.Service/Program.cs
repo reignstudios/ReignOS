@@ -107,7 +107,7 @@ internal class Program
         }
 
         // start Dbus monitor
-        DbusMonitor.Init();
+        //DbusMonitor.Init();
 
         // run events
         Log.WriteLine("Running events...");
@@ -146,7 +146,7 @@ internal class Program
         
         // shutdown
         Log.WriteLine("Shutting down...");
-        DbusMonitor.Shutdown();
+        //DbusMonitor.Shutdown();
         MSI_Claw.Dispose();
         VirtualGamepad.Dispose();
         keyboardInput.Dispose();
