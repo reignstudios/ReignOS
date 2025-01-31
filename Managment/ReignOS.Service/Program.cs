@@ -63,27 +63,27 @@ internal class Program
 
         // install Systemd services
         string processPath = Path.GetDirectoryName(Environment.ProcessPath);
-        string srcPath = Path.Combine(processPath, "Systemd");
-        string dstPath = "/home/gamer/.config/systemd/user/default.target.wants/";//"/etc/systemd/system/";
-        InstallService(Path.Combine(srcPath, "reignos-shutdown.service"), Path.Combine(dstPath, "reignos-shutdown.service"));
+        /*string srcPath = Path.Combine(processPath, "Systemd");
+        string dstPath = "/etc/systemd/system/";
+        FileUtils.InstallService(Path.Combine(srcPath, "reignos-shutdown.service"), Path.Combine(dstPath, "reignos-shutdown.service"));
         ProcessUtil.Run("systemctl", "--user daemon-reload", out _, wait:true);// reload installed services
         ProcessUtil.Run("systemctl", "--user enable reignos-shutdown.service", out _, wait:true);
-        ProcessUtil.Run("systemctl", "--user start reignos-shutdown.service", out _, wait:true);
+        ProcessUtil.Run("systemctl", "--user start reignos-shutdown.service", out _, wait:true);*/
 
         // install SteamOS3 scripts
-        srcPath = Path.Combine(processPath, "SteamOS3/steamos-polkit-helpers/");
-        dstPath = "/usr/bin/steamos-polkit-helpers/";
-        InstallScript(Path.Combine(srcPath, "jupiter-biosupdate"), Path.Combine(dstPath, "jupiter-biosupdate"));
-        InstallScript(Path.Combine(srcPath, "steamos-select-branch"), Path.Combine(dstPath, "steamos-select-branch"));
-        InstallScript(Path.Combine(srcPath, "steamos-update"), Path.Combine(dstPath, "steamos-update"));
+        string srcPath = Path.Combine(processPath, "SteamOS3/steamos-polkit-helpers/");
+        string dstPath = "/usr/bin/steamos-polkit-helpers/";
+        FileUtils.InstallScript(Path.Combine(srcPath, "jupiter-biosupdate"), Path.Combine(dstPath, "jupiter-biosupdate"));
+        FileUtils.InstallScript(Path.Combine(srcPath, "steamos-select-branch"), Path.Combine(dstPath, "steamos-select-branch"));
+        FileUtils.InstallScript(Path.Combine(srcPath, "steamos-update"), Path.Combine(dstPath, "steamos-update"));
 
         srcPath = Path.Combine(processPath, "SteamOS3/");
         dstPath = "/usr/bin/";
-        InstallScript(Path.Combine(srcPath, "jupiter-biosupdate"), Path.Combine(dstPath, "jupiter-biosupdate"));
-        InstallScript(Path.Combine(srcPath, "steam-http-loader"), Path.Combine(dstPath, "steam-http-loader"));
-        InstallScript(Path.Combine(srcPath, "steamos-select-branch"), Path.Combine(dstPath, "steamos-select-branch"));
-        InstallScript(Path.Combine(srcPath, "steamos-session-select"), Path.Combine(dstPath, "steamos-session-select"));
-        InstallScript(Path.Combine(srcPath, "steamos-update"), Path.Combine(dstPath, "steamos-update"));
+        FileUtils.InstallScript(Path.Combine(srcPath, "jupiter-biosupdate"), Path.Combine(dstPath, "jupiter-biosupdate"));
+        FileUtils.InstallScript(Path.Combine(srcPath, "steam-http-loader"), Path.Combine(dstPath, "steam-http-loader"));
+        FileUtils.InstallScript(Path.Combine(srcPath, "steamos-select-branch"), Path.Combine(dstPath, "steamos-select-branch"));
+        FileUtils.InstallScript(Path.Combine(srcPath, "steamos-session-select"), Path.Combine(dstPath, "steamos-session-select"));
+        FileUtils.InstallScript(Path.Combine(srcPath, "steamos-update"), Path.Combine(dstPath, "steamos-update"));
 
         // init virtual gamepad
         VirtualGamepad.Init();
@@ -172,37 +172,5 @@ internal class Program
     {
         if (e != null) Log.WriteLine($"Unhandled exception: {e}");
         else Log.WriteLine("Unhandled exception: Unknown");
-    }
-
-    private static void InstallService(string srcPath, string dstPath)
-    {
-        Log.WriteLine("Installing service: " + dstPath);
-        try
-        {
-            string path = Path.GetDirectoryName(dstPath);
-            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-            File.Copy(srcPath, dstPath, true);
-        }
-        catch (Exception e)
-        {
-            Log.WriteLine(e.Message);
-        }
-    }
-
-    private static void InstallScript(string srcPath, string dstPath)
-    {
-        Log.WriteLine("Installing script: " + dstPath);
-        try
-        {
-            string path = Path.GetDirectoryName(dstPath);
-            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-            File.Copy(srcPath, dstPath, true);
-        }
-        catch (Exception e)
-        {
-            Log.WriteLine(e.Message);
-        }
-
-        ProcessUtil.Run("chmod", $"+x \"{dstPath}\"", out _, wait:true);
     }
 }
