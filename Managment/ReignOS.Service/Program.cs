@@ -64,11 +64,11 @@ internal class Program
         // install Systemd services
         string processPath = Path.GetDirectoryName(Environment.ProcessPath);
         string srcPath = Path.Combine(processPath, "Systemd");
-        string dstPath = "/home/gamer/.config/systemd/user/";//"/etc/systemd/system/";
+        string dstPath = "/home/gamer/.config/systemd/user/default.target.wants/";//"/etc/systemd/system/";
         InstallService(Path.Combine(srcPath, "reignos-shutdown.service"), Path.Combine(dstPath, "reignos-shutdown.service"));
-        ProcessUtil.Run("systemctl", "daemon-reload", out _, wait:true);// reload installed services
-        ProcessUtil.Run("systemctl", "enable reignos-shutdown.service", out _, wait:true);
-        ProcessUtil.Run("systemctl", "start reignos-shutdown.service", out _, wait:true);
+        ProcessUtil.Run("systemctl", "--user daemon-reload", out _, wait:true);// reload installed services
+        ProcessUtil.Run("systemctl", "--user enable reignos-shutdown.service", out _, wait:true);
+        ProcessUtil.Run("systemctl", "--user start reignos-shutdown.service", out _, wait:true);
 
         // install SteamOS3 scripts
         srcPath = Path.Combine(processPath, "SteamOS3/steamos-polkit-helpers/");
