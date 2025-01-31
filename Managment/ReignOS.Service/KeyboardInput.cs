@@ -8,10 +8,11 @@ using System.Text;
 
 public unsafe class KeyboardInput : IDisposable
 {
-    private int handle;
+    private int handle = -1;
     
     public void Init(string name, bool useName, ushort vendorID, ushort productID)
     {
+        handle = -1;
         const int bufferSize = 256;
         byte* buffer = stackalloc byte[bufferSize];
 
@@ -44,12 +45,19 @@ public unsafe class KeyboardInput : IDisposable
             }
             else
             {
-                input.input_id id;
-                if (c.ioctl(handle, input.EVIOCGID, &id) < 0) goto CONTINUE;
-                if (id.vendor == vendorID && id.product == productID)
+                if (vendorID == 0 && productID == 0)
                 {
-                    Log.WriteLine($"Keyboard event device found vendorID:{vendorID} productID:{productID} path:{path}");
-                    break;
+                    // TODO: find keyboard with Volume Keys. Otherwise generic keyboard
+                }
+                else
+                {
+                    input.input_id id;
+                    if (c.ioctl(handle, input.EVIOCGID, &id) < 0) goto CONTINUE;
+                    if (id.vendor == vendorID && id.product == productID)
+                    {
+                        Log.WriteLine($"Keyboard event device found vendorID:{vendorID} productID:{productID} path:{path}");
+                        break;
+                    }
                 }
             }
             
@@ -60,15 +68,22 @@ public unsafe class KeyboardInput : IDisposable
     
     public void Dispose()
     {
-        if (handle != 0)
+        if (handle >= 0)
         {
             c.close(handle);
-            handle = 0;
+            handle = -1;
         }
     }
     
     public bool ReadNextKey(out ushort key, out bool pressed)
     {
+        if (handle < 0)
+        {
+            key = 0;
+            pressed = false;
+            return false;
+        }
+        
         var e = new input.input_event();
         if (c.read(handle, &e, (UIntPtr)Marshal.SizeOf<input.input_event>()) < 0)
         {

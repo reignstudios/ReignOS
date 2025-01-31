@@ -21,7 +21,7 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        int exitCode = 9;// run updates on exit
+        int exitCode = 0;
 
         Log.prefix = "ReignOS.Bootloader: ";
         Log.WriteLine("Bootloader started: " + VersionInfo.version);
@@ -109,9 +109,6 @@ internal class Program
             goto SHUTDOWN;
         }
         Thread.Sleep(1000);// give service a sec to config anything needed before launching compositor
-        
-        // start Dbus monitor
-        //DbusMonitor.Init();
 
         // start compositor
         var compositor = Compositor.None;
@@ -153,13 +150,15 @@ internal class Program
 
         // stop service
         SHUTDOWN:;
-        //DbusMonitor.Shutdown();
         ProcessUtil.KillHard("udiskie", true, out _);
         if (serviceProcess != null && !serviceProcess.HasExited)
         {
             Log.WriteLine("Soft Killing service");
             ProcessUtil.KillSoft("ReignOS.Service", true, out _);
             Thread.Sleep(1000);
+            
+            Log.WriteLine("Service ExitCode: " + serviceProcess.ExitCode.ToString());
+            if (exitCode == 0) exitCode = serviceProcess.ExitCode;
 
             Log.WriteLine("Hard Killing service (just in case)");
             serviceProcess.Kill();
