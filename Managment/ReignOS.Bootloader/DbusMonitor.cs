@@ -78,7 +78,7 @@ static class DbusMonitor
     
     private static void ProcessLine(string line)
     {
-        lock (Log.lockObj) Console.WriteLine(line);// NOTE: only log for testing
+        //lock (Log.lockObj) Console.WriteLine(line);// NOTE: only log for testing
         if (line.Contains("member=ListInhibitors") || line.Contains("Access denied due to active block inhibitor"))
         {
             PreShutdown();
@@ -205,6 +205,7 @@ static class DbusMonitor
 
     private static void PreShutdown()
     {
+        Log.WriteLine("Shutting down steam...");
         //ProcessUtil.Run("sudo", "-u gamer -- steam -shutdown", out _);
         ProcessUtil.Run("steam", "-shutdown", out _);
         ProcessUtil.Wait("steam", 20);

@@ -111,7 +111,7 @@ internal class Program
         Thread.Sleep(1000);// give service a sec to config anything needed before launching compositor
         
         // start Dbus monitor
-        DbusMonitor.Init();
+        //DbusMonitor.Init();
 
         // start compositor
         var compositor = Compositor.None;
@@ -153,7 +153,7 @@ internal class Program
 
         // stop service
         SHUTDOWN:;
-        DbusMonitor.Shutdown();
+        //DbusMonitor.Shutdown();
         ProcessUtil.KillHard("udiskie", true, out _);
         if (serviceProcess != null && !serviceProcess.HasExited)
         {

@@ -78,7 +78,8 @@ static class DbusMonitor
     
     private static void ProcessLine(string line)
     {
-        if (line.Contains("member=ListInhibitors"))
+        //lock (Log.lockObj) Console.WriteLine(line);// NOTE: only log for testing
+        if (line.Contains("member=ListInhibitors") || line.Contains("Access denied due to active block inhibitor"))
         {
             PreShutdown();
         }
@@ -204,8 +205,9 @@ static class DbusMonitor
 
     private static void PreShutdown()
     {
-        //ProcessUtil.Run("sudo", "-u gamer -- steam -shutdown", out _);
-        ProcessUtil.Run("steam", "-shutdown", out _);
+        Log.WriteLine("Shutting down steam...");
+        ProcessUtil.Run("sudo", "-u gamer -- steam -shutdown", out _);
+        //ProcessUtil.Run("steam", "-shutdown", out _);
         ProcessUtil.Wait("steam", 20);
         ProcessUtil.KillHard("systemd-inhibit", false, out _);
         //if (isRebootMode) ProcessUtil.Run("reboot", "", out _);
