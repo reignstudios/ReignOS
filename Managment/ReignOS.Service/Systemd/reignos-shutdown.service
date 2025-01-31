@@ -8,7 +8,7 @@ Type=oneshot
 ExecStart=/usr/bin/steam -shutdown
 ExecStop=/usr/bin/bash -c '
   echo "Waiting for Steam to exit..."
-  while pgrep -f "steam" >/dev/null; do
+  while pgrep -f "ReignOS.Bootloader" >/dev/null; do
       sleep 1
   done
   echo "Steam has exited."
