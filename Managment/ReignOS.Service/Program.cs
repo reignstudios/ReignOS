@@ -63,16 +63,16 @@ internal class Program
 
         // install Systemd services
         string processPath = Path.GetDirectoryName(Environment.ProcessPath);
-        /*string srcPath = Path.Combine(processPath, "Systemd");
+        string srcPath = Path.Combine(processPath, "Systemd");
         string dstPath = "/etc/systemd/system/";
         InstallService(Path.Combine(srcPath, "reignos-shutdown.service"), Path.Combine(dstPath, "reignos-shutdown.service"));
         ProcessUtil.Run("systemctl", "daemon-reload", out _, wait:true);// reload installed services
         ProcessUtil.Run("systemctl", "enable reignos-shutdown.service", out _, wait:true);
-        ProcessUtil.Run("systemctl", "start reignos-shutdown.service", out _, wait:true);*/
+        ProcessUtil.Run("systemctl", "start reignos-shutdown.service", out _, wait:true);
 
         // install SteamOS3 scripts
-        string srcPath = Path.Combine(processPath, "SteamOS3/steamos-polkit-helpers/");
-        string dstPath = "/usr/bin/steamos-polkit-helpers/";
+        srcPath = Path.Combine(processPath, "SteamOS3/steamos-polkit-helpers/");
+        dstPath = "/usr/bin/steamos-polkit-helpers/";
         InstallScript(Path.Combine(srcPath, "jupiter-biosupdate"), Path.Combine(dstPath, "jupiter-biosupdate"));
         InstallScript(Path.Combine(srcPath, "steamos-select-branch"), Path.Combine(dstPath, "steamos-select-branch"));
         InstallScript(Path.Combine(srcPath, "steamos-update"), Path.Combine(dstPath, "steamos-update"));
@@ -107,7 +107,7 @@ internal class Program
         }
 
         // start Dbus monitor
-        DbusMonitor.Init();
+        //DbusMonitor.Init();
 
         // run events
         Log.WriteLine("Running events...");
@@ -146,7 +146,7 @@ internal class Program
         
         // shutdown
         Log.WriteLine("Shutting down...");
-        DbusMonitor.Shutdown();
+        //DbusMonitor.Shutdown();
         MSI_Claw.Dispose();
         VirtualGamepad.Dispose();
         keyboardInput.Dispose();

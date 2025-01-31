@@ -1,16 +1,24 @@
 [Unit]
 Description=ReignOS Pre-Shutdown tasks
 #DefaultDependencies=no (NOTE this causes issues)
-Before=shutdown.target poweroff.target reboot.target
+#Before=shutdown.target poweroff.target reboot.target
 
 [Service]
 Type=oneshot
-ExecStart=/bin/true
-ExecStop=/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/CheckUpdates.sh
+ExecStart=/usr/bin/steam -shutdown
+ExecStop=/usr/bin/bash -c '
+  echo "Waiting for Steam to exit..."
+  while pgrep -f "steam" >/dev/null; do
+      sleep 1
+  done
+  echo "Steam has exited."
+'
 User=gamer
+TimeoutStopSec=60
 RemainAfterExit=yes
-TimeoutStopSec=infinity
-KillMode=none
+#TimeoutStopSec=infinity
+#KillMode=none
 
 [Install]
-WantedBy=multi-user.target
+#WantedBy=multi-user.target
+WantedBy=default.target

@@ -78,7 +78,7 @@ static class DbusMonitor
     
     private static void ProcessLine(string line)
     {
-        //lock (Log.lockObj) Console.WriteLine(line);// NOTE: only log for testing
+        lock (Log.lockObj) Console.WriteLine(line);// NOTE: only log for testing
 
         // detect
         if (stage == Stage.None)
