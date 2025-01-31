@@ -78,6 +78,7 @@ static class DbusMonitor
     
     private static void ProcessLine(string line)
     {
+        lock (Log.lockObj) Console.WriteLine(line);// NOTE: only log for testing
         if (line.Contains("member=ListInhibitors"))
         {
             PreShutdown();
