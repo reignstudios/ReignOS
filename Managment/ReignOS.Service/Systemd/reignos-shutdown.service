@@ -6,8 +6,8 @@ Before=exit.target
 [Service]
 Type=oneshot
 #User=gamer
-ExecStart=/usr/bin/steam -shutdown
-ExecStop=/usr/bin/bash -c 'while pgrep -f "[R]eignOS.Bootloader" > /dev/null; do sleep 1; done;'
+ExecStart=/usr/bin/echo "ReignOS shutdown started..."
+ExecStop=/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/publish/Shutdown.sh
 TimeoutStopSec=60
 RemainAfterExit=yes
 #TimeoutStopSec=infinity

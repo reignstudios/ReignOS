@@ -30,8 +30,8 @@ internal class Program
 
         // ensure permissions
         ProcessUtil.Run("chmod", "+x ./CheckUpdates.sh", out _, wait:true);
-        //ProcessUtil.Run("chown", "gamer:gamer ./CheckUpdates.sh", out _, wait:true);
         ProcessUtil.Run("chmod", "+x ./PostKill.sh", out _, wait:true);
+        ProcessUtil.Run("chmod", "+x ./Shutdown.sh", out _, wait:true);
         
         // install user services
         string processPath = Path.GetDirectoryName(Environment.ProcessPath);
