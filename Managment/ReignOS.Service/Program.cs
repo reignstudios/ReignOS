@@ -64,7 +64,7 @@ internal class Program
         // install Systemd services
         string processPath = Path.GetDirectoryName(Environment.ProcessPath);
         string srcPath = Path.Combine(processPath, "Systemd");
-        string dstPath = "~gamer/.config/systemd/user/";//"/etc/systemd/system/";
+        string dstPath = "/home/gamer/.config/systemd/user/";//"/etc/systemd/system/";
         InstallService(Path.Combine(srcPath, "reignos-shutdown.service"), Path.Combine(dstPath, "reignos-shutdown.service"));
         ProcessUtil.Run("systemctl", "daemon-reload", out _, wait:true);// reload installed services
         ProcessUtil.Run("systemctl", "enable reignos-shutdown.service", out _, wait:true);
