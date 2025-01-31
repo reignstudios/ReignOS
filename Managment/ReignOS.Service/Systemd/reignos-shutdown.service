@@ -1,13 +1,13 @@
 [Unit]
 Description=ReignOS Pre-Shutdown tasks
 #DefaultDependencies=no (NOTE this causes issues)
-#Before=shutdown.target poweroff.target reboot.target
+Before=exit.target
 
 [Service]
 Type=oneshot
 #User=gamer
 ExecStart=/usr/bin/steam -shutdown
-ExecStop=/usr/bin/bash -c 'while pgrep -f "ReignOS.Bootloader" > /dev/null; do sleep 1; done;'
+ExecStop=/usr/bin/bash -c 'while pgrep -f "[R]eignOS.Bootloader" > /dev/null; do sleep 1; done;'
 TimeoutStopSec=60
 RemainAfterExit=yes
 #TimeoutStopSec=infinity
