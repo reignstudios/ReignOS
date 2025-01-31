@@ -78,7 +78,12 @@ static class DbusMonitor
     
     private static void ProcessLine(string line)
     {
-        lock (Log.lockObj) Console.WriteLine(line);// NOTE: only log for testing
+        if (line.Contains("member=ListInhibitors"))
+        {
+            PreShutdown();
+        }
+        
+        /*lock (Log.lockObj) Console.WriteLine(line);// NOTE: only log for testing
 
         // detect
         if (stage == Stage.None)
@@ -183,7 +188,7 @@ static class DbusMonitor
         else if (stage != Stage.Shutdown)
         {
             Reset();
-        }
+        }*/
     }
 
     private static void Reset()

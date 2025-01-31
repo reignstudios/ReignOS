@@ -33,14 +33,14 @@ internal class Program
         ProcessUtil.Run("chmod", "+x ./PostKill.sh", out _, wait:true);
         ProcessUtil.Run("chmod", "+x ./Shutdown.sh", out _, wait:true);
         
-        // install user services
+        /*// install user services
         string processPath = Path.GetDirectoryName(Environment.ProcessPath);
         string srcPath = Path.Combine(processPath, "Systemd");
         string dstPath = "/home/gamer/.config/systemd/user/";
         FileUtils.InstallService(Path.Combine(srcPath, "reignos-shutdown.service"), Path.Combine(dstPath, "reignos-shutdown.service"));
         ProcessUtil.Run("systemctl", "--user daemon-reload", out _, wait:true);// reload installed services
         ProcessUtil.Run("systemctl", "--user enable reignos-shutdown.service", out _, wait:true);
-        ProcessUtil.Run("systemctl", "--user start reignos-shutdown.service", out _, wait:true);
+        ProcessUtil.Run("systemctl", "--user start reignos-shutdown.service", out _, wait:true);*/
 
         // start auto mounting service
         ProcessUtil.KillHard("udiskie", true, out _);
