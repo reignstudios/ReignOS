@@ -5,20 +5,13 @@ Description=ReignOS Pre-Shutdown tasks
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/steam -shutdown
-ExecStop=/usr/bin/bash -c '
-  echo "Waiting for Steam to exit..."
-  while pgrep -f "ReignOS.Bootloader" >/dev/null; do
-      sleep 1
-  done
-  echo "Steam has exited."
-'
 User=gamer
+ExecStart=/usr/bin/steam -shutdown
+ExecStop=/usr/bin/bash -c 'echo "Waiting for ReignOS.Bootloader to exit..."; while pgrep -f "ReignOS.Bootloader" >/dev/null; do sleep 1; done; echo "Done waiting!"'
 TimeoutStopSec=60
 RemainAfterExit=yes
 #TimeoutStopSec=infinity
 #KillMode=none
 
 [Install]
-#WantedBy=multi-user.target
-WantedBy=default.target
+WantedBy=multi-user.target
