@@ -77,11 +77,11 @@ public unsafe class KeyboardInput : IDisposable
                             Log.WriteLine($"Volume Keyboard event device found path:{path}");
                             break;
                         }
-                        else if (TestBit(input.KEY_A, keybitmask) != 0 && TestBit(input.KEY_Z, keybitmask) != 0)
+                        /*else if (TestBit(input.KEY_A, keybitmask) != 0 && TestBit(input.KEY_Z, keybitmask) != 0)
                         {
                             Log.WriteLine($"Normal Keyboard event device found path:{path}");
                             break;
-                        }
+                        }*/
                     }
                 }
                 else
