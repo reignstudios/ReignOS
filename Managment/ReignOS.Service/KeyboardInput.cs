@@ -72,7 +72,7 @@ public unsafe class KeyboardInput : IDisposable
                     //if (TestBit(input.EV_KEY, evbitmask) != UIntPtr.Zero)
                     {
                         NativeUtils.ZeroMemory(keybitmask, keybitmaskSize);
-                        if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_KEY_keybitmaskSize_), keybitmask) < 0) goto CONTINUE;
+                        //if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_KEY_keybitmaskSize_), keybitmask) < 0) goto CONTINUE;
 
                         if (TestBit(input.KEY_VOLUMEDOWN, keybitmask) != 0 || TestBit(input.KEY_VOLUMEUP, keybitmask) != 0)
                         {
