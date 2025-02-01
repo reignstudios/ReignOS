@@ -72,14 +72,14 @@ public unsafe class KeyboardInput : IDisposable
                         NativeUtils.ZeroMemory(keybitmask, keybitmaskSize);
                         if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_KEY_keybitmaskSize_), keybitmask) < 0) goto CONTINUE;
 
-                        if (TestBit(input.KEY_VOLUMEUP, keybitmask) != 0 && TestBit(input.KEY_VOLUMEDOWN, keybitmask) != 0)
+                        if (TestBit(input.KEY_VOLUMEDOWN, keybitmask) != 0 || TestBit(input.KEY_VOLUMEUP, keybitmask) != 0)
                         {
-                            Log.WriteLine($"Volume Keyboard event device found path:{path}");
+                            Log.WriteLine($"Media Keyboard device found path:{path}");
                             break;
                         }
                         /*else if (TestBit(input.KEY_A, keybitmask) != 0 && TestBit(input.KEY_Z, keybitmask) != 0)
                         {
-                            Log.WriteLine($"Normal Keyboard event device found path:{path}");
+                            Log.WriteLine($"Normal Keyboard device found path:{path}");
                             break;
                         }*/
                     }

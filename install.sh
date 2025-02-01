@@ -47,8 +47,9 @@ nano /etc/pacman.conf
 # Include = /etc/pacman.d/mirrorlist
 pacman -Syy
 
-# install nano
+# install apps
 pacman -S nano
+pacman -S evtest
 
 # install network
 pacman -S dhcpcd dhclient networkmanager iwd netctl iproute2 wireless_tools wpa_supplicant dialog
