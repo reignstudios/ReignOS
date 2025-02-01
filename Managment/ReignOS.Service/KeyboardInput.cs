@@ -12,14 +12,16 @@ public unsafe class KeyboardInput : IDisposable
     
     public void Init(string name, bool useName, ushort vendorID, ushort productID)
     {
+        Log.WriteLine("Searching for media keyboard...");
+        
         handle = -1;
         const int bufferSize = 256;
         byte* buffer = stackalloc byte[bufferSize];
 
         const int BITS_PER_LONG = sizeof(long) * 8;
-        const int evbitmaskSize = (input.EV_MAX + BITS_PER_LONG - 1) / BITS_PER_LONG;
-        var evbitmask = stackalloc UIntPtr[evbitmaskSize];
-        const int EVIOCGBIT_0_evbitmaskSize_ = -2147400416;
+        //const int evbitmaskSize = (input.EV_MAX + BITS_PER_LONG - 1) / BITS_PER_LONG;
+        //var evbitmask = stackalloc UIntPtr[evbitmaskSize];
+        //const int EVIOCGBIT_0_evbitmaskSize_ = -2147400416;
         
         const int keybitmaskSize = (input.KEY_MAX + BITS_PER_LONG - 1) / BITS_PER_LONG;
         var keybitmask = stackalloc UIntPtr[keybitmaskSize];
@@ -64,10 +66,10 @@ public unsafe class KeyboardInput : IDisposable
                 {
                     static UIntPtr TestBit(int bit, UIntPtr* array) => ((array[bit / BITS_PER_LONG] >> (bit % BITS_PER_LONG)) & 1);
                     
-                    NativeUtils.ZeroMemory(evbitmask, evbitmaskSize);
-                    if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_0_evbitmaskSize_), evbitmask) < 0) goto CONTINUE;
+                    //NativeUtils.ZeroMemory(evbitmask, evbitmaskSize);
+                    //if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_0_evbitmaskSize_), evbitmask) < 0) goto CONTINUE;
                     
-                    if (TestBit(input.EV_KEY, evbitmask) != UIntPtr.Zero)
+                    //if (TestBit(input.EV_KEY, evbitmask) != UIntPtr.Zero)
                     {
                         NativeUtils.ZeroMemory(keybitmask, keybitmaskSize);
                         if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_KEY_keybitmaskSize_), keybitmask) < 0) goto CONTINUE;
