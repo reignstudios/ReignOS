@@ -26,9 +26,12 @@ public unsafe static class input
     public const int EV_SYN = 0x00;
     public const int SYN_REPORT = 0;
     
+    public const int EV_MAX = 0x1f;
     public const int EV_KEY = 0x1;
     
+    public const int KEY_MAX = 0x2ff;
     public const int KEY_A = 30;
+    public const int KEY_Z = 44;
     public const int KEY_VOLUMEDOWN = 114;
     public const int KEY_VOLUMEUP = 115;
     public const int KEY_F15 = 185;

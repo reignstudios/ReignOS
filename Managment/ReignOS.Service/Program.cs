@@ -103,7 +103,7 @@ internal class Program
         if (keyboardInput == null)
         {
             keyboardInput = new KeyboardInput();
-            keyboardInput.Init(null, false, 0, 0);// TODO: update to just load default keyboard
+            keyboardInput.Init(null, false, 0, 0);
         }
 
         // start Dbus monitor

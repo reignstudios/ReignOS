@@ -16,6 +16,15 @@ public unsafe class KeyboardInput : IDisposable
         const int bufferSize = 256;
         byte* buffer = stackalloc byte[bufferSize];
 
+        const int BITS_PER_LONG = sizeof(long) * 8;
+        const int evbitmaskSize = (input.EV_MAX + BITS_PER_LONG - 1) / BITS_PER_LONG;
+        var evbitmask = stackalloc UIntPtr[evbitmaskSize];
+        const int EVIOCGBIT_0_evbitmaskSize_ = -2147400416;
+        
+        const int keybitmaskSize = (input.KEY_MAX + BITS_PER_LONG - 1) / BITS_PER_LONG;
+        var keybitmask = stackalloc UIntPtr[keybitmaskSize];
+        const int EVIOCGBIT_EV_KEY_keybitmaskSize_ = -2146679519;
+        
         // scan devices
         for (int i = 0; i != 32; ++i)
         {
@@ -35,8 +44,14 @@ public unsafe class KeyboardInput : IDisposable
                 if (infoHandle < 0) goto CONTINUE;
 
                 NativeUtils.ZeroMemory(buffer, bufferSize);
-                if (c.read(infoHandle, buffer, bufferSize - 1) < 0) goto CONTINUE;
+                if (c.read(infoHandle, buffer, bufferSize - 1) < 0)
+                {
+                    c.close(infoHandle);
+                    goto CONTINUE;
+                }
+                
                 string deviceName = Marshal.PtrToStringAnsi((IntPtr)buffer).TrimEnd();
+                c.close(infoHandle);
                 if (deviceName == name)
                 {
                     Log.WriteLine($"Keyboard event device found name:'{name}' path:{path}");
@@ -47,7 +62,27 @@ public unsafe class KeyboardInput : IDisposable
             {
                 if (vendorID == 0 && productID == 0)
                 {
-                    // TODO: find keyboard with Volume Keys. Otherwise generic keyboard
+                    static UIntPtr TestBit(int bit, UIntPtr* array) => ((array[bit / BITS_PER_LONG] >> (bit % BITS_PER_LONG)) & 1);
+                    
+                    NativeUtils.ZeroMemory(evbitmask, evbitmaskSize);
+                    if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_0_evbitmaskSize_), evbitmask) < 0) goto CONTINUE;
+                    
+                    if (TestBit(input.EV_KEY, evbitmask) != UIntPtr.Zero)
+                    {
+                        NativeUtils.ZeroMemory(keybitmask, keybitmaskSize);
+                        if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_KEY_keybitmaskSize_), keybitmask) < 0) goto CONTINUE;
+
+                        if (TestBit(input.KEY_VOLUMEUP, keybitmask) != 0 && TestBit(input.KEY_VOLUMEDOWN, keybitmask) != 0)
+                        {
+                            Log.WriteLine($"Volume Keyboard event device found path:{path}");
+                            break;
+                        }
+                        else if (TestBit(input.KEY_A, keybitmask) != 0 && TestBit(input.KEY_Z, keybitmask) != 0)
+                        {
+                            Log.WriteLine($"Normal Keyboard event device found path:{path}");
+                            break;
+                        }
+                    }
                 }
                 else
                 {
