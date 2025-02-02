@@ -65,12 +65,13 @@ public unsafe class KeyboardInput : IDisposable
             {
                 if (vendorID == 0 && productID == 0)
                 {
-                    int TestBit(int bit, byte* array) => array[bit / 8] & (1 << (bit % 8));
+                    //int TestBit(int bit, byte* array) => array[bit / 8] & (1 << (bit % 8));
+                    int TestBit(int bit, byte* array) => (array)[(bit) >> 3] & (1 << ((bit) & 7));
                     
-                    //NativeUtils.ZeroMemory(ev_bits, ev_bitsSize);
-                    //if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_MAX_ev_bitsSize_), ev_bits) < 0) goto CONTINUE;
+                    NativeUtils.ZeroMemory(ev_bits, ev_bitsSize);
+                    if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_MAX_ev_bitsSize_), ev_bits) < 0) goto CONTINUE;
                     
-                    //if (TestBit(input.EV_KEY, ev_bits) != UIntPtr.Zero)
+                    if (TestBit(input.EV_KEY, ev_bits) != 0)
                     {
                         NativeUtils.ZeroMemory(key_bits, key_bitsSize);
                         if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_KEY_key_bitsSize_), key_bits) < 0) goto CONTINUE;
