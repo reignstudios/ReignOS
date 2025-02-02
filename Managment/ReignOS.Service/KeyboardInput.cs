@@ -21,13 +21,13 @@ public unsafe class KeyboardInput : IDisposable
         int BITS_PER_LONG = Marshal.SizeOf<nint>() * 8;
         int NBITS(int x) => (x + 7) / 8;//((x + BITS_PER_LONG - 1) / BITS_PER_LONG);
         
-        int evbitmaskSize = NBITS(input.EV_MAX + 1);
+        int evbitmaskSize = NBITS(input.EV_MAX);
         var evbitmask = stackalloc byte[evbitmaskSize];
-        const nint EVIOCGBIT_EV_MAX_evbitmaskSize_ = -2147400385;
+        const nint EVIOCGBIT_EV_MAX_evbitmaskSize_ = -2147203808;
         
-        int keybitmaskSize = NBITS(input.KEY_MAX + 1);
+        int keybitmaskSize = NBITS(input.KEY_MAX);
         var keybitmask = stackalloc byte[keybitmaskSize];
-        const nint EVIOCGBIT_EV_KEY_keybitmaskSize_ = -2146679009;
+        const nint EVIOCGBIT_EV_KEY_keybitmaskSize_ = -2147203808;
         
         // scan devices
         for (int i = 0; i != 32; ++i)
@@ -101,7 +101,9 @@ public unsafe class KeyboardInput : IDisposable
             }
             
             // close
-            CONTINUE: c.close(handle);
+            CONTINUE:
+            c.close(handle);
+            handle = -1;
         }
     }
     
