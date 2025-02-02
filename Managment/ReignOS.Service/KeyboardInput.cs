@@ -22,11 +22,11 @@ public unsafe class KeyboardInput : IDisposable
         int NBITS(int x) => (x + 7) / 8;//((x + BITS_PER_LONG - 1) / BITS_PER_LONG);
         
         int evbitmaskSize = NBITS(input.EV_MAX + 1);
-        var evbitmask = stackalloc nint[evbitmaskSize];
+        var evbitmask = stackalloc byte[evbitmaskSize];
         const nint EVIOCGBIT_EV_MAX_evbitmaskSize_ = -2147400385;
         
         int keybitmaskSize = NBITS(input.KEY_MAX + 1);
-        var keybitmask = stackalloc nint[keybitmaskSize];
+        var keybitmask = stackalloc byte[keybitmaskSize];
         const nint EVIOCGBIT_EV_KEY_keybitmaskSize_ = -2146679009;
         
         // scan devices
@@ -66,7 +66,7 @@ public unsafe class KeyboardInput : IDisposable
             {
                 if (vendorID == 0 && productID == 0)
                 {
-                    nint TestBit(int bit, nint* array) => array[bit / 8] & (1 << (bit % 8));//((array[bit / BITS_PER_LONG] >> (bit % BITS_PER_LONG)) & 1);
+                    int TestBit(int bit, byte* array) => array[bit / 8] & (1 << (bit % 8));//((array[bit / BITS_PER_LONG] >> (bit % BITS_PER_LONG)) & 1);
                     Log.WriteLine("KeyboardPath test1: " + path);
                     //NativeUtils.ZeroMemory(evbitmask, evbitmaskSize);
                     //if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_MAX_evbitmaskSize_), evbitmask) < 0) goto CONTINUE;
