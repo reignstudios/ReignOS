@@ -133,7 +133,6 @@ public unsafe class KeyboardInput : IDisposable
             {
                 if (e.type == input.EV_KEY)
                 {
-                    Log.WriteLine("EV_KEY: " + e.type);
                     key = e.code;
                     pressed = e.value == 1;
                     success = true;

@@ -124,16 +124,25 @@ pacman -S xorg-xev xbindkeys xorg-xinput xorg-xmodmap
 # install X11
 pacman -S xorg xorg-server xorg-xinit xterm
 
+nano ~/.xinitrc
+# add lines:
+#xsetroot -cursor_name left_ptr
+#MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture
+chmod +x ~/.xinitrc
+
 # install Wayland graphics drivers
 pacman -S mesa lib32-mesa
 pacman -S libva-intel-driver intel-media-driver intel-ucode vulkan-intel lib32-vulkan-intel intel-gpu-tools
 pacman -S libva-mesa-driver lib32-libva-mesa-driver amd-ucode vulkan-radeon lib32-vulkan-radeon radeontop
-pacman -S nvidia nvidia-utils lib32-nvidia-utils #libva-vdpau-driver lib32-libva-vdpau-driver
+
+#pacman -S nvidia nvidia-utils lib32-nvidia-utils nvidia-settings nvidia-prime
 pacman -S vulkan-icd-loader lib32-vulkan-icd-loader lib32-libglvnd
-pacman -S vulkan-tools egl-wayland
+pacman -S vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-layers
+pacman -S egl-wayland
 
 # install X11 drivers
-pacman -S xf86-video-intel xf86-video-amdgpu
+pacman -S xf86-video-intel xf86-video-amdgpu xf86-video-nouveau
+pacman -S glxinfo
 
 #install compositors
 pacman -S wlr-randr
@@ -173,7 +182,7 @@ nano /boot/loader/entries/arch.conf
 # add to the end of 'options'
 i915.enable_dc=2 i915.enable_psr=1
 amdgpu.dpm=1 amdgpu.ppfeaturemask=0xffffffff amdgpu.dc=1
-# nouveau.pstate=1
+nouveau.pstate=1
 # mem_sleep_default=deep (this can cause some systems to fail to wake)
 acpi_osi=Linux
 
