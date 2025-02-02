@@ -127,14 +127,15 @@ public unsafe class KeyboardInput : IDisposable
         foreach (var handle in handles)
         {
             var e = new input.input_event();
-            if (c.read(handle, &e, (UIntPtr)Marshal.SizeOf<input.input_event>()) < 0) continue;
-            
-            if (e.type == input.EV_KEY)
+            if (c.read(handle, &e, (UIntPtr)Marshal.SizeOf<input.input_event>()) >= 0)
             {
-                Log.WriteLine("EV_KEY: " + e.type);
-                key = e.code;
-                pressed = e.value == 1;
-                success = true;
+                if (e.type == input.EV_KEY)
+                {
+                    Log.WriteLine("EV_KEY: " + e.type);
+                    key = e.code;
+                    pressed = e.value == 1;
+                    success = true;
+                }
             }
         }
         
