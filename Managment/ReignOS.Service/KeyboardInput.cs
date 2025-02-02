@@ -77,7 +77,7 @@ public unsafe class KeyboardInput : IDisposable
                     {
                         NativeUtils.ZeroMemory(key_bits, key_bitsSize);
                         if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_KEY_key_bitsSize_), key_bits) < 0) goto CONTINUE;
-                        Log.WriteLine("KeyboardPath test: " + path);
+                        
                         if (TestBit(input.KEY_VOLUMEDOWN, key_bits) != 0 && TestBit(input.KEY_VOLUMEUP, key_bits) != 0)
                         {
                             Log.WriteLine($"Media Keyboard device found path:{path}");
@@ -85,7 +85,7 @@ public unsafe class KeyboardInput : IDisposable
                         }
                         else if (TestBit(input.KEY_A, key_bits) != 0 && TestBit(input.KEY_Z, key_bits) != 0)
                         {
-                            Log.WriteLine($"Normal Keyboard device found path:{path}");
+                            Log.WriteLine($"Keyboard device found path:{path}");
                             handles.Add(handle);
                         }
                     }
@@ -104,9 +104,7 @@ public unsafe class KeyboardInput : IDisposable
             }
             
             // close
-            CONTINUE:
-            c.close(handle);
-            handle = -1;
+            CONTINUE: c.close(handle);
         }
     }
     
@@ -133,6 +131,7 @@ public unsafe class KeyboardInput : IDisposable
             
             if (e.type == input.EV_KEY)
             {
+                Log.WriteLine("EV_KEY: " + e.type);
                 key = e.code;
                 pressed = e.value == 1;
                 success = true;
