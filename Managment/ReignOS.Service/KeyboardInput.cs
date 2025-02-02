@@ -18,14 +18,16 @@ public unsafe class KeyboardInput : IDisposable
         const int bufferSize = 256;
         byte* buffer = stackalloc byte[bufferSize];
 
-        const int BITS_PER_LONG = sizeof(long) * 8;
-        const int evbitmaskSize = (input.EV_MAX + BITS_PER_LONG - 1) / BITS_PER_LONG;
-        var evbitmask = stackalloc UIntPtr[evbitmaskSize];
-        const int EVIOCGBIT_0_evbitmaskSize_ = -2147400416;
+        int BITS_PER_LONG = Marshal.SizeOf<IntPtr>() * 8;
+        int NBITS(int x) => ((x + BITS_PER_LONG - 1) / BITS_PER_LONG);
         
-        const int keybitmaskSize = (input.KEY_MAX + BITS_PER_LONG - 1) / BITS_PER_LONG;
+        int evbitmaskSize = NBITS(input.EV_MAX);
+        var evbitmask = stackalloc UIntPtr[evbitmaskSize];
+        const int EVIOCGBIT_EV_MAX_evbitmaskSize_ = -2147400385;
+        
+        int keybitmaskSize = NBITS(input.KEY_MAX);
         var keybitmask = stackalloc UIntPtr[keybitmaskSize];
-        const int EVIOCGBIT_EV_KEY_KEY_MAX_ = -2097199839;
+        const int EVIOCGBIT_EV_KEY_keybitmaskSize_ = -2146679009;
         
         // scan devices
         for (int i = 0; i != 32; ++i)
@@ -64,15 +66,15 @@ public unsafe class KeyboardInput : IDisposable
             {
                 if (vendorID == 0 && productID == 0)
                 {
-                    static UIntPtr TestBit(int bit, UIntPtr* array) => ((array[bit / BITS_PER_LONG] >> (bit % BITS_PER_LONG)) & 1);
+                    UIntPtr TestBit(int bit, UIntPtr* array) => ((array[bit / BITS_PER_LONG] >> (bit % BITS_PER_LONG)) & 1);
                     
                     NativeUtils.ZeroMemory(evbitmask, evbitmaskSize);
-                    if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_0_evbitmaskSize_), evbitmask) < 0) goto CONTINUE;
+                    if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_MAX_evbitmaskSize_), evbitmask) < 0) goto CONTINUE;
                     
                     if (TestBit(input.EV_KEY, evbitmask) != UIntPtr.Zero)
                     {
                         NativeUtils.ZeroMemory(keybitmask, keybitmaskSize);
-                        if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_KEY_KEY_MAX_), keybitmask) < 0) goto CONTINUE;
+                        if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_KEY_keybitmaskSize_), keybitmask) < 0) goto CONTINUE;
                         Log.WriteLine("KeyboardPath test: " + path);
                         if (TestBit(input.KEY_VOLUMEDOWN, keybitmask) != 0 || TestBit(input.KEY_VOLUMEUP, keybitmask) != 0)
                         {
