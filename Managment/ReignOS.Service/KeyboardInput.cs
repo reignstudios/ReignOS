@@ -1,20 +1,21 @@
-using System;
-using System.Runtime.InteropServices;
-
 namespace ReignOS.Service;
 using ReignOS.Service.OS;
 using ReignOS.Core;
 using System.Text;
 
+using System;
+using System.Runtime.InteropServices;
+using System.Collections.Generic;
+
 public unsafe class KeyboardInput : IDisposable
 {
-    private int handle = -1;
+    private List<int> handles;
     
     public void Init(string name, bool useName, ushort vendorID, ushort productID)
     {
         Log.WriteLine("Searching for media keyboard...");
         
-        handle = -1;
+        handles = new List<int>();
         const int bufferSize = 256;
         byte* buffer = stackalloc byte[bufferSize];
 
@@ -34,6 +35,7 @@ public unsafe class KeyboardInput : IDisposable
             // open keyboard
             string path = "/dev/input/event" + i.ToString();
             byte[] pathEncoded = Encoding.UTF8.GetBytes(path);
+            int handle;
             fixed (byte* uinputPathPtr = pathEncoded) handle = c.open(uinputPathPtr, c.O_RDONLY | c.O_NONBLOCK);
             if (handle < 0) continue;
             
@@ -58,6 +60,7 @@ public unsafe class KeyboardInput : IDisposable
                 if (deviceName == name)
                 {
                     Log.WriteLine($"Keyboard event device found name:'{name}' path:{path}");
+                    handles.Add(handle);
                     break;
                 }
             }
@@ -65,8 +68,7 @@ public unsafe class KeyboardInput : IDisposable
             {
                 if (vendorID == 0 && productID == 0)
                 {
-                    //int TestBit(int bit, byte* array) => array[bit / 8] & (1 << (bit % 8));
-                    int TestBit(int bit, byte* array) => (array)[(bit) >> 3] & (1 << ((bit) & 7));
+                    int TestBit(int bit, byte* array) => array[bit / 8] & (1 << (bit % 8));
                     
                     NativeUtils.ZeroMemory(ev_bits, ev_bitsSize);
                     if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_MAX_ev_bitsSize_), ev_bits) < 0) goto CONTINUE;
@@ -79,12 +81,12 @@ public unsafe class KeyboardInput : IDisposable
                         if (TestBit(input.KEY_VOLUMEDOWN, key_bits) != 0 && TestBit(input.KEY_VOLUMEUP, key_bits) != 0)
                         {
                             Log.WriteLine($"Media Keyboard device found path:{path}");
-                            //break;
+                            handles.Add(handle);
                         }
                         else if (TestBit(input.KEY_A, key_bits) != 0 && TestBit(input.KEY_Z, key_bits) != 0)
                         {
                             Log.WriteLine($"Normal Keyboard device found path:{path}");
-                            //break;
+                            handles.Add(handle);
                         }
                     }
                 }
@@ -95,6 +97,7 @@ public unsafe class KeyboardInput : IDisposable
                     if (id.vendor == vendorID && id.product == productID)
                     {
                         Log.WriteLine($"Keyboard event device found vendorID:{vendorID} productID:{productID} path:{path}");
+                        handles.Add(handle);
                         break;
                     }
                 }
@@ -109,39 +112,33 @@ public unsafe class KeyboardInput : IDisposable
     
     public void Dispose()
     {
-        if (handle >= 0)
+        if (handles != null)
         {
-            c.close(handle);
-            handle = -1;
+            foreach (var handle in handles) c.close(handle);
+            handles = null;
         }
     }
     
     public bool ReadNextKey(out ushort key, out bool pressed)
     {
-        if (handle < 0)
-        {
-            key = 0;
-            pressed = false;
-            return false;
-        }
-        
-        var e = new input.input_event();
-        if (c.read(handle, &e, (UIntPtr)Marshal.SizeOf<input.input_event>()) < 0)
-        {
-            key = 0;
-            pressed = false;
-            return false;
-        }
-        
-        if (e.type == input.EV_KEY)
-        {
-            key = e.code;
-            pressed = e.value == 1;
-            return true;
-        }
-        
         key = 0;
         pressed = false;
-        return false;
+        if (handles == null || handles.Count == 0) return false;
+        
+        bool success = false;
+        foreach (var handle in handles)
+        {
+            var e = new input.input_event();
+            if (c.read(handle, &e, (UIntPtr)Marshal.SizeOf<input.input_event>()) < 0) continue;
+            
+            if (e.type == input.EV_KEY)
+            {
+                key = e.code;
+                pressed = e.value == 1;
+                success = true;
+            }
+        }
+        
+        return success;
     }
 }
