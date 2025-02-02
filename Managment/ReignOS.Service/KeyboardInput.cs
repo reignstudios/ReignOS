@@ -68,10 +68,10 @@ public unsafe class KeyboardInput : IDisposable
                 {
                     UIntPtr TestBit(int bit, UIntPtr* array) => ((array[bit / BITS_PER_LONG] >> (bit % BITS_PER_LONG)) & 1);
                     
-                    NativeUtils.ZeroMemory(evbitmask, evbitmaskSize);
-                    if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_MAX_evbitmaskSize_), evbitmask) < 0) goto CONTINUE;
+                    //NativeUtils.ZeroMemory(evbitmask, evbitmaskSize);
+                    //if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_MAX_evbitmaskSize_), evbitmask) < 0) goto CONTINUE;
                     
-                    if (TestBit(input.EV_KEY, evbitmask) != UIntPtr.Zero)
+                    //if (TestBit(input.EV_KEY, evbitmask) != UIntPtr.Zero)
                     {
                         NativeUtils.ZeroMemory(keybitmask, keybitmaskSize);
                         if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_KEY_keybitmaskSize_), keybitmask) < 0) goto CONTINUE;
