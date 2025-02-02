@@ -23,11 +23,11 @@ public unsafe class KeyboardInput : IDisposable
         
         int evbitmaskSize = NBITS(input.EV_MAX + 1);
         var evbitmask = stackalloc UIntPtr[evbitmaskSize];
-        const int EVIOCGBIT_EV_MAX_evbitmaskSize_ = -2147400385;
+        const IntPtr EVIOCGBIT_EV_MAX_evbitmaskSize_ = -2147400385;
         
         int keybitmaskSize = NBITS(input.KEY_MAX + 1);
         var keybitmask = stackalloc UIntPtr[keybitmaskSize];
-        const int EVIOCGBIT_EV_KEY_keybitmaskSize_ = -2146679009;
+        const IntPtr EVIOCGBIT_EV_KEY_keybitmaskSize_ = -2146679009;
         
         // scan devices
         for (int i = 0; i != 32; ++i)
@@ -76,16 +76,16 @@ public unsafe class KeyboardInput : IDisposable
                         NativeUtils.ZeroMemory(keybitmask, keybitmaskSize);
                         if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_KEY_keybitmaskSize_), keybitmask) < 0) goto CONTINUE;
                         Log.WriteLine("KeyboardPath test2: " + path);
-                        if (TestBit(input.KEY_VOLUMEDOWN, keybitmask) != 0 || TestBit(input.KEY_VOLUMEUP, keybitmask) != 0)
+                        if (TestBit(input.KEY_VOLUMEDOWN, keybitmask) != 0 && TestBit(input.KEY_VOLUMEUP, keybitmask) != 0)
                         {
                             Log.WriteLine($"Media Keyboard device found path:{path}");
-                            break;
+                            //break;
                         }
-                        /*else if (TestBit(input.KEY_A, keybitmask) != 0 && TestBit(input.KEY_Z, keybitmask) != 0)
+                        else if (TestBit(input.KEY_A, keybitmask) != 0 && TestBit(input.KEY_Z, keybitmask) != 0)
                         {
                             Log.WriteLine($"Normal Keyboard device found path:{path}");
-                            break;
-                        }*/
+                            //break;
+                        }
                     }
                 }
                 else
