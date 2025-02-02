@@ -67,7 +67,7 @@ public unsafe class KeyboardInput : IDisposable
                 if (vendorID == 0 && productID == 0)
                 {
                     int TestBit(int bit, byte* array) => array[bit / 8] & (1 << (bit % 8));//((array[bit / BITS_PER_LONG] >> (bit % BITS_PER_LONG)) & 1);
-                    Log.WriteLine("KeyboardPath test1: " + path);
+                    
                     //NativeUtils.ZeroMemory(evbitmask, evbitmaskSize);
                     //if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_MAX_evbitmaskSize_), evbitmask) < 0) goto CONTINUE;
                     
@@ -75,7 +75,7 @@ public unsafe class KeyboardInput : IDisposable
                     {
                         NativeUtils.ZeroMemory(keybitmask, keybitmaskSize);
                         if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_KEY_keybitmaskSize_), keybitmask) < 0) goto CONTINUE;
-                        Log.WriteLine("KeyboardPath test2: " + path);
+                        Log.WriteLine("KeyboardPath test: " + path);
                         if (TestBit(input.KEY_VOLUMEDOWN, keybitmask) != 0 && TestBit(input.KEY_VOLUMEUP, keybitmask) != 0)
                         {
                             Log.WriteLine($"Media Keyboard device found path:{path}");
