@@ -82,11 +82,13 @@ public unsafe class KeyboardInput : IDisposable
                         {
                             Log.WriteLine($"Media Keyboard device found path:{path}");
                             handles.Add(handle);
+                            continue;
                         }
                         else if (TestBit(input.KEY_A, key_bits) != 0 && TestBit(input.KEY_Z, key_bits) != 0)
                         {
                             Log.WriteLine($"Keyboard device found path:{path}");
                             handles.Add(handle);
+                            continue;
                         }
                     }
                 }
