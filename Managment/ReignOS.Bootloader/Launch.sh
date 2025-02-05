@@ -15,7 +15,7 @@ done
 # check if Arch updates exist
 echo ""
 echo "ReignOS Checking Arch for updates..."
-echo "gamer" | sudo pacman -Sy
+echo "gamer" | sudo -S pacman -Sy
 HAS_UPDATES=false
 if pacman -Qu &> /dev/null; then
     echo "Updates are available"
