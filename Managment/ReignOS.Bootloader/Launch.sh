@@ -20,7 +20,7 @@ echo "gamer" | sudo -S pacman -Syu --noconfirm
 # update ReignOS Git package
 echo ""
 echo "ReignOS Updating Git packages..."
-cd ~/ReignOS
+cd /home/gamer/ReignOS
 git reset --hard
 git pull
 cd Managment
@@ -28,6 +28,7 @@ echo "ReignOS Building packages..."
 dotnet publish -r linux-x64 -c Release
 
 # run bootloader
+cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
 ./ReignOS.Bootloader $@
 exit_code=$?
 
