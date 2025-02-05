@@ -159,18 +159,24 @@ internal class Program
         // stop service
         SHUTDOWN:;
         ProcessUtil.KillHard("udiskie", true, out _);
-        if (serviceProcess != null && !serviceProcess.HasExited)
+        if (serviceProcess != null)
         {
-            Log.WriteLine("Soft Killing service");
-            ProcessUtil.KillSoft("ReignOS.Service", true, out _);
-            Thread.Sleep(1000);
+            if (!serviceProcess.HasExited)
+            {
+                Log.WriteLine("Soft Killing service");
+                ProcessUtil.KillSoft("ReignOS.Service", true, out _);
+                Thread.Sleep(1000);
+            }
+
+            if (!serviceProcess.HasExited)
+            {
+                Log.WriteLine("Hard Killing service (just in case)");
+                serviceProcess.Kill();
+                ProcessUtil.KillHard("ReignOS.Service", true, out _);
+            }
             
             Log.WriteLine("Service ExitCode: " + serviceProcess.ExitCode.ToString());
             if (exitCode == 0) exitCode = serviceProcess.ExitCode;
-
-            Log.WriteLine("Hard Killing service (just in case)");
-            serviceProcess.Kill();
-            ProcessUtil.KillHard("ReignOS.Service", true, out _);
         }
 
         Environment.ExitCode = exitCode;
