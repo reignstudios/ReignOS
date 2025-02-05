@@ -83,5 +83,6 @@ static class DbusMonitor
         ProcessUtil.Run("sudo", "-u gamer -- steam -shutdown", out _);
         ProcessUtil.Wait("steam", 20);
         ProcessUtil.KillHard("systemd-inhibit", false, out _);
+        Program.exit = true;
     }
 }

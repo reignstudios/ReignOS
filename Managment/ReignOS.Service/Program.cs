@@ -25,7 +25,7 @@ internal class Program
     private static extern int signal(int sig, SignalHandler handler);
     private const int SIGINT = 2;
 
-    private static bool exit;
+    public static bool exit;
     public static HardwareType hardwareType { get; private set; }
 
     public static KeyboardInput keyboardInput;
@@ -61,16 +61,8 @@ internal class Program
         }
         Log.WriteLine("Known hardware detection: " + hardwareType.ToString());
 
-        // install Systemd services
-        string processPath = Path.GetDirectoryName(Environment.ProcessPath);
-        /*string srcPath = Path.Combine(processPath, "Systemd");
-        string dstPath = "/etc/systemd/system/";
-        FileUtils.InstallService(Path.Combine(srcPath, "reignos-shutdown.service"), Path.Combine(dstPath, "reignos-shutdown.service"));
-        ProcessUtil.Run("systemctl", "--user daemon-reload", out _, wait:true);// reload installed services
-        ProcessUtil.Run("systemctl", "--user enable reignos-shutdown.service", out _, wait:true);
-        ProcessUtil.Run("systemctl", "--user start reignos-shutdown.service", out _, wait:true);*/
-
         // install SteamOS3 scripts
+        string processPath = Path.GetDirectoryName(Environment.ProcessPath);
         string srcPath = Path.Combine(processPath, "SteamOS3/steamos-polkit-helpers/");
         string dstPath = "/usr/bin/steamos-polkit-helpers/";
         FileUtils.InstallScript(Path.Combine(srcPath, "jupiter-biosupdate"), Path.Combine(dstPath, "jupiter-biosupdate"));

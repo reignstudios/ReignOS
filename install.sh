@@ -112,7 +112,18 @@ reboot
 
 
 
+#auto login
+mkdir /etc/systemd/system/getty@tty1.service.d/
+nano autologin.conf # add lines below
+#[Service]
+#ExecStart=
+#ExecStart=-/usr/bin/agetty --autologin gamer --noclear %I $TERM
+sudo systemctl daemon-reload
+sudo systemctl restart getty@tty1.service
 
+# auto start ReignOS launch.sh
+nano /home/gamer/.bash_profile # add lines below
+#/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh
 
 # install apps/tools
 pacman -S dmidecode udev python
@@ -134,7 +145,7 @@ chmod +x ~/.xinitrc
 pacman -S mesa lib32-mesa
 pacman -S libva-intel-driver intel-media-driver intel-ucode vulkan-intel lib32-vulkan-intel intel-gpu-tools
 pacman -S libva-mesa-driver lib32-libva-mesa-driver amd-ucode vulkan-radeon lib32-vulkan-radeon radeontop
-
+pacman -S vulkan-nouveau lib32-vulkan-nouveau
 #pacman -S nvidia nvidia-utils lib32-nvidia-utils nvidia-settings nvidia-prime
 pacman -S vulkan-icd-loader lib32-vulkan-icd-loader lib32-libglvnd
 pacman -S vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-layers

@@ -29,18 +29,8 @@ internal class Program
         LibraryResolver.Init(Assembly.GetExecutingAssembly());
 
         // ensure permissions
-        ProcessUtil.Run("chmod", "+x ./CheckUpdates.sh", out _, wait:true);
+        ProcessUtil.Run("chmod", "+x ./Launch.sh", out _, wait:true);
         ProcessUtil.Run("chmod", "+x ./PostKill.sh", out _, wait:true);
-        ProcessUtil.Run("chmod", "+x ./Shutdown.sh", out _, wait:true);
-        
-        /*// install user services
-        string processPath = Path.GetDirectoryName(Environment.ProcessPath);
-        string srcPath = Path.Combine(processPath, "Systemd");
-        string dstPath = "/home/gamer/.config/systemd/user/";
-        FileUtils.InstallService(Path.Combine(srcPath, "reignos-shutdown.service"), Path.Combine(dstPath, "reignos-shutdown.service"));
-        ProcessUtil.Run("systemctl", "--user daemon-reload", out _, wait:true);// reload installed services
-        ProcessUtil.Run("systemctl", "--user enable reignos-shutdown.service", out _, wait:true);
-        ProcessUtil.Run("systemctl", "--user start reignos-shutdown.service", out _, wait:true);*/
 
         // start auto mounting service
         ProcessUtil.KillHard("udiskie", true, out _);
@@ -72,12 +62,10 @@ internal class Program
                     else if (value.Contains("SET_VOLUME_DOWN"))
                     {
                         ProcessUtil.Run("amixer", "set Master 5%-", out _);
-                        //ProcessUtil.Run("beep", "", out _);
                     }
                     else if (value.Contains("SET_VOLUME_UP"))
                     {
                         ProcessUtil.Run("amixer", "set Master 5%+", out _);
-                        //ProcessUtil.Run("beep", "", out _);
                     }
                     lock (Log.lockObj) Console.WriteLine(value);
                 }
@@ -110,7 +98,7 @@ internal class Program
         }
         Thread.Sleep(1000);// give service a sec to config anything needed before launching compositor
 
-        // start compositor
+        // process args
         var compositor = Compositor.None;
         bool useControlCenter = false;
         foreach (string arg in args)
@@ -121,31 +109,50 @@ internal class Program
             else if (arg == "--use-controlcenter") useControlCenter = true;
         }
 
-        try
+        // manage interfaces
+        while (true)
         {
-            switch (compositor)
+            try
             {
-                case Compositor.None:
-                    Log.WriteLine("No Compositor specified (sleeping)");
-                    Thread.Sleep(6000);
-                    break;// sleep for 6 seconds to allow for service bootup testing
+                switch (compositor)
+                {
+                    case Compositor.None:
+                        Log.WriteLine("No Compositor specified (sleeping)");
+                        Thread.Sleep(6000);
+                        break;// sleep for 6 seconds to allow for service bootup testing
 
-                case Compositor.Gamescope: StartCompositor_Gamescope(); break;
-                case Compositor.Cage: StartCompositor_Cage(); break;
-                case Compositor.Labwc: StartCompositor_Labwc(); break;
+                    case Compositor.Gamescope: StartCompositor_Gamescope(); break;
+                    case Compositor.Cage: StartCompositor_Cage(); break;
+                    case Compositor.Labwc: StartCompositor_Labwc(); break;
+                }
             }
-        }
-        catch (Exception e)
-        {
-            Log.WriteLine("Failed to start compositor");
-            Log.WriteLine(e);
-        }
+            catch (Exception e)
+            {
+                Log.WriteLine("Failed to start compositor");
+                Log.WriteLine(e);
+            }
+            
+            // wait and check if service closed
+            Log.WriteLine("Waiting...");
+            Thread.Sleep(2000);
+            if (serviceProcess.HasExited)
+            {
+                Log.WriteLine("Service has exited on its own");
+                break;
+            }
 
-        // start control center
-        if (useControlCenter)
-        {
-            string result = ProcessUtil.Run("cage", "./ReignOS.ControlCenter", out exitCode, wait:true);// start ControlCenter
-            Log.WriteLine(result);
+            // start control center
+            if (useControlCenter)
+            {
+                string result = ProcessUtil.Run("cage", "./ReignOS.ControlCenter", out exitCode, wait:true);// start ControlCenter
+                Console.WriteLine(result);
+                if (exitCode == 0) break;
+                else if (exitCode == 1) compositor = Compositor.Gamescope;
+                else if (exitCode == 2) compositor = Compositor.Cage;
+                else if (exitCode == 3) compositor = Compositor.Labwc;
+                else break;
+                exitCode = 0;
+            }
         }
 
         // stop service
