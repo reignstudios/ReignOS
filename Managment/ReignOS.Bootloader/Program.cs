@@ -131,6 +131,7 @@ internal class Program
                 Log.WriteLine("Failed to start compositor");
                 Log.WriteLine(e);
             }
+            if (compositor == Compositor.None) break;
             
             // wait and check if service closed
             Log.WriteLine("Waiting...");
