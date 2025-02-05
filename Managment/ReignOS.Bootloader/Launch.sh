@@ -12,10 +12,24 @@ for i in $(seq 1 10); do
     fi
 done
 
-# update Arch
+# check if Arch updates exist
 echo ""
-echo "ReignOS Updating Arch..."
-echo "gamer" | sudo -S pacman -Syu --noconfirm
+echo "ReignOS Checking Arch for updates..."
+echo "gamer" | sudo pacman -Sy
+HAS_UPDATES=false
+if sudo pacman -Qu &> /dev/null; then
+    echo "Updates are available"
+    HAS_UPDATES=true
+fi
+
+# update Arch
+if [ "$HAS_UPDATES" = "true" ]; then
+  echo ""
+  echo "ReignOS Updating Arch..."
+  echo "gamer" | sudo -S pacman -Syu --noconfirm
+  reboot
+  exit 0
+fi
 
 # update ReignOS Git package
 echo ""
