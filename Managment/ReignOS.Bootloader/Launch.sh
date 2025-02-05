@@ -17,7 +17,7 @@ echo ""
 echo "ReignOS Checking Arch for updates..."
 echo "gamer" | sudo pacman -Sy
 HAS_UPDATES=false
-if sudo pacman -Qu &> /dev/null; then
+if echo "gamer" | sudo pacman -Qu &> /dev/null; then
     echo "Updates are available"
     HAS_UPDATES=true
 fi
