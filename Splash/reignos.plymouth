@@ -1,0 +1,12 @@
+[Plymouth Theme]
+Name=ReignOS
+Description=ReignOS Splash
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes//reignos
+ScriptFile=/usr/share/plymouth/themes//reignos/script.script
+ConsoleLogBackgroundColor=0x00000000
+
+[script-env-vars]
+example_env_var=example env var value
