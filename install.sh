@@ -125,6 +125,14 @@ sudo systemctl restart getty@tty1.service
 nano /home/gamer/.bash_profile # add lines below
 #/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh
 
+# ReignOS Splashscreen
+pacman -S plymouth
+nano /etc/mkinitcpio.conf # add 'plymouth' after 'base'
+#HOOKS=(base plymouth ...)
+sudo mkinitcpio -P # reconfigure
+nano /boot/loader/entries/arch.conf # add 'quiet splash' after 'rw'
+#options root=<path> rw quiet splash
+
 # install apps/tools
 pacman -S dmidecode udev python
 
