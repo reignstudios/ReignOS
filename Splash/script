@@ -1,0 +1,10 @@
+Window.SetBackgroundTopColor(0, 0, 0);
+Window.SetBackgroundBottomColor(0, 0, 0);
+
+logo.image = Image("ReignOS.png");
+logo.sprite = Sprite(logo.image);
+logo.opacity_angle = 0;
+
+logo.sprite.SetX (Window.GetX() + Window.GetWidth()  / 2 - logo.image.GetWidth()  / 2);
+logo.sprite.SetY (Window.GetY() + Window.GetHeight() / 2 - logo.image.GetHeight() / 2);
+logo.sprite.SetOpacity (1);

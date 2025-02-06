@@ -133,6 +133,12 @@ sudo mkinitcpio -P # reconfigure
 nano /boot/loader/entries/arch.conf # add 'quiet splash' after 'rw'
 #options root=<path> rw quiet splash
 
+mkdir /usr/share/plymouth/themes/reignos
+cp /home/gamer/ReignOS/Splash/ReignOS.png /usr/share/plymouth/themes/reignos
+nano /usr/share/plymouth/themes/reignos/reignos.plymouth # copy stuff from Splash folder
+nano /usr/share/plymouth/themes/reignos/script # copy stuff from Splash folder
+plymouth-set-default-theme -R reignos
+
 # install apps/tools
 pacman -S dmidecode udev python
 
