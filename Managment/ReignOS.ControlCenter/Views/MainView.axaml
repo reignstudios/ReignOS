@@ -8,36 +8,75 @@
 	<Grid>
 		<TextBlock Text="Control Center" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="32" FontWeight="Bold" Margin="4,25,4,4"/>
 		<Separator HorizontalAlignment="Center" VerticalAlignment="Top" Margin="150,70,150,0"/>
-		<Button Content="⚙" FontSize="32" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4" Width="64" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+		<!-- <Button Click="SettingsButton_Click" Content="⚙" FontSize="32" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4" Width="64" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/> -->
 		
-		<StackPanel Margin="4,95,4,50" Background="#202020" Orientation="Horizontal">
-			<Button HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128">
+		<StackPanel Height="145" VerticalAlignment="Top" Margin="4,95,0,0" Background="#202020" Orientation="Horizontal">
+			<Button Click="GamescopeButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128">
 				<Grid Margin="0">
 					<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
 					<TextBlock Text="Gamescope" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
 				</Grid>
 			</Button>
 
-			<Button HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128">
+			<Button Click="CageButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128">
 				<Grid Margin="0">
 					<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
 					<TextBlock Text="Cage" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
 				</Grid>
 			</Button>
 
-			<Button HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#603000">
+			<Button Click="LabwcButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#603000">
 				<Grid Margin="0">
 					<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
 					<TextBlock Text="Labwc" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
 				</Grid>
 			</Button>
+			
+			<Button Click="X11Button_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#600000">
+				<Grid Margin="0">
+					<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
+					<TextBlock Text="X11" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
+				</Grid>
+			</Button>
+		</StackPanel>
+		
+		<StackPanel Margin="4,250,4,50" Background="#202020" Orientation="Vertical">
+			<Grid Margin="8,8,8,4" Background="#444444" Height="40">
+				<TextBlock Text="Default Boot" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+				<ComboBox Margin="120,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="150" SelectedIndex="0">
+					<ComboBoxItem Content="Control Center"/>
+					<ComboBoxItem Content="Gamescope"/>
+					<ComboBoxItem Content="Cage"/>
+				</ComboBox>
+				<Button Content="Apply" Margin="280,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+			</Grid>
+			
+			<Grid Margin="8,8,8,4" Background="#444444" Height="40">
+				<TextBlock Text="Screen Rotation" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+				<ComboBox Margin="120,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="150" SelectedIndex="0">
+					<ComboBoxItem Content="Default"/>
+					<ComboBoxItem Content="Left 90"/>
+					<ComboBoxItem Content="Right 90"/>
+					<ComboBoxItem Content="Flip"/>
+				</ComboBox>
+				<Button Content="Apply" Margin="280,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+			</Grid>
+			
+			<Grid Margin="8,4" Background="#444444" Height="40">
+				<TextBlock Text="Nvidia Drivers" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+				<ComboBox Margin="120,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="150" SelectedIndex="0">
+					<ComboBoxItem Content="Nouveau"/>
+					<ComboBoxItem Content="Proprietary"/>
+				</ComboBox>
+				<Button Content="Apply" Margin="280,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+			</Grid>
 		</StackPanel>
 
 		<StackPanel Margin="4" Height="42" VerticalAlignment="Bottom" Background="#000040" Orientation="Horizontal">
-			<Button Content="Sleep" Margin="4,0"/>
-			<Button Content="Restart" Margin="4,0"/>
-			<Button Content="Shutdown" Margin="4,0"/>
-			<Button Content="Check Updates" Margin="32,0,4,0"/>
+			<Button Content="Sleep" Margin="4,0" Click="SleepButton_Click"/>
+			<Button Content="Restart" Margin="4,0" Click="RestartButton_Click"/>
+			<Button Content="Shutdown" Margin="4,0" Click="ShutdownButton_Click"/>
+			<Button Content="Check Updates" Margin="32,0,4,0" Click="CheckUpdatesButton_Click"/>
 			<Button Content="Exit to Terminal" Margin="4,0" Click="ExitButton_Click"/>
 		</StackPanel>
 	</Grid>
