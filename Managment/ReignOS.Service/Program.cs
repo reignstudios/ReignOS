@@ -142,7 +142,7 @@ internal class Program
         MSI_Claw.Dispose();
         VirtualGamepad.Dispose();
         keyboardInput.Dispose();
-        Environment.ExitCode = DbusMonitor.isRebootMode == null ? 0 : (DbusMonitor.isRebootMode == true ? 2 : 1);
+        Environment.ExitCode = DbusMonitor.isRebootMode == null ? 0 : (DbusMonitor.isRebootMode == true ? 10 : 11);
     }
 
     private static void SignalCloseEvent(int signal)

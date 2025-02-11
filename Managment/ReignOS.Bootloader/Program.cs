@@ -14,7 +14,8 @@ enum Compositor
     None,
     Gamescope,
     Cage,
-    Labwc
+    Labwc,
+    X11
 }
 
 internal class Program
@@ -30,7 +31,13 @@ internal class Program
 
         // ensure permissions
         ProcessUtil.Run("chmod", "+x ./Launch.sh", out _, wait:true);
+        ProcessUtil.Run("chmod", "+x ./Update.sh", out _, wait:true);
         ProcessUtil.Run("chmod", "+x ./PostKill.sh", out _, wait:true);
+
+        ProcessUtil.Run("chmod", "+x ./Start_Gamescope.sh", out _, wait:true);
+        ProcessUtil.Run("chmod", "+x ./Start_Cage.sh", out _, wait:true);
+        ProcessUtil.Run("chmod", "+x ./Start_Labwc.sh", out _, wait:true);
+        ProcessUtil.Run("chmod", "+x ./Start_X11.sh", out _, wait:true);
 
         // start auto mounting service
         ProcessUtil.KillHard("udiskie", true, out _);
@@ -106,6 +113,7 @@ internal class Program
             if (arg == "--gamescope") compositor = Compositor.Gamescope;
             else if (arg == "--cage") compositor = Compositor.Cage;
             else if (arg == "--labwc") compositor = Compositor.Labwc;
+            else if (arg == "--x11") compositor = Compositor.X11;
             else if (arg == "--use-controlcenter") useControlCenter = true;
         }
 
@@ -124,6 +132,7 @@ internal class Program
                     case Compositor.Gamescope: StartCompositor_Gamescope(); break;
                     case Compositor.Cage: StartCompositor_Cage(); break;
                     case Compositor.Labwc: StartCompositor_Labwc(); break;
+                    case Compositor.X11: StartCompositor_X11(); break;
                 }
             }
             catch (Exception e)
@@ -151,8 +160,13 @@ internal class Program
                 else if (exitCode == 1) compositor = Compositor.Gamescope;
                 else if (exitCode == 2) compositor = Compositor.Cage;
                 else if (exitCode == 3) compositor = Compositor.Labwc;
-                else break;
+                else if (exitCode == 4) compositor = Compositor.X11;
+                else break;// exit with control-center exit-code
+
+                // reset things for new compositor
                 exitCode = 0;
+                ProcessUtil.Wait("cage", 6);// wait for cage
+                ProcessUtil.KillHard("cage", true, out _);// kill cage in case its stuck
             }
         }
 
@@ -175,8 +189,9 @@ internal class Program
                 ProcessUtil.KillHard("ReignOS.Service", true, out _);
             }
             
-            Log.WriteLine("Service ExitCode: " + serviceProcess.ExitCode.ToString());
-            if (exitCode == 0) exitCode = serviceProcess.ExitCode;
+            int serviceExitCode = serviceProcess.ExitCode;
+            Log.WriteLine("Service ExitCode: " + serviceExitCode.ToString());
+            if (exitCode == 0) exitCode = serviceExitCode;// if control-center has no exit code, we use service one
         }
 
         Environment.ExitCode = exitCode;
@@ -190,14 +205,12 @@ internal class Program
 
     private static void StartCompositor_Gamescope()
     {
-        ProcessUtil.Run("chmod", "+x ./Start_Gamescope.sh", out _, wait:true);
         string result = ProcessUtil.Run("gamescope", "-e -f --adaptive-sync --hdr-enabled --framerate-limit -- ./Start_Gamescope.sh", out _, wait:true);// start Gamescope with Steam in console mode, VRR
         Log.WriteLine(result);
     }
 
     private static void StartCompositor_Cage()
     {
-        ProcessUtil.Run("chmod", "+x ./Start_Cage.sh", out _, wait:true);
         string result = ProcessUtil.Run("cage", "-d -s -- ./Start_Cage.sh", out _, wait:true);// start Cage with Steam in console mode
         Log.WriteLine(result);
     }
@@ -205,6 +218,12 @@ internal class Program
     private static void StartCompositor_Labwc()
     {
         string result = ProcessUtil.Run("labwc", "--session -- ./Start_Labwc.sh", out _, wait:true);// start Labwc with Steam in desktop mode
+        Log.WriteLine(result);
+    }
+
+    private static void StartCompositor_X11()
+    {
+        string result = ProcessUtil.Run("startx", "", out _, wait:true);// start X11 with Steam in console mode
         Log.WriteLine(result);
     }
 }

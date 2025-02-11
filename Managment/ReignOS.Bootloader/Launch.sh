@@ -12,52 +12,38 @@ for i in $(seq 1 10); do
     fi
 done
 
-# check if Arch updates exist
-echo ""
-echo "ReignOS Checking Arch for updates..."
-echo "gamer" | sudo -S pacman -Sy
-HAS_UPDATES=false
-if pacman -Qu &> /dev/null; then
-    echo "Updates are available"
-    HAS_UPDATES=true
-fi
-
-# update Arch
-if [ "$HAS_UPDATES" = "true" ]; then
-  echo ""
-  echo "ReignOS Updating Arch..."
-  echo "gamer" | sudo -S pacman -Syu --noconfirm
-  reboot
-  exit 0
-fi
-
-# update ReignOS Git package
-echo ""
-echo "ReignOS Updating Git packages..."
-cd /home/gamer/ReignOS
-git reset --hard
-git pull
-cd Managment
-echo "ReignOS Building packages..."
-dotnet publish -r linux-x64 -c Release
+# run updates
+./Update.sh
 
 # run bootloader
 cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
 ./ReignOS.Bootloader $@
 exit_code=$?
 
+# reboot
+if [ $exit_code -eq 10 ]; then
+  echo ""
+  echo "ReignOS (rebooting)..."
+  reboot
+  exit 0
+fi
+
 # shutdown
-if [ $exit_code -eq 1 ]; then
+if [ $exit_code -eq 11 ]; then
   echo ""
   echo "ReignOS (shutting down)..."
   poweroff
   exit 0
 fi
 
-# reboot
-if [ $exit_code -eq 2 ]; then
+# check updates
+if [ $exit_code -eq 12 ]; then
+  ./Update.sh
+fi
+
+# re-launch launcher and exit
+if [ $exit_code -ne 20 ]; then
   echo ""
-  echo "ReignOS (rebooting)..."
-  reboot
-  exit 0
+  echo "ReignOS (Re-Launching)..."
+  ./Launch.sh $@ &
 fi
