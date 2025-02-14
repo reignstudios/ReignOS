@@ -116,7 +116,7 @@ internal class Program
 
         // process args
         var compositor = Compositor.None;
-        bool useControlCenter = true;
+        bool useControlCenter = false;
         foreach (string arg in args)
         {
             if (arg == "--gamescope") compositor = Compositor.Gamescope;
@@ -154,7 +154,7 @@ internal class Program
                 Log.WriteLine("Failed to start compositor");
                 Log.WriteLine(e);
             }
-            if (compositor == Compositor.None) break;
+            if (compositor == Compositor.None && !useControlCenter) break;
             
             // wait and check if service closed
             if (compositorRan)
