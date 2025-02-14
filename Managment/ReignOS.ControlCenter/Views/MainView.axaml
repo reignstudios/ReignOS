@@ -42,33 +42,33 @@
 		
 		<StackPanel Margin="4,250,4,50" Background="#202020" Orientation="Vertical">
 			<Grid Margin="8,8,8,4" Background="#444444" Height="40">
-				<TextBlock Text="Default Boot" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-				<ComboBox Margin="120,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="150" SelectedIndex="0">
-					<ComboBoxItem Content="Control Center"/>
-					<ComboBoxItem Content="Gamescope"/>
-					<ComboBoxItem Content="Cage"/>
-				</ComboBox>
-				<Button Content="Apply" Margin="280,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+				<Grid>
+					<TextBlock Text="Default Boot" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+					<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="BootButton_OnClick"/>
+					<RadioButton Name="boot_ControlCenter" Content="Control Center" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+					<RadioButton Name="boot_Gamescope" Content="Gamescope" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+					<RadioButton Name="boot_Cage" Content="Cage" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+				</Grid>
 			</Grid>
 			
 			<Grid Margin="8,8,8,4" Background="#444444" Height="40">
-				<TextBlock Text="Screen Rotation" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-				<ComboBox Margin="120,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="150" SelectedIndex="0">
-					<ComboBoxItem Content="Default"/>
-					<ComboBoxItem Content="Left 90"/>
-					<ComboBoxItem Content="Right 90"/>
-					<ComboBoxItem Content="Flip"/>
-				</ComboBox>
-				<Button Content="Apply" Margin="280,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+				<Grid>
+					<TextBlock Text="Screen Rotation" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+					<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RotButton_OnClick"/>
+					<RadioButton Name="rot_Default" Content="Default" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+					<RadioButton Name="rot_Left" Content="Left 90" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+					<RadioButton Name="rot_Right" Content="Right 90" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+					<RadioButton Name="rot_Flip" Content="Flip 180" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+				</Grid>
 			</Grid>
 			
-			<Grid Margin="8,4" Background="#444444" Height="40">
-				<TextBlock Text="Nvidia Drivers" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-				<ComboBox Margin="120,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="150" SelectedIndex="0">
-					<ComboBoxItem Content="Nouveau"/>
-					<ComboBoxItem Content="Proprietary"/>
-				</ComboBox>
-				<Button Content="Apply" Margin="280,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+			<Grid Margin="8,8,8,4" Background="#444444" Height="40">
+				<Grid>
+					<TextBlock Text="Nvidia Drivers" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+					<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="GPUButton_OnClick"/>
+					<RadioButton Name="gpu_Nouveau" Content="Nouveau" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+					<RadioButton Name="gpu_Proprietary" Content="Proprietary" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+				</Grid>
 			</Grid>
 		</StackPanel>
 

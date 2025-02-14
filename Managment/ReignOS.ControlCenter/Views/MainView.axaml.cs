@@ -65,4 +65,19 @@ public partial class MainView : UserControl
         App.exitCode = 20;// close Managment and go to virtual terminal
         MainWindow.singleton.Close();
     }
+
+    private void BootButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        
+    }
+    
+    private void RotButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        
+    }
+    
+    private void GPUButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        
+    }
 }
