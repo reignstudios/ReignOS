@@ -135,8 +135,8 @@ internal class Program
                 {
                     case Compositor.None:
                         Log.WriteLine("No Compositor specified (sleeping)");
-                        Thread.Sleep(6000);
-                        break;// sleep for 6 seconds to allow for service bootup testing
+                        if (!useControlCenter) Thread.Sleep(6000);// sleep for 6 seconds to allow for service bootup testing
+                        break;
 
                     case Compositor.Gamescope: StartCompositor_Gamescope(); break;
                     case Compositor.Cage: StartCompositor_Cage(); break;
