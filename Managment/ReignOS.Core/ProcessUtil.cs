@@ -6,7 +6,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 public static class ProcessUtil
 {
@@ -102,6 +102,7 @@ public static class ProcessUtil
                 process.Dispose();
             }
             if (!isAlive) break;
+            Thread.Sleep(1000);
         } while ((DateTime.Now - time).TotalSeconds < seconds);
     }
 }
