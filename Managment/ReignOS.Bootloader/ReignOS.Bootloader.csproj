@@ -32,6 +32,12 @@
     <None Update="Update.sh">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Nvidia_Install_Nouveau.sh">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Nvidia_Install_Proprietary.sh">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <Target Name="CopyService" AfterTargets="Publish">
