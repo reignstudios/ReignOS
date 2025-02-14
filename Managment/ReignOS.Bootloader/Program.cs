@@ -135,8 +135,11 @@ internal class Program
                 switch (compositor)
                 {
                     case Compositor.None:
-                        Log.WriteLine("No Compositor specified (sleeping)");
-                        if (!useControlCenter) Thread.Sleep(6000);// sleep for 6 seconds to allow for service bootup testing
+                        if (!useControlCenter)
+                        {
+                            Log.WriteLine("No Compositor specified (sleeping)");
+                            Thread.Sleep(6000);// sleep for 6 seconds to allow for service bootup testing
+                        }
                         compositorRan = false;
                         break;
 
@@ -168,6 +171,7 @@ internal class Program
             // start control center
             if (useControlCenter)
             {
+                Log.WriteLine("Starting Cage with ReignOS.ControlCenter...");
                 string result = ProcessUtil.Run("cage", "./ReignOS.ControlCenter", out exitCode, wait:true);// start ControlCenter
                 Console.WriteLine(result);
                 if (exitCode == 0) break;
@@ -219,24 +223,28 @@ internal class Program
 
     private static void StartCompositor_Gamescope()
     {
+        Log.WriteLine("Starting Gamescope with Steam...");
         string result = ProcessUtil.Run("gamescope", "-e -f --adaptive-sync --hdr-enabled --framerate-limit -- ./Start_Gamescope.sh", out _, wait:true);// start Gamescope with Steam in console mode, VRR
         Log.WriteLine(result);
     }
 
     private static void StartCompositor_Cage()
     {
+        Log.WriteLine("Starting Cage with Steam...");
         string result = ProcessUtil.Run("cage", "-d -s -- ./Start_Cage.sh", out _, wait:true);// start Cage with Steam in console mode
         Log.WriteLine(result);
     }
 
     private static void StartCompositor_Labwc()
     {
+        Log.WriteLine("Starting Labwc with Steam...");
         string result = ProcessUtil.Run("labwc", "--session -- ./Start_Labwc.sh", out _, wait:true);// start Labwc with Steam in desktop mode
         Log.WriteLine(result);
     }
 
     private static void StartCompositor_X11()
     {
+        Log.WriteLine("Starting X11 with Steam...");
         string result = ProcessUtil.Run("startx", "", out _, wait:true);// start X11 with Steam in console mode
         Log.WriteLine(result);
     }
