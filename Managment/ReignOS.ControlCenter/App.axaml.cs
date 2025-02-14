@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System;
+using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using ReignOS.ControlCenter.Views;
@@ -10,6 +11,7 @@ public partial class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
+        
     }
 
     public override void OnFrameworkInitializationCompleted()
@@ -20,6 +22,8 @@ public partial class App : Application
             {
                 //DataContext = new MainViewModel()
             };
+            
+            desktop.Exit += OnExit;
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
@@ -30,5 +34,10 @@ public partial class App : Application
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private void OnExit(object sender, ControlledApplicationLifetimeExitEventArgs e)
+    {
+        e.ApplicationExitCode = Environment.ExitCode;
     }
 }

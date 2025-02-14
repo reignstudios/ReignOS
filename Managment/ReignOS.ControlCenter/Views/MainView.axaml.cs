@@ -15,13 +15,13 @@ public partial class MainView : UserControl
     
     private void GamescopeButton_OnClick(object sender, RoutedEventArgs e)
     {
-        Environment.ExitCode = 1;// open Steam in Labwc
+        Environment.ExitCode = 1;// open Steam in Gamescope
         MainWindow.singleton.Close();
     }
     
     private void CageButton_OnClick(object sender, RoutedEventArgs e)
     {
-        Environment.ExitCode = 2;// open Steam in Labwc
+        Environment.ExitCode = 2;// open Steam in Cage
         MainWindow.singleton.Close();
     }
     
