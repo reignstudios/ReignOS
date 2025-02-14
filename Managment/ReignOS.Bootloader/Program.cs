@@ -129,6 +129,7 @@ internal class Program
         // manage interfaces
         while (true)
         {
+            bool compositorRan = true;
             try
             {
                 switch (compositor)
@@ -136,6 +137,7 @@ internal class Program
                     case Compositor.None:
                         Log.WriteLine("No Compositor specified (sleeping)");
                         if (!useControlCenter) Thread.Sleep(6000);// sleep for 6 seconds to allow for service bootup testing
+                        compositorRan = false;
                         break;
 
                     case Compositor.Gamescope: StartCompositor_Gamescope(); break;
@@ -152,12 +154,15 @@ internal class Program
             if (compositor == Compositor.None) break;
             
             // wait and check if service closed
-            Log.WriteLine("Waiting...");
-            Thread.Sleep(2000);
-            if (serviceProcess.HasExited)
+            if (compositorRan)
             {
-                Log.WriteLine("Service has exited on its own");
-                break;
+                Log.WriteLine("Waiting...");
+                Thread.Sleep(2000);
+                if (serviceProcess.HasExited)
+                {
+                    Log.WriteLine("Service has exited on its own");
+                    break;
+                }
             }
 
             // start control center
