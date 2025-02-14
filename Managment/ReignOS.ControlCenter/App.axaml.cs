@@ -8,10 +8,11 @@ namespace ReignOS.ControlCenter;
 
 public partial class App : Application
 {
+    public static int exitCode;
+    
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
-        
     }
 
     public override void OnFrameworkInitializationCompleted()
@@ -38,6 +39,6 @@ public partial class App : Application
 
     private void OnExit(object sender, ControlledApplicationLifetimeExitEventArgs e)
     {
-        e.ApplicationExitCode = Environment.ExitCode;
+        e.ApplicationExitCode = exitCode;
     }
 }
