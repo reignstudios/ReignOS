@@ -13,6 +13,7 @@ for i in $(seq 1 30); do
 done
 
 # run updates
+cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
 ./Update.sh
 
 # run bootloader
