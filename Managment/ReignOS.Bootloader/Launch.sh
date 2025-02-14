@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # wait for network
-for i in $(seq 1 10); do
+for i in $(seq 1 30); do
     # Try to ping Google's DNS server
     if ping -c 1 -W 1 8.8.8.8 &> /dev/null; then
         echo "Network is up!"
