@@ -5,6 +5,7 @@ for i in $(seq 1 30); do
     # Try to ping Google's DNS server
     if ping -c 1 -W 1 8.8.8.8 &> /dev/null; then
         echo "Network is up!"
+        sleep 1
         break
     else
         echo "Waiting for network... $i/$timeout"
@@ -50,6 +51,7 @@ fi
 if [ $exit_code -eq 30 ]; then
   echo ""
   echo "ReignOS (Install Nvidia Nouveau)..."
+  chmod +x ./Nvidia_Install_Nouveau.sh
   ./Nvidia_Install_Nouveau.sh
   exit 0
 fi
@@ -57,6 +59,7 @@ fi
 if [ $exit_code -eq 31 ]; then
   echo ""
   echo "ReignOS (Install Nvidia Proprietary)..."
+  chmod +x ./Nvidia_Install_Proprietary.sh
   ./Nvidia_Install_Proprietary.sh
   exit 0
 fi
