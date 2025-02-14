@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using System;
+using System.IO;
 using ReignOS.Core;
 
 namespace ReignOS.ControlCenter.Views;
@@ -66,18 +67,27 @@ public partial class MainView : UserControl
         MainWindow.singleton.Close();
     }
 
-    private void BootButton_OnClick(object sender, RoutedEventArgs e)
+    private void BootApplyButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        const string profileFile = "/home/gamer/.bash_profile";
+        string text = File.ReadAllText(profileFile);
+        text = text.Replace(" --gamescope", "");
+        text = text.Replace(" --cage", "");
+        if (boot_Gamescope.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --gamescope");
+        else if (boot_Cage.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --cage");
+        File.WriteAllText(profileFile, text);
+    }
+    
+    private void RotApplyButton_OnClick(object sender, RoutedEventArgs e)
     {
         
     }
     
-    private void RotButton_OnClick(object sender, RoutedEventArgs e)
+    private void NvidiaApplyButton_OnClick(object sender, RoutedEventArgs e)
     {
-        
-    }
-    
-    private void GPUButton_OnClick(object sender, RoutedEventArgs e)
-    {
-        
+        // invoke Nvidia driver install script
+        if (nvidia_Nouveau.IsChecked == true) App.exitCode = 30;
+        else if (nvidia_Proprietary.IsChecked == true) App.exitCode = 31;
+        MainWindow.singleton.Close();
     }
 }

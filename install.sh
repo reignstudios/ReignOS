@@ -123,7 +123,7 @@ sudo systemctl restart getty@tty1.service
 
 # auto start ReignOS launch.sh
 nano /home/gamer/.bash_profile # add lines below
-#/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh
+#/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh --use-controlcenter
 
 # ReignOS Splashscreen
 pacman -S plymouth

@@ -33,6 +33,9 @@ internal class Program
         ProcessUtil.Run("chmod", "+x ./Launch.sh", out _, wait:true);
         ProcessUtil.Run("chmod", "+x ./Update.sh", out _, wait:true);
         ProcessUtil.Run("chmod", "+x ./PostKill.sh", out _, wait:true);
+        
+        ProcessUtil.Run("chmod", "+x ./Nvidia_Install_Nouveau.sh", out _, wait:true);
+        ProcessUtil.Run("chmod", "+x ./Nvidia_Install_Proprietary.sh", out _, wait:true);
 
         ProcessUtil.Run("chmod", "+x ./Start_Gamescope.sh", out _, wait:true);
         ProcessUtil.Run("chmod", "+x ./Start_Cage.sh", out _, wait:true);

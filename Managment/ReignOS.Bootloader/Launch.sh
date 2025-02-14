@@ -40,7 +40,10 @@ fi
 
 # check updates
 if [ $exit_code -eq 12 ]; then
-  ./Update.sh
+  echo ""
+  echo "ReignOS (Re-Launching to check for updates)..."
+  ./Launch.sh $@ &
+  exit 0
 fi
 
 # re-launch launcher and exit
@@ -48,6 +51,22 @@ if [ $exit_code -ne 20 ]; then
   echo ""
   echo "ReignOS (Re-Launching)..."
   ./Launch.sh $@ &
+  exit 0
+fi
+
+# install Nvidia drivers
+if [ $exit_code -ne 30 ]; then
+  echo ""
+  echo "ReignOS (Install Nvidia Nouveau)..."
+  ./Nvidia_Install_Nouveau.sh
+  exit 0
+fi
+
+if [ $exit_code -ne 31 ]; then
+  echo ""
+  echo "ReignOS (Install Nvidia Proprietary)..."
+  ./Nvidia_Install_Proprietary.sh
+  exit 0
 fi
 
 exit 0
