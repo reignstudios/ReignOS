@@ -151,6 +151,8 @@ pacman -S xorg xorg-server xorg-xinit xterm
 
 nano ~/.xinitrc
 # add lines:
+#!/bin/bash
+#xrandr --output default --rotate left
 #xsetroot -cursor_name left_ptr
 #MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture
 chmod +x ~/.xinitrc
@@ -230,7 +232,7 @@ udiskie --no-tray & # run this in Bootloader
 # NOTE: After auto-mounting a new drive run: sudo chown -R gamer:gamer /run/media/gamer/<disk-label>
 
 # install steam
-pacman -S lib32-libxcomposite lib32-libxrandr lib32-libgcrypt lib32-pipewire lib32-libpulse lib32-gtk2
+pacman -S libxcomposite lib32-libxcomposite libxrandr lib32-libxrandr libgcrypt lib32-libgcrypt lib32-pipewire libpulse lib32-libpulse gtk2 lib32-gtk2
 pacman -S gnutls lib32-gnutls openal lib32-openal sqlite lib32-sqlite libcurl-compat lib32-libcurl-compat
 pacman -S xdg-desktop-portal xdg-desktop-portal-gtk
 pacman -S mangohud

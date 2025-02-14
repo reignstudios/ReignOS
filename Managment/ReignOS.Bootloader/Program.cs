@@ -38,6 +38,15 @@ internal class Program
         ProcessUtil.Run("chmod", "+x ./Start_Cage.sh", out _, wait:true);
         ProcessUtil.Run("chmod", "+x ./Start_Labwc.sh", out _, wait:true);
         ProcessUtil.Run("chmod", "+x ./Start_X11.sh", out _, wait:true);
+        
+        // configure X11
+        const string x11ConfigFile = "/home/gamer/.xinitrc";
+        using (var writer = new StreamWriter(x11ConfigFile))
+        {
+            writer.WriteLine("#!/bin/bash");
+            writer.WriteLine("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_X11.sh");
+        }
+        ProcessUtil.Run("chmod", "+x " + x11ConfigFile, out _, wait:true);
 
         // start auto mounting service
         ProcessUtil.KillHard("udiskie", true, out _);
