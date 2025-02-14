@@ -116,7 +116,7 @@ internal class Program
 
         // process args
         var compositor = Compositor.None;
-        bool useControlCenter = false;
+        bool useControlCenter = true;
         foreach (string arg in args)
         {
             if (arg == "--gamescope") compositor = Compositor.Gamescope;
