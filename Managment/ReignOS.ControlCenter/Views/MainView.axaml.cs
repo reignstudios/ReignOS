@@ -88,21 +88,25 @@ public partial class MainView : UserControl
         {
             File.WriteAllText(x11File, "xrandr --output HDMI-1 --rotate normal");
             File.WriteAllText(waylandFile, "wlr-randr --output eDP-1 --transform 0 --adaptive-sync enabled");
+            ProcessUtil.Run("wlr-randr", "--output eDP-1 --transform 0 --adaptive-sync enabled", out _);
         }
         else if (rot_Left.IsChecked == true)
         {
             File.WriteAllText(x11File, "xrandr --output HDMI-1 --rotate left");
             File.WriteAllText(waylandFile, "wlr-randr --output eDP-1 --transform -90 --adaptive-sync enabled");
+            ProcessUtil.Run("wlr-randr", "--output eDP-1 --transform -90 --adaptive-sync enabled", out _);
         }
         else if (rot_Right.IsChecked == true)
         {
             File.WriteAllText(x11File, "xrandr --output HDMI-1 --rotate right");
             File.WriteAllText(waylandFile, "wlr-randr --output eDP-1 --transform 90 --adaptive-sync enabled");
+            ProcessUtil.Run("wlr-randr", "--output eDP-1 --transform 90 --adaptive-sync enabled", out _);
         }
         else if (rot_Flip.IsChecked == true)
         {
             File.WriteAllText(x11File, "xrandr --output HDMI-1 --rotate inverted");
             File.WriteAllText(waylandFile, "wlr-randr --output eDP-1 --transform 180 --adaptive-sync enabled");
+            ProcessUtil.Run("wlr-randr", "--output eDP-1 --transform 180 --adaptive-sync enabled", out _);
         }
     }
     
