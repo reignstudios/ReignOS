@@ -14,7 +14,14 @@ public partial class MainView : UserControl
     public MainView()
     {
         InitializeComponent();
-        LoadSettings();
+        try
+        {
+            LoadSettings();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
     
     private void LoadSettings()
