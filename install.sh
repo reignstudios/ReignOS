@@ -161,7 +161,7 @@ chmod +x ~/.xinitrc
 pacman -S mesa lib32-mesa
 pacman -S libva-intel-driver intel-media-driver intel-ucode vulkan-intel lib32-vulkan-intel intel-gpu-tools
 pacman -S libva-mesa-driver lib32-libva-mesa-driver amd-ucode vulkan-radeon lib32-vulkan-radeon radeontop
-pacman -S vulkan-nouveau lib32-vulkan-nouveau 
+pacman -S vulkan-nouveau lib32-vulkan-nouveau
 #pacman -S nvidia nvidia-utils lib32-nvidia-utils nvidia-settings nvidia-prime
 pacman -S vulkan-icd-loader lib32-vulkan-icd-loader lib32-libglvnd
 pacman -S vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-layers

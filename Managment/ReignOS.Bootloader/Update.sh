@@ -24,10 +24,8 @@ echo ""
 echo "ReignOS Updating Git packages..."
 cd /home/gamer/ReignOS
 git reset --hard
-if git pull | grep -q "Already up to date."; then
-  echo "ReignOS repo already up to date (skipping...)"
-else
-  cd /home/gamer/ReignOS/Managment
-  echo "ReignOS Building packages..."
-  dotnet publish -r linux-x64 -c Release --no-incremental
-fi
+cd /home/gamer/ReignOS/Managment
+echo "ReignOS Building packages..."
+dotnet publish -r linux-x64 -c Release
+
+exit 0
