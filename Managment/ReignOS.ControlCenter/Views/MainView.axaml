@@ -45,7 +45,7 @@
 				<Grid>
 					<TextBlock Text="Default Boot" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 					<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="BootApplyButton_OnClick"/>
-					<RadioButton Name="boot_ControlCenter" Content="Control Center" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+					<RadioButton Name="boot_ControlCenter" Content="Control Center" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 					<RadioButton Name="boot_Gamescope" Content="Gamescope" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 					<RadioButton Name="boot_Cage" Content="Cage" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 				</Grid>
@@ -55,7 +55,7 @@
 				<Grid>
 					<TextBlock Text="Screen Rotation" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 					<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RotApplyButton_OnClick"/>
-					<RadioButton Name="rot_Default" Content="Default" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+					<RadioButton Name="rot_Default" Content="Default" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 					<RadioButton Name="rot_Left" Content="Left 90" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 					<RadioButton Name="rot_Right" Content="Right 90" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 					<RadioButton Name="rot_Flip" Content="Flip 180" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
@@ -66,7 +66,7 @@
 				<Grid>
 					<TextBlock Text="Nvidia Drivers" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 					<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="NvidiaApplyButton_OnClick"/>
-					<RadioButton Name="nvidia_Nouveau" Content="Nouveau" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+					<RadioButton Name="nvidia_Nouveau" Content="Nouveau" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 					<RadioButton Name="nvidia_Proprietary" Content="Proprietary" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 				</Grid>
 			</Grid>

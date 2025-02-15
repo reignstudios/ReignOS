@@ -9,9 +9,68 @@ namespace ReignOS.ControlCenter.Views;
 
 public partial class MainView : UserControl
 {
+    private const string settingsFile = "/home/gamer/ReignOS_Ext/Settings.txt";
+    
     public MainView()
     {
         InitializeComponent();
+        LoadSettings();
+    }
+    
+    private void LoadSettings()
+    {
+        using (var reader = new StreamReader(settingsFile))
+        {
+            string line;
+            do
+            {
+                line = reader.ReadLine();
+                if (line == null) break;
+                
+                var parts = line.Split('=');
+                if (parts.Length < 2) continue;
+                
+                if (parts[0] == "Boot")
+                {
+                    if (parts[1] == "ControlCenter") boot_ControlCenter.IsChecked = true;
+                    else if (parts[1] == "Gamescope") boot_Gamescope.IsChecked = true;
+                    else if (parts[1] == "Cage") boot_Cage.IsChecked = true;
+                }
+                else if (parts[0] == "ScreenRotation")
+                {
+                    if (parts[1] == "Default") rot_Default.IsChecked = true;
+                    else if (parts[1] == "Left") rot_Left.IsChecked = true;
+                    else if (parts[1] == "Right") rot_Right.IsChecked = true;
+                    else if (parts[1] == "Flip") rot_Flip.IsChecked = true;
+                }
+                else if (parts[0] == "NvidiaDrivers")
+                {
+                    if (parts[1] == "Nouveau") nvidia_Nouveau.IsChecked = true;
+                    else if (parts[1] == "Proprietary") nvidia_Proprietary.IsChecked = true;
+                }
+            } while (!reader.EndOfStream);
+        }
+    }
+    
+    private void SaveSettings()
+    {
+        using (var writer = new StreamWriter(settingsFile))
+        {
+            if (boot_ControlCenter.IsChecked == true) writer.WriteLine("Boot=ControlCenter");
+            else if (boot_Gamescope.IsChecked == true) writer.WriteLine("Boot=Gamescope");
+            else if (boot_Cage.IsChecked == true) writer.WriteLine("Boot=Cage");
+            else writer.WriteLine("Boot=ControlCenter");
+            
+            if (rot_Default.IsChecked == true) writer.WriteLine("ScreenRotation=Default");
+            else if (rot_Left.IsChecked == true) writer.WriteLine("ScreenRotation=Left");
+            else if (rot_Right.IsChecked == true) writer.WriteLine("ScreenRotation=Right");
+            else if (rot_Flip.IsChecked == true) writer.WriteLine("ScreenRotation=Flip");
+            else writer.WriteLine("ScreenRotation=Default");
+            
+            if (nvidia_Nouveau.IsChecked == true) writer.WriteLine("NvidiaDrivers=Nouveau");
+            else if (nvidia_Proprietary.IsChecked == true) writer.WriteLine("NvidiaDrivers=Proprietary");
+            else writer.WriteLine("NvidiaDrivers=Nouveau");
+        }
     }
     
     private void GamescopeButton_OnClick(object sender, RoutedEventArgs e)
@@ -76,19 +135,20 @@ public partial class MainView : UserControl
         if (boot_Gamescope.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --gamescope");
         else if (boot_Cage.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --cage");
         File.WriteAllText(profileFile, text);
+        SaveSettings();
     }
     
     private void RotApplyButton_OnClick(object sender, RoutedEventArgs e)
     {
         static void WriteX11Settings(StreamWriter writer, string rotation)
         {
-            writer.WriteLine("display=$(xrandr --query | awk '/ connected/ {print $1; exit}' | xargs)");
+            writer.WriteLine("display=$(xrandr --query | awk '/ connected/ {print $1; exit}')");
             writer.WriteLine($"xrandr --output $display --rotate {rotation}");
         }
         
         static void WriteWaylandSettings(StreamWriter writer, string rotation)
         {
-            writer.WriteLine("display=$(wlr-randr | awk '/^[^ ]+/{print $1; exit}' | xargs)");
+            writer.WriteLine("display=$(wlr-randr | awk '/^[^ ]+/{print $1; exit}')");
             writer.WriteLine($"wlr-randr --output $display --transform {rotation}");// --adaptive-sync enabled (this can break rotation)
         }
         
@@ -133,6 +193,8 @@ public partial class MainView : UserControl
             using (var writer = new StreamWriter(waylandFile)) WriteWaylandSettings(writer, "180");
             ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 180", out _);
         }
+        
+        SaveSettings();
     }
     
     private void NvidiaApplyButton_OnClick(object sender, RoutedEventArgs e)
@@ -141,5 +203,6 @@ public partial class MainView : UserControl
         if (nvidia_Nouveau.IsChecked == true) App.exitCode = 30;
         else if (nvidia_Proprietary.IsChecked == true) App.exitCode = 31;
         MainWindow.singleton.Close();
+        SaveSettings();
     }
 }
