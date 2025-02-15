@@ -82,8 +82,8 @@ public partial class MainView : UserControl
     {
         const string folder = "/home/gamer/ReignOS_Ext";
         if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
-        string x11File = Path.Combine(folder, "/X11_Settings.sh");
-        string waylandFile = Path.Combine(folder, "/Wayland_Settings.sh");
+        string x11File = Path.Combine(folder, "X11_Settings.sh");
+        string waylandFile = Path.Combine(folder, "Wayland_Settings.sh");
         if (rot_Default.IsChecked == true)
         {
             File.WriteAllText(x11File, "xrandr --output HDMI-1 --rotate normal");
