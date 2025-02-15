@@ -82,13 +82,13 @@ public partial class MainView : UserControl
     {
         static void WriteX11Settings(StreamWriter writer, string rotation)
         {
-            writer.WriteLine("display=$(xrandr --query | awk '/ connected/ {print $1; exit}')");
+            writer.WriteLine("display=$(xrandr --query | awk '/ connected/ {print $1; exit}' | xargs)");
             writer.WriteLine($"xrandr --output $display --rotate {rotation}");
         }
         
         static void WriteWaylandSettings(StreamWriter writer, string rotation)
         {
-            writer.WriteLine("display=$(wlr-randr | awk '/^[^ ]+/{print $1; exit}')");
+            writer.WriteLine("display=$(wlr-randr | awk '/^[^ ]+/{print $1; exit}' | xargs)");
             writer.WriteLine($"wlr-randr --output $display --transform {rotation} --adaptive-sync enabled");
         }
         
