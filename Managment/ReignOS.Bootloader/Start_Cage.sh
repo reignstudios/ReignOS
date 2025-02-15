@@ -1,7 +1,11 @@
 #!/bin/bash
 
-# rotate screen and enable VRR
-#wlr-randr --output eDP-1 --transform 90 --adaptive-sync enabled
+# Wayland settings
+rot_script=/home/gamer/ReignOS_Ext/Wayland_Settings.sh
+if [ -e "$rot_script" ]; then
+  chmod +x "$rot_script"
+  "$rot_script"
+fi
 
 # hide mouse after 3 seconds
 unclutter -idle 3 &

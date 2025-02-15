@@ -80,7 +80,30 @@ public partial class MainView : UserControl
     
     private void RotApplyButton_OnClick(object sender, RoutedEventArgs e)
     {
-        
+        const string folder = "/home/gamer/ReignOS_Ext";
+        if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+        string x11File = Path.Combine(folder, "/X11_Settings.sh");
+        string waylandFile = Path.Combine(folder, "/Wayland_Settings.sh");
+        if (rot_Default.IsChecked == true)
+        {
+            File.WriteAllText(x11File, "xrandr --output HDMI-1 --rotate normal");
+            File.WriteAllText(waylandFile, "wlr-randr --output eDP-1 --transform 0 --adaptive-sync enabled");
+        }
+        else if (rot_Left.IsChecked == true)
+        {
+            File.WriteAllText(x11File, "xrandr --output HDMI-1 --rotate left");
+            File.WriteAllText(waylandFile, "wlr-randr --output eDP-1 --transform -90 --adaptive-sync enabled");
+        }
+        else if (rot_Right.IsChecked == true)
+        {
+            File.WriteAllText(x11File, "xrandr --output HDMI-1 --rotate right");
+            File.WriteAllText(waylandFile, "wlr-randr --output eDP-1 --transform 90 --adaptive-sync enabled");
+        }
+        else if (rot_Flip.IsChecked == true)
+        {
+            File.WriteAllText(x11File, "xrandr --output HDMI-1 --rotate inverted");
+            File.WriteAllText(waylandFile, "wlr-randr --output eDP-1 --transform 180 --adaptive-sync enabled");
+        }
     }
     
     private void NvidiaApplyButton_OnClick(object sender, RoutedEventArgs e)

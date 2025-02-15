@@ -1,7 +1,11 @@
 #!/bin/bash
 
-# rotate screen
-#wlr-randr --output eDP-1 --transform 90 enabled
+# Wayland settings
+rot_script=/home/gamer/ReignOS_Ext/Wayland_Settings.sh
+if [ -e "$rot_script" ]; then
+  chmod +x "$rot_script"
+  "$rot_script"
+fi
 
 # start steam
 steam -nobigpicture
