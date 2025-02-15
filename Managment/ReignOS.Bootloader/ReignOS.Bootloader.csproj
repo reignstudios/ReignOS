@@ -4,6 +4,8 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>disable</Nullable>
+    <DependsOnProjects Include="\$(ProjectDir)..\ReignOS.Service\ReignOS.Service.csproj"/>
+    <DependsOnProjects Include="\$(ProjectDir)..\ReignOS.ControlCenter\ReignOS.ControlCenter.csproj"/>
   </PropertyGroup>
 
   <ItemGroup>
