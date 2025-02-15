@@ -26,6 +26,7 @@ public partial class MainView : UserControl
     
     private void LoadSettings()
     {
+        if (!File.Exists(settingsFile)) return;
         using (var reader = new StreamReader(settingsFile))
         {
             string line;
