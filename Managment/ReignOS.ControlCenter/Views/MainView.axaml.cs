@@ -80,33 +80,58 @@ public partial class MainView : UserControl
     
     private void RotApplyButton_OnClick(object sender, RoutedEventArgs e)
     {
+        static void WriteX11Settings(StreamWriter writer, string rotation)
+        {
+            writer.WriteLine("display=$(xrandr --query | awk '/ connected/ {print $1; exit}')");
+            writer.WriteLine($"xrandr --output $display --rotate {rotation}");
+        }
+        
+        static void WriteWaylandSettings(StreamWriter writer, string rotation)
+        {
+            writer.WriteLine("display=$(wlr-randr | awk '/^[^ ]+/{print $1; exit}')");
+            writer.WriteLine($"wlr-randr --output $display --transform {rotation} --adaptive-sync enabled");
+        }
+        
+        static string GetWaylandDisplay()
+        {
+            try
+            {
+                string result = ProcessUtil.Run("wlr-randr", "", out _);
+                var lines = result.Split('\n');
+                result = lines[0].Split(" ")[0];
+                return result;
+            }
+            catch {}
+            return "ERROR";
+        }
+        
         const string folder = "/home/gamer/ReignOS_Ext";
         if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
         string x11File = Path.Combine(folder, "X11_Settings.sh");
         string waylandFile = Path.Combine(folder, "Wayland_Settings.sh");
         if (rot_Default.IsChecked == true)
         {
-            File.WriteAllText(x11File, "xrandr --output HDMI-1 --rotate normal");
-            File.WriteAllText(waylandFile, "wlr-randr --output eDP-1 --transform 0 --adaptive-sync enabled");
-            ProcessUtil.Run("wlr-randr", "--output eDP-1 --transform 0 --adaptive-sync enabled", out _);
+            using (var writer = new StreamWriter(x11File)) WriteWaylandSettings(writer, "normal");
+            using (var writer = new StreamWriter(waylandFile)) WriteWaylandSettings(writer, "normal");
+            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform normal", out _);
         }
         else if (rot_Left.IsChecked == true)
         {
-            File.WriteAllText(x11File, "xrandr --output HDMI-1 --rotate left");
-            File.WriteAllText(waylandFile, "wlr-randr --output eDP-1 --transform -90 --adaptive-sync enabled");
-            ProcessUtil.Run("wlr-randr", "--output eDP-1 --transform -90 --adaptive-sync enabled", out _);
+            using (var writer = new StreamWriter(x11File)) WriteWaylandSettings(writer, "left");
+            using (var writer = new StreamWriter(waylandFile)) WriteWaylandSettings(writer, "270");
+            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 270", out _);
         }
         else if (rot_Right.IsChecked == true)
         {
-            File.WriteAllText(x11File, "xrandr --output HDMI-1 --rotate right");
-            File.WriteAllText(waylandFile, "wlr-randr --output eDP-1 --transform 90 --adaptive-sync enabled");
-            ProcessUtil.Run("wlr-randr", "--output eDP-1 --transform 90 --adaptive-sync enabled", out _);
+            using (var writer = new StreamWriter(x11File)) WriteWaylandSettings(writer, "right");
+            using (var writer = new StreamWriter(waylandFile)) WriteWaylandSettings(writer, "90");
+            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()}--transform 90", out _);
         }
         else if (rot_Flip.IsChecked == true)
         {
-            File.WriteAllText(x11File, "xrandr --output HDMI-1 --rotate inverted");
-            File.WriteAllText(waylandFile, "wlr-randr --output eDP-1 --transform 180 --adaptive-sync enabled");
-            ProcessUtil.Run("wlr-randr", "--output eDP-1 --transform 180 --adaptive-sync enabled", out _);
+            using (var writer = new StreamWriter(x11File)) WriteWaylandSettings(writer, "inverted");
+            using (var writer = new StreamWriter(waylandFile)) WriteWaylandSettings(writer, "180");
+            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 180", out _);
         }
     }
     
