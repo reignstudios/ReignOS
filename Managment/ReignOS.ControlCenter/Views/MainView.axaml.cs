@@ -89,7 +89,7 @@ public partial class MainView : UserControl
         static void WriteWaylandSettings(StreamWriter writer, string rotation)
         {
             writer.WriteLine("display=$(wlr-randr | awk '/^[^ ]+/{print $1; exit}' | xargs)");
-            writer.WriteLine($"wlr-randr --output $display --transform {rotation} --adaptive-sync enabled");
+            writer.WriteLine($"wlr-randr --output $display --transform {rotation}");// --adaptive-sync enabled (this can break rotation)
         }
         
         static string GetWaylandDisplay()
