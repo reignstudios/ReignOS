@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
+             x:Class="ReignOS.Installer.Views.MainView">
+
+	<Grid>
+		<TextBlock Text="Installer" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="32" FontWeight="Bold" Margin="4,25,4,4"/>
+		<Separator HorizontalAlignment="Center" VerticalAlignment="Top" Margin="150,70,150,0"/>
+		
+		<Grid Margin="4,100,4,50" Background="#202020">
+			
+		</Grid>
+
+		<StackPanel Margin="4" Height="42" VerticalAlignment="Bottom" Background="#000040" Orientation="Horizontal">
+			<Button Content="Sleep" Margin="4,0" Click="SleepButton_Click"/>
+			<Button Content="Restart" Margin="4,0" Click="RestartButton_Click"/>
+			<Button Content="Shutdown" Margin="4,0" Click="ShutdownButton_Click"/>
+			<Button Content="Check Updates" Margin="32,0,4,0" Click="CheckUpdatesButton_Click"/>
+			<Button Content="Exit to Terminal" Margin="4,0" Click="ExitButton_Click"/>
+		</StackPanel>
+	</Grid>
+</UserControl>

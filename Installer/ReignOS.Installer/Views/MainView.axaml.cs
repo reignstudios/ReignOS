@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using ReignOS.Core;
 
-namespace ReignOS.ControlCenter.Views;
+namespace ReignOS.Installer.Views;
 
 public partial class MainView : UserControl
 {

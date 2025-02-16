@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReignOS.Installer", "ReignOS.Installer\ReignOS.Installer.csproj", "{2AEE8143-5E6D-462A-BFEB-C860B9A0EBD5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReignOS.Core", "..\Managment\ReignOS.Core\ReignOS.Core.csproj", "{784D4661-7D80-47D3-8BAA-14998066C446}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2AEE8143-5E6D-462A-BFEB-C860B9A0EBD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AEE8143-5E6D-462A-BFEB-C860B9A0EBD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AEE8143-5E6D-462A-BFEB-C860B9A0EBD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AEE8143-5E6D-462A-BFEB-C860B9A0EBD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{784D4661-7D80-47D3-8BAA-14998066C446}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{784D4661-7D80-47D3-8BAA-14998066C446}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{784D4661-7D80-47D3-8BAA-14998066C446}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{784D4661-7D80-47D3-8BAA-14998066C446}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
