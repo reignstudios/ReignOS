@@ -10,15 +10,28 @@
 		<Separator HorizontalAlignment="Center" VerticalAlignment="Top" Margin="150,70,150,0"/>
 		
 		<Grid Margin="4,100,4,50" Background="#202020">
-			
+			<Grid Name="driveSelectPage" Margin="4">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="0.25*"/>
+					<ColumnDefinition Width="0.75*"/>
+				</Grid.ColumnDefinitions>
+				<Grid Grid.Column="0">
+					<Label Content="Drives" FontSize="32" Height="50" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+					<Separator HorizontalAlignment="Center" VerticalAlignment="Top" Margin="80,40,80,0"/>
+					<ListBox Margin="0,50,0,0">
+						<ListBoxItem Content="Test"/>
+						<ListBoxItem Content="Test"/>
+						<ListBoxItem Content="Test"/>
+						<ListBoxItem Content="Test"/>
+					</ListBox>
+				</Grid>
+			</Grid>
 		</Grid>
 
-		<StackPanel Margin="4" Height="42" VerticalAlignment="Bottom" Background="#000040" Orientation="Horizontal">
-			<Button Content="Sleep" Margin="4,0" Click="SleepButton_Click"/>
-			<Button Content="Restart" Margin="4,0" Click="RestartButton_Click"/>
-			<Button Content="Shutdown" Margin="4,0" Click="ShutdownButton_Click"/>
-			<Button Content="Check Updates" Margin="32,0,4,0" Click="CheckUpdatesButton_Click"/>
-			<Button Content="Exit to Terminal" Margin="4,0" Click="ExitButton_Click"/>
+		<Button Name="shutdownButton" Content="Shutdown" Margin="8,0,0,10" HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="#600000"/>
+		<StackPanel Margin="100,4,4,4" Height="42" VerticalAlignment="Bottom" Background="#000040" Orientation="Horizontal" FlowDirection="RightToLeft">
+			<Button Name="nextButton" Content="Next" Margin="4,0"/>
+			<Button Name="backButton" Content="Back" Margin="4,0"/>
 		</StackPanel>
 	</Grid>
 </UserControl>

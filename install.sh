@@ -22,9 +22,18 @@ fdisk /dev/nvme0n1
 # When creating EFI /dev/nvme0n1p1 partition. Hit 't' then '1' to mark as EFI partition (this is needed for some tools)
 # when done configuring partion hit 'w' to write changes
 
+parted
+(parted) print devices
+(parted) select <device>
+(parted) mklabel gpt
+(parted) mkpart ESP fat32 1MiB 513MiB #1mb header, 513mb ensured 512mb
+(parted) set 1 esp on
+(parted) mkpart primary ext4 513MiB 100%
+(parted) quit
+
 # format partitions
-sudo mkfs.vfat -F 32 /dev/nvme0n1p1
-sudo mkfs.ext4 /dev/nvme0n1p2
+mkfs.fat -F32 /dev/nvme0n1p1
+mkfs.ext4 /dev/nvme0n1p2
 
 # mount partitions
 mount /dev/nvme0n1p2 /mnt

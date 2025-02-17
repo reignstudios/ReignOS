@@ -7,6 +7,7 @@
 		Width="1280" Height="720"
         x:Class="ReignOS.Installer.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="ReignOS.ControlCenter">
+        Title="ReignOS.Installer"
+		WindowStartupLocation="CenterScreen">
         <views:MainView />
 </Window>
