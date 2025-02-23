@@ -49,16 +49,16 @@ genfstab -U /mnt >> /mnt/etc/fstab
 # Chroot into the Installed System
 arch-chroot /mnt
 
+# install apps
+pacman -S nano
+pacman -S evtest
+
 # add mirror list
 nano /etc/pacman.conf
 # uncomment existing lines...
 # [multilib]
 # Include = /etc/pacman.d/mirrorlist
 pacman -Syy
-
-# install apps
-pacman -S nano
-pacman -S evtest
 
 # install network
 pacman -S dhcpcd dhclient networkmanager iwd netctl iproute2 wireless_tools wpa_supplicant dialog
@@ -282,3 +282,95 @@ export DISPLAY:=0
 export STEAM_RUNTIME=1
 exec steam
 #sudo usermod -aG video $USER (is this needed for X11?)
+
+
+
+
+
+
+
+
+# ====================================
+# Installer stuff
+# ====================================
+
+# configure for archiso
+pacman -S archiso
+mkdir ~/ReignOS
+cd ~/ReignOS
+cp -r /usr/share/archiso/configs/releng/* .
+
+# add packages needed in live USB (like dotnet)
+nano packages.x86_64
+
+bash
+git
+git-lfs
+gcc
+dotnet-runtime-8.0
+dmidecode
+udev
+python
+xorg-server-xwayland
+wayland
+wayland-protocols
+xorg-xev
+xbindkeys
+xorg-xinput
+xorg-xmodmap
+mesa
+libva-intel-driver
+intel-media-driver
+intel-ucode
+vulkan-intel
+intel-gpu-tools
+libva-mesa-driver
+amd-ucode
+vulkan-radeon
+radeontop
+vulkan-nouveau
+vulkan-icd-loader
+vulkan-tools
+vulkan-mesa-layers
+egl-wayland
+
+# allow installer to access mirror list
+nano pacman.conf # uncomment files below
+#[multilib]
+#Include = /etc/pacman.d/mirrorlist
+
+# configure root pass
+echo "root:gamer" | chpasswd -R airootfs/
+nano airootfs/etc/passwd # change to (or .bashrc isn't called): root:x:0:0:root:/root:/usr/bin/bash
+
+# edit ReignOS metadata
+nano profiledef.sh
+
+# configure auto boot of installer
+nano airootfs/usr/local/bin/install.sh # add whats needed here
+chmod +x airootfs/usr/local/bin/install.sh
+nano airootfs/root/.bashrc # add lines below
+# chmod +x /usr/local/bin/install.sh
+# /usr/local/bin/install.sh
+
+# build iso
+mkarchiso -v .
+
+# rebuild iso
+rm -rf work/ out/
+mkarchiso -v .
+
+# copy ISO from VirtualBox to host
+In VirtualBox, go to settings and Shared Folders
+Select Host path and name "Folder Name" and "Mount point" to "share"
+Boot up system
+
+In Arch install:
+pacman -S virtualbox-guest-utils linux-headers base-devel
+modprobe vboxguest
+modprobe vboxsf
+modprobe vboxvideo
+reboot
+
+Create mount point: mkdir -p /mnt/share
+Mount host folder: mount -t vboxsf share /mnt/share
