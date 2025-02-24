@@ -319,6 +319,10 @@ xbindkeys
 xorg-xinput
 xorg-xmodmap
 mesa
+libdrm
+xf86-video-intel
+xf86-video-amdgpu
+xf86-video-nouveau
 libva-intel-driver
 intel-media-driver
 intel-ucode
@@ -342,16 +346,30 @@ nano pacman.conf # uncomment files below
 # configure root pass
 echo "root:gamer" | chpasswd -R airootfs/
 nano airootfs/etc/passwd # change to (or .bashrc isn't called): root:x:0:0:root:/root:/usr/bin/bash
+# gamer:x:0:0:gamer:/home/gamer:/usr/bin/bash # add this line
+
+# configure gamer user
+nano airootfs/root/customize_airootfs.sh
+#useradd -m -G wheel -s /bin/bash gamer
+#passwd -d gamer
+
+nano /etc/sudoers.d/archiso # add this folder and file
+#Defaults env_reset
+#Defaults mail_badpass
+#Defaults secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+#%wheel ALL=(ALL) ALL
 
 # edit ReignOS metadata
 nano profiledef.sh
 
 # configure auto boot of installer
-nano airootfs/usr/local/bin/install.sh # add whats needed here
-chmod +x airootfs/usr/local/bin/install.sh
-nano airootfs/root/.bashrc # add lines below
+nano airootfs/home/gamer/install.sh # add whats needed here
+chmod +x airootfs/home/gamer/install.sh
+nano airootfs/home/gamer/.bashrc # add lines below
 # chmod +x /usr/local/bin/install.sh
 # /usr/local/bin/install.sh
+nano airootfs/home/gamer/.bash_profile # add lines below
+# ./bashrc
 
 # build iso
 mkarchiso -v .
