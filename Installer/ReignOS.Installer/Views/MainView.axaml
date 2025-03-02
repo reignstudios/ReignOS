@@ -10,6 +10,34 @@
 		<Separator HorizontalAlignment="Center" VerticalAlignment="Top" Margin="150,70,150,0"/>
 		
 		<Grid Name="drivePage" Margin="4,100,4,50" Background="#202020">
+			<Grid Name="networkSelectPage" Margin="4" IsVisible="True">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="0.25*"/>
+					<ColumnDefinition Width="0.75*"/>
+				</Grid.ColumnDefinitions>
+
+				<Grid Grid.Column="0">
+					<Label Content="Networks" FontSize="32" Height="50" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+					<Separator VerticalAlignment="Top" Margin="0,45,0,0"/>
+					<ListBox Margin="0,50,0,0">
+						<ListBoxItem Content="Wifi 0"/>
+						<ListBoxItem Content="Wifi 1"/>
+						<ListBoxItem Content="Wifi 2"/>
+						<ListBoxItem Content="Wifi 3"/>
+					</ListBox>
+				</Grid>
+
+				<Grid Grid.Column="1">
+					<Label Content="Connection" FontSize="32" Height="50" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+					<Separator VerticalAlignment="Top" Margin="0,45,0,0"/>
+					<StackPanel Orientation="Vertical" Margin="16,50,0,0">
+						<Label Content="Password" FontSize="24"/>
+						<TextBox RevealPassword="False" PasswordChar="*"/>
+						<Button Name="networkConnectButton" Content="Connect" Margin="0,8,0,0"/>
+					</StackPanel>
+				</Grid>
+			</Grid>
+
 			<Grid Name="driveSelectPage" Margin="4" IsVisible="False">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="0.25*"/>
@@ -40,34 +68,6 @@
 							<TextBlock Name="driveGBTextBox" Text="64gb" Foreground="DodgerBlue" Margin="250,6,0,0" Width="100" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 							<Slider Name="driveSlider" ValueChanged="DriveSlider_OnValueChanged" Margin="0,42,0,0" Value="25"/>
 						</Grid>
-					</StackPanel>
-				</Grid>
-			</Grid>
-			
-			<Grid Name="networkSelectPage" Margin="4" IsVisible="True">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="0.25*"/>
-					<ColumnDefinition Width="0.75*"/>
-				</Grid.ColumnDefinitions>
-				
-				<Grid Grid.Column="0">
-					<Label Content="Networks" FontSize="32" Height="50" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-					<Separator VerticalAlignment="Top" Margin="0,45,0,0"/>
-					<ListBox Margin="0,50,0,0">
-						<ListBoxItem Content="Wifi 0"/>
-						<ListBoxItem Content="Wifi 1"/>
-						<ListBoxItem Content="Wifi 2"/>
-						<ListBoxItem Content="Wifi 3"/>
-					</ListBox>
-				</Grid>
-				
-				<Grid Grid.Column="1">
-					<Label Content="Connection" FontSize="32" Height="50" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-					<Separator VerticalAlignment="Top" Margin="0,45,0,0"/>
-					<StackPanel Orientation="Vertical" Margin="16,50,0,0">
-						<Label Content="Password" FontSize="24"/>
-						<TextBox RevealPassword="False" PasswordChar="*"/>
-						<Button Content="Connect" Margin="0,8,0,0"/>
 					</StackPanel>
 				</Grid>
 			</Grid>
