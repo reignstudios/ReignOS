@@ -9,8 +9,12 @@
 		<TextBlock Text="Installer" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="32" FontWeight="Bold" Margin="4,25,4,4"/>
 		<Separator HorizontalAlignment="Center" VerticalAlignment="Top" Margin="150,70,150,0"/>
 		
-		<Grid Name="drivePage" Margin="4,100,4,50" Background="#202020">
-			<Grid Name="networkSelectPage" Margin="4" IsVisible="True">
+		<Grid Margin="4,100,4,50" Background="#202020">
+			<Grid Name="startPage" Margin="4" IsVisible="True">
+				<Image Source="/Assets/ReignOS.png"/>
+			</Grid>
+			
+			<Grid Name="networkSelectPage" Margin="4" IsVisible="False">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="0.25*"/>
 					<ColumnDefinition Width="0.75*"/>
@@ -20,10 +24,10 @@
 					<Label Content="Networks" FontSize="32" Height="50" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 					<Separator VerticalAlignment="Top" Margin="0,45,0,0"/>
 					<ListBox Margin="0,50,0,0">
-						<ListBoxItem Content="Wifi 0"/>
+						<!--<ListBoxItem Content="Wifi 0"/>
 						<ListBoxItem Content="Wifi 1"/>
 						<ListBoxItem Content="Wifi 2"/>
-						<ListBoxItem Content="Wifi 3"/>
+						<ListBoxItem Content="Wifi 3"/>-->
 					</ListBox>
 				</Grid>
 
@@ -38,7 +42,7 @@
 				</Grid>
 			</Grid>
 
-			<Grid Name="driveSelectPage" Margin="4" IsVisible="False">
+			<Grid Name="drivePage" Margin="4" IsVisible="False">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="0.25*"/>
 					<ColumnDefinition Width="0.75*"/>
@@ -48,10 +52,10 @@
 					<Label Content="Drives" FontSize="32" Height="50" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 					<Separator VerticalAlignment="Top" Margin="0,45,0,0"/>
 					<ListBox Margin="0,50,0,0">
-						<ListBoxItem Content="/dev/sdb0"/>
+						<!--<ListBoxItem Content="/dev/sdb0"/>
 						<ListBoxItem Content="/dev/sdb1"/>
 						<ListBoxItem Content="/dev/sdb2"/>
-						<ListBoxItem Content="/dev/sdb3"/>
+						<ListBoxItem Content="/dev/sdb3"/>-->
 					</ListBox>
 				</Grid>
 				
@@ -71,6 +75,11 @@
 					</StackPanel>
 				</Grid>
 			</Grid>
+			
+			<Grid Name="installPage" Margin="4" IsVisible="False">
+				<TextBlock Name="installText" Text="Ready To Install" FontWeight="Bold" FontSize="32" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				<ProgressBar Name="installProgressBar" IsVisible="False" Width="400" Margin="0,80,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+			</Grid>
 		</Grid>
 
 		<Button Name="shutdownButton" Content="Shutdown" Margin="8,0,0,10" HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="#600000" Click="ShutdownButton_OnClick"/>
@@ -82,8 +91,8 @@
 			<RadioButton Name="flipRotRadioButton" Content="Flip" Margin="16,0,0,0" IsCheckedChanged="RotationToggleButton_OnIsCheckedChanged"/>
 		</StackPanel>
 		<StackPanel Margin="500,4,4,4" Height="42" VerticalAlignment="Bottom" Background="#000040" Orientation="Horizontal" FlowDirection="RightToLeft">
-			<Button Name="nextButton" Content="Next" Margin="4,0"/>
-			<Button Name="backButton" Content="Back" Margin="4,0"/>
+			<Button Name="nextButton" Content="Next" Margin="4,0" Click="NextButton_OnClick"/>
+			<Button Name="backButton" Content="Back" Margin="4,0" Click="BackButton_OnClick" IsEnabled="False"/>
 		</StackPanel>
 	</Grid>
 </UserControl>
