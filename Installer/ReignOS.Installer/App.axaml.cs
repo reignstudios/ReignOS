@@ -2,6 +2,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using ReignOS.Core;
 using ReignOS.Installer.Views;
 
 namespace ReignOS.Installer;
@@ -40,5 +41,11 @@ public partial class App : Application
     private void OnExit(object sender, ControlledApplicationLifetimeExitEventArgs e)
     {
         e.ApplicationExitCode = exitCode;
+    }
+
+    public static bool IsOnline()
+    {
+        string result = ProcessUtil.Run("ping", "-c 1 reign-studios.com");
+        return result.Contains("1 received");
     }
 }

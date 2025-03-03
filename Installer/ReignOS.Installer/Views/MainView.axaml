@@ -7,23 +7,25 @@
 
 	<Grid>
 		<TextBlock Text="Installer" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="32" FontWeight="Bold" Margin="4,25,4,4"/>
+		<TextBlock Name="isConnectedText" Text="🛜" Margin="4" HorizontalAlignment="Right" VerticalAlignment="Top"/>
 		<Separator HorizontalAlignment="Center" VerticalAlignment="Top" Margin="150,70,150,0"/>
 		
 		<Grid Margin="4,100,4,50" Background="#202020">
-			<Grid Name="startPage" Margin="4" IsVisible="True">
+			<Grid Name="startPage" Margin="4" IsVisible="False">
 				<Image Source="/Assets/ReignOS.png"/>
 			</Grid>
 			
-			<Grid Name="networkSelectPage" Margin="4" IsVisible="False">
+			<Grid Name="networkSelectPage" Margin="4" IsVisible="True">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="0.25*"/>
 					<ColumnDefinition Width="0.75*"/>
 				</Grid.ColumnDefinitions>
 
 				<Grid Grid.Column="0">
+					<Button Content="Refresh" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,10,0,0" Click="RefreshNetworkButton_OnClick"/>
 					<Label Content="Networks" FontSize="32" Height="50" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 					<Separator VerticalAlignment="Top" Margin="0,45,0,0"/>
-					<ListBox Margin="0,50,0,0">
+					<ListBox Name="connectionListBox" Margin="0,50,0,0">
 						<!--<ListBoxItem Content="Wifi 0"/>
 						<ListBoxItem Content="Wifi 1"/>
 						<ListBoxItem Content="Wifi 2"/>
@@ -36,8 +38,8 @@
 					<Separator VerticalAlignment="Top" Margin="0,45,0,0"/>
 					<StackPanel Orientation="Vertical" Margin="16,50,0,0">
 						<Label Content="Password" FontSize="24"/>
-						<TextBox RevealPassword="False" PasswordChar="*"/>
-						<Button Name="networkConnectButton" Content="Connect" Margin="0,8,0,0"/>
+						<TextBox Name="networkPasswordText" RevealPassword="False" PasswordChar="*"/>
+						<Button Name="networkConnectButton" Content="Connect" Margin="0,8,0,0" Click="NetworkConnectButton_OnClick"/>
 					</StackPanel>
 				</Grid>
 			</Grid>
@@ -51,7 +53,7 @@
 				<Grid Grid.Column="0">
 					<Label Content="Drives" FontSize="32" Height="50" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 					<Separator VerticalAlignment="Top" Margin="0,45,0,0"/>
-					<ListBox Margin="0,50,0,0">
+					<ListBox Name="driveListBox" Margin="0,50,0,0">
 						<!--<ListBoxItem Content="/dev/sdb0"/>
 						<ListBoxItem Content="/dev/sdb1"/>
 						<ListBoxItem Content="/dev/sdb2"/>

@@ -1,4 +1,6 @@
-﻿namespace ReignOS.Core;
+﻿using System.IO;
+
+namespace ReignOS.Core;
 
 using System;
 using System.Collections.Generic;
@@ -10,7 +12,15 @@ using System.Threading;
 
 public static class ProcessUtil
 {
-    public static string Run(string name, string args, out int exitCode, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false)
+    public delegate void ProcessOutputDelegate(string line);
+    public delegate void ProcessInputDelegate(StreamWriter writer);
+    
+    public static string Run(string name, string args, Dictionary<string, string> enviromentVars = null, bool wait = true, bool asAdmin = false, ProcessOutputDelegate standardOut = null, ProcessOutputDelegate errorOut = null, ProcessInputDelegate getStandardInput = null)
+    {
+        return Run(name, args, out _, enviromentVars, wait, asAdmin, standardOut, errorOut, getStandardInput);
+    }
+
+    public static string Run(string name, string args, out int exitCode, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false, ProcessOutputDelegate standardOut = null, ProcessOutputDelegate errorOut = null, ProcessInputDelegate getStandardInput = null)
     {
         try
         {
@@ -43,18 +53,46 @@ public static class ProcessUtil
                     process.StandardInput.WriteLine("gamer");
                     process.StandardInput.Flush();
                 }
+                
+                getStandardInput?.Invoke(process.StandardInput);
 
                 if (wait)
                 {
                     process.WaitForExit();
                     exitCode = process.ExitCode;
                     var builder = new StringBuilder();
-                    builder.Append(process.StandardOutput.ReadToEnd());
-                    builder.Append(process.StandardError.ReadToEnd());
+
+                    if (standardOut == null)
+                    {
+                        builder.Append(process.StandardOutput.ReadToEnd());
+                    }
+                    else
+                    {
+                        process.OutputDataReceived += (sender, args) =>
+                        {
+                            if (args != null && args.Data != null) standardOut(args.Data);
+                        };
+                        process.BeginOutputReadLine();
+                    }
+
+                    if (errorOut == null)
+                    {
+                        builder.Append(process.StandardError.ReadToEnd());
+                    }
+                    else
+                    {
+                        process.ErrorDataReceived += (sender, args) =>
+                        {
+                            if (args != null && args.Data != null) errorOut(args.Data);
+                        };
+                        process.BeginErrorReadLine();
+                    }
+                    
                     return builder.ToString();
                 }
                 else
                 {
+                    if (standardOut != null || errorOut != null) throw new Exception("Callbacks can only be used with 'wait'");
                     exitCode = 0;
                     return string.Empty;
                 }

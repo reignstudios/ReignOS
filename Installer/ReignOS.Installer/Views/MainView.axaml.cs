@@ -3,6 +3,8 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
+using System.Timers;
 using Avalonia.Controls.Primitives;
 using Avalonia.Threading;
 using ReignOS.Core;
@@ -22,15 +24,35 @@ enum InstallerStage
 public partial class MainView : UserControl
 {
     private InstallerStage stage;
-    private bool isRefreshing;
+    private bool isRefreshing = true;
     private double drivePercentage = 25;
     private const ulong driveSize = 512ul * 1024 * 1024 * 1024;
+
+    private System.Timers.Timer connectedTimer;
+    private List<string> wlanDevices = new List<string>();
+    private string wlanDevice;
+    private bool isConnected;
     
     public MainView()
     {
-        isRefreshing = true;
         InitializeComponent();
         InstallUtil.InstallProgress += InstallProgress;
+        
+        connectedTimer = new System.Timers.Timer(1000 * 5);
+        connectedTimer.Elapsed += ConnectedTimer;
+        connectedTimer.AutoReset = true;
+        connectedTimer.Start();
+    }
+
+    private void ConnectedTimer(object sender, ElapsedEventArgs e)
+    {
+        Dispatcher.UIThread.Invoke(() =>
+        {
+            isConnected = App.IsOnline();
+            if (stage == InstallerStage.Network) nextButton.IsEnabled = isConnected;
+            if (isConnected) isConnectedText.Text = "\ud83d\udedc";
+            else isConnectedText.Text = "\ud83d\udeab";
+        });
     }
 
     private void InstallProgress(string task, float progress)
@@ -125,12 +147,15 @@ public partial class MainView : UserControl
                 startPage.IsVisible = false;
                 networkSelectPage.IsVisible = true;
                 backButton.IsEnabled = true;
+                nextButton.IsEnabled = isRefreshing;
+                SetupNetworkPage();
                 break;
             
             case InstallerStage.Network:
                 stage = InstallerStage.Drive;
                 networkSelectPage.IsVisible = false;
                 drivePage.IsVisible = true;
+                SetupDrivePage();
                 break;
             
             case InstallerStage.Drive:
@@ -159,6 +184,7 @@ public partial class MainView : UserControl
                 startPage.IsVisible = true;
                 networkSelectPage.IsVisible = false;
                 backButton.IsEnabled = false;
+                nextButton.IsEnabled = true;
                 break;
             
             case InstallerStage.Drive:
@@ -174,5 +200,73 @@ public partial class MainView : UserControl
                 nextButton.Content = "Next";
                 break;
         }
+    }
+    
+    private void RefreshNetworkButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        SetupNetworkPage();
+    }
+
+    private void SetupNetworkPage()
+    {
+        // find wlan devices
+        void deviceOut(string line)
+        {
+            if (line.StartsWith(" wlan"))
+            {
+                var match = Regex.Match(line, " (wlan\\d)");
+                if (match.Success)
+                {
+                    wlanDevices.Add(match.Groups[1].Value);
+                }
+            }
+        }
+
+        wlanDevices.Clear();
+        ProcessUtil.Run("iwctl", "device list", standardOut:deviceOut, errorOut:deviceOut);
+        
+        // choose device
+        if (wlanDevices.Count == 0) return;
+        wlanDevice = wlanDevices[0];
+        
+        // get SSID
+        void ssidOut(string line)
+        {
+            var match = Regex.Match(line, @"\s*\>\s*(\S*)\s?");
+            if (match.Success)
+            {
+                connectionListBox.Items.Add(new ListBoxItem { Content = match.Groups[1].Value + "*" });
+            }
+            else
+            {
+                match = Regex.Match(line, @"\s*(\S*)\s?");
+                if (match.Success)
+                {
+                    connectionListBox.Items.Add(new ListBoxItem { Content = match.Groups[1].Value });
+                }
+            }
+        }
+
+        connectionListBox.Items.Clear();
+        ProcessUtil.Run("iwctl", $"station {wlanDevice} get-networks", standardOut:ssidOut, errorOut:ssidOut);
+    }
+    
+    private void NetworkConnectButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (connectionListBox.SelectedIndex < 0) return;
+
+        void getStandardInput(StreamWriter writer)
+        {
+            writer.WriteLine(networkPasswordText.Text);
+        }
+        
+        var item = (ListBoxItem)connectionListBox.Items[connectionListBox.SelectedIndex];
+        var ssid = (string)item.Content;
+        ProcessUtil.Run("iwctl", $"station {wlanDevice} connect {ssid}", getStandardInput:getStandardInput);
+    }
+    
+    private void SetupDrivePage()
+    {
+        
     }
 }
