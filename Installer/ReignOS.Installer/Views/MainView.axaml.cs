@@ -230,32 +230,36 @@ public partial class MainView : UserControl
         ProcessUtil.Run("iwctl", "device list", standardOut:deviceOut);
         
         // choose device
+        Console.WriteLine("wlanDevices: " + wlanDevices.Count);
         //if (wlanDevices.Count == 0) return;
         wlanDevice = "wlan0";//wlanDevices[0];
         
         // get SSID
         void ssidOut(string line)
         {
-            try
+            Dispatcher.UIThread.Invoke(() =>
             {
-                var match = Regex.Match(line, @"\s*\>\s*(\S*)\s?");
-                if (match.Success)
+                try
                 {
-                    connectionListBox.Items.Add(new ListBoxItem { Content = match.Groups[1].Value + "*" });
-                }
-                else
-                {
-                    match = Regex.Match(line, @"\s*(\S*)\s?");
+                    var match = Regex.Match(line, @"\s*\>\s*(\S*)\s?");
                     if (match.Success)
                     {
-                        connectionListBox.Items.Add(new ListBoxItem { Content = match.Groups[1].Value });
+                        connectionListBox.Items.Add(new ListBoxItem { Content = match.Groups[1].Value + "*" });
+                    }
+                    else
+                    {
+                        match = Regex.Match(line, @"\s*(\S*)\s?");
+                        if (match.Success)
+                        {
+                            connectionListBox.Items.Add(new ListBoxItem { Content = match.Groups[1].Value });
+                        }
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            });
         }
 
         connectionListBox.Items.Clear();
