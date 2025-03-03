@@ -212,7 +212,7 @@ public partial class MainView : UserControl
         // find wlan devices
         void deviceOut(string line)
         {
-            if (line.Contains("---") || line.Contains("Name")) return;
+            if (line.Contains("-------") || line.Contains("Name")) return;
             try
             {
                 var match = Regex.Match(line, @"\s*(wlan\d)");
@@ -239,7 +239,8 @@ public partial class MainView : UserControl
         var ssids = new List<string>();
         void ssidOut(string line)
         {
-            if (line.Contains("---") || line.Contains("Network name")) return;
+            lock (this) Console.WriteLine("LINE: " + line);
+            if (line.Contains("-------") || line.Contains("Network name")) return;
             try
             {
                 var match = Regex.Match(line, @"\s*\>\s*(\S*)\s?");
@@ -263,6 +264,7 @@ public partial class MainView : UserControl
         }
 
         ProcessUtil.Run("iwctl", $"station {wlanDevice} scan");
+        Thread.Sleep(2000);
         ProcessUtil.Run("iwctl", $"station {wlanDevice} get-networks", standardOut:ssidOut);
         connectionListBox.Items.Clear();
         foreach (var ssid in ssids) connectionListBox.Items.Add(new ListBoxItem { Content = ssid });
