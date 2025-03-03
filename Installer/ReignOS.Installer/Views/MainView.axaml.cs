@@ -244,17 +244,14 @@ public partial class MainView : UserControl
             if (line.Contains("-------") || line.Contains("Network name")) return;
             try
             {
-                var match = Regex.Match(line, @"\s*\>\s*(\S*)\s*psk");
+                var match = Regex.Match(line, @"\s*(\S*)\s*psk");
                 if (match.Success)
                 {
-                    lock (this) ssids.Add(match.Groups[1].Value + "*");
-                }
-                else
-                {
-                    match = Regex.Match(line, @"\s*(\S*)\s*psk");
-                    if (match.Success)
+                    string value = match.Groups[1].Value;
+                    lock (this)
                     {
-                        lock (this) ssids.Add(match.Groups[1].Value);
+                        if (value.Contains('>')) ssids.Add(value + "*");
+                        else ssids.Add(value);
                     }
                 }
             }
@@ -265,7 +262,6 @@ public partial class MainView : UserControl
         }
 
         ProcessUtil.Run("iwctl", $"station {wlanDevice} scan");
-        Thread.Sleep(5000);
         ProcessUtil.Run("iwctl", $"station {wlanDevice} get-networks", standardOut:ssidOut);
         connectionListBox.Items.Clear();
         foreach (var ssid in ssids) connectionListBox.Items.Add(new ListBoxItem { Content = ssid });
