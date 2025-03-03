@@ -15,12 +15,12 @@ public static class ProcessUtil
     public delegate void ProcessOutputDelegate(string line);
     public delegate void ProcessInputDelegate(StreamWriter writer);
     
-    public static string Run(string name, string args, Dictionary<string, string> enviromentVars = null, bool wait = true, bool asAdmin = false, ProcessOutputDelegate standardOut = null, ProcessOutputDelegate errorOut = null, ProcessInputDelegate getStandardInput = null)
+    public static string Run(string name, string args, Dictionary<string, string> enviromentVars = null, bool wait = true, bool asAdmin = false, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null)
     {
-        return Run(name, args, out _, enviromentVars, wait, asAdmin, standardOut, errorOut, getStandardInput);
+        return Run(name, args, out _, enviromentVars, wait, asAdmin, standardOut, getStandardInput);
     }
 
-    public static string Run(string name, string args, out int exitCode, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false, ProcessOutputDelegate standardOut = null, ProcessOutputDelegate errorOut = null, ProcessInputDelegate getStandardInput = null)
+    public static string Run(string name, string args, out int exitCode, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null)
     {
         try
         {
@@ -44,6 +44,7 @@ public static class ProcessUtil
                     foreach (var v in enviromentVars) process.StartInfo.EnvironmentVariables[v.Key] = v.Value;
                 }
 
+                if (standardOut != null) process.StartInfo.UseShellExecute = false;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardError = true;
                 process.Start();
@@ -65,13 +66,10 @@ public static class ProcessUtil
                             if (args != null && args.Data != null) standardOut(args.Data);
                         };
                         process.BeginOutputReadLine();
-                    }
-                    
-                    if (errorOut != null)
-                    {
+                        
                         process.ErrorDataReceived += (sender, args) =>
                         {
-                            if (args != null && args.Data != null) errorOut(args.Data);
+                            if (args != null && args.Data != null) standardOut(args.Data);
                         };
                         process.BeginErrorReadLine();
                     }
@@ -79,13 +77,16 @@ public static class ProcessUtil
                     process.WaitForExit();
                     exitCode = process.ExitCode;
                     var builder = new StringBuilder();
-                    if (standardOut == null) builder.Append(process.StandardOutput.ReadToEnd());
-                    if (errorOut == null) builder.Append(process.StandardError.ReadToEnd());
+                    if (standardOut == null)
+                    {
+                        builder.Append(process.StandardOutput.ReadToEnd());
+                        builder.Append(process.StandardError.ReadToEnd());
+                    }
                     return builder.ToString();
                 }
                 else
                 {
-                    if (standardOut != null || errorOut != null) throw new Exception("Callbacks can only be used with 'wait'");
+                    if (standardOut != null) throw new Exception("Callbacks can only be used with 'wait'");
                     exitCode = 0;
                     return string.Empty;
                 }

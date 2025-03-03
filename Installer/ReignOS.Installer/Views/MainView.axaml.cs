@@ -220,7 +220,7 @@ public partial class MainView : UserControl
         }
 
         wlanDevices.Clear();
-        ProcessUtil.Run("iwctl", "device list", standardOut:deviceOut, errorOut:deviceOut);
+        ProcessUtil.Run("iwctl", "device list", standardOut:deviceOut);
         
         // choose device
         //if (wlanDevices.Count == 0) return;
@@ -245,7 +245,7 @@ public partial class MainView : UserControl
         }
 
         connectionListBox.Items.Clear();
-        ProcessUtil.Run("iwctl", $"station {wlanDevice} get-networks", standardOut:ssidOut, errorOut:ssidOut);
+        ProcessUtil.Run("iwctl", $"station {wlanDevice} get-networks", standardOut:ssidOut);
     }
     
     private void NetworkConnectButton_OnClick(object sender, RoutedEventArgs e)
