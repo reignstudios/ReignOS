@@ -250,7 +250,7 @@ public partial class MainView : UserControl
                     string value = match.Groups[1].Value;
                     lock (this)
                     {
-                        if (value.Contains('>')) ssids.Add(value + "*");
+                        if (value.Contains('>') || value.Contains('^')) ssids.Add(value + "*");
                         else ssids.Add(value);
                     }
                 }
