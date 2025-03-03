@@ -245,14 +245,14 @@ public partial class MainView : UserControl
                 var match = Regex.Match(line, @"\s*\>\s*(\S*)\s?");
                 if (match.Success)
                 {
-                    ssids.Add(match.Groups[1].Value + "*");
+                    lock (this) ssids.Add(match.Groups[1].Value + "*");
                 }
                 else
                 {
                     match = Regex.Match(line, @"\s*(\S*)\s?");
                     if (match.Success)
                     {
-                        ssids.Add(match.Groups[1].Value);
+                        lock (this) ssids.Add(match.Groups[1].Value);
                     }
                 }
             }
