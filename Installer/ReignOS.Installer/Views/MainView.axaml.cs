@@ -237,7 +237,7 @@ public partial class MainView : UserControl
         // get SSID
         void ssidOut(string line)
         {
-            Dispatcher.UIThread.Invoke(() =>
+            Dispatcher.UIThread.InvokeAsync(() =>
             {
                 try
                 {
