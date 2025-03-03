@@ -6,6 +6,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Timers;
 using Avalonia.Controls.Primitives;
+using Avalonia.Media;
 using Avalonia.Threading;
 using ReignOS.Core;
 
@@ -51,8 +52,16 @@ public partial class MainView : UserControl
         {
             isConnected = App.IsOnline();
             if (stage == InstallerStage.Network) nextButton.IsEnabled = isConnected;
-            if (isConnected) isConnectedText.Text = "Network Connected";
-            else isConnectedText.Text = "Network Disconnected";
+            if (isConnected)
+            {
+                isConnectedText.Text = "Network Connected";
+                isConnectedText.Foreground = new SolidColorBrush(Colors.Green);
+            }
+            else
+            {
+                isConnectedText.Text = "Network Disconnected";
+                isConnectedText.Foreground = new SolidColorBrush(Colors.Red);
+            }
         });
     }
 
@@ -250,7 +259,7 @@ public partial class MainView : UserControl
                     string value = match.Groups[1].Value;
                     lock (this)
                     {
-                        if (line.Contains(">")) ssids.Add(value + " - (Connected)");
+                        if (line.Contains(">")) ssids.Add(value + " (Connected)");
                         else ssids.Add(value);
                     }
                 }
