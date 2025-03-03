@@ -11,11 +11,11 @@
 		<Separator HorizontalAlignment="Center" VerticalAlignment="Top" Margin="150,70,150,0"/>
 		
 		<Grid Margin="4,100,4,50" Background="#202020">
-			<Grid Name="startPage" Margin="4" IsVisible="False">
+			<Grid Name="startPage" Margin="4" IsVisible="True">
 				<Image Source="/Assets/ReignOS.png"/>
 			</Grid>
 			
-			<Grid Name="networkSelectPage" Margin="4" IsVisible="True">
+			<Grid Name="networkSelectPage" Margin="4" IsVisible="False">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="0.25*"/>
 					<ColumnDefinition Width="0.75*"/>
