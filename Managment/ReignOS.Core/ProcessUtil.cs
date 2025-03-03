@@ -58,15 +58,7 @@ public static class ProcessUtil
 
                 if (wait)
                 {
-                    process.WaitForExit();
-                    exitCode = process.ExitCode;
-                    var builder = new StringBuilder();
-
-                    if (standardOut == null)
-                    {
-                        builder.Append(process.StandardOutput.ReadToEnd());
-                    }
-                    else
+                    if (standardOut != null)
                     {
                         process.OutputDataReceived += (sender, args) =>
                         {
@@ -74,12 +66,8 @@ public static class ProcessUtil
                         };
                         process.BeginOutputReadLine();
                     }
-
-                    if (errorOut == null)
-                    {
-                        builder.Append(process.StandardError.ReadToEnd());
-                    }
-                    else
+                    
+                    if (errorOut != null)
                     {
                         process.ErrorDataReceived += (sender, args) =>
                         {
@@ -88,6 +76,11 @@ public static class ProcessUtil
                         process.BeginErrorReadLine();
                     }
                     
+                    process.WaitForExit();
+                    exitCode = process.ExitCode;
+                    var builder = new StringBuilder();
+                    if (standardOut == null) builder.Append(process.StandardOutput.ReadToEnd());
+                    if (errorOut == null) builder.Append(process.StandardError.ReadToEnd());
                     return builder.ToString();
                 }
                 else

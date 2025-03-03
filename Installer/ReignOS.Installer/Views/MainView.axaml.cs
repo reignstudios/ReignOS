@@ -223,8 +223,8 @@ public partial class MainView : UserControl
         ProcessUtil.Run("iwctl", "device list", standardOut:deviceOut, errorOut:deviceOut);
         
         // choose device
-        if (wlanDevices.Count == 0) return;
-        wlanDevice = wlanDevices[0];
+        //if (wlanDevices.Count == 0) return;
+        wlanDevice = "wlan0";//wlanDevices[0];
         
         // get SSID
         void ssidOut(string line)
