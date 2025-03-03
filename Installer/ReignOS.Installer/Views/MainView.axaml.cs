@@ -37,7 +37,8 @@ public partial class MainView : UserControl
     {
         InitializeComponent();
         InstallUtil.InstallProgress += InstallProgress;
-        
+
+        ConnectedTimer(null, null);
         connectedTimer = new System.Timers.Timer(1000 * 5);
         connectedTimer.Elapsed += ConnectedTimer;
         connectedTimer.AutoReset = true;
@@ -243,14 +244,14 @@ public partial class MainView : UserControl
             if (line.Contains("-------") || line.Contains("Network name")) return;
             try
             {
-                var match = Regex.Match(line, @"\s*\>\s*(\S*)\s?");
+                var match = Regex.Match(line, @"\s*\>\s*(\S*)\s*psk");
                 if (match.Success)
                 {
                     lock (this) ssids.Add(match.Groups[1].Value + "*");
                 }
                 else
                 {
-                    match = Regex.Match(line, @"\s*(\S*)\s?");
+                    match = Regex.Match(line, @"\s*(\S*)\s*psk");
                     if (match.Success)
                     {
                         lock (this) ssids.Add(match.Groups[1].Value);
@@ -264,7 +265,7 @@ public partial class MainView : UserControl
         }
 
         ProcessUtil.Run("iwctl", $"station {wlanDevice} scan");
-        Thread.Sleep(2000);
+        Thread.Sleep(5000);
         ProcessUtil.Run("iwctl", $"station {wlanDevice} get-networks", standardOut:ssidOut);
         connectionListBox.Items.Clear();
         foreach (var ssid in ssids) connectionListBox.Items.Add(new ListBoxItem { Content = ssid });
