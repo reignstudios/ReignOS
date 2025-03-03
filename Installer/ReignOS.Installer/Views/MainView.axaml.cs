@@ -236,36 +236,36 @@ public partial class MainView : UserControl
         Console.WriteLine("wlanDevice: " + wlanDevice);
         
         // get SSID
+        var ssids = new List<string>();
         void ssidOut(string line)
         {
             if (line.Contains("---") || line.Contains("Network name")) return;
-            Dispatcher.UIThread.InvokeAsync(() =>
+            try
             {
-                try
+                var match = Regex.Match(line, @"\s*\>\s*(\S*)\s?");
+                if (match.Success)
                 {
-                    var match = Regex.Match(line, @"\s*\>\s*(\S*)\s?");
+                    ssids.Add(match.Groups[1].Value + "*");
+                }
+                else
+                {
+                    match = Regex.Match(line, @"\s*(\S*)\s?");
                     if (match.Success)
                     {
-                        connectionListBox.Items.Add(new ListBoxItem { Content = match.Groups[1].Value + "*" });
-                    }
-                    else
-                    {
-                        match = Regex.Match(line, @"\s*(\S*)\s?");
-                        if (match.Success)
-                        {
-                            connectionListBox.Items.Add(new ListBoxItem { Content = match.Groups[1].Value });
-                        }
+                        ssids.Add(match.Groups[1].Value);
                     }
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-            });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
-        connectionListBox.Items.Clear();
+        ProcessUtil.Run("iwctl", $"station {wlanDevice} scan");
         ProcessUtil.Run("iwctl", $"station {wlanDevice} get-networks", standardOut:ssidOut);
+        connectionListBox.Items.Clear();
+        foreach (var ssid in ssids) connectionListBox.Items.Add(new ListBoxItem { Content = ssid });
     }
     
     private void NetworkConnectButton_OnClick(object sender, RoutedEventArgs e)
