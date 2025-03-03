@@ -134,7 +134,7 @@ public partial class MainView : UserControl
 
     private void ShutdownButton_OnClick(object sender, RoutedEventArgs e)
     {
-        ProcessUtil.Run("poweroff", "", out _, wait:false);
+        //ProcessUtil.Run("poweroff", "", out _, wait:false);
         MainWindow.singleton.Close();
     }
 
@@ -212,13 +212,10 @@ public partial class MainView : UserControl
         // find wlan devices
         void deviceOut(string line)
         {
-            if (line.StartsWith(" wlan"))
+            var match = Regex.Match(line, @"\s*(wlan\\d)");
+            if (match.Success)
             {
-                var match = Regex.Match(line, " (wlan\\d)");
-                if (match.Success)
-                {
-                    wlanDevices.Add(match.Groups[1].Value);
-                }
+                wlanDevices.Add(match.Groups[1].Value);
             }
         }
 
