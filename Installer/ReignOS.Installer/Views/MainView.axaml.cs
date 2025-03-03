@@ -149,14 +149,14 @@ public partial class MainView : UserControl
                 networkSelectPage.IsVisible = true;
                 backButton.IsEnabled = true;
                 nextButton.IsEnabled = isRefreshing;
-                SetupNetworkPage();
+                RefreshNetworkPage();
                 break;
             
             case InstallerStage.Network:
                 stage = InstallerStage.Drive;
                 networkSelectPage.IsVisible = false;
                 drivePage.IsVisible = true;
-                SetupDrivePage();
+                RefreshDrivePage();
                 break;
             
             case InstallerStage.Drive:
@@ -205,10 +205,10 @@ public partial class MainView : UserControl
     
     private void RefreshNetworkButton_OnClick(object sender, RoutedEventArgs e)
     {
-        SetupNetworkPage();
+        RefreshNetworkPage();
     }
 
-    private void SetupNetworkPage()
+    private void RefreshNetworkPage()
     {
         // find wlan devices
         void deviceOut(string line)
@@ -250,7 +250,7 @@ public partial class MainView : UserControl
                     string value = match.Groups[1].Value;
                     lock (this)
                     {
-                        if (value.Contains('>') || value.Contains('^')) ssids.Add(value + "*");
+                        if (line.Contains(">")) ssids.Add(value + " - (Connected)");
                         else ssids.Add(value);
                     }
                 }
@@ -279,9 +279,11 @@ public partial class MainView : UserControl
         var item = (ListBoxItem)connectionListBox.Items[connectionListBox.SelectedIndex];
         var ssid = (string)item.Content;
         ProcessUtil.Run("iwctl", $"station {wlanDevice} connect {ssid}", getStandardInput:getStandardInput);
+        Thread.Sleep(1000);
+        RefreshNetworkPage();
     }
     
-    private void SetupDrivePage()
+    private void RefreshDrivePage()
     {
         
     }
