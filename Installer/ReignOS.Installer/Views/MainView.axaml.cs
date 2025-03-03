@@ -212,7 +212,7 @@ public partial class MainView : UserControl
         // find wlan devices
         void deviceOut(string line)
         {
-            var match = Regex.Match(line, @"\s*(wlan\\d)");
+            var match = Regex.Match(line, @"\s*(wlan\d)");
             if (match.Success)
             {
                 wlanDevices.Add(match.Groups[1].Value);
