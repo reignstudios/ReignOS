@@ -212,7 +212,7 @@ public partial class MainView : UserControl
         // find wlan devices
         void deviceOut(string line)
         {
-            if (line.StartsWith("-") || line.Contains("Name")) return;
+            if (line.Contains("---") || line.Contains("Name")) return;
             try
             {
                 var match = Regex.Match(line, @"\s*(wlan\d)");
@@ -233,11 +233,12 @@ public partial class MainView : UserControl
         // choose device
         if (wlanDevices.Count == 0) return;
         wlanDevice = wlanDevices[0];
+        Console.WriteLine("wlanDevice: " + wlanDevice);
         
         // get SSID
         void ssidOut(string line)
         {
-            if (line.StartsWith("-") || line.Contains("Network name")) return;
+            if (line.Contains("---") || line.Contains("Network name")) return;
             Dispatcher.UIThread.InvokeAsync(() =>
             {
                 try
