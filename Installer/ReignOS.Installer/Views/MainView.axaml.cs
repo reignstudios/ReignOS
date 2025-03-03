@@ -50,8 +50,8 @@ public partial class MainView : UserControl
         {
             isConnected = App.IsOnline();
             if (stage == InstallerStage.Network) nextButton.IsEnabled = isConnected;
-            if (isConnected) isConnectedText.Text = "\ud83d\udedc";
-            else isConnectedText.Text = "\ud83d\udeab";
+            if (isConnected) isConnectedText.Text = "Network Connected";
+            else isConnectedText.Text = "Network Disconnected";
         });
     }
 
@@ -212,10 +212,17 @@ public partial class MainView : UserControl
         // find wlan devices
         void deviceOut(string line)
         {
-            var match = Regex.Match(line, @"\s*(wlan\d)");
-            if (match.Success)
+            try
             {
-                wlanDevices.Add(match.Groups[1].Value);
+                var match = Regex.Match(line, @"\s*(wlan\d)");
+                if (match.Success)
+                {
+                    wlanDevices.Add(match.Groups[1].Value);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 
@@ -229,18 +236,25 @@ public partial class MainView : UserControl
         // get SSID
         void ssidOut(string line)
         {
-            var match = Regex.Match(line, @"\s*\>\s*(\S*)\s?");
-            if (match.Success)
+            try
             {
-                connectionListBox.Items.Add(new ListBoxItem { Content = match.Groups[1].Value + "*" });
-            }
-            else
-            {
-                match = Regex.Match(line, @"\s*(\S*)\s?");
+                var match = Regex.Match(line, @"\s*\>\s*(\S*)\s?");
                 if (match.Success)
                 {
-                    connectionListBox.Items.Add(new ListBoxItem { Content = match.Groups[1].Value });
+                    connectionListBox.Items.Add(new ListBoxItem { Content = match.Groups[1].Value + "*" });
                 }
+                else
+                {
+                    match = Regex.Match(line, @"\s*(\S*)\s?");
+                    if (match.Success)
+                    {
+                        connectionListBox.Items.Add(new ListBoxItem { Content = match.Groups[1].Value });
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 
