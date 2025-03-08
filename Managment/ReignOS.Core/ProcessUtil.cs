@@ -61,16 +61,34 @@ public static class ProcessUtil
                 {
                     if (standardOut != null)
                     {
-                        process.OutputDataReceived += (sender, args) =>
+                        void ReadLine(object sender, DataReceivedEventArgs args)
                         {
-                            if (args != null && args.Data != null) standardOut(args.Data);
-                        };
+                            if (args != null && args.Data != null)
+                            {
+                                try
+                                {
+                                    string value = args.Data;
+                                    if (asAdmin && value.Contains("[sudo] password for"))
+                                    {
+                                        process.StandardInput.WriteLine("gamer");
+                                        process.StandardInput.Flush();
+                                    }
+                                    else
+                                    {
+                                        standardOut(args.Data);
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine(e);
+                                }
+                            }
+                        }
+
+                        process.OutputDataReceived += ReadLine;
                         process.BeginOutputReadLine();
-                        
-                        process.ErrorDataReceived += (sender, args) =>
-                        {
-                            if (args != null && args.Data != null) standardOut(args.Data);
-                        };
+
+                        process.ErrorDataReceived += ReadLine;
                         process.BeginErrorReadLine();
                     }
                     

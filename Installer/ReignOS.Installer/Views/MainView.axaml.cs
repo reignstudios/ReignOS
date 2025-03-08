@@ -22,6 +22,23 @@ enum InstallerStage
     DoneInstalling
 }
 
+struct Partition
+{
+    public int number;
+    public ulong start, end, size;
+    public string fileSystem;
+    public string name;
+    public string flags;
+}
+
+struct Drive
+{
+    public string model;
+    public string disk;
+    public ulong size;
+    public List<Partition> partitions;
+}
+
 public partial class MainView : UserControl
 {
     private InstallerStage stage;
@@ -33,6 +50,8 @@ public partial class MainView : UserControl
     private List<string> wlanDevices = new List<string>();
     private string wlanDevice;
     private bool isConnected;
+    
+    private List<Drive> drives;
     
     public MainView()
     {
@@ -144,7 +163,7 @@ public partial class MainView : UserControl
 
     private void ShutdownButton_OnClick(object sender, RoutedEventArgs e)
     {
-        //ProcessUtil.Run("poweroff", "", out _, wait:false);
+        ProcessUtil.Run("poweroff", "", out _, wait:false);
         MainWindow.singleton.Close();
     }
 
@@ -157,7 +176,7 @@ public partial class MainView : UserControl
                 startPage.IsVisible = false;
                 networkSelectPage.IsVisible = true;
                 backButton.IsEnabled = true;
-                nextButton.IsEnabled = isRefreshing;
+                nextButton.IsEnabled = isConnected;
                 RefreshNetworkPage();
                 break;
             
@@ -294,6 +313,108 @@ public partial class MainView : UserControl
     
     private void RefreshDrivePage()
     {
+        static ulong ParseSizeName(string sizeName)
+        {
+            if (sizeName.EndsWith("GB"))
+            {
+                return ulong.Parse(sizeName.Replace("GB", "")) * 1024 * 1024 * 1024;
+            }
+            else if (sizeName.EndsWith("MB"))
+            {
+                return ulong.Parse(sizeName.Replace("MB", "")) * 1024 * 1024;
+            }
+            else if (sizeName.EndsWith("kB"))
+            {
+                return ulong.Parse(sizeName.Replace("kB", "")) * 1024;
+            }
+
+            return 0;
+        }
         
+        var drive = new Drive();
+        bool partitionMode = false;
+        int partitionIndex_Number = 1;
+        int partitionIndex_Start = 0;
+        int partitionIndex_End = 0;
+        int partitionIndex_Size = 0;
+        int partitionIndex_FileSystem = 0;
+        int partitionIndex_Name = 0;
+        int partitionIndex_Flags = 0;
+        void standardOutput(string line)
+        {
+            if (partitionMode)
+            {
+                if (line.Length == 0)
+                {
+                    partitionMode = false;
+                }
+                else
+                {
+                    try
+                    {
+                        var partition = new Partition();
+
+                        string value = line.Substring(partitionIndex_Number, line.Length - partitionIndex_Number);
+                        value = value.Split(' ')[0];
+                        partition.number = int.Parse(value);
+                        
+                        if (drive.partitions == null) drive.partitions = new List<Partition>();
+                        drive.partitions.Add(partition);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+            }
+            else if (line.StartsWith("Model:"))
+            {
+                if (drive.model != null)
+                {
+                    drives.Add(drive);
+                    drive = new Drive();
+                    partitionMode = false;
+                }
+                
+                var values = line.Split(':');
+                drive.model = values[1];
+            }
+            else if (line.StartsWith("Disk ") && !line.StartsWith("Disk Flags:"))
+            {
+                try
+                {
+                    var match = Regex.Match(line, @"Disk (\S*): (\S*)");
+                    if (match.Success)
+                    {
+                        drive.disk = match.Groups[1].Value;
+                        drive.size = ParseSizeName(match.Groups[2].Value);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+            else if (line.StartsWith("Number "))
+            {
+                partitionMode = true;
+                partitionIndex_Start = line.IndexOf("Start");
+                partitionIndex_End = line.IndexOf("End");
+                partitionIndex_Size = line.IndexOf("Size");
+                partitionIndex_FileSystem = line.IndexOf("File system");
+                partitionIndex_Name = line.IndexOf("Name");
+                partitionIndex_Flags = line.IndexOf("Flags");
+            }
+        }
+        
+        drives = new List<Drive>();
+        ProcessUtil.Run("parted", "-l", asAdmin:true, standardOut:standardOutput);
+        foreach (var d in drives)
+        {
+            var item = new ListBoxItem();
+            item.Content = d.model;
+            item.Tag = d;
+            driveListBox.Items.Add(item);
+        }
     }
 }
