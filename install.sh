@@ -27,6 +27,7 @@ parted
 (parted) select <device>
 (parted) mklabel gpt
 (parted) mkpart ESP fat32 1MiB 513MiB #1mb header, 513mb ensured 512mb
+(parted) set 1 boot on
 (parted) set 1 esp on
 (parted) mkpart primary ext4 513MiB 100%
 (parted) quit

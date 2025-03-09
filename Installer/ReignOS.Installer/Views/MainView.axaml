@@ -51,9 +51,10 @@
 				</Grid.ColumnDefinitions>
 				
 				<Grid Grid.Column="0">
+					<Button Content="Refresh" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,10,0,0" Click="RefreshDrivesButton_OnClick"/>
 					<Label Content="Drives" FontSize="32" Height="50" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 					<Separator VerticalAlignment="Top" Margin="0,45,0,0"/>
-					<ListBox Name="driveListBox" Margin="0,50,0,0">
+					<ListBox Name="driveListBox" Margin="0,50,0,0" SelectionChanged="DriveListBox_OnSelectionChanged">
 						<!--<ListBoxItem Content="/dev/sdb0"/>
 						<ListBoxItem Content="/dev/sdb1"/>
 						<ListBoxItem Content="/dev/sdb2"/>
@@ -65,14 +66,19 @@
 					<Label Content="Options" FontSize="32" Height="50" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 					<Separator VerticalAlignment="Top" Margin="0,45,0,0"/>
 					<StackPanel Orientation="Vertical" Margin="16,50,0,0">
-						<RadioButton Content="Clean Install (Uses Entire Drive)"/>
-						<RadioButton Content="Dual Boot (Keep Windows)"/>
-						<Grid Name="windowsDriveGrid" Margin="0,16,0,0">
-							<Label Content="Windows Drive" Margin="0,4,0,0" Width="110" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+						<RadioButton Content="Clean Install (Uses Entire Drive)" Click="CleanInstallButton_OnClick"/>
+						<RadioButton Content="Dual Boot (Keep Other OS)" Click="DualInstallButton_OnClick"/>
+						<Grid Name="cleanDriveGrid" IsVisible="False">
+							<TextBlock Text="NOTE: This will delete all data on the entire drive selected." Margin="4,16,0,0" TextWrapping="Wrap"/>
+						</Grid>
+						<Grid Name="keepOSDriveGrid" IsVisible="False">
+							<!--<Label Content="Windows Drive" Margin="0,4,0,0" Width="110" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 							<Label Content="%" Margin="220,4,0,0" Width="110" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 							<TextBox Name="drivePercentTextBox" TextChanged="DrivePercentTextBox_OnTextChanged" Text="25" Margin="120,0,0,0" Width="100" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 							<TextBlock Name="driveGBTextBox" Text="64gb" Foreground="DodgerBlue" Margin="250,6,0,0" Width="100" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-							<Slider Name="driveSlider" ValueChanged="DriveSlider_OnValueChanged" Margin="0,42,0,0" Value="25"/>
+							<Slider Name="driveSlider" ValueChanged="DriveSlider_OnValueChanged" Margin="0,42,0,0" Value="25"/>-->
+							<Button Content="Open GParted" Click="OpenGPartedButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,16,0,0"/>
+							<TextBlock Text="1) Open GParted, shrink your existing OS main partition freeing at least 32gb.&#x0A;2) Add EFI partion 512MB in size named 'ReignOS EFI' with flags 'boot, esp'.&#x0A;3) Add ext4 partition using ramaining free space named 'ReignOS'.&#x0A;4) Exit Gparted, refresh drives and continue install." Margin="4,52,0,0" TextWrapping="Wrap"/>
 						</Grid>
 					</StackPanel>
 				</Grid>
