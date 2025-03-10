@@ -438,7 +438,7 @@ public partial class MainView : UserControl
                 }
                 
                 var values = line.Split(':');
-                drive.model = values[1];
+                drive.model = values[1].Trim();
             }
             else if (line.StartsWith("Disk ") && !line.StartsWith("Disk Flags:"))
             {
@@ -447,7 +447,7 @@ public partial class MainView : UserControl
                     var match = Regex.Match(line, @"Disk (\S*): (\S*)");
                     if (match.Success)
                     {
-                        drive.disk = match.Groups[1].Value;
+                        drive.disk = match.Groups[1].Value.Trim();
                         drive.size = ParseSizeName(match.Groups[2].Value);
                     }
                 }
@@ -474,7 +474,7 @@ public partial class MainView : UserControl
         foreach (var d in drives)
         {
             var item = new ListBoxItem();
-            item.Content = d.model;
+            item.Content = $"{d.model}\nSize: {d.size / 1024 / 1024 / 1024}GB\nPath: {d.disk}";
             item.Tag = d;
             driveListBox.Items.Add(item);
         }
@@ -518,6 +518,11 @@ public partial class MainView : UserControl
         bool validFormatExt4 = partitionEXT4.fileSystem == "ext4";
         bool validFlagsEFI = partitionEFI.flags.Contains("boot") && partitionEFI.flags.Contains("esp");
         nextButton.IsEnabled = validSize && validFormatEFI && validFormatExt4 && validFlagsEFI;
+    }
+    
+    private void FormatDriveButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        //ProcessUtil.Run("parted", "", asAdmin:true);
     }
 
     private void OpenGPartedButton_OnClick(object sender, RoutedEventArgs e)
