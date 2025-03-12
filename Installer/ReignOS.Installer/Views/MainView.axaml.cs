@@ -482,42 +482,61 @@ public partial class MainView : UserControl
     
     private void DriveListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (driveListBox.SelectedIndex < 0)
+        bool IsValidDrive(ListBoxItem item)
         {
-            nextButton.IsEnabled = false;
-            return;
-        }
+            var drive = (Drive)item.Tag;
         
-        var item = (ListBoxItem)driveListBox.Items[driveListBox.SelectedIndex];
-        var drive = (Drive)item.Tag;
-        
-        // validate & find partitions
-        if (drive.partitions == null || drive.partitions.Count < 2)
-        {
-            nextButton.IsEnabled = false;
-            return;
-        }
+            // validate & find partitions
+            if (drive.partitions == null || drive.partitions.Count < 2)
+            {
+                return false;
+            }
 
-        Partition partitionEFI = null;
-        Partition partitionEXT4 = null;
-        foreach (var parition in drive.partitions)
-        {
-            if (parition.name == "ReignOS EFI") partitionEFI = parition;
-            else if (parition.name == "ReignOS") partitionEXT4 = parition;
-        }
+            Partition partitionEFI = null;
+            Partition partitionEXT4 = null;
+            foreach (var parition in drive.partitions)
+            {
+                if (parition.name == "ReignOS EFI") partitionEFI = parition;
+                else if (parition.name == "ReignOS") partitionEXT4 = parition;
+            }
 
-        if (partitionEFI == null || partitionEXT4 == null)
-        {
-            nextButton.IsEnabled = false;
-            return;
+            if (partitionEFI == null || partitionEXT4 == null)
+            {
+                return false;
+            }
+        
+            const ulong size32GB = 32ul * 1024 * 1024 * 1024;
+            bool validSize = drive.size >= size32GB;
+            bool validFormatEFI = partitionEFI.fileSystem == "fat32";
+            bool validFormatExt4 = partitionEXT4.fileSystem == "ext4";
+            bool validFlagsEFI = partitionEFI.flags.Contains("boot") && partitionEFI.flags.Contains("esp");
+            return validSize && validFormatEFI && validFormatExt4 && validFlagsEFI;
         }
         
-        const ulong size32GB = 32ul * 1024 * 1024 * 1024;
-        bool validSize = drive.size >= size32GB;
-        bool validFormatEFI = partitionEFI.fileSystem == "fat32";
-        bool validFormatExt4 = partitionEXT4.fileSystem == "ext4";
-        bool validFlagsEFI = partitionEFI.flags.Contains("boot") && partitionEFI.flags.Contains("esp");
-        nextButton.IsEnabled = validSize && validFormatEFI && validFormatExt4 && validFlagsEFI;
+        if (useMultipleDrivesCheckBox.IsChecked == true)
+        {
+            bool validDrive = false;
+            foreach (ListBoxItem item in driveListBox.Items)
+            {
+                if (IsValidDrive(item))
+                {
+                    validDrive = true;
+                    break;
+                }
+            }
+            nextButton.IsEnabled = validDrive;
+        }
+        else
+        {
+            if (driveListBox.SelectedIndex < 0)
+            {
+                nextButton.IsEnabled = false;
+                return;
+            }
+        
+            var item = (ListBoxItem)driveListBox.Items[driveListBox.SelectedIndex];
+            nextButton.IsEnabled = IsValidDrive(item);
+        }
     }
     
     private void FormatDriveButton_OnClick(object sender, RoutedEventArgs e)
