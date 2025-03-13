@@ -52,6 +52,9 @@ public partial class MainView : UserControl
     private bool isConnected;
     
     private List<Drive> drives;
+    private Drive efiDrive, ext4Drive;
+    private const string efiPartitionName = "ReignOS EFI";
+    private const string ext4PartitionName = "ReignOS";
     
     public MainView()
     {
@@ -482,7 +485,7 @@ public partial class MainView : UserControl
     
     private void DriveListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        bool IsValidDrive(ListBoxItem item)
+        bool IsValidDrive(ListBoxItem item, bool efiCheck, bool ext4Check)
         {
             var drive = (Drive)item.Tag;
         
@@ -496,35 +499,44 @@ public partial class MainView : UserControl
             Partition partitionEXT4 = null;
             foreach (var parition in drive.partitions)
             {
-                if (parition.name == "ReignOS EFI") partitionEFI = parition;
-                else if (parition.name == "ReignOS") partitionEXT4 = parition;
+                if (parition.name == efiPartitionName) partitionEFI = parition;
+                else if (parition.name == ext4PartitionName) partitionEXT4 = parition;
             }
 
-            if (partitionEFI == null || partitionEXT4 == null)
+            if (efiCheck)
             {
-                return false;
+                if (partitionEFI == null) return false;
+                
+                const ulong size512MB = 512ul * 1024 * 1024;
+                bool validSizeEFI = drive.size >= size512MB;
+                bool validFormatEFI = partitionEFI.fileSystem == "fat32";
+                bool validFlagsEFI = partitionEFI.flags.Contains("boot") && partitionEFI.flags.Contains("esp");
+                if (!validSizeEFI || !validFormatEFI || !validFlagsEFI) return false;
             }
-        
-            const ulong size32GB = 32ul * 1024 * 1024 * 1024;
-            bool validSize = drive.size >= size32GB;
-            bool validFormatEFI = partitionEFI.fileSystem == "fat32";
-            bool validFormatExt4 = partitionEXT4.fileSystem == "ext4";
-            bool validFlagsEFI = partitionEFI.flags.Contains("boot") && partitionEFI.flags.Contains("esp");
-            return validSize && validFormatEFI && validFormatExt4 && validFlagsEFI;
+
+            if (ext4Check)
+            {
+                if (partitionEXT4 == null) return false;
+                
+                const ulong size32GB = 32ul * 1024 * 1024 * 1024;
+                bool validSizeEXT4 = drive.size >= size32GB;
+                bool validFormatExt4 = partitionEXT4.fileSystem == "ext4";
+                if (!validSizeEXT4 || !validFormatExt4) return false;
+            }
+
+            return true;
         }
         
         if (useMultipleDrivesCheckBox.IsChecked == true)
         {
-            bool validDrive = false;
+            efiDrive = null;
+            ext4Drive = null;
             foreach (ListBoxItem item in driveListBox.Items)
             {
-                if (IsValidDrive(item))
-                {
-                    validDrive = true;
-                    break;
-                }
+                if (IsValidDrive(item, true, false)) efiDrive = (Drive)item.Tag;
+                if (IsValidDrive(item, false, true)) ext4Drive = (Drive)item.Tag;
             }
-            nextButton.IsEnabled = validDrive;
+            nextButton.IsEnabled = efiDrive != null && ext4Drive != null;
         }
         else
         {
@@ -535,13 +547,17 @@ public partial class MainView : UserControl
             }
         
             var item = (ListBoxItem)driveListBox.Items[driveListBox.SelectedIndex];
-            nextButton.IsEnabled = IsValidDrive(item);
+            nextButton.IsEnabled = IsValidDrive(item, true, true);
         }
     }
     
     private void FormatDriveButton_OnClick(object sender, RoutedEventArgs e)
     {
-        //ProcessUtil.Run("parted", "", asAdmin:true);
+        var efiPartition = efiDrive.partitions.First(x => x.name == efiPartitionName);
+        var ext4Partition = ext4Drive.partitions.First(x => x.name == ext4PartitionName);
+        ProcessUtil.Run("mkfs.fat", $"-F32 {efiDrive.disk}p{efiPartition.number}", asAdmin:true);
+        ProcessUtil.Run("mkfs.ext4", $"{ext4Drive.disk}p{ext4Partition.number}", asAdmin:true);
+        RefreshDrivePage();
     }
 
     private void OpenGPartedButton_OnClick(object sender, RoutedEventArgs e)
