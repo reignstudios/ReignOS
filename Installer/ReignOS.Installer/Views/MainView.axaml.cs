@@ -22,23 +22,6 @@ enum InstallerStage
     DoneInstalling
 }
 
-class Partition
-{
-    public int number;
-    public ulong start, end, size;
-    public string fileSystem;
-    public string name;
-    public string flags;
-}
-
-class Drive
-{
-    public string model;
-    public string disk;
-    public ulong size;
-    public List<Partition> partitions;
-}
-
 public partial class MainView : UserControl
 {
     private InstallerStage stage;
@@ -52,7 +35,7 @@ public partial class MainView : UserControl
     private bool isConnected;
     
     private List<Drive> drives;
-    private Drive efiDrive, ext4Drive;
+    private Partition efiPartition, ext4Partition;
     private const string efiPartitionName = "ReignOS EFI";
     private const string ext4PartitionName = "ReignOS";
     
@@ -217,7 +200,7 @@ public partial class MainView : UserControl
                 backButton.IsEnabled = false;
                 nextButton.IsEnabled = false;
                 installProgressBar.IsVisible = true;
-                InstallUtil.Install();
+                InstallUtil.Install(efiPartition, ext4Partition);
                 break;
         }
     }
@@ -379,7 +362,7 @@ public partial class MainView : UserControl
                 {
                     try
                     {
-                        var partition = new Partition();
+                        var partition = new Partition(drive);
 
                         // number
                         string value = line.Substring(partitionIndex_Number, line.Length - partitionIndex_Number);
@@ -529,13 +512,16 @@ public partial class MainView : UserControl
         
         if (useMultipleDrivesCheckBox.IsChecked == true)
         {
-            efiDrive = null;
-            ext4Drive = null;
+            Drive efiDrive = null;
+            Drive ext4Drive = null;
             foreach (ListBoxItem item in driveListBox.Items)
             {
                 if (IsValidDrive(item, true, false)) efiDrive = (Drive)item.Tag;
                 if (IsValidDrive(item, false, true)) ext4Drive = (Drive)item.Tag;
             }
+            
+            if (efiDrive != null) efiPartition = efiDrive.partitions.First(x => x.name == efiPartitionName);
+            if (ext4Drive != null) ext4Partition = ext4Drive.partitions.First(x => x.name == ext4PartitionName);
             nextButton.IsEnabled = efiDrive != null && ext4Drive != null;
         }
         else
@@ -553,10 +539,8 @@ public partial class MainView : UserControl
     
     private void FormatDriveButton_OnClick(object sender, RoutedEventArgs e)
     {
-        var efiPartition = efiDrive.partitions.First(x => x.name == efiPartitionName);
-        var ext4Partition = ext4Drive.partitions.First(x => x.name == ext4PartitionName);
-        ProcessUtil.Run("mkfs.fat", $"-F32 {efiDrive.disk}p{efiPartition.number}", asAdmin:true);
-        ProcessUtil.Run("mkfs.ext4", $"{ext4Drive.disk}p{ext4Partition.number}", asAdmin:true);
+        ProcessUtil.Run("mkfs.fat", $"-F32 {efiPartition.path}", asAdmin:true);
+        ProcessUtil.Run("mkfs.ext4", ext4Partition.path, asAdmin:true);
         RefreshDrivePage();
     }
 
