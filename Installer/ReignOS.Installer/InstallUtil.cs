@@ -1,4 +1,5 @@
 using System.Text;
+using System.Diagnostics;
 using ReignOS.Core;
 
 namespace ReignOS.Installer;
@@ -33,6 +34,7 @@ static class InstallUtil
     public delegate void InstallProgressDelegate(string task, float progress);
     public static event InstallProgressDelegate InstallProgress;
 
+    private static Process archRootProcess;
     private static Partition efiPartition, ext4Partition;
     private static Thread installThread;
     private static float progress;
@@ -44,11 +46,46 @@ static class InstallUtil
         InstallProgress?.Invoke(progressTask, progress);
     }
 
-    private static bool archChrootEnable;
     private static void Run(string name, string args)
     {
-        if (archChrootEnable) ProcessUtil.Run("", $"/mnt {name} {args}");
-        else ProcessUtil.Run(name, args);
+        if (archRootProcess == null)
+        {
+            ProcessUtil.Run(name, args, asAdmin:true);
+        }
+        else
+        {
+            archRootProcess.StandardInput.WriteLine($"{name} {args}");
+            archRootProcess.StandardInput.Flush();
+        }
+    }
+
+    private static void StartArchRootProcess()
+    {
+        archRootProcess = new Process();
+        archRootProcess.StartInfo.UseShellExecute = false;
+        archRootProcess.StartInfo.FileName = "sudo";
+        archRootProcess.StartInfo.Arguments = "-S -- arch-chroot /mnt";
+        archRootProcess.StartInfo.RedirectStandardInput = true;
+        archRootProcess.StartInfo.RedirectStandardOutput = true;
+        archRootProcess.StartInfo.RedirectStandardError = true;
+        archRootProcess.Start();
+        
+        archRootProcess.StandardInput.WriteLine("gamer");
+        archRootProcess.StandardInput.Flush();
+
+        void ReadLine(object sender, DataReceivedEventArgs args)
+        {
+            if (args != null && args.Data != null)
+            {
+                Console.WriteLine(args.Data);
+            }
+        }
+        
+        archRootProcess.OutputDataReceived += ReadLine;
+        archRootProcess.BeginOutputReadLine();
+
+        archRootProcess.ErrorDataReceived += ReadLine;
+        archRootProcess.BeginErrorReadLine();
     }
     
     public static void Install(Partition efiPartition, Partition ext4Partition)
@@ -62,11 +99,28 @@ static class InstallUtil
     private static void InstallThread()
     {
         progress = 0;
-        archChrootEnable = false;
-        InstallBaseArch();
-        InstallArchPackages();
-        ConfigureArch();
-        InstallProgress?.Invoke("Done", progress);
+        try
+        {
+            InstallBaseArch();
+            InstallArchPackages();
+            ConfigureArch();
+            InstallProgress?.Invoke("Done", progress);
+        }
+        catch (Exception e)
+        {
+            InstallProgress?.Invoke("Failed", progress);
+            Console.WriteLine(e);
+        }
+
+        if (archRootProcess != null)
+        {
+            archRootProcess.StandardInput.WriteLine("exit");
+            Thread.Sleep(1000);
+            archRootProcess.Kill(true);
+            archRootProcess.Dispose();
+            archRootProcess = null;
+            Run("umount", "-R /mnt");
+        }
     }
     
     private static void InstallBaseArch()
@@ -81,13 +135,14 @@ static class InstallUtil
         
         Run("pacstrap", "/mnt base linux linux-firmware systemd");
         Run("genfstab", "-U /mnt >> /mnt/etc/fstab");
-        archChrootEnable = true;
+        StartArchRootProcess();
         UpdateProgress(20);
-        
-        string fileText = File.ReadAllText("/etc/pacman.conf");
+
+        string path = "/mnt/etc/pacman.conf";
+        string fileText = File.ReadAllText(path);
         fileText = fileText.Replace("# [multilib]", "[multilib]");
         fileText = fileText.Replace("# Include = /etc/pacman.d/mirrorlist", "Include = /etc/pacman.d/mirrorlist");
-        File.WriteAllText("/etc/pacman.conf", fileText);
+        File.WriteAllText(path, fileText);
         Run("pacman", "-Syy");
         UpdateProgress(25);
 
@@ -107,11 +162,12 @@ static class InstallUtil
         UpdateProgress(40);
 
         Run("echo", "\"reignos\" > /etc/hostname");
-        var fileBuilder = new StringBuilder(File.ReadAllText("/etc/hosts"));
+        path = "/mnt/etc/hosts";
+        var fileBuilder = new StringBuilder(File.ReadAllText(path));
         fileBuilder.AppendLine("127.0.0.1 localhost");
         fileBuilder.AppendLine("::1 localhost");
         fileBuilder.AppendLine("127.0.1.1 reignos.localdomain reignos");
-        File.WriteAllText("/etc/hosts", fileBuilder.ToString());
+        File.WriteAllText(path, fileBuilder.ToString());
         UpdateProgress(45);
         
         Run("bootctl", "install");
@@ -120,9 +176,26 @@ static class InstallUtil
         fileBuilder.AppendLine("linux /vmlinuz-linux");
         fileBuilder.AppendLine("initrd /initramfs-linux.img");
         fileBuilder.AppendLine("options root=/dev/nvme0n1p2 rw");
-        File.WriteAllText("/boot/loader/entries/arch.conf", fileBuilder.ToString());
+        File.WriteAllText("/mnt/boot/loader/entries/arch.conf", fileBuilder.ToString());
         Run("systemctl", "enable systemd-networkd systemd-resolved");
         UpdateProgress(50);
+
+        Run("passwd", "root");
+        archRootProcess.StandardInput.WriteLine("gamer");
+        UpdateProgress(51);
+
+        Run("useradd", "-m -G users -s /bin/bash gamer");
+        Run("passwd", "gamer");
+        archRootProcess.StandardInput.WriteLine("gamer");
+        Run("usermod", "-aG wheel,audio,video,storage gamer");
+        UpdateProgress(55);
+
+        Run("pacman", "-S sudo");
+        path = "/mnt/etc/sudoers";
+        fileText = File.ReadAllText(path);
+        fileText = fileText.Replace("# %wheel ALL=(ALL:ALL) ALL", "%wheel ALL=(ALL:ALL) ALL");
+        File.WriteAllText(path, fileText);
+        UpdateProgress(60);
     }
     
     private static void InstallArchPackages()

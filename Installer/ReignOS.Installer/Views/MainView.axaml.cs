@@ -91,43 +91,13 @@ public partial class MainView : UserControl
         {
             installText.Text = task;
             installProgressBar.Value = progress;
+            if (progress >= 100)
+            {
+                nextButton.Content = "Restart";
+                stage = InstallerStage.DoneInstalling;
+            }
         });
     }
-
-    /*protected override void OnLoaded(RoutedEventArgs e)
-    {
-        base.OnLoaded(e);
-        isRefreshing = false;
-        UpdateDrivePercentage();
-    }
-
-    private void UpdateDrivePercentage()
-    {
-        isRefreshing = true;
-        
-        var gb = (double)driveSize / 1024 / 1024 / 1024;
-        drivePercentage = Math.Round(drivePercentage);
-        
-        drivePercentTextBox.Text = Math.Round(drivePercentage).ToString();
-        driveGBTextBox.Text = Math.Round((drivePercentage / 100) * gb).ToString() + "gb";
-        driveSlider.Value = drivePercentage;
-
-        isRefreshing = false;
-    }
-
-    private void DrivePercentTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
-    {
-        if (isRefreshing) return;
-        double.TryParse(drivePercentTextBox.Text, out drivePercentage);
-        UpdateDrivePercentage();
-    }
-    
-    private void DriveSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
-    {
-        if (isRefreshing) return;
-        drivePercentage = driveSlider.Value;
-        UpdateDrivePercentage();
-    }*/
 
     private void RotationToggleButton_OnIsCheckedChanged(object sender, RoutedEventArgs e)
     {
@@ -199,8 +169,14 @@ public partial class MainView : UserControl
                 stage = InstallerStage.Installing;
                 backButton.IsEnabled = false;
                 nextButton.IsEnabled = false;
+                installProgressBar.Value = 0;
                 installProgressBar.IsVisible = true;
                 InstallUtil.Install(efiPartition, ext4Partition);
+                break;
+            
+            case InstallerStage.DoneInstalling:
+                ProcessUtil.Run("reboot", "", out _, wait:false);
+                MainWindow.singleton.Close();
                 break;
         }
     }
