@@ -42,6 +42,8 @@ public partial class MainView : UserControl
     public MainView()
     {
         InitializeComponent();
+        if (!Design.IsDesignMode) return;
+        
         InstallUtil.InstallProgress += InstallProgress;
         MainWindow.singleton.Closing += Window_Closing;
 
