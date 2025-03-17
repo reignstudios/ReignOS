@@ -42,7 +42,7 @@ public partial class MainView : UserControl
     public MainView()
     {
         InitializeComponent();
-        if (!Design.IsDesignMode) return;
+        if (Design.IsDesignMode) return;
         
         InstallUtil.InstallProgress += InstallProgress;
         MainWindow.singleton.Closing += Window_Closing;
@@ -288,8 +288,6 @@ public partial class MainView : UserControl
         var item = (ListBoxItem)connectionListBox.Items[connectionListBox.SelectedIndex];
         var ssid = (string)item.Content;
         ProcessUtil.Run("iwctl", $"station {wlanDevice} connect {ssid}", asAdmin:true, getStandardInput:getStandardInput);
-        Thread.Sleep(1000);
-        RefreshNetworkPage();
     }
     
     private void RefreshDrivesButton_OnClick(object sender, RoutedEventArgs e)
