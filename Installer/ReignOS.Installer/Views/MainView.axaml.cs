@@ -25,9 +25,6 @@ enum InstallerStage
 public partial class MainView : UserControl
 {
     private InstallerStage stage;
-    //private bool isRefreshing = true;
-    private double drivePercentage = 25;
-    private const ulong driveSize = 512ul * 1024 * 1024 * 1024;
 
     private System.Timers.Timer connectedTimer;
     private List<string> wlanDevices = new List<string>();
@@ -136,7 +133,7 @@ public partial class MainView : UserControl
 
     private void ShutdownButton_OnClick(object sender, RoutedEventArgs e)
     {
-        ProcessUtil.Run("poweroff", "", out _, wait:false);
+        //ProcessUtil.Run("poweroff", "", out _, wait:false);
         MainWindow.singleton.Close();
     }
 
@@ -288,6 +285,8 @@ public partial class MainView : UserControl
         var item = (ListBoxItem)connectionListBox.Items[connectionListBox.SelectedIndex];
         var ssid = (string)item.Content;
         ProcessUtil.Run("iwctl", $"station {wlanDevice} connect {ssid}", asAdmin:true, getStandardInput:getStandardInput);
+        string result = ProcessUtil.Run("iwctl", $"station {wlanDevice} connect show");
+        Console.WriteLine(result);
     }
     
     private void RefreshDrivesButton_OnClick(object sender, RoutedEventArgs e)
