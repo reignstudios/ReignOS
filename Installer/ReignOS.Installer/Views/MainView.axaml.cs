@@ -192,13 +192,14 @@ public partial class MainView : UserControl
                 startPage.IsVisible = true;
                 networkSelectPage.IsVisible = false;
                 backButton.IsEnabled = false;
-                nextButton.IsEnabled = isConnected;
+                nextButton.IsEnabled = true;
                 break;
             
             case InstallerStage.Drive:
                 stage = InstallerStage.Network;
                 networkSelectPage.IsVisible = true;
                 drivePage.IsVisible = false;
+                nextButton.IsEnabled = isConnected;
                 break;
             
             case InstallerStage.Install:
@@ -281,11 +282,12 @@ public partial class MainView : UserControl
         void getStandardInput(StreamWriter writer)
         {
             writer.WriteLine(networkPasswordText.Text);
+            writer.Flush();
         }
         
         var item = (ListBoxItem)connectionListBox.Items[connectionListBox.SelectedIndex];
         var ssid = (string)item.Content;
-        ProcessUtil.Run("iwctl", $"station {wlanDevice} connect {ssid}", getStandardInput:getStandardInput);
+        ProcessUtil.Run("iwctl", $"station {wlanDevice} connect {ssid}", asAdmin:true, getStandardInput:getStandardInput);
         Thread.Sleep(1000);
         RefreshNetworkPage();
     }

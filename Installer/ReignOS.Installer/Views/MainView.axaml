@@ -38,7 +38,7 @@
 					<Separator VerticalAlignment="Top" Margin="0,45,0,0"/>
 					<StackPanel Orientation="Vertical" Margin="16,50,0,0">
 						<Label Content="Password" FontSize="24"/>
-						<TextBox Name="networkPasswordText" RevealPassword="False" PasswordChar="*"/>
+						<TextBox Name="networkPasswordText"/>
 						<Button Name="networkConnectButton" Content="Connect" Margin="0,8,0,0" Click="NetworkConnectButton_OnClick"/>
 					</StackPanel>
 				</Grid>
