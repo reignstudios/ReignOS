@@ -282,11 +282,12 @@ public partial class MainView : UserControl
             inputWriter = writer;
         }
 
+        string pass = networkPasswordText.Text;
         void standardOut(string line)
         {
             if (line.ToLower().Contains("pass"))
             {
-                inputWriter.WriteLine(networkPasswordText.Text);
+                inputWriter.WriteLine(pass);
                 inputWriter.Flush();
             }
         }
