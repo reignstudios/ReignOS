@@ -276,16 +276,25 @@ public partial class MainView : UserControl
     {
         if (connectionListBox.SelectedIndex < 0) return;
 
+        StreamWriter inputWriter = null;
         void getStandardInput(StreamWriter writer)
         {
-            writer.WriteLine(networkPasswordText.Text);
-            writer.Flush();
+            inputWriter = writer;
+        }
+
+        void standardOut(string line)
+        {
+            if (line.ToLower().StartsWith("pass"))
+            {
+                inputWriter.WriteLine(networkPasswordText.Text);
+                inputWriter.Flush();
+            }
         }
         
         var item = (ListBoxItem)connectionListBox.Items[connectionListBox.SelectedIndex];
         var ssid = (string)item.Content;
-        ProcessUtil.Run("iwctl", $"station {wlanDevice} connect {ssid}", asAdmin:true, getStandardInput:getStandardInput);
-        string result = ProcessUtil.Run("iwctl", $"station {wlanDevice} connect show");
+        ProcessUtil.Run("iwctl", $"station {wlanDevice} connect {ssid}", asAdmin:true, getStandardInput:getStandardInput, standardOut:standardOut);
+        string result = ProcessUtil.Run("iwctl", $"station {wlanDevice} show");
         Console.WriteLine(result);
     }
     
