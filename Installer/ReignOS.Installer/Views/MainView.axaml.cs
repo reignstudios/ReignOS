@@ -284,7 +284,7 @@ public partial class MainView : UserControl
 
         void standardOut(string line)
         {
-            if (line.ToLower().StartsWith("pass"))
+            if (line.ToLower().Contains("pass"))
             {
                 inputWriter.WriteLine(networkPasswordText.Text);
                 inputWriter.Flush();
