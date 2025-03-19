@@ -285,8 +285,10 @@ public partial class MainView : UserControl
         string pass = networkPasswordText.Text;
         void standardOut(string line)
         {
-            if (line.ToLower().Contains("pass"))
+            Console.WriteLine(line);
+            if (line.Contains("Passphrase:"))
             {
+                Console.WriteLine("Enter WiFi password: " + pass);
                 inputWriter.WriteLine(pass);
                 inputWriter.Flush();
             }
