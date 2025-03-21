@@ -66,21 +66,28 @@ public partial class MainView : UserControl
         lock (this)
         {
             if (connectedTimer == null) return;
-            Dispatcher.UIThread.Invoke(() =>
+            try
             {
-                isConnected = App.IsOnline();
-                if (stage == InstallerStage.Network) nextButton.IsEnabled = isConnected;
-                if (isConnected)
+                Dispatcher.UIThread.Invoke(() =>
                 {
-                    isConnectedText.Text = "Network Connected";
-                    isConnectedText.Foreground = new SolidColorBrush(Colors.Green);
-                }
-                else
-                {
-                    isConnectedText.Text = "Network Disconnected";
-                    isConnectedText.Foreground = new SolidColorBrush(Colors.Red);
-                }
-            });
+                    isConnected = App.IsOnline();
+                    if (stage == InstallerStage.Network) nextButton.IsEnabled = isConnected;
+                    if (isConnected)
+                    {
+                        isConnectedText.Text = "Network Connected";
+                        isConnectedText.Foreground = new SolidColorBrush(Colors.Green);
+                    }
+                    else
+                    {
+                        isConnectedText.Text = "Network Disconnected";
+                        isConnectedText.Foreground = new SolidColorBrush(Colors.Red);
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
     }
 
