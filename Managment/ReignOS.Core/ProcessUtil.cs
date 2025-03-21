@@ -45,10 +45,11 @@ public static class ProcessUtil
                 }
 
                 if (standardOut != null) process.StartInfo.UseShellExecute = false;
+                if (getStandardInput != null) process.StartInfo.RedirectStandardInput = true;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardError = true;
                 process.Start();
-
+                
                 if (asAdmin)
                 {
                     process.StandardInput.WriteLine("gamer");
@@ -70,11 +71,13 @@ public static class ProcessUtil
                                     string value = args.Data;
                                     if (asAdmin && value.Contains("[sudo] password for"))
                                     {
+                                        Console.WriteLine($"sudo asking for pass again? '{value}'");
                                         process.StandardInput.WriteLine("gamer");
                                         process.StandardInput.Flush();
                                     }
                                     else
                                     {
+                                        Console.WriteLine(value);
                                         standardOut(args.Data);
                                     }
                                 }

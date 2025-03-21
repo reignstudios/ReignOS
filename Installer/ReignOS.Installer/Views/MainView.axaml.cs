@@ -70,17 +70,24 @@ public partial class MainView : UserControl
             {
                 Dispatcher.UIThread.Invoke(() =>
                 {
-                    isConnected = App.IsOnline();
-                    if (stage == InstallerStage.Network) nextButton.IsEnabled = isConnected;
-                    if (isConnected)
+                    try
                     {
-                        isConnectedText.Text = "Network Connected";
-                        isConnectedText.Foreground = new SolidColorBrush(Colors.Green);
+                        isConnected = App.IsOnline();
+                        if (stage == InstallerStage.Network) nextButton.IsEnabled = isConnected;
+                        if (isConnected)
+                        {
+                            isConnectedText.Text = "Network Connected";
+                            isConnectedText.Foreground = new SolidColorBrush(Colors.Green);
+                        }
+                        else
+                        {
+                            isConnectedText.Text = "Network Disconnected";
+                            isConnectedText.Foreground = new SolidColorBrush(Colors.Red);
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        isConnectedText.Text = "Network Disconnected";
-                        isConnectedText.Foreground = new SolidColorBrush(Colors.Red);
+                        Console.WriteLine(ex);
                     }
                 });
             }
@@ -279,31 +286,15 @@ public partial class MainView : UserControl
         foreach (var ssid in ssids) connectionListBox.Items.Add(new ListBoxItem { Content = ssid });
     }
     
+    // NOTE: forget network for debugger: iwctl known-networks <SSID> forget
     private void NetworkConnectButton_OnClick(object sender, RoutedEventArgs e)
     {
         if (connectionListBox.SelectedIndex < 0) return;
 
-        StreamWriter inputWriter = null;
-        void getStandardInput(StreamWriter writer)
-        {
-            inputWriter = writer;
-        }
-
-        string pass = networkPasswordText.Text;
-        void standardOut(string line)
-        {
-            Console.WriteLine(line);
-            if (line.Contains("Passphrase:"))
-            {
-                Console.WriteLine("Enter WiFi password: " + pass);
-                inputWriter.WriteLine(pass);
-                inputWriter.Flush();
-            }
-        }
-        
         var item = (ListBoxItem)connectionListBox.Items[connectionListBox.SelectedIndex];
         var ssid = (string)item.Content;
-        ProcessUtil.Run("iwctl", $"station {wlanDevice} connect {ssid}", asAdmin:true, getStandardInput:getStandardInput, standardOut:standardOut);
+        ProcessUtil.KillHard("iwctl", true, out _);// make sure any failed processes are not open
+        ProcessUtil.Run("iwctl", $"--passphrase {networkPasswordText.Text} station {wlanDevice} connect {ssid}", asAdmin:true);
         string result = ProcessUtil.Run("iwctl", $"station {wlanDevice} show");
         Console.WriteLine(result);
     }
