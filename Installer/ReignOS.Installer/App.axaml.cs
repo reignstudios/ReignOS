@@ -45,7 +45,7 @@ public partial class App : Application
 
     public static bool IsOnline()
     {
-        string result = ProcessUtil.Run("ping", "-c 1 reign-studios.com");
+        string result = ProcessUtil.Run("ping", "-c 1 reign-studios.com", consoleLogOut:false);
         return result.Contains("1 received");
     }
 }

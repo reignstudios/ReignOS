@@ -32,8 +32,9 @@ public partial class MainView : UserControl
     private bool isConnected;
     
     private List<Drive> drives;
+    private Drive efiDrive, ext4Drive;
     private Partition efiPartition, ext4Partition;
-    private const string efiPartitionName = "ReignOS EFI";
+    private const string efiPartitionName = "ReignOS_EFI";
     private const string ext4PartitionName = "ReignOS";
     
     public MainView()
@@ -44,11 +45,11 @@ public partial class MainView : UserControl
         InstallUtil.InstallProgress += InstallProgress;
         MainWindow.singleton.Closing += Window_Closing;
 
-        ConnectedTimer(null, null);
         connectedTimer = new System.Timers.Timer(1000 * 5);
         connectedTimer.Elapsed += ConnectedTimer;
         connectedTimer.AutoReset = true;
         connectedTimer.Start();
+        ConnectedTimer(null, null);
     }
 
     private void Window_Closing(object sender, WindowClosingEventArgs e)
@@ -310,17 +311,35 @@ public partial class MainView : UserControl
         
         static ulong ParseSizeName(string sizeName)
         {
-            if (sizeName.EndsWith("GB"))
+            if (sizeName.EndsWith("TB"))
             {
-                return ulong.Parse(sizeName.Replace("GB", "")) * 1024 * 1024 * 1024;
+                sizeName = sizeName.Replace("TB", "");
+                if (ulong.TryParse(sizeName, out ulong sizeUL)) return sizeUL * 1024 * 1024 * 1024 * 1024;
+                if (double.TryParse(sizeName, out double sizeD)) return (ulong)(sizeD * 1024 * 1024 * 1024 * 1024);
+            }
+            else if (sizeName.EndsWith("GB"))
+            {
+                sizeName = sizeName.Replace("GB", "");
+                if (ulong.TryParse(sizeName, out ulong sizeUL)) return sizeUL * 1024 * 1024 * 1024;
+                if (double.TryParse(sizeName, out double sizeD)) return (ulong)(sizeD * 1024 * 1024 * 1024);
             }
             else if (sizeName.EndsWith("MB"))
             {
-                return ulong.Parse(sizeName.Replace("MB", "")) * 1024 * 1024;
+                sizeName = sizeName.Replace("MB", "");
+                if (ulong.TryParse(sizeName, out ulong sizeUL)) return sizeUL * 1024 * 1024;
+                if (double.TryParse(sizeName, out double sizeD)) return (ulong)(sizeD * 1024 * 1024);
             }
             else if (sizeName.EndsWith("kB"))
             {
-                return ulong.Parse(sizeName.Replace("kB", "")) * 1024;
+                sizeName = sizeName.Replace("kB", "");
+                if (ulong.TryParse(sizeName, out ulong sizeUL)) return sizeUL * 1024;
+                if (double.TryParse(sizeName, out double sizeD)) return (ulong)(sizeD * 1024);
+            }
+            else if (sizeName.EndsWith("B"))
+            {
+                sizeName = sizeName.Replace("B", "");
+                if (ulong.TryParse(sizeName, out ulong sizeUL)) return sizeUL;
+                if (double.TryParse(sizeName, out double sizeD)) return (ulong)(sizeD);
             }
 
             return 0;
@@ -372,27 +391,26 @@ public partial class MainView : UserControl
                         partition.size = ParseSizeName(value);
                         
                         // file-system
-                        if (line.Length - partitionIndex_FileSystem > 0)
+                        if (partitionIndex_FileSystem >= 0 && line.Length - partitionIndex_FileSystem > 0)
                         {
                             value = line.Substring(partitionIndex_FileSystem, line.Length - partitionIndex_FileSystem);
                             if (value.Length != 0 && value[0] != ' ') partition.fileSystem = value.Split(' ')[0];
                         }
 
                         // name
-                        if (line.Length - partitionIndex_Name > 0)
+                        if (partitionIndex_Name >= 0 && line.Length - partitionIndex_Name > 0)
                         {
                             value = line.Substring(partitionIndex_Name, line.Length - partitionIndex_Name);
                             if (value.Length != 0 && value[0] != ' ') partition.name = value.Split(' ')[0];
                         }
 
                         // flags
-                        if (line.Length - partitionIndex_Flags > 0)
+                        if (partitionIndex_Flags >= 0 && line.Length - partitionIndex_Flags > 0)
                         {
                             value = line.Substring(partitionIndex_Flags, line.Length - partitionIndex_Flags);
                             if (value.Length != 0 && value[0] != ' ') partition.flags = value;
                         }
 
-                        if (drive.partitions == null) drive.partitions = new List<Partition>();
                         drive.partitions.Add(partition);
                     }
                     catch (Exception e)
@@ -497,10 +515,10 @@ public partial class MainView : UserControl
             return true;
         }
         
+        efiDrive = ext4Drive = null;
+        efiPartition = ext4Partition = null;
         if (useMultipleDrivesCheckBox.IsChecked == true)
         {
-            Drive efiDrive = null;
-            Drive ext4Drive = null;
             foreach (ListBoxItem item in driveListBox.Items)
             {
                 if (IsValidDrive(item, true, false)) efiDrive = (Drive)item.Tag;
@@ -521,13 +539,48 @@ public partial class MainView : UserControl
         
             var item = (ListBoxItem)driveListBox.Items[driveListBox.SelectedIndex];
             nextButton.IsEnabled = IsValidDrive(item, true, true);
+            efiDrive = ext4Drive = (Drive)item.Tag;
+            if (efiDrive.partitions != null) efiPartition = efiDrive.partitions.FirstOrDefault(x => x.name == efiPartitionName);
+            if (ext4Drive.partitions != null) ext4Partition = efiDrive.partitions.FirstOrDefault(x => x.name == ext4PartitionName);
         }
     }
     
     private void FormatDriveButton_OnClick(object sender, RoutedEventArgs e)
     {
-        ProcessUtil.Run("mkfs.fat", $"-F32 {efiPartition.path}", asAdmin:true);
-        ProcessUtil.Run("mkfs.ext4", ext4Partition.path, asAdmin:true);
+        if (driveListBox.SelectedIndex < 0 || efiDrive == null || ext4Drive == null) return;
+        
+        // delete old partitions
+        foreach (var parition in efiDrive.partitions)
+        {
+            ProcessUtil.Run("parted", $"-s {efiDrive.disk} rm {parition.number}", asAdmin:true);
+        }
+        
+        // make sure gpt partition scheme
+        ProcessUtil.Run("parted", $"-s {efiDrive.disk} mklabel gpt", asAdmin:true);
+        
+        // make new partitions
+        ProcessUtil.Run("parted", $"-s {efiDrive.disk} mkpart ESP fat32 1MiB 513MiB", asAdmin:true);
+        ProcessUtil.Run("parted", $"-s {efiDrive.disk} mkpart primary ext4 513MiB 100%", asAdmin:true);
+        
+        // configure partition
+        ProcessUtil.Run("parted", $"-s {efiDrive.disk} set 1 boot on", asAdmin:true);
+        ProcessUtil.Run("parted", $"-s {efiDrive.disk} set 1 esp on", asAdmin:true);
+        ProcessUtil.Run("parted", $"-s {efiDrive.disk} name 1 \"{efiPartitionName}\"", asAdmin:true);
+        ProcessUtil.Run("parted", $"-s {efiDrive.disk} name 2 \"{ext4PartitionName}\"", asAdmin:true);
+        
+        // format partitions
+        if (efiDrive.disk.StartsWith("/dev/nvme") || efiDrive.disk.StartsWith("/dev/mmcblk"))
+        {
+            ProcessUtil.Run("mkfs.fat", $"-F32 {efiDrive.disk}p1", asAdmin:true);
+            ProcessUtil.Run("mkfs.ext4", $"{ext4Drive.disk}p2", asAdmin:true);
+        }
+        else
+        {
+            ProcessUtil.Run("mkfs.fat", $"-F32 {efiDrive.disk}1", asAdmin:true);
+            ProcessUtil.Run("mkfs.ext4", $"{ext4Drive.disk}2", asAdmin:true);
+        }
+        
+        // finish
         RefreshDrivePage();
     }
 

@@ -26,7 +26,7 @@ class Drive
     public string model;
     public string disk;
     public ulong size;
-    public List<Partition> partitions;
+    public List<Partition> partitions = new List<Partition>();
 }
 
 static class InstallUtil

@@ -12,15 +12,16 @@ using System.Threading;
 
 public static class ProcessUtil
 {
+    private const string pass = "gamer";
     public delegate void ProcessOutputDelegate(string line);
     public delegate void ProcessInputDelegate(StreamWriter writer);
     
-    public static string Run(string name, string args, Dictionary<string, string> enviromentVars = null, bool wait = true, bool asAdmin = false, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null)
+    public static string Run(string name, string args, Dictionary<string, string> enviromentVars = null, bool wait = true, bool asAdmin = false, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, bool consoleLogOut = true)
     {
-        return Run(name, args, out _, enviromentVars, wait, asAdmin, standardOut, getStandardInput);
+        return Run(name, args, out _, enviromentVars, wait, asAdmin, standardOut, getStandardInput, consoleLogOut);
     }
 
-    public static string Run(string name, string args, out int exitCode, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null)
+    public static string Run(string name, string args, out int exitCode, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, bool consoleLogOut = true)
     {
         try
         {
@@ -52,7 +53,7 @@ public static class ProcessUtil
                 
                 if (asAdmin)
                 {
-                    process.StandardInput.WriteLine("gamer");
+                    process.StandardInput.WriteLine(pass);
                     process.StandardInput.Flush();
                 }
                 
@@ -71,13 +72,13 @@ public static class ProcessUtil
                                     string value = args.Data;
                                     if (asAdmin && value.Contains("[sudo] password for"))
                                     {
-                                        Console.WriteLine($"sudo asking for pass again? '{value}'");
-                                        process.StandardInput.WriteLine("gamer");
+                                        if (consoleLogOut) Console.WriteLine($"sudo asking for pass again? '{value}'");
+                                        process.StandardInput.WriteLine(pass);
                                         process.StandardInput.Flush();
                                     }
                                     else
                                     {
-                                        Console.WriteLine(value);
+                                        if (consoleLogOut) Console.WriteLine(value);
                                         standardOut(args.Data);
                                     }
                                 }
@@ -97,13 +98,16 @@ public static class ProcessUtil
                     
                     process.WaitForExit();
                     exitCode = process.ExitCode;
-                    var builder = new StringBuilder();
+                    string resultOutput = string.Empty;
                     if (standardOut == null)
                     {
+                        var builder = new StringBuilder();
                         builder.Append(process.StandardOutput.ReadToEnd());
                         builder.Append(process.StandardError.ReadToEnd());
+                        resultOutput = builder.ToString();
+                        if (consoleLogOut) Console.WriteLine(resultOutput);
                     }
-                    return builder.ToString();
+                    return resultOutput;
                 }
                 else
                 {
