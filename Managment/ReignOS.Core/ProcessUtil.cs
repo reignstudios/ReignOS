@@ -23,7 +23,6 @@ public static class ProcessUtil
 
     public static string Run(string name, string args, out int exitCode, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, bool consoleLogOut = true)
     {
-        if (consoleLogOut) Console.WriteLine($"ProcessUtil.Run: {name} {args}");
         try
         {
             using (var process = new Process())
@@ -44,6 +43,7 @@ public static class ProcessUtil
                     foreach (var v in enviromentVars) process.StartInfo.EnvironmentVariables[v.Key] = v.Value;
                 }
 
+                if (consoleLogOut) Console.WriteLine($"ProcessUtil.Run: {process.StartInfo.FileName} {process.StartInfo.Arguments}");
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardError = true;

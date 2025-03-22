@@ -67,7 +67,7 @@ static class InstallUtil
         else
         {
             Console.WriteLine($"Arch-Chroot.Run: {name} {args}");
-            ProcessUtil.Run("arch-chroot", $"/mnt {name} {args} && exit", asAdmin:true, enterAdminPass:false, getStandardInput:getStandardInput);
+            ProcessUtil.Run("arch-chroot", $"/mnt bash -c \\\"{name} {args}\\\"", asAdmin:true, enterAdminPass:false, getStandardInput:getStandardInput);
         }
     }
     
@@ -97,6 +97,7 @@ static class InstallUtil
             Console.WriteLine(e);
         }
 
+        archRootMode = false;
         ProcessUtil.KillHard("arch-chroot", true, out _);
         Run("umount", "-R /mnt/boot");
         Run("umount", "-R /mnt");
@@ -172,7 +173,7 @@ static class InstallUtil
         fileBuilder.AppendLine("title ReignOS");
         fileBuilder.AppendLine("linux /vmlinuz-linux");
         fileBuilder.AppendLine("initrd /initramfs-linux.img");
-        fileBuilder.AppendLine("options root=/dev/nvme0n1p2 rw");
+        fileBuilder.AppendLine($"options root={ext4Partition.path} rw");
         void getStandardInput_arch_conf(StreamWriter writer)
         {
             writer.WriteLine(fileBuilder);
@@ -183,15 +184,15 @@ static class InstallUtil
         Run("systemctl", "enable systemd-networkd systemd-resolved");
         UpdateProgress(50);
 
-        Run("passwd", "root", getStandardInput:WriteInputPass);
+        Run("echo", "'root:gamer' | chpasswd");
         UpdateProgress(51);
 
-        Run("pacman", "-S --noconfirm sudo");
+        Run("pacman", "-S --noconfirm sudo pam");
         Run("pacman", "-Qs sudo");
         UpdateProgress(55);
         
         Run("useradd", "-m -G users -s /bin/bash gamer");
-        Run("passwd", "gamer", getStandardInput:WriteInputPass);
+        Run("echo", "'gamer:gamer' | chpasswd");
         Run("usermod", "-aG wheel,audio,video,storage gamer");
         UpdateProgress(58);
 
@@ -206,13 +207,6 @@ static class InstallUtil
         }
         ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_sudoers);
         UpdateProgress(60);
-    }
-
-    private static void WriteInputPass(StreamWriter writer)
-    {
-        writer.WriteLine("gamer");
-        writer.Flush();
-        writer.Close();
     }
     
     private static void InstallArchPackages()
