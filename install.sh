@@ -220,6 +220,7 @@ nano /boot/loader/entries/arch.conf
 i915.enable_dc=2 i915.enable_psr=1
 amdgpu.dpm=1 amdgpu.ppfeaturemask=0xffffffff amdgpu.dc=1
 nouveau.pstate=1 nouveau.perflvl=N nouveau.perflvl_wr=7777 nouveau.config=NvGspRm=1
+nvidia_drm.modeset=1
 # mem_sleep_default=deep (this can cause some systems to fail to wake)
 acpi_osi=Linux
 
