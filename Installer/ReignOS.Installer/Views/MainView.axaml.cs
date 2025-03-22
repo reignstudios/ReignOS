@@ -108,6 +108,7 @@ public partial class MainView : UserControl
             if (progress >= 100)
             {
                 nextButton.Content = "Restart";
+                nextButton.IsEnabled = true;
                 stage = InstallerStage.DoneInstalling;
             }
         });
@@ -543,6 +544,8 @@ public partial class MainView : UserControl
             if (efiDrive.partitions != null) efiPartition = efiDrive.partitions.FirstOrDefault(x => x.name == efiPartitionName);
             if (ext4Drive.partitions != null) ext4Partition = efiDrive.partitions.FirstOrDefault(x => x.name == ext4PartitionName);
         }
+        
+        if (cleanInstallRadioButton.IsChecked != true && dualBootInstallRadioButton.IsChecked != true) nextButton.IsEnabled = false;
     }
     
     private void FormatDriveButton_OnClick(object sender, RoutedEventArgs e)
@@ -569,7 +572,7 @@ public partial class MainView : UserControl
         ProcessUtil.Run("parted", $"-s {efiDrive.disk} name 2 \"{ext4PartitionName}\"", asAdmin:true);
         
         // format partitions
-        if (efiDrive.disk.StartsWith("/dev/nvme") || efiDrive.disk.StartsWith("/dev/mmcblk"))
+        if (efiDrive.PartitionsUseP())
         {
             ProcessUtil.Run("mkfs.fat", $"-F32 {efiDrive.disk}p1", asAdmin:true);
             ProcessUtil.Run("mkfs.ext4", $"{ext4Drive.disk}p2", asAdmin:true);
@@ -586,18 +589,25 @@ public partial class MainView : UserControl
 
     private void OpenGPartedButton_OnClick(object sender, RoutedEventArgs e)
     {
-        ProcessUtil.Run("gparted", "", wait:false, asAdmin:true);
+        ProcessUtil.Run("gparted", "", wait:true, asAdmin:true);
     }
 
     private void CleanInstallButton_OnClick(object sender, RoutedEventArgs e)
     {
         cleanDriveGrid.IsVisible = true;
         keepOSDriveGrid.IsVisible = false;
+        RefreshDrivePage();
     }
     
     private void DualInstallButton_OnClick(object sender, RoutedEventArgs e)
     {
         cleanDriveGrid.IsVisible = false;
         keepOSDriveGrid.IsVisible = true;
+        RefreshDrivePage();
+    }
+
+    private void UseMultipleDrivesCheckBox_OnIsCheckedChanged(object sender, RoutedEventArgs e)
+    {
+        RefreshDrivePage();
     }
 }

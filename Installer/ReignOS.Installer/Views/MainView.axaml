@@ -66,15 +66,15 @@
 					<Label Content="Options" FontSize="32" Height="50" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 					<Separator VerticalAlignment="Top" Margin="0,45,0,0"/>
 					<StackPanel Orientation="Vertical" Margin="16,50,0,0">
-						<RadioButton Content="Clean Install (Uses Entire Drive)" Click="CleanInstallButton_OnClick"/>
-						<RadioButton Content="Dual Boot (Keep Other OS)" Click="DualInstallButton_OnClick"/>
-						<Grid Name="cleanDriveGrid" IsVisible="False">
+						<RadioButton Name="cleanInstallRadioButton" Content="Clean Install (Uses Entire Drive)" Click="CleanInstallButton_OnClick" IsChecked="True"/>
+						<RadioButton Name="dualBootInstallRadioButton" Content="Dual Boot (Keep Other OS)" Click="DualInstallButton_OnClick"/>
+						<Grid Name="cleanDriveGrid" IsVisible="True">
 							<Button Content="Format Selected Drive" Click="FormatDriveButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,16,0,0"/>
 							<TextBlock Text="NOTE: This will delete all data on the entire drive selected." Margin="4,52,0,0" TextWrapping="Wrap"/>
 						</Grid>
 						<Grid Name="keepOSDriveGrid" IsVisible="False">
 							<Button Content="Open GParted" Click="OpenGPartedButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,16,0,0"/>
-							<CheckBox Name="useMultipleDrivesCheckBox" Content="Use Multiple Drives" Margin="4,52,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+							<CheckBox Name="useMultipleDrivesCheckBox" Content="Use Multiple Drives" Margin="4,52,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsCheckedChanged="UseMultipleDrivesCheckBox_OnIsCheckedChanged"/>
 							<TextBlock Margin="4,100,0,0" Text="1) Open GParted, shrink your existing OS main partition freeing at least 32gb.&#x0A;2) Add EFI partion 512MB in size named 'ReignOS EFI' with flags 'boot, esp'.&#x0A;3) Add ext4 partition using ramaining free space named 'ReignOS'.&#x0A;4) Exit Gparted, refresh drives and continue install.&#x0A;NOTE: If you put the EFI or EXT4 partitions on different drives, check the 'Use Multiple Drives' option." TextWrapping="Wrap"/>
 						</Grid>
 					</StackPanel>

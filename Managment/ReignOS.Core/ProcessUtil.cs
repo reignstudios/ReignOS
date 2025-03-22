@@ -16,28 +16,27 @@ public static class ProcessUtil
     public delegate void ProcessOutputDelegate(string line);
     public delegate void ProcessInputDelegate(StreamWriter writer);
     
-    public static string Run(string name, string args, Dictionary<string, string> enviromentVars = null, bool wait = true, bool asAdmin = false, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, bool consoleLogOut = true)
+    public static string Run(string name, string args, Dictionary<string, string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, bool consoleLogOut = true)
     {
-        return Run(name, args, out _, enviromentVars, wait, asAdmin, standardOut, getStandardInput, consoleLogOut);
+        return Run(name, args, out _, enviromentVars, wait, asAdmin, enterAdminPass, standardOut, getStandardInput, consoleLogOut);
     }
 
-    public static string Run(string name, string args, out int exitCode, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, bool consoleLogOut = true)
+    public static string Run(string name, string args, out int exitCode, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, bool consoleLogOut = true)
     {
+        if (consoleLogOut) Console.WriteLine($"ProcessUtil.Run: {name} {args}");
         try
         {
             using (var process = new Process())
             {
                 if (asAdmin)
                 {
-                    process.StartInfo.UseShellExecute = false;
                     process.StartInfo.FileName = "sudo";
-                    process.StartInfo.Arguments = $"-S -- {name} {args}";
-                    process.StartInfo.RedirectStandardInput = true;
+                    process.StartInfo.Arguments = $"-- bash -c \"{name} {args}\"";
                 }
                 else
                 {
-                    process.StartInfo.FileName = name;
-                    process.StartInfo.Arguments = args;
+                    process.StartInfo.FileName = "bash";
+                    process.StartInfo.Arguments = $"-c \"{name} {args}\"";
                 }
 
                 if (enviromentVars != null)
@@ -45,13 +44,13 @@ public static class ProcessUtil
                     foreach (var v in enviromentVars) process.StartInfo.EnvironmentVariables[v.Key] = v.Value;
                 }
 
-                if (standardOut != null) process.StartInfo.UseShellExecute = false;
-                if (getStandardInput != null) process.StartInfo.RedirectStandardInput = true;
+                process.StartInfo.UseShellExecute = false;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardError = true;
+                if (getStandardInput != null) process.StartInfo.RedirectStandardInput = true;
                 process.Start();
                 
-                if (asAdmin)
+                if (asAdmin && enterAdminPass)
                 {
                     process.StandardInput.WriteLine(pass);
                     process.StandardInput.Flush();
@@ -70,17 +69,8 @@ public static class ProcessUtil
                                 try
                                 {
                                     string value = args.Data;
-                                    if (asAdmin && value.Contains("[sudo] password for"))
-                                    {
-                                        if (consoleLogOut) Console.WriteLine($"sudo asking for pass again? '{value}'");
-                                        process.StandardInput.WriteLine(pass);
-                                        process.StandardInput.Flush();
-                                    }
-                                    else
-                                    {
-                                        if (consoleLogOut) Console.WriteLine(value);
-                                        standardOut(args.Data);
-                                    }
+                                    if (consoleLogOut) Console.WriteLine(value);
+                                    standardOut(args.Data);
                                 }
                                 catch (Exception e)
                                 {
@@ -123,6 +113,11 @@ public static class ProcessUtil
             Log.WriteLine(e.Message);
             return e.Message;
         }
+    }
+
+    public static string ReadAllTextAdmin(string path)
+    {
+        return Run("cat", path, asAdmin:true);
     }
 
     public static void KillHard(string name, bool asAdmin, out int exitCode)

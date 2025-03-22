@@ -108,8 +108,8 @@ usermod -aG wheel,audio,video,storage gamer
 # add new user to sudo
 pacman -S sudo
 nano /etc/sudoers
-# uncomment
-# %wheel ALL=(ALL:ALL) ALL
+# %wheel ALL=(ALL:ALL) ALL # uncomment
+#gamer ALL=(ALL) NOPASSWD:ALL # add line (disable the need for sudo pass)
 
 # finish install
 exit
@@ -359,6 +359,8 @@ nano /etc/sudoers.d/archiso # add this folder and file
 #Defaults mail_badpass
 #Defaults secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 #%wheel ALL=(ALL) ALL
+#%wheel ALL=(ALL:ALL) ALL # uncomment
+#gamer ALL=(ALL) NOPASSWD:ALL # add line (disable the need for sudo pass)
 
 # edit ReignOS metadata
 nano profiledef.sh
