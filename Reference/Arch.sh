@@ -322,9 +322,6 @@ xorg-xinput
 xorg-xmodmap
 mesa
 libdrm
-xf86-video-intel
-xf86-video-amdgpu
-xf86-video-nouveau
 libva-intel-driver
 intel-media-driver
 intel-ucode
