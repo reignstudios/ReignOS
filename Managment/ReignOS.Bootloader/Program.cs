@@ -64,8 +64,7 @@ internal class Program
         {
             serviceProcess.StartInfo.UseShellExecute = false;
             serviceProcess.StartInfo.FileName = "sudo";
-            serviceProcess.StartInfo.Arguments = "-S ./ReignOS.Service";
-            serviceProcess.StartInfo.RedirectStandardInput = true;
+            serviceProcess.StartInfo.Arguments = "./ReignOS.Service";
             serviceProcess.StartInfo.RedirectStandardOutput = true;
             serviceProcess.StartInfo.RedirectStandardError = true;
             serviceProcess.OutputDataReceived += (sender, args) =>
@@ -73,12 +72,7 @@ internal class Program
                 if (args != null && args.Data != null)
                 {
                     string value = args.Data;
-                    if (value.Contains("[sudo] password for"))
-                    {
-                        serviceProcess.StandardInput.WriteLine("gamer");
-                        serviceProcess.StandardInput.Flush();
-                    }
-                    else if (value.Contains("SET_VOLUME_DOWN"))
+                    if (value.Contains("SET_VOLUME_DOWN"))
                     {
                         ProcessUtil.Run("amixer", "set Master 5%-", out _);
                     }
@@ -94,18 +88,10 @@ internal class Program
                 if (args != null && args.Data != null)
                 {
                     string value = args.Data;
-                    if (value.Contains("[sudo] password for"))
-                    {
-                        serviceProcess.StandardInput.WriteLine("gamer");
-                        serviceProcess.StandardInput.Flush();
-                    }
                     lock (Log.lockObj) Console.WriteLine(value);
                 }
             };
             serviceProcess.Start();
-            
-            serviceProcess.StandardInput.WriteLine("gamer");
-            serviceProcess.StandardInput.Flush();
             
             serviceProcess.BeginOutputReadLine();
             serviceProcess.BeginErrorReadLine();
