@@ -9,12 +9,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Remove="Assets\avalonia-logo.ico" />
+        <None Remove="Assets\ReignOS_Icon.ico" />
     </ItemGroup>
 
     <ItemGroup>
-        <AvaloniaResource Include="Assets\avalonia-logo.ico" />
         <AvaloniaResource Include="Assets\ReignOS.png" />
+        <AvaloniaResource Include="Assets\ReignOS_Icon.ico" />
     </ItemGroup>
 
     <ItemGroup>

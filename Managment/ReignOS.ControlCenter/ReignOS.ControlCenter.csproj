@@ -9,10 +9,10 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Assets\avalonia-logo.ico" />
+    <None Remove="Assets\ReignOS_Icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <AvaloniaResource Include="Assets\avalonia-logo.ico" />
+    <AvaloniaResource Include="Assets\ReignOS_Icon.ico" />
     <AvaloniaResource Include="Assets\steam_black.png" />
   </ItemGroup>
 

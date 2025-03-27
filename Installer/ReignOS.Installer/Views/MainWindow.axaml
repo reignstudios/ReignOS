@@ -6,7 +6,7 @@
         mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
 		Width="1280" Height="720"
         x:Class="ReignOS.Installer.Views.MainWindow"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/ReignOS_Icon.ico"
         Title="ReignOS.Installer"
 		WindowStartupLocation="CenterScreen">
         <views:MainView />

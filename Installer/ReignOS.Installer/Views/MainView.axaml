@@ -11,7 +11,7 @@
 		<Separator HorizontalAlignment="Center" VerticalAlignment="Top" Margin="150,70,150,0"/>
 		
 		<Grid Margin="4,100,4,50" Background="#202020">
-			<Grid Name="startPage" Margin="4" IsVisible="True">
+			<Grid Name="startPage" Margin="4" IsVisible="True" Background="#001b2e">
 				<Image Source="/Assets/ReignOS.png"/>
 			</Grid>
 			
