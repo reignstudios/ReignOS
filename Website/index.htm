@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Splash Page</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #001b2e;
+        }
+        
+        .container {
+            text-align: center;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centers all children horizontally */
+        }
+        
+        .splash-image {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        
+        .download-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 20px;
+            text-decoration: none;
+            display: inline-block;
+            width: fit-content; /* Ensures button stays its natural width */
+        }
+        
+        .download-btn:hover {
+            background-color: #45a049;
+        }
+        
+        .description {
+            max-width: 600px;
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        ul {
+            text-align: left;
+            padding-left: 20px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="ReignOS.png" alt="Splash Image" class="splash-image">
+        <a href="https://github.com/reignstudios/ReignOS/releases" class="download-btn">Download Now</a>
+        <div class="description">
+            ReignOS is a SteamOS like Arch distro but with its own unique take focused on general portability.
+            It supports Gamescope and Cage compositors for better compatibility with some hardware.
+        </div>
+        <ul style="color: #ddd;">
+            <li>AMD, Intel and Nvidia GPUs supported</li>
+            <li>Most General PC hardware should just work</li>
+        </ul>
+        <div>
+            <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">Known working hardware</h2>
+            <ul style="color: #888;">
+                <li>MSI-Claw AM1</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

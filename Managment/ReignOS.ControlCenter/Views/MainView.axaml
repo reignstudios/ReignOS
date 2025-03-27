@@ -73,9 +73,9 @@
 		</StackPanel>
 
 		<StackPanel Margin="4" Height="42" VerticalAlignment="Bottom" Background="#000040" Orientation="Horizontal">
-			<Button Content="Sleep" Margin="4,0" Click="SleepButton_Click"/>
-			<Button Content="Restart" Margin="4,0" Click="RestartButton_Click"/>
-			<Button Content="Shutdown" Margin="4,0" Click="ShutdownButton_Click"/>
+			<Button Content="Sleep" Margin="4,0" Background="#0000AA" Click="SleepButton_Click"/>
+			<Button Content="Restart" Margin="4,0" Background="#00AA00" Click="RestartButton_Click"/>
+			<Button Content="Shutdown" Margin="4,0" Background="#AA0000" Click="ShutdownButton_Click"/>
 			<Button Content="Check Updates" Margin="32,0,4,0" Click="CheckUpdatesButton_Click"/>
 			<Button Content="Exit to Terminal" Margin="4,0" Click="ExitButton_Click"/>
 		</StackPanel>
