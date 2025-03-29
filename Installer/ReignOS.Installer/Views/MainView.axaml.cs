@@ -595,7 +595,8 @@ public partial class MainView : UserControl
         }
         else
         {
-            MainWindow.singleton.Close();// exit so Labwc will open
+            ProcessUtil.Run("labwc", "--session gparted", wait:false, asAdmin:true);
+            //MainWindow.singleton.Close();// exit so Labwc will open
         }
     }
 
