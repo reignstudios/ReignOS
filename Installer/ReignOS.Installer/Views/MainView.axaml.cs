@@ -149,7 +149,7 @@ public partial class MainView : UserControl
 
     private void ShutdownButton_OnClick(object sender, RoutedEventArgs e)
     {
-        //ProcessUtil.Run("poweroff", "", out _, wait:false);
+        ProcessUtil.Run("poweroff", "", out _, wait:false);
         MainWindow.singleton.Close();
     }
 
@@ -589,7 +589,14 @@ public partial class MainView : UserControl
 
     private void OpenGPartedButton_OnClick(object sender, RoutedEventArgs e)
     {
-        ProcessUtil.Run("gparted", "", wait:true, asAdmin:true);
+        if (Program.compositorMode == CompositorMode.Labwc)
+        {
+            ProcessUtil.Run("gparted", "", wait:true, asAdmin:true);
+        }
+        else
+        {
+            MainWindow.singleton.Close();// exit so Labwc will open
+        }
     }
 
     private void CleanInstallButton_OnClick(object sender, RoutedEventArgs e)
@@ -609,5 +616,10 @@ public partial class MainView : UserControl
     private void UseMultipleDrivesCheckBox_OnIsCheckedChanged(object sender, RoutedEventArgs e)
     {
         RefreshDrivePage();
+    }
+
+    private void ExitButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        MainWindow.singleton.Close();
     }
 }

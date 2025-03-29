@@ -227,7 +227,7 @@ internal class Program
     private static void StartCompositor_Labwc()
     {
         Log.WriteLine("Starting Labwc with Steam...");
-        string result = ProcessUtil.Run("labwc", "--session -- ./Start_Labwc.sh", out _, wait:true);// start Labwc with Steam in desktop mode
+        string result = ProcessUtil.Run("labwc", "--startup -- ./Start_Labwc.sh", out _, wait:true);// start Labwc with Steam in desktop mode
         Log.WriteLine(result);
     }
 

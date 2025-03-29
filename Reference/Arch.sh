@@ -306,10 +306,14 @@ cp -r /usr/share/archiso/configs/releng/* .
 nano packages.x86_64
 
 bash
+gparted
 git
 git-lfs
 gcc
 dotnet-runtime-8.0
+cage
+labwc
+wlr-randr
 dmidecode
 udev
 python
@@ -357,7 +361,7 @@ nano /etc/sudoers.d/archiso # add this folder and file
 #Defaults mail_badpass
 #Defaults secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 #%wheel ALL=(ALL) ALL
-#%wheel ALL=(ALL:ALL) ALL # uncomment
+#%wheel ALL=(ALL:ALL) ALL
 #gamer ALL=(ALL) NOPASSWD:ALL # add line (disable the need for sudo pass)
 
 # edit ReignOS metadata

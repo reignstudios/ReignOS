@@ -6,6 +6,7 @@
              x:Class="ReignOS.Installer.Views.MainView">
 
 	<Grid>
+		<Button Content="Exit" Margin="4" HorizontalAlignment="Left" VerticalAlignment="Top" Click="ExitButton_OnClick"/>
 		<TextBlock Text="Installer" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="32" FontWeight="Bold" Margin="4,25,4,4"/>
 		<TextBlock Name="isConnectedText" Text="Network Status" Margin="8" HorizontalAlignment="Right" VerticalAlignment="Top"/>
 		<Separator HorizontalAlignment="Center" VerticalAlignment="Top" Margin="150,70,150,0"/>
