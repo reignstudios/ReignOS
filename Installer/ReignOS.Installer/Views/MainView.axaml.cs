@@ -595,7 +595,7 @@ public partial class MainView : UserControl
         }
         else
         {
-            ProcessUtil.Run("labwc", "--session gparted", wait:false, asAdmin:true);
+            ProcessUtil.Run("labwc", "--session bash -c \"sudo gparted\"", wait:false, asAdmin:false);
             //MainWindow.singleton.Close();// exit so Labwc will open
         }
     }
