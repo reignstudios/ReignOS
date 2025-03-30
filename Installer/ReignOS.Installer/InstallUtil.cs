@@ -148,7 +148,9 @@ static class InstallUtil
         UpdateProgress(30);
 
         // install BT support
-        // TODO
+        Run("pacman", "-S --noconfirm bluez bluez-utils");
+        Run("systemctl", "enable bluetoothd");
+        UpdateProgress(35);
 
         // configure time and lang
         Run("ln", "-sf /usr/share/zoneinfo/Region/City /etc/localtime");
