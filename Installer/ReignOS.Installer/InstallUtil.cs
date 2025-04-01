@@ -206,7 +206,7 @@ static class InstallUtil
             writer.Flush();
             writer.Close();
         }
-        ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_nvidia_conf);
+        ProcessUtil.Run("tee", Path.Combine(path, "nvidia.conf"), asAdmin:true, getStandardInput:getStandardInput_nvidia_conf);
         
         void getStandardInput_99nvidia_conf(StreamWriter writer)
         {
@@ -214,7 +214,7 @@ static class InstallUtil
             writer.Flush();
             writer.Close();
         }
-        ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_99nvidia_conf);
+        ProcessUtil.Run("tee", Path.Combine(path, "99-nvidia.conf"), asAdmin:true, getStandardInput:getStandardInput_99nvidia_conf);
         UpdateProgress(51);
 
         // configure root pass
@@ -258,10 +258,19 @@ static class InstallUtil
             writer.Flush();
             writer.Close();
         }
-        ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_autologin_conf);
+        ProcessUtil.Run("tee", Path.Combine(path, "autologin.conf"), asAdmin:true, getStandardInput:getStandardInput_autologin_conf);
         Run("systemctl", "daemon-reload");
         Run("systemctl", "restart getty@tty1.service");
         UpdateProgress(61);
+        
+        // add first run file
+        path = "/mnt/home/gamer/FirstRun.sh";
+        fileBuilder = new StringBuilder();
+        fileBuilder.AppendLine("cd /home/gamer/ReignOS/Managment");
+        fileBuilder.AppendLine("publish -r linux-x64 -c Release");
+        fileBuilder.AppendLine("echo -n > /home/gamer/FirstRun.sh");// no need to run again
+        File.WriteAllText(path, fileBuilder.ToString());
+        UpdateProgress(62);
 
         // auto invoke launch after login
         path = "/mnt/home/gamer/.bash_profile";
@@ -269,10 +278,12 @@ static class InstallUtil
         else fileText = "";
         fileBuilder = new StringBuilder(fileText);
         fileBuilder.AppendLine();
+        fileBuilder.AppendLine("chmod +x /home/gamer/FirstRun.sh");
+        fileBuilder.AppendLine("/home/gamer/FirstRun.sh");
         fileBuilder.AppendLine("chmod +x /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh");
         fileBuilder.AppendLine("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh --use-controlcenter");
         File.WriteAllText(path, fileBuilder.ToString());
-        UpdateProgress(62);
+        UpdateProgress(63);
 
         // configure splash image
         // TODO
@@ -374,7 +385,7 @@ static class InstallUtil
         
         // clone ReignOS repo
         Run("git", "clone https://github.com/reignstudios/ReignOS.git /mnt/home/gamer/ReignOS");
-        Run("dotnet", "publish -r linux-x64 -c Release", workingDir:"/mnt/home/gamer/ReignOS/Managment");
+        //Run("dotnet", "publish -r linux-x64 -c Release", workingDir:"/mnt/home/gamer/ReignOS/Managment");
         
         UpdateProgress(100);
     }

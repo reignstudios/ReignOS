@@ -30,17 +30,17 @@ internal class Program
         LibraryResolver.Init(Assembly.GetExecutingAssembly());
 
         // ensure permissions
-        ProcessUtil.Run("chmod", "+x ./Launch.sh", out _, wait:true);
-        ProcessUtil.Run("chmod", "+x ./Update.sh", out _, wait:true);
-        ProcessUtil.Run("chmod", "+x ./PostKill.sh", out _, wait:true);
+        ProcessUtil.Run("chmod", "+x ./Launch.sh");
+        ProcessUtil.Run("chmod", "+x ./Update.sh");
+        ProcessUtil.Run("chmod", "+x ./PostKill.sh");
         
-        ProcessUtil.Run("chmod", "+x ./Nvidia_Install_Nouveau.sh", out _, wait:true);
-        ProcessUtil.Run("chmod", "+x ./Nvidia_Install_Proprietary.sh", out _, wait:true);
+        ProcessUtil.Run("chmod", "+x ./Nvidia_Install_Nouveau.sh");
+        ProcessUtil.Run("chmod", "+x ./Nvidia_Install_Proprietary.sh");
 
-        ProcessUtil.Run("chmod", "+x ./Start_Gamescope.sh", out _, wait:true);
-        ProcessUtil.Run("chmod", "+x ./Start_Cage.sh", out _, wait:true);
-        ProcessUtil.Run("chmod", "+x ./Start_Labwc.sh", out _, wait:true);
-        ProcessUtil.Run("chmod", "+x ./Start_X11.sh", out _, wait:true);
+        ProcessUtil.Run("chmod", "+x ./Start_Gamescope.sh");
+        ProcessUtil.Run("chmod", "+x ./Start_Cage.sh");
+        ProcessUtil.Run("chmod", "+x ./Start_Labwc.sh");
+        ProcessUtil.Run("chmod", "+x ./Start_X11.sh");
         
         // configure X11
         const string x11ConfigFile = "/home/gamer/.xinitrc";
@@ -49,7 +49,7 @@ internal class Program
             writer.WriteLine("#!/bin/bash");
             writer.WriteLine("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_X11.sh");
         }
-        ProcessUtil.Run("chmod", "+x " + x11ConfigFile, out _, wait:true);
+        ProcessUtil.Run("chmod", "+x " + x11ConfigFile);
 
         // start auto mounting service
         ProcessUtil.KillHard("udiskie", true, out _);
@@ -74,11 +74,11 @@ internal class Program
                     string value = args.Data;
                     if (value.Contains("SET_VOLUME_DOWN"))
                     {
-                        ProcessUtil.Run("amixer", "set Master 5%-", out _);
+                        ProcessUtil.Run("amixer", "set Master 5%-");
                     }
                     else if (value.Contains("SET_VOLUME_UP"))
                     {
-                        ProcessUtil.Run("amixer", "set Master 5%+", out _);
+                        ProcessUtil.Run("amixer", "set Master 5%+");
                     }
                     lock (Log.lockObj) Console.WriteLine(value);
                 }
@@ -161,7 +161,7 @@ internal class Program
             if (useControlCenter)
             {
                 Log.WriteLine("Starting Cage with ReignOS.ControlCenter...");
-                string result = ProcessUtil.Run("cage", "./ReignOS.ControlCenter", out exitCode, wait:true);// start ControlCenter
+                string result = ProcessUtil.Run("cage", "./ReignOS.ControlCenter", out exitCode);// start ControlCenter
                 Console.WriteLine(result);
                 if (exitCode == 0) break;
                 else if (exitCode == 1) compositor = Compositor.Gamescope;
@@ -213,28 +213,28 @@ internal class Program
     private static void StartCompositor_Gamescope()
     {
         Log.WriteLine("Starting Gamescope with Steam...");
-        string result = ProcessUtil.Run("gamescope", "-e -f --adaptive-sync --hdr-enabled --framerate-limit -- ./Start_Gamescope.sh", out _, wait:true);// start Gamescope with Steam in console mode, VRR
+        string result = ProcessUtil.Run("gamescope", "-e -f --adaptive-sync --hdr-enabled --framerate-limit -- ./Start_Gamescope.sh");// start Gamescope with Steam in console mode, VRR
         Log.WriteLine(result);
     }
 
     private static void StartCompositor_Cage()
     {
         Log.WriteLine("Starting Cage with Steam...");
-        string result = ProcessUtil.Run("cage", "-d -s -- ./Start_Cage.sh", out _, wait:true);// start Cage with Steam in console mode
+        string result = ProcessUtil.Run("cage", "-d -s -- ./Start_Cage.sh");// start Cage with Steam in console mode
         Log.WriteLine(result);
     }
 
     private static void StartCompositor_Labwc()
     {
         Log.WriteLine("Starting Labwc with Steam...");
-        string result = ProcessUtil.Run("labwc", "--startup ./Start_Labwc.sh", out _, wait:true);// start Labwc with Steam in desktop mode
+        string result = ProcessUtil.Run("labwc", "--startup ./Start_Labwc.sh");// start Labwc with Steam in desktop mode
         Log.WriteLine(result);
     }
 
     private static void StartCompositor_X11()
     {
         Log.WriteLine("Starting X11 with Steam...");
-        string result = ProcessUtil.Run("startx", "", out _, wait:true);// start X11 with Steam in console mode
+        string result = ProcessUtil.Run("startx", "");// start X11 with Steam in console mode
         Log.WriteLine(result);
     }
 }

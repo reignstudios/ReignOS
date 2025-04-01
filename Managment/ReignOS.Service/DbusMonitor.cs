@@ -80,7 +80,7 @@ static class DbusMonitor
     private static void PreShutdown()
     {
         Log.WriteLine("Shutting down steam...");
-        ProcessUtil.Run("sudo", "-u gamer -- steam -shutdown", out _);
+        ProcessUtil.Run("sudo", "-u gamer -- steam -shutdown");
         ProcessUtil.Wait("steam", 20);
         ProcessUtil.KillHard("systemd-inhibit", false, out _);
         Program.exit = true;
