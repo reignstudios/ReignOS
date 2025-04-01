@@ -186,7 +186,8 @@ static class InstallUtil
         fileBuilder.AppendLine("title ReignOS");
         fileBuilder.AppendLine("linux /vmlinuz-linux");
         fileBuilder.AppendLine("initrd /initramfs-linux.img");
-        fileBuilder.AppendLine($"options root={ext4Partition.path} rw acpi_osi=Linux i915.enable_dc=2 i915.enable_psr=1 amdgpu.dpm=1 amdgpu.ppfeaturemask=0xffffffff amdgpu.dc=1 nouveau.pstate=1 nouveau.perflvl=N nouveau.perflvl_wr=7777 nouveau.config=NvGspRm=1 nvidia_drm.modeset=1");
+        //fileBuilder.AppendLine($"options root={ext4Partition.path} rw acpi_osi=Linux i915.enable_dc=2 i915.enable_psr=1 amdgpu.dpm=1 amdgpu.ppfeaturemask=0xffffffff amdgpu.dc=1 nouveau.pstate=1 nouveau.perflvl=N nouveau.perflvl_wr=7777 nouveau.config=NvGspRm=1 nvidia_drm.modeset=1");
+        fileBuilder.AppendLine($"options root=sda2 rw acpi_osi=Linux i915.enable_dc=2 i915.enable_psr=1 amdgpu.dpm=1 amdgpu.ppfeaturemask=0xffffffff amdgpu.dc=1 nouveau.pstate=1 nouveau.perflvl=N nouveau.perflvl_wr=7777 nouveau.config=NvGspRm=1 nvidia_drm.modeset=1");
         void getStandardInput_arch_conf(StreamWriter writer)
         {
             writer.WriteLine(fileBuilder);
@@ -266,8 +267,10 @@ static class InstallUtil
         // add first run file
         path = "/mnt/home/gamer/FirstRun.sh";
         fileBuilder = new StringBuilder();
-        fileBuilder.AppendLine("cd /home/gamer/ReignOS/Managment");
-        fileBuilder.AppendLine("publish -r linux-x64 -c Release");
+        fileBuilder.AppendLine("cd /home/gamer/ReignOS");
+        fileBuilder.AppendLine("sudo chown -R $USER .");
+        //fileBuilder.AppendLine("cd /home/gamer/ReignOS/Managment");
+        //fileBuilder.AppendLine("dotnet publish -r linux-x64 -c Release");
         fileBuilder.AppendLine("echo -n > /home/gamer/FirstRun.sh");// no need to run again
         File.WriteAllText(path, fileBuilder.ToString());
         UpdateProgress(62);
@@ -385,7 +388,7 @@ static class InstallUtil
         
         // clone ReignOS repo
         Run("git", "clone https://github.com/reignstudios/ReignOS.git /mnt/home/gamer/ReignOS");
-        //Run("dotnet", "publish -r linux-x64 -c Release", workingDir:"/mnt/home/gamer/ReignOS/Managment");
+        Run("dotnet", "publish -r linux-x64 -c Release", workingDir:"/mnt/home/gamer/ReignOS/Managment");
         
         UpdateProgress(100);
     }
