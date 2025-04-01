@@ -16,12 +16,12 @@ public static class ProcessUtil
     public delegate void ProcessOutputDelegate(string line);
     public delegate void ProcessInputDelegate(StreamWriter writer);
     
-    public static string Run(string name, string args, Dictionary<string, string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, bool consoleLogOut = true)
+    public static string Run(string name, string args, Dictionary<string, string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, bool useBash = true, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, bool consoleLogOut = true)
     {
-        return Run(name, args, out _, enviromentVars, wait, asAdmin, enterAdminPass, standardOut, getStandardInput, consoleLogOut);
+        return Run(name, args, out _, enviromentVars, wait, asAdmin, enterAdminPass, useBash, standardOut, getStandardInput, consoleLogOut);
     }
 
-    public static string Run(string name, string args, out int exitCode, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, bool consoleLogOut = true)
+    public static string Run(string name, string args, out int exitCode, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, bool useBash = true, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, bool consoleLogOut = true)
     {
         try
         {
@@ -30,12 +30,22 @@ public static class ProcessUtil
                 if (asAdmin)
                 {
                     process.StartInfo.FileName = "sudo";
-                    process.StartInfo.Arguments = $"-- bash -c \"{name} {args}\"";
+                    string adminArg = enterAdminPass ? "-S " : "";
+                    if (useBash) process.StartInfo.Arguments = $"{adminArg}-- bash -c \"{name} {args}\"";
+                    else process.StartInfo.Arguments = $"{adminArg}-- {name} {args}";
                 }
                 else
                 {
-                    process.StartInfo.FileName = "bash";
-                    process.StartInfo.Arguments = $"-c \"{name} {args}\"";
+                    if (useBash)
+                    {
+                        process.StartInfo.FileName = "bash";
+                        process.StartInfo.Arguments = $"-c \"{name} {args}\"";
+                    }
+                    else
+                    {
+                        process.StartInfo.FileName = name;
+                        process.StartInfo.Arguments = args;
+                    }
                 }
 
                 if (enviromentVars != null)
