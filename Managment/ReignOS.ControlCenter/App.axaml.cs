@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using ReignOS.ControlCenter.Views;
+using ReignOS.Core;
 
 namespace ReignOS.ControlCenter;
 
@@ -40,5 +41,11 @@ public partial class App : Application
     private void OnExit(object sender, ControlledApplicationLifetimeExitEventArgs e)
     {
         e.ApplicationExitCode = exitCode;
+    }
+    
+    public static bool IsOnline()
+    {
+        string result = ProcessUtil.Run("ping", "-c 1 google.com", consoleLogOut:false);
+        return result.Contains("1 received");
     }
 }

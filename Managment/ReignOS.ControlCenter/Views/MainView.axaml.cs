@@ -2,9 +2,13 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Timers;
+using Avalonia.Media;
+using Avalonia.Threading;
 using ReignOS.Core;
 
 namespace ReignOS.ControlCenter.Views;
@@ -12,6 +16,11 @@ namespace ReignOS.ControlCenter.Views;
 public partial class MainView : UserControl
 {
     private const string settingsFile = "/home/gamer/ReignOS_Ext/Settings.txt";
+    
+    private System.Timers.Timer connectedTimer;
+    private List<string> wlanDevices = new List<string>();
+    private string wlanDevice;
+    private bool isConnected;
     
     public MainView()
     {
@@ -24,6 +33,12 @@ public partial class MainView : UserControl
         {
             Console.WriteLine(e);
         }
+        
+        connectedTimer = new System.Timers.Timer(1000 * 5);
+        connectedTimer.Elapsed += ConnectedTimer;
+        connectedTimer.AutoReset = true;
+        connectedTimer.Start();
+        ConnectedTimer(null, null);
     }
     
     private void LoadSettings()
@@ -80,6 +95,42 @@ public partial class MainView : UserControl
             if (nvidia_Nouveau.IsChecked == true) writer.WriteLine("NvidiaDrivers=Nouveau");
             else if (nvidia_Proprietary.IsChecked == true) writer.WriteLine("NvidiaDrivers=Proprietary");
             else writer.WriteLine("NvidiaDrivers=Nouveau");
+        }
+    }
+    
+    private void ConnectedTimer(object sender, ElapsedEventArgs e)
+    {
+        lock (this)
+        {
+            if (connectedTimer == null) return;
+            try
+            {
+                Dispatcher.UIThread.Invoke(() =>
+                {
+                    try
+                    {
+                        isConnected = App.IsOnline();
+                        if (isConnected)
+                        {
+                            isConnectedText.Text = "Network Connected";
+                            isConnectedText.Foreground = new SolidColorBrush(Colors.Green);
+                        }
+                        else
+                        {
+                            isConnectedText.Text = "Network Disconnected";
+                            isConnectedText.Foreground = new SolidColorBrush(Colors.Red);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
     }
     
@@ -274,5 +325,95 @@ public partial class MainView : UserControl
     {
         mainGrid.IsVisible = true;
         bootManagerGrid.IsVisible = false;
+    }
+
+    private void NetworkManagerRebootButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        mainGrid.IsVisible = false;
+        networkManagerGrid.IsVisible = true;
+        RefreshNetworkPage();
+    }
+    
+    private void NetworkManagerBackButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        mainGrid.IsVisible = true;
+        networkManagerGrid.IsVisible = false;
+    }
+    
+    private void RefreshNetworkButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        RefreshNetworkPage();
+    }
+    
+    private void RefreshNetworkPage()
+    {
+        // find wlan devices
+        void deviceOut(string line)
+        {
+            if (line.Contains("-------") || line.Contains("Name")) return;
+            try
+            {
+                var match = Regex.Match(line, @"\s*(wlan\d)");
+                if (match.Success)
+                {
+                    wlanDevices.Add(match.Groups[1].Value);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        wlanDevices.Clear();
+        ProcessUtil.Run("iwctl", "device list", standardOut:deviceOut);
+        
+        // choose device
+        if (wlanDevices.Count == 0) return;
+        wlanDevice = wlanDevices[0];
+        Console.WriteLine("wlanDevice: " + wlanDevice);
+        
+        // get SSID
+        var ssids = new List<string>();
+        void ssidOut(string line)
+        {
+            lock (this) Console.WriteLine("LINE: " + line);
+            if (line.Contains("-------") || line.Contains("Network name")) return;
+            try
+            {
+                var match = Regex.Match(line, @"\s*(\S*)\s*psk");
+                if (match.Success)
+                {
+                    string value = match.Groups[1].Value;
+                    lock (this)
+                    {
+                        if (line.Contains(">")) ssids.Add(value + " (Connected)");
+                        else ssids.Add(value);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        ProcessUtil.Run("iwctl", $"station {wlanDevice} scan");
+        ProcessUtil.Run("iwctl", $"station {wlanDevice} get-networks", standardOut:ssidOut);
+        connectionListBox.Items.Clear();
+        foreach (var ssid in ssids) connectionListBox.Items.Add(new ListBoxItem { Content = ssid });
+    }
+    
+    // NOTE: forget network for debugger: iwctl known-networks <SSID> forget
+    private void NetworkConnectButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (connectionListBox.SelectedIndex < 0) return;
+
+        var item = (ListBoxItem)connectionListBox.Items[connectionListBox.SelectedIndex];
+        var ssid = (string)item.Content;
+        ProcessUtil.KillHard("iwctl", true, out _);// make sure any failed processes are not open
+        ProcessUtil.Run("iwctl", $"--passphrase {networkPasswordText.Text} station {wlanDevice} connect {ssid}", asAdmin:true);
+        string result = ProcessUtil.Run("iwctl", $"station {wlanDevice} show");
+        Console.WriteLine(result);
     }
 }
