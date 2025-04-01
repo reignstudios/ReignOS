@@ -306,7 +306,9 @@ cp -r /usr/share/archiso/configs/releng/* .
 nano packages.x86_64
 
 bash
+parted
 gparted
+ntfs-3g # needed for NFTS partitions
 git
 git-lfs
 gcc
