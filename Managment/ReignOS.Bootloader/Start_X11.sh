@@ -11,7 +11,7 @@ fi
 xsetroot -cursor_name left_ptr
 
 # start steam
-MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture
+MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -no-cef-sandbox
 
 # run post kill
 ./PostKill.sh &
