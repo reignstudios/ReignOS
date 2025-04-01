@@ -13,7 +13,7 @@ static class DbusMonitor
     public static void Init()
     {
         // start inhibiter
-        ProcessUtil.Run("systemd-inhibit", "--what=shutdown --who=\"ReignOS\" --why=\"Clean Shutdown\" -- sleep infinity", out _, wait:false);
+        ProcessUtil.Run("systemd-inhibit", "--what=shutdown --who=\"ReignOS\" --why=\"Clean Shutdown\" -- sleep infinity", out _, wait:false, useBash:false);
 
         // start watchdog
         try
@@ -80,7 +80,7 @@ static class DbusMonitor
     private static void PreShutdown()
     {
         Log.WriteLine("Shutting down steam...");
-        ProcessUtil.Run("sudo", "-u gamer -- steam -shutdown");
+        ProcessUtil.Run("sudo", "-u gamer -- steam -shutdown", useBash:false);
         ProcessUtil.Wait("steam", 20);
         ProcessUtil.KillHard("systemd-inhibit", false, out _);
         Program.exit = true;

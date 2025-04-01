@@ -109,7 +109,7 @@ public partial class MainView : UserControl
     
     private void SleepButton_Click(object sender, RoutedEventArgs e)
     {
-        ProcessUtil.Run("systemctl", "suspend", out _, wait:false);
+        ProcessUtil.Run("systemctl", "suspend", out _, wait:false, useBash:false);
     }
     
     private void RestartButton_Click(object sender, RoutedEventArgs e)
@@ -166,7 +166,7 @@ public partial class MainView : UserControl
         {
             try
             {
-                string result = ProcessUtil.Run("wlr-randr", "", out _);
+                string result = ProcessUtil.Run("wlr-randr", "", useBash:false);
                 var lines = result.Split('\n');
                 result = lines[0].Split(" ")[0];
                 return result;
@@ -183,25 +183,25 @@ public partial class MainView : UserControl
         {
             using (var writer = new StreamWriter(x11File)) WriteX11Settings(writer, "normal");
             using (var writer = new StreamWriter(waylandFile)) WriteWaylandSettings(writer, "normal");
-            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform normal", out _);
+            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform normal", useBash:false);
         }
         else if (rot_Left.IsChecked == true)
         {
             using (var writer = new StreamWriter(x11File)) WriteX11Settings(writer, "left");
             using (var writer = new StreamWriter(waylandFile)) WriteWaylandSettings(writer, "270");
-            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 270", out _);
+            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 270", useBash:false);
         }
         else if (rot_Right.IsChecked == true)
         {
             using (var writer = new StreamWriter(x11File)) WriteX11Settings(writer, "right");
             using (var writer = new StreamWriter(waylandFile)) WriteWaylandSettings(writer, "90");
-            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()}--transform 90", out _);
+            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()}--transform 90", useBash:false);
         }
         else if (rot_Flip.IsChecked == true)
         {
             using (var writer = new StreamWriter(x11File)) WriteX11Settings(writer, "inverted");
             using (var writer = new StreamWriter(waylandFile)) WriteWaylandSettings(writer, "180");
-            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 180", out _);
+            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 180", useBash:false);
         }
         
         SaveSettings();
@@ -222,7 +222,7 @@ public partial class MainView : UserControl
         bootManagerGrid.IsVisible = true;
 
         bootOptionsListBox.Items.Clear();
-        string result = ProcessUtil.Run("efibootmgr", "", asAdmin:true);
+        string result = ProcessUtil.Run("efibootmgr", "", asAdmin:true, useBash:false);
         var values = result.Split('\n');
         foreach (string value in values)
         {
@@ -265,9 +265,9 @@ public partial class MainView : UserControl
         if (bootOptionsListBox.SelectedIndex <= -1) return;
         var item = (ListBoxItem)bootOptionsListBox.Items[bootOptionsListBox.SelectedIndex];
         string boot = (string)item.Tag;
-        ProcessUtil.Run("efibootmgr", $"-n {boot}", asAdmin:true);
+        ProcessUtil.Run("efibootmgr", $"-n {boot}", asAdmin:true, useBash:false);
         Thread.Sleep(1000);
-        ProcessUtil.Run("reboot", "", asAdmin:false);
+        ProcessUtil.Run("reboot", "", asAdmin:false, useBash:false);
     }
     
     private void BootManagerBackButton_OnClick(object sender, RoutedEventArgs e)
