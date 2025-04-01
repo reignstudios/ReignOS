@@ -26,12 +26,7 @@
 					<Button Content="Refresh" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,10,0,0" Click="RefreshNetworkButton_OnClick"/>
 					<Label Content="Networks" FontSize="32" Height="50" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 					<Separator VerticalAlignment="Top" Margin="0,45,0,0"/>
-					<ListBox Name="connectionListBox" Margin="0,50,0,0">
-						<!--<ListBoxItem Content="Wifi 0"/>
-						<ListBoxItem Content="Wifi 1"/>
-						<ListBoxItem Content="Wifi 2"/>
-						<ListBoxItem Content="Wifi 3"/>-->
-					</ListBox>
+					<ListBox Name="connectionListBox" Margin="0,50,0,0"/>
 				</Grid>
 
 				<Grid Grid.Column="1">
@@ -55,12 +50,7 @@
 					<Button Content="Refresh" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,10,0,0" Click="RefreshDrivesButton_OnClick"/>
 					<Label Content="Drives" FontSize="32" Height="50" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 					<Separator VerticalAlignment="Top" Margin="0,45,0,0"/>
-					<ListBox Name="driveListBox" Margin="0,50,0,0" SelectionChanged="DriveListBox_OnSelectionChanged">
-						<!--<ListBoxItem Content="/dev/sdb0"/>
-						<ListBoxItem Content="/dev/sdb1"/>
-						<ListBoxItem Content="/dev/sdb2"/>
-						<ListBoxItem Content="/dev/sdb3"/>-->
-					</ListBox>
+					<ListBox Name="driveListBox" Margin="0,50,0,0" SelectionChanged="DriveListBox_OnSelectionChanged"/>
 				</Grid>
 				
 				<Grid Grid.Column="1">
@@ -85,6 +75,9 @@
 			<Grid Name="installPage" Margin="4" IsVisible="False">
 				<TextBlock Name="installText" Text="Ready To Install" FontWeight="Bold" FontSize="32" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 				<ProgressBar Name="installProgressBar" IsVisible="False" Width="400" Margin="0,80,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				<ScrollViewer Name="installTerminalScroll" IsVisible="False" Height="100" Margin="0,120,0,0" VerticalAlignment="Bottom" VerticalScrollBarVisibility="Visible">
+					<TextBlock Name="installTerminalText" Text=">" Background="Black"/>
+				</ScrollViewer>
 			</Grid>
 		</Grid>
 

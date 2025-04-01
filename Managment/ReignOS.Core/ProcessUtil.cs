@@ -15,6 +15,7 @@ public static class ProcessUtil
     private const string pass = "gamer";
     public delegate void ProcessOutputDelegate(string line);
     public delegate void ProcessInputDelegate(StreamWriter writer);
+    public static event ProcessOutputDelegate ProcessOutput;
     
     public static string Run(string name, string args, Dictionary<string, string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, bool useBash = true, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, bool consoleLogOut = true)
     {
@@ -53,7 +54,12 @@ public static class ProcessUtil
                     foreach (var v in enviromentVars) process.StartInfo.EnvironmentVariables[v.Key] = v.Value;
                 }
 
-                if (consoleLogOut) Console.WriteLine($"ProcessUtil.Run: {process.StartInfo.FileName} {process.StartInfo.Arguments}");
+                if (consoleLogOut)
+                {
+                    string l = $"ProcessUtil.Run: {process.StartInfo.FileName} {process.StartInfo.Arguments}";
+                    Console.WriteLine(l);
+                    ProcessOutput?.Invoke(l);
+                }
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardError = true;
@@ -79,12 +85,17 @@ public static class ProcessUtil
                                 try
                                 {
                                     string value = args.Data;
-                                    if (consoleLogOut) Console.WriteLine(value);
+                                    if (consoleLogOut)
+                                    {
+                                        Console.WriteLine(value);
+                                        ProcessOutput?.Invoke(value);
+                                    }
                                     standardOut(args.Data);
                                 }
                                 catch (Exception e)
                                 {
                                     Console.WriteLine(e);
+                                    ProcessOutput?.Invoke(e.ToString());
                                 }
                             }
                         }
@@ -105,7 +116,11 @@ public static class ProcessUtil
                         builder.Append(process.StandardOutput.ReadToEnd());
                         builder.Append(process.StandardError.ReadToEnd());
                         resultOutput = builder.ToString();
-                        if (consoleLogOut) Console.WriteLine(resultOutput);
+                        if (consoleLogOut)
+                        {
+                            Console.WriteLine(resultOutput);
+                            ProcessOutput?.Invoke(resultOutput);
+                        }
                     }
                     return resultOutput;
                 }
@@ -121,8 +136,14 @@ public static class ProcessUtil
         {
             exitCode = 0;
             Log.WriteLine(e.Message);
+            ProcessOutput?.Invoke(e.Message);
             return e.Message;
         }
+    }
+
+    public static void CreateDirectoryAdmin(string path)
+    {
+        ProcessUtil.Run("mkdir", path, asAdmin:true);
     }
 
     public static string ReadAllTextAdmin(string path)

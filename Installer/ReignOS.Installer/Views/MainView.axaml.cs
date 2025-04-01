@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using System;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Timers;
 using Avalonia.Controls.Primitives;
@@ -24,6 +25,7 @@ enum InstallerStage
 
 public partial class MainView : UserControl
 {
+    public static MainView singleton { get; private set; }
     private InstallerStage stage;
 
     private System.Timers.Timer connectedTimer;
@@ -39,6 +41,7 @@ public partial class MainView : UserControl
     
     public MainView()
     {
+        singleton = this;
         InitializeComponent();
         if (Design.IsDesignMode) return;
         
@@ -114,6 +117,18 @@ public partial class MainView : UserControl
         });
     }
 
+    private static StringBuilder installOutputBuilder = new StringBuilder();
+    public static void ProcessOutput(string line)
+    {
+        Dispatcher.UIThread.Invoke(() =>
+        {
+            installOutputBuilder.AppendLine(line);
+            if (installOutputBuilder.Length > 1024) installOutputBuilder.Remove(0, installOutputBuilder.Length - 1024);
+            singleton.installTerminalText.Text = installOutputBuilder.ToString();
+            singleton.installTerminalScroll.ScrollToEnd();
+        });
+    }
+
     private void RotationToggleButton_OnIsCheckedChanged(object sender, RoutedEventArgs e)
     {
         static string GetWaylandDisplay()
@@ -186,6 +201,8 @@ public partial class MainView : UserControl
                 nextButton.IsEnabled = false;
                 installProgressBar.Value = 0;
                 installProgressBar.IsVisible = true;
+                installTerminalText.Text = "";
+                installTerminalScroll.IsVisible = true;
                 InstallUtil.Install(efiPartition, ext4Partition);
                 break;
             

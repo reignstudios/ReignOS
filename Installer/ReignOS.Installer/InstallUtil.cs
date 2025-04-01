@@ -66,7 +66,9 @@ static class InstallUtil
         }
         else
         {
-            Console.WriteLine($"Arch-Chroot.Run: {name} {args}");
+            string l = $"Arch-Chroot.Run: {name} {args}";
+            Console.WriteLine(l);
+            Views.MainView.ProcessOutput(l);
             ProcessUtil.Run("arch-chroot", $"/mnt bash -c \\\"{name} {args}\\\"", asAdmin:true, enterAdminPass:false, getStandardInput:getStandardInput);
         }
     }
@@ -81,6 +83,7 @@ static class InstallUtil
 
     private static void InstallThread()
     {
+        ProcessUtil.ProcessOutput += Views.MainView.ProcessOutput;
         progress = 0;
         archRootMode = false;
         ProcessUtil.KillHard("arch-chroot", true, out _);
@@ -98,11 +101,12 @@ static class InstallUtil
         }
 
         archRootMode = false;
+        ProcessUtil.ProcessOutput -= Views.MainView.ProcessOutput;
         ProcessUtil.KillHard("arch-chroot", true, out _);
         Run("umount", "-R /mnt/boot");
         Run("umount", "-R /mnt");
     }
-    
+
     private static void InstallBaseArch()
     {
         progressTask = "Installing base...";
@@ -194,10 +198,23 @@ static class InstallUtil
         UpdateProgress(50);
 
         // configure nvidia settings
-        path = "/etc/modprobe.d/";
-        if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-        File.WriteAllText(Path.Combine(path, "nvidia.conf"), "options nvidia-drm modeset=1");
-        File.WriteAllText(Path.Combine(path, "99-nvidia.conf"), "options nvidia NVreg_DynamicPowerManagement=0x02");
+        path = "/mnt/etc/modprobe.d/";
+        if (!Directory.Exists(path)) ProcessUtil.CreateDirectoryAdmin(path);
+        void getStandardInput_nvidia_conf(StreamWriter writer)
+        {
+            writer.WriteLine("options nvidia-drm modeset=1");
+            writer.Flush();
+            writer.Close();
+        }
+        ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_nvidia_conf);
+        
+        void getStandardInput_99nvidia_conf(StreamWriter writer)
+        {
+            writer.WriteLine("options nvidia NVreg_DynamicPowerManagement=0x02");
+            writer.Flush();
+            writer.Close();
+        }
+        ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_99nvidia_conf);
         UpdateProgress(51);
 
         // configure root pass
@@ -229,17 +246,23 @@ static class InstallUtil
         UpdateProgress(60);
 
         // make gamer user auto login
-        path = "/etc/systemd/system/getty@tty1.service.d/";
-        if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+        path = "/mnt/etc/systemd/system/getty@tty1.service.d/";
+        if (!Directory.Exists(path)) ProcessUtil.CreateDirectoryAdmin(path);
         fileBuilder = new StringBuilder();
         fileBuilder.AppendLine("[Service]");
         fileBuilder.AppendLine("ExecStart=");
         fileBuilder.AppendLine("ExecStart=-/usr/bin/agetty --autologin gamer --noclear %I $TERM");
-        File.WriteAllText(Path.Combine(path, "autologin.conf"), fileBuilder.ToString());
+        void getStandardInput_autologin_conf(StreamWriter writer)
+        {
+            writer.WriteLine(fileBuilder.ToString());
+            writer.Flush();
+            writer.Close();
+        }
+        ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_autologin_conf);
         UpdateProgress(61);
 
         // auto invoke launch after login
-        path = "/home/gamer/.bash_profile";
+        path = "/mnt/home/gamer/.bash_profile";
         if (File.Exists(path)) fileText = File.ReadAllText(path);
         else fileText = "";
         fileBuilder = new StringBuilder(fileText);
@@ -264,11 +287,11 @@ static class InstallUtil
         // install wayland
         Run("pacman", "-S --noconfirm xorg-server-xwayland wayland wayland-protocols");
         Run("pacman", "-S --noconfirm xorg-xev xbindkeys xorg-xinput xorg-xmodmap");
-        UpdateProgress(75);
+        UpdateProgress(72);
 
         // install x11
         Run("pacman", "-S --noconfirm xorg xorg-server xorg-xinit xterm");
-        UpdateProgress(80);
+        UpdateProgress(75);
 
         // install wayland graphics drivers
         Run("pacman", "-S --noconfirm mesa lib32-mesa");
@@ -278,34 +301,34 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm vulkan-icd-loader lib32-vulkan-icd-loader lib32-libglvnd");
         Run("pacman", "-S --noconfirm vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-layers");
         Run("pacman", "-S --noconfirm egl-wayland");
-        UpdateProgress(85);
+        UpdateProgress(80);
 
         // install x11 graphics drivers
         Run("pacman", "-S --noconfirm xf86-video-intel xf86-video-amdgpu xf86-video-nouveau");
         Run("pacman", "-S --noconfirm glxinfo");
-        UpdateProgress(90);
+        UpdateProgress(82);
 
         // install compositors
         Run("pacman", "-S --noconfirm wlr-randr wlroots gamescope cage labwc");
-        UpdateProgress(92);
+        UpdateProgress(83);
 
         // install audio
         Run("pacman", "-S --noconfirm alsa-utils alsa-plugins");
         Run("pacman", "-S --noconfirm sof-firmware");
         Run("pacman", "-S --noconfirm pipewire pipewire-pulse pipewire-alsa pipewire-jack");
         Run("systemctl", "--user enable pipewire pipewire-pulse");
-        UpdateProgress(93);
+        UpdateProgress(85);
 
         // install power
         Run("pacman", "-S --noconfirm acpi acpid powertop power-profiles-daemon");
         Run("pacman", "-S --noconfirm python-gobject");
         Run("systemctl", "enable acpid power-profiles-daemon");
-        UpdateProgress(94);
+        UpdateProgress(86);
 
         // install auto-mount drives
         Run("pacman", "-S --noconfirm udiskie udisks2");
-        string path = "/etc/udev/rules.d/";
-        if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+        string path = "/mnt/etc/udev/rules.d/";
+        if (!Directory.Exists(path)) ProcessUtil.CreateDirectoryAdmin(path);
         path = Path.Combine(path, "99-automount.rules");
         string fileText;
         if (File.Exists(path)) fileText = File.ReadAllText(path);
@@ -313,14 +336,20 @@ static class InstallUtil
         var fileBuilder = new StringBuilder(fileText);
         fileBuilder.AppendLine();
         fileBuilder.AppendLine("ACTION==\"add\", SUBSYSTEM==\"block\", ENV{ID_FS_TYPE}!=\"\", RUN+=\"/usr/bin/udisksctl mount -b $env{DEVNAME}\"");
-        File.WriteAllText(path, fileBuilder.ToString());
+        void getStandardInput_99automount_rules(StreamWriter writer)
+        {
+            writer.WriteLine(fileBuilder.ToString());
+            writer.Flush();
+            writer.Close();
+        }
+        ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_99automount_rules);
         Run("udevadm", "control --reload-rules");
         Run("systemctl", "enable udisks2");
-        UpdateProgress(94);
+        UpdateProgress(87);
 
         // install compiler tools
         Run("pacman", "-S --noconfirm base-devel dotnet-sdk-8.0 git git-lfs");
-        UpdateProgress(95);
+        UpdateProgress(90);
 
         // install steam
         Run("pacman", "-S --noconfirm libxcomposite lib32-libxcomposite libxrandr lib32-libxrandr libgcrypt lib32-libgcrypt lib32-pipewire libpulse lib32-libpulse gtk2 lib32-gtk2");
@@ -328,7 +357,7 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm xdg-desktop-portal xdg-desktop-portal-gtk");
         Run("pacman", "-S --noconfirm mangohud");
         Run("pacman", "-S --noconfirm steam");// TODO: how to accept correct defaults?
-        UpdateProgress(98);
+        UpdateProgress(95);
 
         // install wayland mouse util
         Run("pacman", "-S --noconfirm unclutter");
