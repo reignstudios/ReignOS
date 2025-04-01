@@ -310,7 +310,7 @@ gparted
 git
 git-lfs
 gcc
-dotnet-sdk-8.0
+dotnet-runtime-8.0
 cage
 labwc
 wlr-randr

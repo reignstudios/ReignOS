@@ -283,6 +283,7 @@ static class InstallUtil
         else fileText = "";
         fileBuilder = new StringBuilder(fileText);
         fileBuilder.AppendLine();
+        fileBuilder.AppendLine("chown -R $USER /home/gamer/FirstRun.sh");
         fileBuilder.AppendLine("chmod +x /home/gamer/FirstRun.sh");
         fileBuilder.AppendLine("/home/gamer/FirstRun.sh");
         fileBuilder.AppendLine("chmod +x /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh");
