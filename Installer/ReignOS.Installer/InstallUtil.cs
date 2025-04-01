@@ -298,7 +298,7 @@ static class InstallUtil
     {
         progressTask = "Installing packages...";
         // install apps
-        Run("pacman", "-S --noconfirm nano evtest");
+        Run("pacman", "-S --noconfirm nano evtest efibootmgr");
         Run("pacman", "-S --noconfirm dmidecode udev python");
         UpdateProgress(70);
 
@@ -370,13 +370,15 @@ static class InstallUtil
         UpdateProgress(90);
 
         // install steam
-        Run("pacman", "-S --noconfirm libxcomposite lib32-libxcomposite libxrandr lib32-libxrandr libgcrypt lib32-libgcrypt lib32-pipewire libpulse lib32-libpulse gtk2 lib32-gtk2");
+        Run("pacman", "-S --noconfirm libxcomposite lib32-libxcomposite libxrandr lib32-libxrandr libgcrypt lib32-libgcrypt lib32-pipewire libpulse lib32-libpulse gtk2 lib32-gtk2 gtk3 lib32-gtk3 nss lib32-nss glib2 lib32-glib2");
+        Run("pacman", "-S --noconfirm libxss lib32-libxss libva lib32-libva libvdpau lib32-libvdpau");
         Run("pacman", "-S --noconfirm gnutls lib32-gnutls openal lib32-openal sqlite lib32-sqlite libcurl-compat lib32-libcurl-compat");
         Run("pacman", "-S --noconfirm xdg-desktop-portal xdg-desktop-portal-gtk");
         Run("pacman", "-S --noconfirm mangohud gamemode");
-        Run("pacman", "-S --noconfirm amdvlk nvidia-utils vulkan-dzn vulkan-gfxstream vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio");// all steam options
-        Run("pacman", "-S --noconfirm lib32-amdvlk lib32-nvidia-utils lib32-vulkan-dzn lib32-vulkan-gfxstream lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio");// all steam options
+        Run("pacman", "-S --noconfirm vulkan-dzn vulkan-gfxstream vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio");// all steam options
+        Run("pacman", "-S --noconfirm lib32-vulkan-dzn lib32-vulkan-gfxstream lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio");// all steam options
         Run("pacman", "-S --noconfirm steam");//steam-native-runtime (use Arch libs)
+        Run("pacman", "-R amdvlk lib32-amdvlk nvidia-utils lib32-nvidia-utils");// remove amd or nvidia driver defaults steam might try to install
         UpdateProgress(95);
 
         // install wayland mouse util
