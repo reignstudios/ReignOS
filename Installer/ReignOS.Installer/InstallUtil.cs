@@ -187,8 +187,8 @@ static class InstallUtil
         fileBuilder.AppendLine("title ReignOS");
         fileBuilder.AppendLine("linux /vmlinuz-linux");
         fileBuilder.AppendLine("initrd /initramfs-linux.img");
-        //fileBuilder.AppendLine($"options root={ext4Partition.path} rw acpi_osi=Linux i915.enable_dc=2 i915.enable_psr=1 amdgpu.dpm=1 amdgpu.ppfeaturemask=0xffffffff amdgpu.dc=1 nouveau.pstate=1 nouveau.perflvl=N nouveau.perflvl_wr=7777 nouveau.config=NvGspRm=1 nvidia_drm.modeset=1");
-        fileBuilder.AppendLine($"options root=/dev/sda2 rw acpi_osi=Linux i915.enable_dc=2 i915.enable_psr=1 amdgpu.dpm=1 amdgpu.ppfeaturemask=0xffffffff amdgpu.dc=1 nouveau.pstate=1 nouveau.perflvl=N nouveau.perflvl_wr=7777 nouveau.config=NvGspRm=1 nvidia_drm.modeset=1");
+        fileBuilder.AppendLine($"options root={ext4Partition.path} rw acpi_osi=Linux i915.enable_dc=2 i915.enable_psr=1 amdgpu.dpm=1 amdgpu.ppfeaturemask=0xffffffff amdgpu.dc=1 nouveau.pstate=1 nouveau.perflvl=N nouveau.perflvl_wr=7777 nouveau.config=NvGspRm=1 nvidia_drm.modeset=1");
+        //fileBuilder.AppendLine($"options root=/dev/sda2 rw acpi_osi=Linux i915.enable_dc=2 i915.enable_psr=1 amdgpu.dpm=1 amdgpu.ppfeaturemask=0xffffffff amdgpu.dc=1 nouveau.pstate=1 nouveau.perflvl=N nouveau.perflvl_wr=7777 nouveau.config=NvGspRm=1 nvidia_drm.modeset=1");// TEST HACK
         void getStandardInput_arch_conf(StreamWriter writer)
         {
             writer.WriteLine(fileBuilder);
