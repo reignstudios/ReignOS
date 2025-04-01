@@ -58,18 +58,18 @@ static class InstallUtil
         InstallProgress?.Invoke(progressTask, progress);
     }
 
-    private static void Run(string name, string args, ProcessUtil.ProcessInputDelegate getStandardInput = null, string workingDir = null)
+    private static void Run(string name, string args, ProcessUtil.ProcessOutputDelegate standardOut = null, ProcessUtil.ProcessInputDelegate getStandardInput = null, string workingDir = null)
     {
         if (!archRootMode)
         {
-            ProcessUtil.Run(name, args, asAdmin:true, enterAdminPass:false, getStandardInput:getStandardInput, workingDir:workingDir);
+            ProcessUtil.Run(name, args, asAdmin:true, enterAdminPass:false, standardOut:standardOut, getStandardInput:getStandardInput, workingDir:workingDir);
         }
         else
         {
             string l = $"Arch-Chroot.Run: {name} {args}";
             Console.WriteLine(l);
             Views.MainView.ProcessOutput(l);
-            ProcessUtil.Run("arch-chroot", $"/mnt bash -c \\\"{name} {args}\\\"", asAdmin:true, enterAdminPass:false, getStandardInput:getStandardInput, workingDir:workingDir);
+            ProcessUtil.Run("arch-chroot", $"/mnt bash -c \\\"{name} {args}\\\"", asAdmin:true, enterAdminPass:false, standardOut:standardOut, getStandardInput:getStandardInput, workingDir:workingDir);
         }
     }
     
@@ -161,6 +161,7 @@ static class InstallUtil
         Run("hwclock", "--systohc");
         Run("locale-gen", "");
         Run("echo", "\"LANG=en_US.UTF-8\" > /etc/locale.conf");
+        Run("pacman", "-S --noconfirm noto-fonts-extra");
         UpdateProgress(40);
 
         // configure hosts file
@@ -187,7 +188,7 @@ static class InstallUtil
         fileBuilder.AppendLine("linux /vmlinuz-linux");
         fileBuilder.AppendLine("initrd /initramfs-linux.img");
         //fileBuilder.AppendLine($"options root={ext4Partition.path} rw acpi_osi=Linux i915.enable_dc=2 i915.enable_psr=1 amdgpu.dpm=1 amdgpu.ppfeaturemask=0xffffffff amdgpu.dc=1 nouveau.pstate=1 nouveau.perflvl=N nouveau.perflvl_wr=7777 nouveau.config=NvGspRm=1 nvidia_drm.modeset=1");
-        fileBuilder.AppendLine($"options root=sda2 rw acpi_osi=Linux i915.enable_dc=2 i915.enable_psr=1 amdgpu.dpm=1 amdgpu.ppfeaturemask=0xffffffff amdgpu.dc=1 nouveau.pstate=1 nouveau.perflvl=N nouveau.perflvl_wr=7777 nouveau.config=NvGspRm=1 nvidia_drm.modeset=1");
+        fileBuilder.AppendLine($"options root=/dev/sda2 rw acpi_osi=Linux i915.enable_dc=2 i915.enable_psr=1 amdgpu.dpm=1 amdgpu.ppfeaturemask=0xffffffff amdgpu.dc=1 nouveau.pstate=1 nouveau.perflvl=N nouveau.perflvl_wr=7777 nouveau.config=NvGspRm=1 nvidia_drm.modeset=1");
         void getStandardInput_arch_conf(StreamWriter writer)
         {
             writer.WriteLine(fileBuilder);
@@ -267,10 +268,11 @@ static class InstallUtil
         // add first run file
         path = "/mnt/home/gamer/FirstRun.sh";
         fileBuilder = new StringBuilder();
+        fileBuilder.AppendLine("echo \"First Run setup...\"");
         fileBuilder.AppendLine("cd /home/gamer/ReignOS");
         fileBuilder.AppendLine("sudo chown -R $USER .");
-        //fileBuilder.AppendLine("cd /home/gamer/ReignOS/Managment");
-        //fileBuilder.AppendLine("dotnet publish -r linux-x64 -c Release");
+        fileBuilder.AppendLine("cd /home/gamer/ReignOS/Managment");
+        fileBuilder.AppendLine("dotnet publish -r linux-x64 -c Release");
         fileBuilder.AppendLine("echo -n > /home/gamer/FirstRun.sh");// no need to run again
         File.WriteAllText(path, fileBuilder.ToString());
         UpdateProgress(62);
@@ -295,7 +297,6 @@ static class InstallUtil
     private static void InstallArchPackages()
     {
         progressTask = "Installing packages...";
-
         // install apps
         Run("pacman", "-S --noconfirm nano evtest");
         Run("pacman", "-S --noconfirm dmidecode udev python");
@@ -372,8 +373,10 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm libxcomposite lib32-libxcomposite libxrandr lib32-libxrandr libgcrypt lib32-libgcrypt lib32-pipewire libpulse lib32-libpulse gtk2 lib32-gtk2");
         Run("pacman", "-S --noconfirm gnutls lib32-gnutls openal lib32-openal sqlite lib32-sqlite libcurl-compat lib32-libcurl-compat");
         Run("pacman", "-S --noconfirm xdg-desktop-portal xdg-desktop-portal-gtk");
-        Run("pacman", "-S --noconfirm mangohud");
-        Run("pacman", "-S --noconfirm steam");// TODO: how to accept correct defaults?
+        Run("pacman", "-S --noconfirm mangohud gamemode");
+        Run("pacman", "-S --noconfirm amdvlk nvidia-utils vulkan-dzn vulkan-gfxstream vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio");// all steam options
+        Run("pacman", "-S --noconfirm lib32-amdvlk lib32-nvidia-utils lib32-vulkan-dzn lib32-vulkan-gfxstream lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio");// all steam options
+        Run("pacman", "-S --noconfirm steam");//steam-native-runtime (use Arch libs)
         UpdateProgress(95);
 
         // install wayland mouse util
@@ -388,7 +391,7 @@ static class InstallUtil
         
         // clone ReignOS repo
         Run("git", "clone https://github.com/reignstudios/ReignOS.git /mnt/home/gamer/ReignOS");
-        Run("dotnet", "publish -r linux-x64 -c Release", workingDir:"/mnt/home/gamer/ReignOS/Managment");
+        //Run("dotnet", "publish -r linux-x64 -c Release", workingDir:"/mnt/home/gamer/ReignOS/Managment");// do this post-install
         
         UpdateProgress(100);
     }
