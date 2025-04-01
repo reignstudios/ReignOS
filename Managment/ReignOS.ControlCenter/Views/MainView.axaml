@@ -6,78 +6,95 @@
              x:Class="ReignOS.ControlCenter.Views.MainView">
 
 	<Grid>
-		<TextBlock Text="Control Center" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="32" FontWeight="Bold" Margin="4,25,4,4"/>
-		<Separator HorizontalAlignment="Center" VerticalAlignment="Top" Margin="150,70,150,0"/>
-		<!-- <Button Click="SettingsButton_Click" Content="⚙" FontSize="32" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4" Width="64" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/> -->
+		<Grid Name="mainGrid" IsVisible="True">
+			<Button Content="Exit to Terminal" Margin="4" Click="ExitButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+			<TextBlock Text="Control Center" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="32" FontWeight="Bold" Margin="4,25,4,4"/>
+			<Separator HorizontalAlignment="Center" VerticalAlignment="Top" Margin="150,70,150,0"/>
+			<!-- <Button Click="SettingsButton_Click" Content="⚙" FontSize="32" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4" Width="64" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/> -->
+			
+			<StackPanel Height="145" VerticalAlignment="Top" Margin="4,95,0,0" Background="#202020" Orientation="Horizontal">
+				<Button Click="GamescopeButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#006000">
+					<Grid Margin="0">
+						<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
+						<TextBlock Text="Gamescope" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
+					</Grid>
+				</Button>
+
+				<Button Click="CageButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#006000">
+					<Grid Margin="0">
+						<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
+						<TextBlock Text="Cage" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
+					</Grid>
+				</Button>
+
+				<Button Click="LabwcButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#603000">
+					<Grid Margin="0">
+						<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
+						<TextBlock Text="Labwc" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
+					</Grid>
+				</Button>
+				
+				<Button Click="X11Button_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#600000">
+					<Grid Margin="0">
+						<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
+						<TextBlock Text="X11" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
+					</Grid>
+				</Button>
+			</StackPanel>
+			
+			<StackPanel Margin="4,250,4,50" Background="#202020" Orientation="Vertical">
+				<Grid Margin="8,8,8,4" Background="#444444" Height="40">
+					<Grid>
+						<TextBlock Text="Default Boot" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+						<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="BootApplyButton_OnClick"/>
+						<RadioButton Name="boot_ControlCenter" Content="Control Center" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						<RadioButton Name="boot_Gamescope" Content="Gamescope" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						<RadioButton Name="boot_Cage" Content="Cage" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+					</Grid>
+				</Grid>
+				
+				<Grid Margin="8,8,8,4" Background="#444444" Height="40">
+					<Grid>
+						<TextBlock Text="Screen Rotation" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+						<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RotApplyButton_OnClick"/>
+						<RadioButton Name="rot_Default" Content="Default" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						<RadioButton Name="rot_Left" Content="Left 90" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						<RadioButton Name="rot_Right" Content="Right 90" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						<RadioButton Name="rot_Flip" Content="Flip 180" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+					</Grid>
+				</Grid>
+				
+				<Grid Margin="8,8,8,4" Background="#444444" Height="40">
+					<Grid>
+						<TextBlock Text="Nvidia Drivers" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+						<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="NvidiaApplyButton_OnClick"/>
+						<RadioButton Name="nvidia_Nouveau" Content="Open Source" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						<RadioButton Name="nvidia_Proprietary" Content="Proprietary" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+					</Grid>
+				</Grid>
+			</StackPanel>
+
+			<StackPanel Margin="4" Width="235" Height="42" HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="#000040" Orientation="Horizontal">
+				<Button Content="Sleep" Margin="4,0" Background="#0000AA" Click="SleepButton_Click"/>
+				<Button Content="Restart" Margin="4,0" Background="#00AA00" Click="RestartButton_Click"/>
+				<Button Content="Shutdown" Margin="4,0" Background="#AA0000" Click="ShutdownButton_Click"/>
+			</StackPanel>
+			
+			<StackPanel Margin="245,0,4,4" Height="42" VerticalAlignment="Bottom" Background="#000040" Orientation="Horizontal" FlowDirection="RightToLeft">
+				<Button Content="Check Updates" Margin="4,0,0,0" Click="CheckUpdatesButton_Click"/>
+				<Button Content="Boot Manager" Margin="4,0,0,0" Click="BootManagerButton_OnClick"/>
+			</StackPanel>
+		</Grid>
 		
-		<StackPanel Height="145" VerticalAlignment="Top" Margin="4,95,0,0" Background="#202020" Orientation="Horizontal">
-			<Button Click="GamescopeButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#006000">
-				<Grid Margin="0">
-					<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
-					<TextBlock Text="Gamescope" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
-				</Grid>
-			</Button>
-
-			<Button Click="CageButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#006000">
-				<Grid Margin="0">
-					<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
-					<TextBlock Text="Cage" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
-				</Grid>
-			</Button>
-
-			<Button Click="LabwcButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#603000">
-				<Grid Margin="0">
-					<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
-					<TextBlock Text="Labwc" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
-				</Grid>
-			</Button>
+		<Grid Name="bootManagerGrid" IsVisible="False">
+			<TextBlock Text="Boot Manager" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="32" FontWeight="Bold" Margin="4,25,4,4"/>
+			<Separator VerticalAlignment="Top" Margin="4,70,4,0"/>
 			
-			<Button Click="X11Button_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#600000">
-				<Grid Margin="0">
-					<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
-					<TextBlock Text="X11" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
-				</Grid>
-			</Button>
-		</StackPanel>
-		
-		<StackPanel Margin="4,250,4,50" Background="#202020" Orientation="Vertical">
-			<Grid Margin="8,8,8,4" Background="#444444" Height="40">
-				<Grid>
-					<TextBlock Text="Default Boot" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-					<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="BootApplyButton_OnClick"/>
-					<RadioButton Name="boot_ControlCenter" Content="Control Center" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-					<RadioButton Name="boot_Gamescope" Content="Gamescope" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-					<RadioButton Name="boot_Cage" Content="Cage" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-				</Grid>
-			</Grid>
-			
-			<Grid Margin="8,8,8,4" Background="#444444" Height="40">
-				<Grid>
-					<TextBlock Text="Screen Rotation" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-					<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RotApplyButton_OnClick"/>
-					<RadioButton Name="rot_Default" Content="Default" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-					<RadioButton Name="rot_Left" Content="Left 90" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-					<RadioButton Name="rot_Right" Content="Right 90" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-					<RadioButton Name="rot_Flip" Content="Flip 180" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-				</Grid>
-			</Grid>
-			
-			<Grid Margin="8,8,8,4" Background="#444444" Height="40">
-				<Grid>
-					<TextBlock Text="Nvidia Drivers" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-					<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="NvidiaApplyButton_OnClick"/>
-					<RadioButton Name="nvidia_Nouveau" Content="Open Source" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-					<RadioButton Name="nvidia_Proprietary" Content="Proprietary" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-				</Grid>
-			</Grid>
-		</StackPanel>
-
-		<StackPanel Margin="4" Height="42" VerticalAlignment="Bottom" Background="#000040" Orientation="Horizontal">
-			<Button Content="Sleep" Margin="4,0" Background="#0000AA" Click="SleepButton_Click"/>
-			<Button Content="Restart" Margin="4,0" Background="#00AA00" Click="RestartButton_Click"/>
-			<Button Content="Shutdown" Margin="4,0" Background="#AA0000" Click="ShutdownButton_Click"/>
-			<Button Content="Check Updates" Margin="32,0,4,0" Click="CheckUpdatesButton_Click"/>
-			<Button Content="Exit to Terminal" Margin="4,0" Click="ExitButton_Click"/>
-		</StackPanel>
+			<ListBox Name="bootOptionsListBox" Width="300" HorizontalAlignment="Left" Margin="4,120,4,50"/>
+			<TextBlock Name="bootCurrentText" Text="Current Boot: N/A" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,75,4,4"/>
+			<TextBlock Name="bootOrderText" Text="Boot Order: N/A" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,95,4,4"/>
+			<Button Content="Reboot to selected OS" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="320,120,4,4" Click="BootManagerRebootButton_OnClick"/>
+			<Button Content="Back" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4" Click="BootManagerBackButton_OnClick"/>
+		</Grid>
 	</Grid>
 </UserControl>

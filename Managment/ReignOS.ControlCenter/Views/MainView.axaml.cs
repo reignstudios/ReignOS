@@ -3,6 +3,8 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
+using System.Threading;
 using ReignOS.Core;
 
 namespace ReignOS.ControlCenter.Views;
@@ -212,5 +214,65 @@ public partial class MainView : UserControl
         else if (nvidia_Proprietary.IsChecked == true) App.exitCode = 31;
         MainWindow.singleton.Close();
         SaveSettings();
+    }
+
+    private void BootManagerButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        mainGrid.IsVisible = false;
+        bootManagerGrid.IsVisible = true;
+
+        bootOptionsListBox.Items.Clear();
+        string result = ProcessUtil.Run("efibootmgr", "", asAdmin:true);
+        var values = result.Split('\n');
+        foreach (string value in values)
+        {
+            if (value.StartsWith("Boot"))
+            {
+                if (value.StartsWith("BootCurrent:"))
+                {
+                    var match = Regex.Match(value, @"BootCurrent:\s*(.*)");
+                    if (match.Success) bootCurrentText.Text = "Current Boot: " + match.Groups[1].Value;
+                    else bootCurrentText.Text = "Current Boot: N/A";
+                }
+                else if (value.StartsWith("BootOrder:"))
+                {
+                    var match = Regex.Match(value, @"BootOrder:\s*(.*)");
+                    if (match.Success) bootOrderText.Text = "Boot Order: " + match.Groups[1].Value;
+                    else bootOrderText.Text = "Boot Order: N/A";
+                }
+                else
+                {
+                    var match = Regex.Match(value, @"Boot(\d*)(\*)?\s*(.*)");
+                    if (match.Success)
+                    {
+                        string name = match.Groups[3].Value;
+                        const int maxLength = 20;
+                        if (name.StartsWith("Windows Boot Manager")) name = "Windows Boot Manager";
+                        else if (name.StartsWith("Linux Boot Manager")) name = "Linux Boot Manager";
+                        else if (name.Length > maxLength) name = name.Substring(0, maxLength);
+                        var item = new ListBoxItem();
+                        item.Content = $"({match.Groups[1].Value}{match.Groups[2].Value}): {name}";
+                        item.Tag = match.Groups[1].Value;
+                        bootOptionsListBox.Items.Add(item);
+                    }
+                }
+            }
+        }
+    }
+
+    private void BootManagerRebootButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (bootOptionsListBox.SelectedIndex <= -1) return;
+        var item = (ListBoxItem)bootOptionsListBox.Items[bootOptionsListBox.SelectedIndex];
+        string boot = (string)item.Tag;
+        ProcessUtil.Run("efibootmgr", $"-n {boot}", asAdmin:true);
+        Thread.Sleep(1000);
+        ProcessUtil.Run("reboot", "", asAdmin:false);
+    }
+    
+    private void BootManagerBackButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        mainGrid.IsVisible = true;
+        bootManagerGrid.IsVisible = false;
     }
 }
