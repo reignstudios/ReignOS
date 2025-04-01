@@ -249,7 +249,7 @@ public partial class MainView : UserControl
                         const int maxLength = 20;
                         if (name.StartsWith("Windows Boot Manager")) name = "Windows Boot Manager";
                         else if (name.StartsWith("Linux Boot Manager")) name = "Linux Boot Manager";
-                        else if (name.Length > maxLength) name = name.Substring(0, maxLength);
+                        else if (name.Length > maxLength) name = name.Substring(0, maxLength) + "...";
                         var item = new ListBoxItem();
                         item.Content = $"({match.Groups[1].Value}{match.Groups[2].Value}): {name}";
                         item.Tag = match.Groups[1].Value;

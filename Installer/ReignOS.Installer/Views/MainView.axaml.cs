@@ -200,6 +200,7 @@ public partial class MainView : UserControl
                 stage = InstallerStage.Installing;
                 backButton.IsEnabled = false;
                 nextButton.IsEnabled = false;
+                exitButton.IsEnabled = false;
                 installProgressBar.Value = 0;
                 installProgressBar.IsVisible = true;
                 installTerminalText.Text = "";
@@ -208,6 +209,7 @@ public partial class MainView : UserControl
                 break;
             
             case InstallerStage.DoneInstalling:
+                exitButton.IsEnabled = true;
                 ProcessUtil.Run("reboot", "", out _, wait:false);
                 MainWindow.singleton.Close();
                 break;
