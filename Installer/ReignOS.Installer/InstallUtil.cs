@@ -269,7 +269,7 @@ static class InstallUtil
         path = "/mnt/home/gamer/FirstRun.sh";
         fileBuilder = new StringBuilder();
         fileBuilder.AppendLine("echo \"First Run setup...\"");
-        fileBuilder.AppendLine("cd /home/gamer/ReignOS");
+        fileBuilder.AppendLine("cd /home/gamer");
         fileBuilder.AppendLine("sudo chown -R $USER .");
         fileBuilder.AppendLine("cd /home/gamer/ReignOS/Managment");
         fileBuilder.AppendLine("dotnet publish -r linux-x64 -c Release");

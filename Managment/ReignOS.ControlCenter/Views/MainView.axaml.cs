@@ -25,14 +25,7 @@ public partial class MainView : UserControl
     public MainView()
     {
         InitializeComponent();
-        try
-        {
-            LoadSettings();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
+        LoadSettings();
         
         connectedTimer = new System.Timers.Timer(1000 * 5);
         connectedTimer.Elapsed += ConnectedTimer;
@@ -44,57 +37,73 @@ public partial class MainView : UserControl
     private void LoadSettings()
     {
         if (!File.Exists(settingsFile)) return;
-        using (var reader = new StreamReader(settingsFile))
+        try
         {
-            string line;
-            do
+            using (var reader = new StreamReader(settingsFile))
             {
-                line = reader.ReadLine();
-                if (line == null) break;
+                string line;
+                do
+                {
+                    line = reader.ReadLine();
+                    if (line == null) break;
                 
-                var parts = line.Split('=');
-                if (parts.Length < 2) continue;
+                    var parts = line.Split('=');
+                    if (parts.Length < 2) continue;
                 
-                if (parts[0] == "Boot")
-                {
-                    if (parts[1] == "ControlCenter") boot_ControlCenter.IsChecked = true;
-                    else if (parts[1] == "Gamescope") boot_Gamescope.IsChecked = true;
-                    else if (parts[1] == "Cage") boot_Cage.IsChecked = true;
-                }
-                else if (parts[0] == "ScreenRotation")
-                {
-                    if (parts[1] == "Default") rot_Default.IsChecked = true;
-                    else if (parts[1] == "Left") rot_Left.IsChecked = true;
-                    else if (parts[1] == "Right") rot_Right.IsChecked = true;
-                    else if (parts[1] == "Flip") rot_Flip.IsChecked = true;
-                }
-                else if (parts[0] == "NvidiaDrivers")
-                {
-                    if (parts[1] == "Nouveau") nvidia_Nouveau.IsChecked = true;
-                    else if (parts[1] == "Proprietary") nvidia_Proprietary.IsChecked = true;
-                }
-            } while (!reader.EndOfStream);
+                    if (parts[0] == "Boot")
+                    {
+                        if (parts[1] == "ControlCenter") boot_ControlCenter.IsChecked = true;
+                        else if (parts[1] == "Gamescope") boot_Gamescope.IsChecked = true;
+                        else if (parts[1] == "Cage") boot_Cage.IsChecked = true;
+                    }
+                    else if (parts[0] == "ScreenRotation")
+                    {
+                        if (parts[1] == "Default") rot_Default.IsChecked = true;
+                        else if (parts[1] == "Left") rot_Left.IsChecked = true;
+                        else if (parts[1] == "Right") rot_Right.IsChecked = true;
+                        else if (parts[1] == "Flip") rot_Flip.IsChecked = true;
+                    }
+                    else if (parts[0] == "NvidiaDrivers")
+                    {
+                        if (parts[1] == "Nouveau") nvidia_Nouveau.IsChecked = true;
+                        else if (parts[1] == "Proprietary") nvidia_Proprietary.IsChecked = true;
+                    }
+                } while (!reader.EndOfStream);
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
         }
     }
     
     private void SaveSettings()
     {
-        using (var writer = new StreamWriter(settingsFile))
+        try
         {
-            if (boot_ControlCenter.IsChecked == true) writer.WriteLine("Boot=ControlCenter");
-            else if (boot_Gamescope.IsChecked == true) writer.WriteLine("Boot=Gamescope");
-            else if (boot_Cage.IsChecked == true) writer.WriteLine("Boot=Cage");
-            else writer.WriteLine("Boot=ControlCenter");
+            string path = Path.GetDirectoryName(settingsFile);
+            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+            using (var writer = new StreamWriter(settingsFile))
+            {
+                if (boot_ControlCenter.IsChecked == true) writer.WriteLine("Boot=ControlCenter");
+                else if (boot_Gamescope.IsChecked == true) writer.WriteLine("Boot=Gamescope");
+                else if (boot_Cage.IsChecked == true) writer.WriteLine("Boot=Cage");
+                else writer.WriteLine("Boot=ControlCenter");
             
-            if (rot_Default.IsChecked == true) writer.WriteLine("ScreenRotation=Default");
-            else if (rot_Left.IsChecked == true) writer.WriteLine("ScreenRotation=Left");
-            else if (rot_Right.IsChecked == true) writer.WriteLine("ScreenRotation=Right");
-            else if (rot_Flip.IsChecked == true) writer.WriteLine("ScreenRotation=Flip");
-            else writer.WriteLine("ScreenRotation=Default");
+                if (rot_Default.IsChecked == true) writer.WriteLine("ScreenRotation=Default");
+                else if (rot_Left.IsChecked == true) writer.WriteLine("ScreenRotation=Left");
+                else if (rot_Right.IsChecked == true) writer.WriteLine("ScreenRotation=Right");
+                else if (rot_Flip.IsChecked == true) writer.WriteLine("ScreenRotation=Flip");
+                else writer.WriteLine("ScreenRotation=Default");
             
-            if (nvidia_Nouveau.IsChecked == true) writer.WriteLine("NvidiaDrivers=Nouveau");
-            else if (nvidia_Proprietary.IsChecked == true) writer.WriteLine("NvidiaDrivers=Proprietary");
-            else writer.WriteLine("NvidiaDrivers=Nouveau");
+                if (nvidia_Nouveau.IsChecked == true) writer.WriteLine("NvidiaDrivers=Nouveau");
+                else if (nvidia_Proprietary.IsChecked == true) writer.WriteLine("NvidiaDrivers=Proprietary");
+                else writer.WriteLine("NvidiaDrivers=Nouveau");
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
         }
     }
     
