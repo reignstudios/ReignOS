@@ -58,18 +58,18 @@ static class InstallUtil
         InstallProgress?.Invoke(progressTask, progress);
     }
 
-    private static void Run(string name, string args, ProcessUtil.ProcessInputDelegate getStandardInput = null)
+    private static void Run(string name, string args, ProcessUtil.ProcessInputDelegate getStandardInput = null, string workingDir = null)
     {
         if (!archRootMode)
         {
-            ProcessUtil.Run(name, args, asAdmin:true, enterAdminPass:false, getStandardInput:getStandardInput);
+            ProcessUtil.Run(name, args, asAdmin:true, enterAdminPass:false, getStandardInput:getStandardInput, workingDir:workingDir);
         }
         else
         {
             string l = $"Arch-Chroot.Run: {name} {args}";
             Console.WriteLine(l);
             Views.MainView.ProcessOutput(l);
-            ProcessUtil.Run("arch-chroot", $"/mnt bash -c \\\"{name} {args}\\\"", asAdmin:true, enterAdminPass:false, getStandardInput:getStandardInput);
+            ProcessUtil.Run("arch-chroot", $"/mnt bash -c \\\"{name} {args}\\\"", asAdmin:true, enterAdminPass:false, getStandardInput:getStandardInput, workingDir:workingDir);
         }
     }
     
@@ -91,7 +91,7 @@ static class InstallUtil
         {
             InstallBaseArch();
             InstallArchPackages();
-            ConfigureArch();
+            InstallReignOSRepo();
             InstallProgress?.Invoke("Done", progress);
         }
         catch (Exception e)
@@ -259,6 +259,8 @@ static class InstallUtil
             writer.Close();
         }
         ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_autologin_conf);
+        Run("systemctl", "daemon-reload");
+        Run("systemctl", "restart getty@tty1.service");
         UpdateProgress(61);
 
         // auto invoke launch after login
@@ -267,6 +269,7 @@ static class InstallUtil
         else fileText = "";
         fileBuilder = new StringBuilder(fileText);
         fileBuilder.AppendLine();
+        fileBuilder.AppendLine("chmod +x /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh");
         fileBuilder.AppendLine("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh --use-controlcenter");
         File.WriteAllText(path, fileBuilder.ToString());
         UpdateProgress(62);
@@ -361,12 +364,18 @@ static class InstallUtil
 
         // install wayland mouse util
         Run("pacman", "-S --noconfirm unclutter");
-        UpdateProgress(100);
+        UpdateProgress(96);
     }
     
-    private static void ConfigureArch()
+    private static void InstallReignOSRepo()
     {
-        progressTask = "Configuring...";
+        progressTask = "Installing ReignOS Repo...";
+        archRootMode = false;
+        
+        // clone ReignOS repo
+        Run("git", "clone https://github.com/reignstudios/ReignOS.git /mnt/home/gamer/ReignOS");
+        Run("dotnet", "publish -r linux-x64 -c Release", workingDir:"/mnt/home/gamer/ReignOS/Managment");
+        
         UpdateProgress(100);
     }
 }

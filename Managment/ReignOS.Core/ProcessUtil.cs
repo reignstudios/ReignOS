@@ -17,12 +17,12 @@ public static class ProcessUtil
     public delegate void ProcessInputDelegate(StreamWriter writer);
     public static event ProcessOutputDelegate ProcessOutput;
     
-    public static string Run(string name, string args, Dictionary<string, string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, bool useBash = true, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, bool consoleLogOut = true)
+    public static string Run(string name, string args, Dictionary<string, string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, bool useBash = true, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, string workingDir = null, bool consoleLogOut = true)
     {
-        return Run(name, args, out _, enviromentVars, wait, asAdmin, enterAdminPass, useBash, standardOut, getStandardInput, consoleLogOut);
+        return Run(name, args, out _, enviromentVars, wait, asAdmin, enterAdminPass, useBash, standardOut, getStandardInput, workingDir, consoleLogOut);
     }
 
-    public static string Run(string name, string args, out int exitCode, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, bool useBash = true, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, bool consoleLogOut = true)
+    public static string Run(string name, string args, out int exitCode, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, bool useBash = true, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, string workingDir = null, bool consoleLogOut = true)
     {
         try
         {
@@ -64,6 +64,7 @@ public static class ProcessUtil
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardError = true;
                 if (getStandardInput != null) process.StartInfo.RedirectStandardInput = true;
+                if (workingDir != null) process.StartInfo.WorkingDirectory = workingDir;
                 process.Start();
                 
                 if (asAdmin && enterAdminPass)

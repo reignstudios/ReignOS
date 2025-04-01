@@ -123,7 +123,8 @@ public partial class MainView : UserControl
         Dispatcher.UIThread.Invoke(() =>
         {
             installOutputBuilder.AppendLine(line);
-            if (installOutputBuilder.Length > 1024) installOutputBuilder.Remove(0, installOutputBuilder.Length - 1024);
+            const int maxLength = 2048;
+            if (installOutputBuilder.Length > maxLength) installOutputBuilder.Remove(0, installOutputBuilder.Length - maxLength);
             singleton.installTerminalText.Text = installOutputBuilder.ToString();
             singleton.installTerminalScroll.ScrollToEnd();
         });
