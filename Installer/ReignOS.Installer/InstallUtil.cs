@@ -161,7 +161,8 @@ static class InstallUtil
         Run("hwclock", "--systohc");
         Run("locale-gen", "");
         Run("echo", "\"LANG=en_US.UTF-8\" > /etc/locale.conf");
-        Run("pacman", "-S --noconfirm noto-fonts-extra");
+        Run("pacman", "-S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji ttf-dejavu ttf-liberation ttf-unifont");
+        Run("fc-cache", "-fv");
         UpdateProgress(40);
 
         // configure hosts file
@@ -269,8 +270,7 @@ static class InstallUtil
         path = "/mnt/home/gamer/FirstRun.sh";
         fileBuilder = new StringBuilder();
         fileBuilder.AppendLine("echo \"First Run setup...\"");
-        fileBuilder.AppendLine("cd /home/gamer");
-        fileBuilder.AppendLine("sudo chown -R $USER .");
+        fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS");
         fileBuilder.AppendLine("cd /home/gamer/ReignOS/Managment");
         fileBuilder.AppendLine("dotnet publish -r linux-x64 -c Release");
         fileBuilder.AppendLine("echo -n > /home/gamer/FirstRun.sh");// no need to run again
