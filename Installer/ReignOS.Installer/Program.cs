@@ -2,6 +2,7 @@
 
 using Avalonia;
 using Avalonia.ReactiveUI;
+using ReignOS.Core;
 
 namespace ReignOS.Installer;
 
@@ -21,6 +22,8 @@ class Program
     [STAThread]
     public static void Main(string[] args)
     {
+        Log.WriteLine("Installer started: " + VersionInfo.version);
+
         if (args != null)
         {
             if (args.Contains("-cage")) compositorMode = CompositorMode.Cage;

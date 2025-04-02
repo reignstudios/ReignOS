@@ -415,21 +415,21 @@ public partial class MainView : UserControl
                         if (partitionIndex_FileSystem >= 0 && line.Length - partitionIndex_FileSystem > 0)
                         {
                             value = line.Substring(partitionIndex_FileSystem, line.Length - partitionIndex_FileSystem);
-                            if (value.Length != 0 && value[0] != ' ') partition.fileSystem = value.Split(' ')[0];
+                            if (value.Length != 0 && value[0] != ' ') partition.fileSystem = value.Split(' ')[0].Trim();
                         }
 
                         // name
                         if (partitionIndex_Name >= 0 && line.Length - partitionIndex_Name > 0)
                         {
                             value = line.Substring(partitionIndex_Name, line.Length - partitionIndex_Name);
-                            if (value.Length != 0 && value[0] != ' ') partition.name = value.Split(' ')[0];
+                            if (value.Length != 0 && value[0] != ' ') partition.name = value.Split(' ')[0].Trim();
                         }
 
                         // flags
                         if (partitionIndex_Flags >= 0 && line.Length - partitionIndex_Flags > 0)
                         {
                             value = line.Substring(partitionIndex_Flags, line.Length - partitionIndex_Flags);
-                            if (value.Length != 0 && value[0] != ' ') partition.flags = value;
+                            if (value.Length != 0 && value[0] != ' ') partition.flags = value.Trim();
                         }
 
                         drive.partitions.Add(partition);
@@ -499,7 +499,7 @@ public partial class MainView : UserControl
             var drive = (Drive)item.Tag;
         
             // validate & find partitions
-            if (drive.partitions == null || drive.partitions.Count < 2)
+            if (drive.partitions == null || drive.partitions.Count == 0)
             {
                 return false;
             }
@@ -538,7 +538,7 @@ public partial class MainView : UserControl
         
         efiDrive = ext4Drive = null;
         efiPartition = ext4Partition = null;
-        if (useMultipleDrivesCheckBox.IsChecked == true)
+        if (dualBootInstallRadioButton.IsChecked == true && useMultipleDrivesCheckBox.IsChecked == true)
         {
             foreach (ListBoxItem item in driveListBox.Items)
             {
@@ -612,6 +612,7 @@ public partial class MainView : UserControl
         if (Program.compositorMode == CompositorMode.Labwc)
         {
             ProcessUtil.Run("gparted", "", wait:true, asAdmin:true);
+            driveListBox.Items.Clear();
         }
         else
         {

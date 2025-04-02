@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using ReignOS.Core;
 
 namespace ReignOS.Installer.Views;
 
@@ -10,5 +11,6 @@ public partial class MainWindow : Window
     {
         singleton = this;
         InitializeComponent();
+        Title = $"{Title} ({VersionInfo.version})";
     }
 }
