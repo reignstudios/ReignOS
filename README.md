@@ -10,3 +10,5 @@ ReignOS is a SteamOS like Arch distro but with its own unique take focused on ge
 
 ## Known working hardware
 * MSI-Claw AM1
+* MSI-Claw 7 AI+ A2VM
+* MSI-Claw 8 AI+ A2VM

@@ -151,15 +151,15 @@ public partial class MainView : UserControl
         }
         else if (leftRotRadioButton.IsChecked == true)
         {
-            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 270", out _);// flipped-270
+            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 270", out _);// 270, flipped-270 (options)
         }
         else if (rightRotRadioButton.IsChecked == true)
         {
-            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()}--transform 90", out _);// flipped-90
+            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()}--transform flipped-90", out _);// 90, flipped-90 (options)
         }
         else if (flipRotRadioButton.IsChecked == true)
         {
-            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 180", out _);// flipped, flipped-180
+            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 180", out _);// 180, flipped, flipped-180 (options)
         }
     }
 
