@@ -637,6 +637,7 @@ public partial class MainView : UserControl
     private void UseMultipleDrivesCheckBox_OnIsCheckedChanged(object sender, RoutedEventArgs e)
     {
         RefreshDrivePage();
+        DriveListBox_OnSelectionChanged(null, null);
     }
 
     private void ExitButton_OnClick(object sender, RoutedEventArgs e)
