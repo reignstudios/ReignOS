@@ -302,7 +302,7 @@ public partial class MainView : UserControl
                 }
                 else
                 {
-                    var match = Regex.Match(value, @"Boot(\S*)(\*)?\s*(.*)");
+                    var match = Regex.Match(value, @"Boot(\w*)(\*)?\s*(.*)");
                     if (match.Success)
                     {
                         string name = match.Groups[3].Value;
