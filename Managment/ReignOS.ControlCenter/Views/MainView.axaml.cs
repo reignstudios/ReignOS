@@ -326,8 +326,9 @@ public partial class MainView : UserControl
         var item = (ListBoxItem)bootOptionsListBox.Items[bootOptionsListBox.SelectedIndex];
         string boot = (string)item.Tag;
         ProcessUtil.Run("efibootmgr", $"-n {boot}", asAdmin:true, useBash:false);
+
         Thread.Sleep(1000);
-        ProcessUtil.Run("reboot", "", asAdmin:false, useBash:false);
+        RestartButton_Click(null, null);
     }
     
     private void BootManagerBackButton_OnClick(object sender, RoutedEventArgs e)
