@@ -161,7 +161,11 @@ static class InstallUtil
         Run("hwclock", "--systohc");
         Run("locale-gen", "");
         Run("echo", "\"LANG=en_US.UTF-8\" > /etc/locale.conf");
-        Run("pacman", "-S --noconfirm noto-fonts noto-fonts-cjk noto-fonts-extra noto-fonts-emoji ttf-dejavu ttf-liberation ttf-unifont");
+        Run("pacman", "-S --noconfirm noto-fonts");
+        Run("pacman", "-S --noconfirm noto-fonts-cjk");
+        Run("pacman", "-S --noconfirm noto-fonts-extra");
+        Run("pacman", "-S --noconfirm noto-fonts-emoji");
+        Run("pacman", "-S --noconfirm ttf-dejavu ttf-liberation");
         Run("fc-cache", "-fv");
         UpdateProgress(40);
 
