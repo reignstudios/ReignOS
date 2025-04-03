@@ -126,7 +126,7 @@ static class InstallUtil
         UpdateProgress(10);
         
         // install arch base
-        Run("pacstrap", "/mnt base linux linux-firmware systemd lib32-systemd");
+        Run("pacstrap", "/mnt base linux linux-firmware systemd");
         Run("genfstab", "-U /mnt >> /mnt/etc/fstab");
         archRootMode = true;
         UpdateProgress(20);
@@ -268,17 +268,6 @@ static class InstallUtil
         Run("systemctl", "daemon-reload");
         Run("systemctl", "restart getty@tty1.service");
         UpdateProgress(61);
-        
-        /*// add first run file
-        path = "/mnt/home/gamer/FirstRun.sh";
-        fileBuilder = new StringBuilder();
-        fileBuilder.AppendLine("echo \"First Run setup...\"");
-        fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS");
-        fileBuilder.AppendLine("cd /home/gamer/ReignOS/Managment");
-        fileBuilder.AppendLine("dotnet publish -r linux-x64 -c Release");
-        fileBuilder.AppendLine("echo -n > /home/gamer/FirstRun.sh");// no need to run again
-        File.WriteAllText(path, fileBuilder.ToString());
-        UpdateProgress(62);*/
 
         // auto invoke launch after login
         path = "/mnt/home/gamer/.bash_profile";
@@ -286,17 +275,11 @@ static class InstallUtil
         else fileText = "";
         fileBuilder = new StringBuilder(fileText);
         fileBuilder.AppendLine();
-        //fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/FirstRun.sh");
-        //fileBuilder.AppendLine("chmod +x /home/gamer/FirstRun.sh");
-        //fileBuilder.AppendLine("/home/gamer/FirstRun.sh");
         fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS");
         fileBuilder.AppendLine("chmod +x /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh");
         fileBuilder.AppendLine("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh --use-controlcenter");
         File.WriteAllText(path, fileBuilder.ToString());
         UpdateProgress(63);
-
-        // configure splash image
-        // TODO
     }
     
     private static void InstallArchPackages()
