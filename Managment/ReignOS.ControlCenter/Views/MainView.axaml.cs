@@ -13,6 +13,43 @@ using ReignOS.Core;
 
 namespace ReignOS.ControlCenter.Views;
 
+class Partition
+{
+    public Drive drive;
+    public int number;
+    public ulong start, end, size;
+    public string fileSystem;
+    public string name;
+    public string flags;
+
+    public string path
+    {
+        get
+        {
+            if (drive.PartitionsUseP()) return drive.disk + "p" + number.ToString();
+            return drive.disk + number.ToString();
+        }
+    }
+
+    public Partition(Drive drive)
+    {
+        this.drive = drive;
+    }
+}
+
+class Drive
+{
+    public string model;
+    public string disk;
+    public ulong size;
+    public List<Partition> partitions = new List<Partition>();
+
+    public bool PartitionsUseP()
+    {
+        return disk.StartsWith("/dev/nvme") || disk.StartsWith("/dev/mmcblk");
+    }
+}
+
 public partial class MainView : UserControl
 {
     private const string settingsFile = "/home/gamer/ReignOS_Ext/Settings.txt";
@@ -21,6 +58,8 @@ public partial class MainView : UserControl
     private List<string> wlanDevices = new List<string>();
     private string wlanDevice;
     private bool isConnected;
+    
+    private List<Drive> drives;
     
     public MainView()
     {
@@ -340,7 +379,7 @@ public partial class MainView : UserControl
         bootManagerGrid.IsVisible = false;
     }
 
-    private void NetworkManagerRebootButton_OnClick(object sender, RoutedEventArgs e)
+    private void NetworkManagerButton_OnClick(object sender, RoutedEventArgs e)
     {
         mainGrid.IsVisible = false;
         networkManagerGrid.IsVisible = true;
@@ -428,5 +467,219 @@ public partial class MainView : UserControl
         ProcessUtil.Run("iwctl", $"--passphrase {networkPasswordText.Text} station {wlanDevice} connect {ssid}", asAdmin:true);
         string result = ProcessUtil.Run("iwctl", $"station {wlanDevice} show");
         Console.WriteLine(result);
+    }
+    
+    private void DriveManagerButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        mainGrid.IsVisible = false;
+        driveManagerGrid.IsVisible = true;
+        RefreshDrivePage();
+    }
+    
+    private void DriveManagerBackButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        mainGrid.IsVisible = true;
+        driveManagerGrid.IsVisible = false;
+    }
+    
+    private void RefreshDrivesButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        RefreshDrivePage();
+    }
+    
+    private void RefreshDrivePage()
+    {
+        static ulong ParseSizeName(string sizeName)
+        {
+            if (sizeName.EndsWith("TB"))
+            {
+                sizeName = sizeName.Replace("TB", "");
+                if (ulong.TryParse(sizeName, out ulong sizeUL)) return sizeUL * 1024 * 1024 * 1024 * 1024;
+                if (double.TryParse(sizeName, out double sizeD)) return (ulong)(sizeD * 1024 * 1024 * 1024 * 1024);
+            }
+            else if (sizeName.EndsWith("GB"))
+            {
+                sizeName = sizeName.Replace("GB", "");
+                if (ulong.TryParse(sizeName, out ulong sizeUL)) return sizeUL * 1024 * 1024 * 1024;
+                if (double.TryParse(sizeName, out double sizeD)) return (ulong)(sizeD * 1024 * 1024 * 1024);
+            }
+            else if (sizeName.EndsWith("MB"))
+            {
+                sizeName = sizeName.Replace("MB", "");
+                if (ulong.TryParse(sizeName, out ulong sizeUL)) return sizeUL * 1024 * 1024;
+                if (double.TryParse(sizeName, out double sizeD)) return (ulong)(sizeD * 1024 * 1024);
+            }
+            else if (sizeName.EndsWith("kB"))
+            {
+                sizeName = sizeName.Replace("kB", "");
+                if (ulong.TryParse(sizeName, out ulong sizeUL)) return sizeUL * 1024;
+                if (double.TryParse(sizeName, out double sizeD)) return (ulong)(sizeD * 1024);
+            }
+            else if (sizeName.EndsWith("B"))
+            {
+                sizeName = sizeName.Replace("B", "");
+                if (ulong.TryParse(sizeName, out ulong sizeUL)) return sizeUL;
+                if (double.TryParse(sizeName, out double sizeD)) return (ulong)(sizeD);
+            }
+
+            return 0;
+        }
+        
+        var drive = new Drive();
+        bool partitionMode = false;
+        int partitionIndex_Number = 1;
+        int partitionIndex_Start = 0;
+        int partitionIndex_End = 0;
+        int partitionIndex_Size = 0;
+        int partitionIndex_FileSystem = 0;
+        int partitionIndex_Name = 0;
+        int partitionIndex_Flags = 0;
+        void standardOutput(string line)
+        {
+            if (partitionMode)
+            {
+                if (line.Length == 0)
+                {
+                    drives.Add(drive);
+                    drive = new Drive();
+                    partitionMode = false;
+                }
+                else
+                {
+                    try
+                    {
+                        var partition = new Partition(drive);
+
+                        // number
+                        string value = line.Substring(partitionIndex_Number, line.Length - partitionIndex_Number);
+                        value = value.Split(' ')[0];
+                        partition.number = int.Parse(value);
+                        
+                        // start
+                        value = line.Substring(partitionIndex_Start, line.Length - partitionIndex_Start);
+                        value = value.Split(' ')[0];
+                        partition.start = ParseSizeName(value);
+                        
+                        // end
+                        value = line.Substring(partitionIndex_End, line.Length - partitionIndex_End);
+                        value = value.Split(' ')[0];
+                        partition.end = ParseSizeName(value);
+                        
+                        // size
+                        value = line.Substring(partitionIndex_Size, line.Length - partitionIndex_Size);
+                        value = value.Split(' ')[0];
+                        partition.size = ParseSizeName(value);
+                        
+                        // file-system
+                        if (partitionIndex_FileSystem >= 0 && line.Length - partitionIndex_FileSystem > 0)
+                        {
+                            value = line.Substring(partitionIndex_FileSystem, line.Length - partitionIndex_FileSystem);
+                            if (value.Length != 0 && value[0] != ' ') partition.fileSystem = value.Split(' ')[0].Trim();
+                        }
+
+                        // name
+                        if (partitionIndex_Name >= 0 && line.Length - partitionIndex_Name > 0)
+                        {
+                            value = line.Substring(partitionIndex_Name, line.Length - partitionIndex_Name);
+                            if (value.Length != 0 && value[0] != ' ') partition.name = value.Split(' ')[0].Trim();
+                        }
+
+                        // flags
+                        if (partitionIndex_Flags >= 0 && line.Length - partitionIndex_Flags > 0)
+                        {
+                            value = line.Substring(partitionIndex_Flags, line.Length - partitionIndex_Flags);
+                            if (value.Length != 0 && value[0] != ' ') partition.flags = value.Trim();
+                        }
+
+                        drive.partitions.Add(partition);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+            }
+            else if (line.StartsWith("Model:"))
+            {
+                if (drive.model != null)
+                {
+                    drives.Add(drive);
+                    drive = new Drive();
+                    partitionMode = false;
+                }
+                
+                var values = line.Split(':');
+                drive.model = values[1].Trim();
+            }
+            else if (line.StartsWith("Disk ") && !line.StartsWith("Disk Flags:"))
+            {
+                try
+                {
+                    var match = Regex.Match(line, @"Disk (\S*): (\S*)");
+                    if (match.Success)
+                    {
+                        drive.disk = match.Groups[1].Value.Trim();
+                        drive.size = ParseSizeName(match.Groups[2].Value);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+            else if (line.StartsWith("Number "))
+            {
+                partitionMode = true;
+                partitionIndex_Start = line.IndexOf("Start");
+                partitionIndex_End = line.IndexOf("End");
+                partitionIndex_Size = line.IndexOf("Size");
+                partitionIndex_FileSystem = line.IndexOf("File system");
+                partitionIndex_Name = line.IndexOf("Name");
+                partitionIndex_Flags = line.IndexOf("Flags");
+            }
+        }
+        
+        drives = new List<Drive>();
+        driveListBox.Items.Clear();
+        ProcessUtil.Run("parted", "-l", asAdmin:true, standardOut:standardOutput);
+        foreach (var d in drives)
+        {
+            var item = new ListBoxItem();
+            item.Content = $"{d.model}\nSize: {d.size / 1024 / 1024 / 1024}GB\nPath: {d.disk}";
+            item.Tag = d;
+            driveListBox.Items.Add(item);
+        }
+    }
+    
+    private void FormatDriveButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (driveListBox.SelectedIndex < 0) return;
+        var item = (ListBoxItem)driveListBox.Items[driveListBox.SelectedIndex];
+        var drive = (Drive)item.Tag;
+        
+        // delete old partitions
+        foreach (var parition in drive.partitions)
+        {
+            ProcessUtil.Run("parted", $"-s {drive.disk} rm {parition.number}", asAdmin:true);
+        }
+        
+        // make sure gpt partition scheme
+        ProcessUtil.Run("parted", $"-s {drive.disk} mklabel gpt", asAdmin:true);
+        
+        // make new partitions
+        ProcessUtil.Run("parted", $"-s {drive.disk} mkpart primary ext4 1MiB 100%", asAdmin:true);
+        
+        // format partitions
+        if (drive.PartitionsUseP())
+        {
+            ProcessUtil.Run("mkfs.ext4", $"{drive.disk}p2", asAdmin:true);
+        }
+        else
+        {
+            ProcessUtil.Run("mkfs.ext4", $"{drive.disk}2", asAdmin:true);
+        }
+        
+        // finish
+        RefreshDrivePage();
     }
 }
