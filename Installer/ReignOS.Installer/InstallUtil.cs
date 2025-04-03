@@ -381,6 +381,9 @@ static class InstallUtil
     private static void InstallReignOSRepo()
     {
         progressTask = "Installing ReignOS Repo...";
+
+        // clear package cache
+        Run("pacman", "-Scc --noconfirm");
         archRootMode = false;
         
         // clone ReignOS repo
