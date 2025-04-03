@@ -128,6 +128,7 @@ static class InstallUtil
         // install arch base
         Run("pacstrap", "/mnt base linux linux-firmware systemd");
         Run("genfstab", "-U /mnt >> /mnt/etc/fstab");
+        Run("mkdir", "-p /mnt/var/cache/pacman/pkg");
         Run("mount", "--bind /mnt/var/cache/pacman/pkg /var/cache/pacman/pkg");// store package cache on install drive
         archRootMode = true;
         UpdateProgress(20);
