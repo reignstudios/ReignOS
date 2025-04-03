@@ -155,7 +155,7 @@ public partial class MainView : UserControl
         }
         else if (rightRotRadioButton.IsChecked == true)
         {
-            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()}--transform flipped-270", out _);// 90, flipped-90 (options)
+            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()}--transform 90", out _);// 90, flipped-90 (options)
         }
         else if (flipRotRadioButton.IsChecked == true)
         {
