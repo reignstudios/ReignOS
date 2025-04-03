@@ -43,7 +43,7 @@ fi
 if [ $exit_code -eq 12 ]; then
   echo ""
   echo "ReignOS (Re-Launching to check for updates)..."
-  logout
+  loginctl terminate-user gamer
   exit 0
 fi
 
@@ -68,7 +68,7 @@ fi
 if [ $exit_code -ne 20 ]; then
   echo ""
   echo "ReignOS (Re-Launching)..."
-  logout
+  loginctl terminate-user gamer
   exit 0
 fi
 
