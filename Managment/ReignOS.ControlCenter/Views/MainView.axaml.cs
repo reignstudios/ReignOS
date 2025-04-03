@@ -25,6 +25,9 @@ public partial class MainView : UserControl
     public MainView()
     {
         InitializeComponent();
+        versionText.Text = "Version: " + VersionInfo.version;
+        if (Design.IsDesignMode) return;
+
         LoadSettings();
         
         connectedTimer = new System.Timers.Timer(1000 * 5);

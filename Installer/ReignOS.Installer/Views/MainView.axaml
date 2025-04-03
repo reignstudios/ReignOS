@@ -8,6 +8,7 @@
 	<Grid>
 		<Button Name="exitButton" Content="Exit" Margin="4" HorizontalAlignment="Left" VerticalAlignment="Top" Click="ExitButton_OnClick"/>
 		<TextBlock Name="isConnectedText" Text="Network Status" Margin="8" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+		<TextBlock Name="versionText" Text="Version: x.x.x" Foreground="Gray" Margin="0,32,8,0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
 		<TextBlock Text="Installer" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="32" FontWeight="Bold" Margin="4,25,4,4"/>
 		<Separator HorizontalAlignment="Center" VerticalAlignment="Top" Margin="150,70,150,0"/>
 		

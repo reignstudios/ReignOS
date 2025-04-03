@@ -43,6 +43,7 @@ public partial class MainView : UserControl
     {
         singleton = this;
         InitializeComponent();
+        versionText.Text = "Version: " + VersionInfo.version;
         if (Design.IsDesignMode) return;
         
         InstallUtil.InstallProgress += InstallProgress;
