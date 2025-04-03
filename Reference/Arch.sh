@@ -312,7 +312,7 @@ ntfs-3g # needed for NFTS partitions
 git
 git-lfs
 gcc
-dotnet-runtime-8.0
+dotnet-sdk-8.0
 cage
 labwc
 wlr-randr

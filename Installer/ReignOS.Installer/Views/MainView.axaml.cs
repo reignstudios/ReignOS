@@ -113,6 +113,7 @@ public partial class MainView : UserControl
             {
                 nextButton.Content = "Restart";
                 nextButton.IsEnabled = true;
+                exitButton.IsEnabled = true;
                 stage = InstallerStage.DoneInstalling;
             }
         });
@@ -210,7 +211,6 @@ public partial class MainView : UserControl
                 break;
             
             case InstallerStage.DoneInstalling:
-                exitButton.IsEnabled = true;
                 ProcessUtil.Run("reboot", "", out _, wait:false);
                 MainWindow.singleton.Close();
                 break;
