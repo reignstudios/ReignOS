@@ -87,6 +87,7 @@ internal class Program
             var builder = new StringBuilder();
             builder.AppendLine("[Login]");
             builder.AppendLine("HandlePowerKey=suspend");
+            File.WriteAllText(dstPath, builder.ToString());
             ProcessUtil.Run("systemctl", "restart systemd-logind");
         }
 
