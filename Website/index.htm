@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome Splash Page</title>
+    <title>ReignOS</title>
     <style>
         body {
             margin: 0;
@@ -57,11 +57,13 @@
 
         ul {
             text-align: left;
-            padding-left: 20px;
+            border: 2px solid gray;
+            padding: 10px
         }
         
         li {
             margin-bottom: 10px;
+            margin: 10px
         }
     </style>
 </head>
@@ -73,21 +75,59 @@
             <a style="color: #45a049; font-weight: bold;" href="https://github.com/reignstudios/ReignOS">GitHub,</a>
             <a style="color: #45a049; font-weight: bold;" href="https://disboard.org/server/1344845464175902750">Discord</a>
         </p>
+
         <div class="description">
             ReignOS is a SteamOS like Arch distro but with its own unique take focused on general portability.
             It supports Gamescope and Cage compositors for better compatibility with some hardware.
         </div>
-        <ul style="color: #ddd;">
+
+        <ul style="color: #ddd; border: none;">
             <li>AMD, Intel and Nvidia GPUs supported</li>
             <li>Most General PC hardware should just work</li>
             <li>Dual-Boot with Windows</li>
         </ul>
+
         <div>
             <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">Known working hardware</h2>
             <ul style="color: #888;">
                 <li>MSI-Claw AM1</li>
-                <li>MSI-Claw 7 AI+ A2VM</li>
-                <li>MSI-Claw 8 AI+ A2VM</li>
+                <li>MSI-Claw 7 AI+ A2VM (Gamescope not working)</li>
+                <li>MSI-Claw 8 AI+ A2VM (Gamescope not working)</li>
+            </ul>
+        </div>
+
+        <div>
+            <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">How to Install</h2>
+            <ul style="color: #888;">
+                <li>Download latest ISO image</li>
+                <li>Use <a href="https://etcher.balena.io/">Balena Etcher</a> to create bootable USB</li>
+                <li>Disable SecureBoot in your BIOS (Common keys are Esc, F2, Del)</li>
+                <li>If you're Dual-Booting with Windows, disable Windows Bitlocker or resize partitions with Windows DiskManager instead of Gparted</li>
+                <li>Boot USB using a Dock if installing on Handheld device</li>
+                <li>Follow on screen instructions</li>
+            </ul>
+        </div>
+
+        <div>
+            <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">Control Center</h2>
+            <ul style="color: #888;">
+                <li>Select what compositor to boot with or set boot default</li>
+                <li>Set screen rotation (NOTE: doesn't work with Gamescope atm)</li>
+                <li>Manage Nvidia drivers</li>
+                <li>Boot Manager: This allows you to boot to Windows or any other OS</li>
+                <li>Network Manager: Allows you to manage WiFi connection</li>
+                <li>Disk Manager: Allows you to format extra game drives, like MicroSD cards etc</li>
+                <li>NOTE: Use Labwc compositor to sign into Steam if you have issues with others. Then try another.</li>
+            </ul>
+        </div>
+
+        <div>
+            <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">Compositors</h2>
+            <ul style="color: #888;">
+                <li>Gamescope: Same as SteamOS (Not all hardware supports this)</li>
+                <li>Cage: wlroots fullscreen compositor (Fallback option)</li>
+                <li>Labwc: wlroots compositor (Right-Click background to exit)</li>
+                <li>X11: Only exists to launch Steam once in this mode which solves a Proton bug in some games</li>
             </ul>
         </div>
     </div>

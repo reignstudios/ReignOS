@@ -126,7 +126,7 @@ static class InstallUtil
         UpdateProgress(10);
         
         // install arch base
-        Run("pacstrap", "/mnt base linux linux-firmware systemd");
+        Run("pacstrap", "/mnt base linux linux-firmware systemd lib32-systemd");
         Run("genfstab", "-U /mnt >> /mnt/etc/fstab");
         archRootMode = true;
         UpdateProgress(20);
@@ -321,7 +321,7 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm libva-mesa-driver lib32-libva-mesa-driver amd-ucode vulkan-radeon lib32-vulkan-radeon radeontop");// AMD
         Run("pacman", "-S --noconfirm vulkan-nouveau lib32-vulkan-nouveau");// Nvida
         Run("pacman", "-S --noconfirm vulkan-icd-loader lib32-vulkan-icd-loader lib32-libglvnd");
-        Run("pacman", "-S --noconfirm vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-layers");
+        Run("pacman", "-S --noconfirm vulkan-tools lib32-vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-layers");
         Run("pacman", "-S --noconfirm egl-wayland");
         UpdateProgress(80);
 
@@ -379,6 +379,8 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm gnutls lib32-gnutls openal lib32-openal sqlite lib32-sqlite libcurl-compat lib32-libcurl-compat");
         Run("pacman", "-S --noconfirm xdg-desktop-portal xdg-desktop-portal-gtk");
         Run("pacman", "-S --noconfirm mangohud gamemode");
+        Run("pacman", "-S --noconfirm glibc lib32-glibc");// needed by cef
+        Run("pacman", "-S --noconfirm fontconfig lib32-fontconfig");// needed for fonts
         Run("pacman", "-S --noconfirm vulkan-dzn vulkan-gfxstream vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio");// all steam options
         Run("pacman", "-S --noconfirm lib32-vulkan-dzn lib32-vulkan-gfxstream lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio");// all steam options
         Run("pacman", "-S --noconfirm steam");//steam-native-runtime (use Arch libs)
