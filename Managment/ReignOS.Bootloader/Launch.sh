@@ -68,7 +68,7 @@ fi
 if [ $exit_code -ne 20 ]; then
   echo ""
   echo "ReignOS (Re-Launching)..."
-  ./Launch.sh $@ &
+  logout
   exit 0
 fi
 
