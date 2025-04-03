@@ -22,6 +22,9 @@
     <None Update="Start_Cage.sh">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Start_ControlCenter.sh">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Start_Gamescope.sh">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

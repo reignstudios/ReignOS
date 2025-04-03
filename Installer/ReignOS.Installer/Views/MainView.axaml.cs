@@ -155,7 +155,7 @@ public partial class MainView : UserControl
         }
         else if (rightRotRadioButton.IsChecked == true)
         {
-            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()}--transform flipped-90", out _);// 90, flipped-90 (options)
+            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()}--transform flipped-270", out _);// 90, flipped-90 (options)
         }
         else if (flipRotRadioButton.IsChecked == true)
         {
@@ -517,7 +517,7 @@ public partial class MainView : UserControl
                 if (partitionEFI == null) return false;
                 
                 const ulong size512MB = 512ul * 1024 * 1024;
-                bool validSizeEFI = drive.size >= size512MB;
+                bool validSizeEFI = partitionEFI.size >= size512MB;
                 bool validFormatEFI = partitionEFI.fileSystem == "fat32";
                 bool validFlagsEFI = partitionEFI.flags.Contains("boot") && partitionEFI.flags.Contains("esp");
                 if (!validSizeEFI || !validFormatEFI || !validFlagsEFI) return false;
@@ -528,7 +528,7 @@ public partial class MainView : UserControl
                 if (partitionEXT4 == null) return false;
                 
                 const ulong size32GB = 32ul * 1024 * 1024 * 1024;
-                bool validSizeEXT4 = drive.size >= size32GB;
+                bool validSizeEXT4 = partitionEXT4.size >= size32GB;
                 bool validFormatExt4 = partitionEXT4.fileSystem == "ext4";
                 if (!validSizeEXT4 || !validFormatExt4) return false;
             }

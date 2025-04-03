@@ -28,5 +28,6 @@ git pull
 cd /home/gamer/ReignOS/Managment
 echo "ReignOS Building packages..."
 dotnet publish -r linux-x64 -c Release
+sleep 1
 
 exit 0

@@ -37,6 +37,7 @@ internal class Program
         ProcessUtil.Run("chmod", "+x ./Nvidia_Install_Nouveau.sh", useBash:false);
         ProcessUtil.Run("chmod", "+x ./Nvidia_Install_Proprietary.sh", useBash:false);
 
+        ProcessUtil.Run("chmod", "+x ./Start_ControlCenter.sh", useBash:false);
         ProcessUtil.Run("chmod", "+x ./Start_Gamescope.sh", useBash:false);
         ProcessUtil.Run("chmod", "+x ./Start_Cage.sh", useBash:false);
         ProcessUtil.Run("chmod", "+x ./Start_Labwc.sh", useBash:false);
@@ -79,6 +80,11 @@ internal class Program
                     else if (value.Contains("SET_VOLUME_UP"))
                     {
                         ProcessUtil.Run("amixer", "set Master 5%+");
+                    }
+                    else if (value.StartsWith("ReignOS.Service.COMMAND: "))// service wants to run user-space command
+                    {
+                        string cmd = value.Replace("ReignOS.Service.COMMAND: ", "");
+                        ProcessUtil.Run("bash", $"-c \"{cmd}\"", useBash:false);
                     }
                     lock (Log.lockObj) Console.WriteLine(value);
                 }
@@ -161,7 +167,7 @@ internal class Program
             if (useControlCenter)
             {
                 Log.WriteLine("Starting Cage with ReignOS.ControlCenter...");
-                string result = ProcessUtil.Run("cage", "./ReignOS.ControlCenter", out exitCode, useBash:false);// start ControlCenter
+                string result = ProcessUtil.Run("cage", "./Start_ControlCenter.sh", out exitCode, useBash:false);// start ControlCenter
                 Console.WriteLine(result);
                 if (exitCode == 0) break;
                 else if (exitCode == 1) compositor = Compositor.Gamescope;

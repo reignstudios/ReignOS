@@ -1,6 +1,8 @@
 namespace ReignOS.Service.Hardware;
 using ReignOS.Core;
+using ReignOS.Service.HardwarePatches;
 using ReignOS.Service.OS;
+using System;
 using System.Threading;
 
 public static class MSI_Claw
@@ -21,6 +23,10 @@ public static class MSI_Claw
 
     public static void Configure()
     {
+        // configure audio after sleep fix
+        AudioPatches.Patch1();
+
+        // configure gamepad
         device = new HidDevice();
         if (!device.Init(0x0DB0, 0x1901, true) || device.handles.Count == 0)
         {
@@ -69,11 +75,17 @@ public static class MSI_Claw
         return true;
     }
 
-    public static void Update(bool resumeFromSleep, ushort key, bool keyPressed)
+    public static void Update(ref DateTime time, bool resumeFromSleep, ushort key, bool keyPressed)
     {
         if (resumeFromSleep)
         {
-            if (device != null) EnableMode(Mode.XInput);
+            if (device != null)
+            {
+                EnableMode(Mode.XInput);
+                Thread.Sleep(3000);
+                EnableMode(Mode.XInput);// ensure again after delay
+                time = DateTime.Now;// reset time
+            }
         }
         else if (!keyPressed)
         {

@@ -43,7 +43,7 @@ fi
 if [ $exit_code -eq 12 ]; then
   echo ""
   echo "ReignOS (Re-Launching to check for updates)..."
-  ./Launch.sh $@ &
+  logout
   exit 0
 fi
 

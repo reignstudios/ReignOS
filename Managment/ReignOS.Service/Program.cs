@@ -7,6 +7,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 
 enum HardwareType
@@ -77,6 +78,18 @@ internal class Program
         FileUtils.InstallScript(Path.Combine(srcPath, "steamos-session-select"), Path.Combine(dstPath, "steamos-session-select"));
         FileUtils.InstallScript(Path.Combine(srcPath, "steamos-update"), Path.Combine(dstPath, "steamos-update"));
 
+        // configure pwr button for sleep
+        dstPath = "/etc/systemd/logind.conf.d/";
+        if (!Directory.Exists(dstPath)) Directory.CreateDirectory(dstPath);
+        dstPath = Path.Combine(dstPath, "reignos.conf");
+        if (!File.Exists(dstPath))
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine("[Login]");
+            builder.AppendLine("HandlePowerKey=suspend");
+            ProcessUtil.Run("systemctl", "restart systemd-logind");
+        }
+
         // init virtual gamepad
         VirtualGamepad.Init();
 
@@ -119,7 +132,7 @@ internal class Program
             keyboardInput.ReadNextKey(out ushort key, out bool keyPressed);
 
             // update devices
-            if (MSI_Claw.isEnabled) MSI_Claw.Update(resumeFromSleep, key, keyPressed);
+            if (MSI_Claw.isEnabled) MSI_Claw.Update(ref time, resumeFromSleep, key, keyPressed);
 
             // update volume
             if (keyPressed)
@@ -165,5 +178,10 @@ internal class Program
     {
         if (e != null) Log.WriteLine($"Unhandled exception: {e}");
         else Log.WriteLine("Unhandled exception: Unknown");
+    }
+
+    public static void RunUserCmd(string cmd)
+    {
+        Console.WriteLine("ReignOS.Service.COMMAND: " + cmd);
     }
 }
