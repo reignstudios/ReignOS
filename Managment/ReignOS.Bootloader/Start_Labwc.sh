@@ -8,7 +8,7 @@ if [ -e "$rot_script" ]; then
 fi
 
 # start steam
-steam -nobigpicture -no-cef-sandbox
+steam -nobigpicture
 
 # run post kill
 ./PostKill.sh &

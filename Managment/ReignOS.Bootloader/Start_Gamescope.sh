@@ -27,7 +27,7 @@
 #printenv &
 
 # start steam
-steam -bigpicture -steamdeck -steamos3 -no-cef-sandbox
+steam -bigpicture -steamdeck -steamos3
 #STEAM_PID=$!
 #wait $STEAM_PID
 

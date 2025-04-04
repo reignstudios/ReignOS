@@ -11,7 +11,7 @@ fi
 unclutter -idle 3 &
 
 # start steam
-steam -bigpicture -steamdeck -no-cef-sandbox
+steam -bigpicture -steamdeck
 
 # close unclutter
 sudo pkill "unclutter"
