@@ -221,8 +221,8 @@ internal class Program
     private static void StartCompositor_Gamescope(bool useMangoHub)
     {
         Log.WriteLine("Starting Gamescope with Steam...");
-        string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
-        string result = ProcessUtil.Run("MANGOHUD=1 gamescope", $"-e -f --adaptive-sync --hdr-enabled --framerate-limit -- ./Start_Gamescope.sh", useBash:true);// start Gamescope with Steam in console mode, VRR
+        string useMangoHubArg = useMangoHub ? "MANGOHUD=1 " : "";
+        string result = ProcessUtil.Run($"{useMangoHubArg}gamescope", $"-e -f --adaptive-sync --hdr-enabled --framerate-limit -- ./Start_Gamescope.sh", useBash:true);// start Gamescope with Steam in console mode, VRR
         Log.WriteLine(result);
     }
 
