@@ -51,6 +51,7 @@ esac";
 
                 // remove
                 File.Delete(path);
+                ProcessUtil.Run("systemctl", "restart NetworkManager", useBash:false);
                 return;
             }
 
