@@ -104,6 +104,7 @@ static class InstallUtil
         ProcessUtil.ProcessOutput -= Views.MainView.ProcessOutput;
         ProcessUtil.KillHard("arch-chroot", true, out _);
         Run("umount", "-R /var/cache/pacman/pkg");
+        Run("umount", "-R /root/.nuget");
         Run("umount", "-R /mnt/boot");
         Run("umount", "-R /mnt");
     }
@@ -115,6 +116,7 @@ static class InstallUtil
         
         // unmount conflicting mounts
         Run("umount", "-R /var/cache/pacman/pkg");
+        Run("umount", "-R /root/.nuget");
         Run("umount", "-R /mnt/boot");
         Run("umount", "-R /mnt");
         UpdateProgress(5);
@@ -131,6 +133,11 @@ static class InstallUtil
         Run("mkdir", "-p /mnt/var/cache/pacman/pkg");
         Run("mount", "--bind /mnt/var/cache/pacman/pkg /var/cache/pacman/pkg");
         UpdateProgress(11);
+        
+        // map nuget cache path to use install drive
+        Run("mkdir", "-p /mnt/root/.nuget");
+        Run("mount", "--bind /mnt/root/.nuget /root/.nuget");
+        UpdateProgress(12);
         
         // install arch base
         Run("pacstrap", "/mnt base linux linux-firmware systemd");
@@ -151,6 +158,10 @@ static class InstallUtil
         ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_pacman_conf);
         Run("pacman", "-Syy --noconfirm");
         UpdateProgress(25);
+        
+        // install lib32-systemd
+        Run("pacman", "-S --noconfirm lib32-systemd");
+        UpdateProgress(27);
         
         // install network support
         Run("pacman", "-S --noconfirm dhcpcd dhclient networkmanager iwd netctl iproute2 wireless_tools dialog");
