@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using ReignOS.Core;
+using System.IO;
 
 namespace ReignOS.Service.HardwarePatches
 {
@@ -35,5 +36,29 @@ esac";
             File.WriteAllText(path, config);
             Program.RunUserCmd("chmod +x " + path);
 		}
+
+        /// <summary>
+        /// Fixes wifi after sleep on hardware: MSI-Claw
+        /// </summary>
+		public static void Fix2(bool apply)
+        {
+            string path = "/etc/NetworkManager/conf.d/wifi-powersave.conf";
+            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+            path = Path.Combine(path, "wifi-powersave.conf");
+            if (File.Exists(path))
+            {
+                if (apply) return;// already patched
+
+                // remove
+                File.Delete(path);
+                return;
+            }
+
+            const string config =
+@"[connection]
+wifi.powersave=2";
+            File.WriteAllText(path, config);
+            ProcessUtil.Run("systemctl", "restart NetworkManager");
+        }
 	}
 }
