@@ -31,9 +31,9 @@ public static class ProcessUtil
                 if (asAdmin)
                 {
                     process.StartInfo.FileName = "sudo";
-                    string adminArg = enterAdminPass ? "-S " : "";
-                    if (useBash) process.StartInfo.Arguments = $"{adminArg}-- bash -c \"{name} {args}\"";
-                    else process.StartInfo.Arguments = $"{adminArg}-- {name} {args}";
+                    string adminArg = enterAdminPass ? "-S -- " : "";
+                    if (useBash) process.StartInfo.Arguments = $"{adminArg}bash -c \"{name} {args}\"";
+                    else process.StartInfo.Arguments = $"{adminArg}{name} {args}";
                 }
                 else
                 {
