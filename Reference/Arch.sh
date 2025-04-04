@@ -62,12 +62,8 @@ nano /etc/pacman.conf
 pacman -Syy
 
 # install network
-pacman -S dhcpcd dhclient networkmanager iwd netctl iproute2 wireless_tools dialog # wpa_supplicant is alternative to iwd (do not use together)
-pacman -S network-manager-applet nm-connection-editor
-systemctl enable dhcpcd
-systemctl enable NetworkManager
-systemctl enable iwd
-#systemctl enable wpa_supplicant
+pacman -S networkmanager iwd netctl iproute2
+systemctl enable NetworkManager iwd
 
 # configure timezone
 ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
