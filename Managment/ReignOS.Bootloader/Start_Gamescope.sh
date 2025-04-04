@@ -26,20 +26,8 @@
 # print env vars
 #printenv &
 
-# args
-USE_MANGOHUB=0
-for arg in "$@"; do
-    if [ "$arg" = "--use-mangohub" ]; then
-        USE_MANGOHUB=1
-    fi
-done
-
 # start steam
-if [ "$USE_MANGOHUB" -eq 1 ]; then
-    steam -bigpicture -steamdeck -steamos3
-else
-    steam -bigpicture -steamdeck -steamos3
-fi
+steam -bigpicture -steamdeck -steamos3
 
 # -steamos or -steamos3 (this starts making it try to update SteamOS incorrectly for a generic distro)
 # -gamepadui (newer)

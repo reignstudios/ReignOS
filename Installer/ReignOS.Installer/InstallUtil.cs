@@ -164,7 +164,7 @@ static class InstallUtil
         UpdateProgress(27);
         
         // install network support
-        Run("pacman", "-S --noconfirm networkmanager iwd iproute2");
+        Run("pacman", "-S --noconfirm networkmanager iwd iw iproute2 wireless_tools");
         Run("mkdir", "-p /etc/NetworkManager");
         path = "/mnt/etc/NetworkManager/NetworkManager.conf";
         var fileBuilder = new StringBuilder();
