@@ -42,7 +42,7 @@ esac";
         /// </summary>
 		public static void Fix2(bool apply)
         {
-            string path = "/etc/NetworkManager/conf.d/wifi-powersave.conf";
+            string path = "/etc/NetworkManager/conf.d";
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
             path = Path.Combine(path, "wifi-powersave.conf");
             if (File.Exists(path))
