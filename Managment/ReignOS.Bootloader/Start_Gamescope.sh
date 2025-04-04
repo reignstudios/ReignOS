@@ -36,7 +36,7 @@ done
 
 # start steam
 if [ "$USE_MANGOHUB" -eq 1 ]; then
-    mangohud steam -bigpicture -steamdeck -steamos3
+    steam -bigpicture -steamdeck -steamos3
 else
     steam -bigpicture -steamdeck -steamos3
 fi
