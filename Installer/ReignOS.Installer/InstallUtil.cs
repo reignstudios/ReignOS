@@ -405,7 +405,7 @@ static class InstallUtil
         
         // clone ReignOS repo
         Run("git", "clone https://github.com/reignstudios/ReignOS.git /mnt/home/gamer/ReignOS");
-        Run("dotnet", "publish -r linux-x64 -c Release", workingDir:"/mnt/home/gamer/ReignOS/Managment");
+        Run("NUGET_PACKAGES=/mnt/root/.nuget dotnet", "publish -r linux-x64 -c Release", workingDir:"/mnt/home/gamer/ReignOS/Managment");
         
         UpdateProgress(100);
     }
