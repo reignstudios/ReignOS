@@ -34,7 +34,7 @@ case ""$1"" in
     ;;
 esac";
             File.WriteAllText(path, config);
-            Program.RunUserCmd("chmod +x " + path);
+            ProcessUtil.Run("chmod", "+x " + path, useBash:false);
 		}
 
         /// <summary>
@@ -58,7 +58,7 @@ esac";
 @"[connection]
 wifi.powersave=2";
             File.WriteAllText(path, config);
-            ProcessUtil.Run("systemctl", "restart NetworkManager");
+            ProcessUtil.Run("systemctl", "restart NetworkManager", useBash:false);
         }
 	}
 }
