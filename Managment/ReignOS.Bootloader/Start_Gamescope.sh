@@ -26,10 +26,20 @@
 # print env vars
 #printenv &
 
+# args
+USE_MANGOHUB=0
+for arg in "$@"; do
+    if [ "$arg" = "--use-mangohub" ]; then
+        USE_MANGOHUB=1
+    fi
+done
+
 # start steam
-steam -bigpicture -steamdeck -steamos3
-#STEAM_PID=$!
-#wait $STEAM_PID
+if [ "$USE_MANGOHUB" -eq 1 ]; then
+    mangohud steam -bigpicture -steamdeck -steamos3
+else
+    steam -bigpicture -steamdeck -steamos3
+fi
 
 # -steamos or -steamos3 (this starts making it try to update SteamOS incorrectly for a generic distro)
 # -gamepadui (newer)

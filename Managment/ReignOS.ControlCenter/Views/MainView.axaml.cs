@@ -35,6 +35,10 @@ class Partition
     {
         this.drive = drive;
     }
+
+	private void CheckBox_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+	{
+	}
 }
 
 class Drive
@@ -248,6 +252,26 @@ public partial class MainView : UserControl
         else if (boot_Cage.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --cage");
         File.WriteAllText(profileFile, text);
         SaveSettings();
+    }
+
+    private void UseMangoHubCheckBox_Click(object sender, RoutedEventArgs e)
+    {
+        const string profileFile = "/home/gamer/.bash_profile";
+        string text = File.ReadAllText(profileFile);
+        foreach (string line in text.Split('\n'))
+        {
+            if (line.Contains(""))
+            {
+                if (useMangohubCheckbox.IsChecked == true) text = text.Replace(line, line + " --use-mangohub");
+                else text = text.Replace(" --use-mangohub", "");
+                break;
+            }
+        }
+        File.WriteAllText(profileFile, text);
+        SaveSettings();
+
+        App.exitCode = 0;// reopen
+        MainWindow.singleton.Close();
     }
     
     private void RotApplyButton_OnClick(object sender, RoutedEventArgs e)

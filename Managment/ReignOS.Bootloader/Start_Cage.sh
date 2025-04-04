@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# args
+USE_MANGOHUB=0
+for arg in "$@"; do
+    if [ "$arg" = "--use-mangohub" ]; then
+        USE_MANGOHUB=1
+    fi
+done
+
 # Wayland settings
 rot_script=/home/gamer/ReignOS_Ext/Wayland_Settings.sh
 if [ -e "$rot_script" ]; then
@@ -11,7 +19,11 @@ fi
 unclutter -idle 3 &
 
 # start steam
-steam -bigpicture -steamdeck
+if [ "$USE_MANGOHUB" -eq 1 ]; then
+    mangohud steam -bigpicture -steamdeck
+else
+    steam -bigpicture -steamdeck
+fi
 
 # close unclutter
 sudo pkill "unclutter"

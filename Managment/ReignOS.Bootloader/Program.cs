@@ -48,7 +48,7 @@ internal class Program
         using (var writer = new StreamWriter(x11ConfigFile))
         {
             writer.WriteLine("#!/bin/bash");
-            writer.WriteLine("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_X11.sh");
+            writer.WriteLine("exec /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_X11.sh");
         }
         ProcessUtil.Run("chmod", "+x " + x11ConfigFile, useBash:false);
 
@@ -112,6 +112,7 @@ internal class Program
         // process args
         var compositor = Compositor.None;
         bool useControlCenter = false;
+        bool useMangoHub = false;
         foreach (string arg in args)
         {
             if (arg == "--gamescope") compositor = Compositor.Gamescope;
@@ -119,6 +120,7 @@ internal class Program
             else if (arg == "--labwc") compositor = Compositor.Labwc;
             else if (arg == "--x11") compositor = Compositor.X11;
             else if (arg == "--use-controlcenter") useControlCenter = true;
+            else if (arg == "--use-mangohub") useMangoHub = true;
         }
 
         // manage interfaces
@@ -138,8 +140,8 @@ internal class Program
                         compositorRan = false;
                         break;
 
-                    case Compositor.Gamescope: StartCompositor_Gamescope(); break;
-                    case Compositor.Cage: StartCompositor_Cage(); break;
+                    case Compositor.Gamescope: StartCompositor_Gamescope(useMangoHub); break;
+                    case Compositor.Cage: StartCompositor_Cage(useMangoHub); break;
                     case Compositor.Labwc: StartCompositor_Labwc(); break;
                     case Compositor.X11: StartCompositor_X11(); break;
                 }
@@ -216,17 +218,19 @@ internal class Program
         else Log.WriteLine("Unhandled exception: Unknown");
     }
 
-    private static void StartCompositor_Gamescope()
+    private static void StartCompositor_Gamescope(bool useMangoHub)
     {
         Log.WriteLine("Starting Gamescope with Steam...");
-        string result = ProcessUtil.Run("gamescope", "-e -f --adaptive-sync --hdr-enabled --framerate-limit -- ./Start_Gamescope.sh", useBash:false);// start Gamescope with Steam in console mode, VRR
+        string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
+        string result = ProcessUtil.Run("gamescope", $"-e -f --adaptive-sync --hdr-enabled --framerate-limit -- ./Start_Gamescope.sh{useMangoHubArg}", useBash:false);// start Gamescope with Steam in console mode, VRR
         Log.WriteLine(result);
     }
 
-    private static void StartCompositor_Cage()
+    private static void StartCompositor_Cage(bool useMangoHub)
     {
         Log.WriteLine("Starting Cage with Steam...");
-        string result = ProcessUtil.Run("cage", "-d -s -- ./Start_Cage.sh", useBash:false);// start Cage with Steam in console mode
+        string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
+        string result = ProcessUtil.Run("cage", $"-d -s -- ./Start_Cage.sh{useMangoHubArg}", useBash:false);// start Cage with Steam in console mode
         Log.WriteLine(result);
     }
 
