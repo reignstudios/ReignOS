@@ -379,6 +379,7 @@ mkarchiso -v .
 
 # rebuild iso
 rm -rf work/ out/
+rm -rf work/ out/ /var/cache/pacman/pkg/* # to clear all packages
 mkarchiso -v .
 
 # copy ISO from VirtualBox to host

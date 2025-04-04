@@ -393,7 +393,7 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm libxss lib32-libxss libva lib32-libva libvdpau lib32-libvdpau");
         Run("pacman", "-S --noconfirm gnutls lib32-gnutls openal lib32-openal sqlite lib32-sqlite libcurl-compat lib32-libcurl-compat");
         Run("pacman", "-S --noconfirm xdg-desktop-portal xdg-desktop-portal-gtk");
-        Run("pacman", "-S --noconfirm mangohud gamemode");
+        Run("pacman", "-S --noconfirm mangohud lib32-mangohud gamemode lib32-gamemode");
         Run("pacman", "-S --noconfirm glibc lib32-glibc");// needed by cef
         Run("pacman", "-S --noconfirm fontconfig lib32-fontconfig");// needed for fonts
         Run("pacman", "-S --noconfirm vulkan-dzn vulkan-gfxstream vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio");// all steam options
