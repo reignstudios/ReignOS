@@ -315,7 +315,7 @@ static class InstallUtil
         UpdateProgress(72);
 
         // install x11
-        Run("pacman", "-S --noconfirm xorg xorg-server xorg-xinit xterm");
+        Run("pacman", "-S --noconfirm xorg xorg-server xorg-xinit xf86-input-libinput xterm");
         UpdateProgress(75);
 
         // install wayland graphics drivers

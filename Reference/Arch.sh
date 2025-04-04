@@ -157,7 +157,7 @@ pacman -S xorg-server-xwayland wayland wayland-protocols
 pacman -S xorg-xev xbindkeys xorg-xinput xorg-xmodmap
 
 # install X11
-pacman -S xorg xorg-server xorg-xinit xterm
+pacman -S xorg xorg-server xorg-xinit xf86-input-libinput xterm
 
 nano ~/.xinitrc
 # add lines:
