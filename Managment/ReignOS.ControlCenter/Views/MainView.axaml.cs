@@ -268,7 +268,7 @@ public partial class MainView : UserControl
         string text = File.ReadAllText(profileFile);
         foreach (string line in text.Split('\n'))
         {
-            if (line.Contains(""))
+            if (line.Contains("--use-controlcenter"))
             {
                 if (useMangohubCheckbox.IsChecked == true) text = text.Replace(line, line + " --use-mangohub");
                 else text = text.Replace(" --use-mangohub", "");
