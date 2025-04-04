@@ -201,7 +201,7 @@ static class InstallUtil
         // configure hosts file
         Run("echo", "\"reignos\" > /etc/hostname");
         path = "/mnt/etc/hosts";
-        var fileBuilder = new StringBuilder(File.ReadAllText(path));
+        fileBuilder = new StringBuilder(File.ReadAllText(path));
         fileBuilder.AppendLine("127.0.0.1 localhost");
         fileBuilder.AppendLine("::1 localhost");
         fileBuilder.AppendLine("127.0.1.1 reignos.localdomain reignos");
