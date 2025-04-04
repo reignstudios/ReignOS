@@ -103,6 +103,7 @@ static class InstallUtil
         archRootMode = false;
         ProcessUtil.ProcessOutput -= Views.MainView.ProcessOutput;
         ProcessUtil.KillHard("arch-chroot", true, out _);
+        Run("umount", "-R /var/cache/pacman/pkg");
         Run("umount", "-R /mnt/boot");
         Run("umount", "-R /mnt");
     }
@@ -113,6 +114,7 @@ static class InstallUtil
         UpdateProgress(0);
         
         // unmount conflicting mounts
+        Run("umount", "-R /var/cache/pacman/pkg");
         Run("umount", "-R /mnt/boot");
         Run("umount", "-R /mnt");
         UpdateProgress(5);
@@ -125,11 +127,14 @@ static class InstallUtil
         Run("rm", "-rf /mnt/boot/*");
         UpdateProgress(10);
         
+        // store package cache on install drive
+        Run("mkdir", "-p /mnt/var/cache/pacman/pkg");
+        Run("mount", "--bind /mnt/var/cache/pacman/pkg /var/cache/pacman/pkg");
+        UpdateProgress(11);
+        
         // install arch base
         Run("pacstrap", "/mnt base linux linux-firmware systemd");
         Run("genfstab", "-U /mnt >> /mnt/etc/fstab");
-        Run("mkdir", "-p /mnt/var/cache/pacman/pkg");
-        Run("mount", "--bind /mnt/var/cache/pacman/pkg /var/cache/pacman/pkg");// store package cache on install drive
         archRootMode = true;
         UpdateProgress(20);
 
@@ -383,7 +388,7 @@ static class InstallUtil
         progressTask = "Installing ReignOS Repo...";
 
         // clear package cache
-        Run("pacman", "-Scc --noconfirm");
+        Run("rm", "-rf /var/cache/pacman/pkg/*");
         archRootMode = false;
         
         // clone ReignOS repo
