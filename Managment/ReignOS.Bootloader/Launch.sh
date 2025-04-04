@@ -1,10 +1,12 @@
 #!/bin/bash
 
 # wait for network
+NetworkUp=false
 for i in $(seq 1 30); do
     # Try to ping Google's DNS server
     if ping -c 1 -W 1 8.8.8.8 &> /dev/null; then
         echo "Network is up!"
+        NetworkUp=true
         sleep 1
         break
     else
@@ -13,10 +15,12 @@ for i in $(seq 1 30); do
     fi
 done
 
-# run updates
-cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
-chmod +x ./Update.sh
-./Update.sh
+# run updates (if network avaliable)
+if [ "$NetworkUp" = "true" ]; then
+    cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
+    chmod +x ./Update.sh
+    ./Update.sh
+fi
 
 # run bootloader
 cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
