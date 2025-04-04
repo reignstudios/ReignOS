@@ -114,6 +114,11 @@ public partial class MainView : UserControl
                         if (parts[1] == "Nouveau") nvidia_Nouveau.IsChecked = true;
                         else if (parts[1] == "Proprietary") nvidia_Proprietary.IsChecked = true;
                     }
+                    else if (parts[0] == "MangoHub")
+                    {
+                        if (parts[1] == "On") useMangohubCheckbox.IsChecked = true;
+                        else useMangohubCheckbox.IsChecked = false;
+                    }
                 } while (!reader.EndOfStream);
             }
         }
@@ -145,6 +150,9 @@ public partial class MainView : UserControl
                 if (nvidia_Nouveau.IsChecked == true) writer.WriteLine("NvidiaDrivers=Nouveau");
                 else if (nvidia_Proprietary.IsChecked == true) writer.WriteLine("NvidiaDrivers=Proprietary");
                 else writer.WriteLine("NvidiaDrivers=Nouveau");
+
+                if (useMangohubCheckbox.IsChecked == true) writer.WriteLine("MangoHub=On");
+                else writer.WriteLine("MangoHub=Off");
             }
         }
         catch (Exception e)
