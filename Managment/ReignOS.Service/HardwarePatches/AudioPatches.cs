@@ -9,14 +9,21 @@ namespace ReignOS.Service.HardwarePatches
         /// <summary>
         /// Fixes audio after sleep on hardware: MSI-Claw
         /// </summary>
-		public static void Fix1()
+		public static void Fix1(bool apply)
 		{
 			string path = "/home/gamer/.config/wireplumber/wireplumber.conf.d";
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
             path = Path.Combine(path, "80-alsa-headroom.conf");
-            if (File.Exists(path)) return;// already patched
+            if (File.Exists(path))
+            {
+                if (apply) return;// already patched
 
-            const string audioConfig =
+                // remove
+                File.Delete(path);
+                return;
+            }
+
+            const string config =
 @"monitor.alsa.rules = [
   {
     matches = [
@@ -31,7 +38,7 @@ namespace ReignOS.Service.HardwarePatches
     }
   }
 ]";
-            File.WriteAllText(path, audioConfig);
+            File.WriteAllText(path, config);
             Program.RunUserCmd("chown -R $USER " + path);
             Program.RunUserCmd("systemctl --user restart wireplumber");
 		}

@@ -24,8 +24,8 @@ public static class MSI_Claw
     public static void Configure()
     {
         // configure after sleep fixes
-        AudioPatches.Fix1();
-        WiFiPatches.Fix1();
+        AudioPatches.Fix1(true);
+        WiFiPatches.Fix1(true);
 
         // configure gamepad
         device = new HidDevice();

@@ -166,7 +166,7 @@ static class InstallUtil
         // install network support
         Run("pacman", "-S --noconfirm networkmanager iwd iproute2");
         Run("mkdir", "-p /etc/NetworkManager");
-        path = "/etc/NetworkManager/NetworkManager.conf";
+        path = "/mnt/etc/NetworkManager/NetworkManager.conf";
         var fileBuilder = new StringBuilder(File.ReadAllText(path));
         fileBuilder.AppendLine("[device]");
         fileBuilder.AppendLine("wifi.backend=iwd");

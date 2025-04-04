@@ -7,14 +7,21 @@ namespace ReignOS.Service.HardwarePatches
 		/// <summary>
         /// Fixes wifi after sleep on hardware: MSI-Claw
         /// </summary>
-		public static void Fix1()
+		public static void Fix1(bool apply)
 		{
 			string path = "/usr/lib/systemd/system-sleep";
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
             path = Path.Combine(path, "iwlwifi-sleep.sh");
-            if (File.Exists(path)) return;// already patched
+            if (File.Exists(path))
+            {
+                if (apply) return;// already patched
 
-            const string audioConfig =
+                // remove
+                File.Delete(path);
+                return;
+            }
+
+            const string config =
 @"#!/bin/bash
 
 case ""$1"" in
@@ -25,7 +32,7 @@ case ""$1"" in
     /usr/sbin/modprobe iwlwifi iwlmvm
     ;;
 esac";
-            File.WriteAllText(path, audioConfig);
+            File.WriteAllText(path, config);
             Program.RunUserCmd("chmod +x " + path);
 		}
 	}
