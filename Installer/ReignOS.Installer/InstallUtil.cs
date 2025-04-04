@@ -164,9 +164,20 @@ static class InstallUtil
         UpdateProgress(27);
         
         // install network support
-        Run("pacman", "-S --noconfirm dhcpcd dhclient networkmanager iwd netctl iproute2 wireless_tools dialog");
-        Run("pacman", "-S --noconfirm network-manager-applet nm-connection-editor");
-        Run("systemctl", "enable dhcpcd NetworkManager iwd");
+        Run("pacman", "-S --noconfirm networkmanager iwd iproute2");
+        Run("mkdir", "-p /etc/NetworkManager");
+        path = "/etc/NetworkManager/NetworkManager.conf";
+        var fileBuilder = new StringBuilder(File.ReadAllText(path));
+        fileBuilder.AppendLine("[device]");
+        fileBuilder.AppendLine("wifi.backend=iwd");
+        void getStandardInput_NetworkManager(StreamWriter writer)
+        {
+            writer.WriteLine(fileBuilder);
+            writer.Flush();
+            writer.Close();
+        }
+        ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_NetworkManager);
+        Run("systemctl", "enable NetworkManager iwd");
         UpdateProgress(30);
 
         // install BT support
