@@ -99,7 +99,7 @@
 			<TextBlock Name="bootCurrentText" Text="Current Boot: N/A" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,75,4,4"/>
 			<TextBlock Name="bootOrderText" Text="Boot Order: N/A" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,95,4,4"/>
 			<Button Content="Reboot to selected OS" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="320,120,4,4" Click="BootManagerRebootButton_OnClick"/>
-			<Button Content="Back" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4" Click="BootManagerBackButton_OnClick"/>
+			<Button Content="Back" Width="128" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4" Click="BootManagerBackButton_OnClick"/>
 		</Grid>
 		
 		<Grid Name="networkManagerGrid" IsVisible="False" Margin="4">
