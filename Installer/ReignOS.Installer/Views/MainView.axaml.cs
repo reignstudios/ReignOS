@@ -579,28 +579,28 @@ public partial class MainView : UserControl
         // delete old partitions
         foreach (var parition in efiDrive.partitions)
         {
-            ProcessUtil.Run("parted", $"-s {efiDrive.disk} rm {parition.number}", asAdmin:true);
+            ProcessUtil.Run("parted", $"-s {efiDrive.disk} rm {parition.number}", asAdmin:true, useBash:false);
         }
         
         // make sure gpt partition scheme
-        ProcessUtil.Run("parted", $"-s {efiDrive.disk} mklabel gpt", asAdmin:true);
+        ProcessUtil.Run("parted", $"-s {efiDrive.disk} mklabel gpt", asAdmin:true, useBash:false);
         
         // make new partitions
-        ProcessUtil.Run("parted", $"-s {efiDrive.disk} mkpart ESP fat32 1MiB 513MiB", asAdmin:true);
-        ProcessUtil.Run("parted", $"-s {efiDrive.disk} mkpart primary ext4 513MiB 100%", asAdmin:true);
+        ProcessUtil.Run("parted", $"-s {efiDrive.disk} mkpart ESP fat32 1MiB 513MiB", asAdmin:true, useBash:false);
+        ProcessUtil.Run("parted", $"-s {efiDrive.disk} mkpart primary ext4 513MiB 100%", asAdmin:true, useBash:false);
 
         // configure partition
-        ProcessUtil.Run("parted", $"-s {efiDrive.disk} set 1 boot on", asAdmin:true);
-        ProcessUtil.Run("parted", $"-s {efiDrive.disk} set 1 esp on", asAdmin:true);
-        ProcessUtil.Run("parted", $"-s {efiDrive.disk} name 1 \"{efiPartitionName}\"", asAdmin:true);
-        ProcessUtil.Run("parted", $"-s {efiDrive.disk} name 2 \"{ext4PartitionName}\"", asAdmin:true);
+        ProcessUtil.Run("parted", $"-s {efiDrive.disk} set 1 boot on", asAdmin:true, useBash:false);
+        ProcessUtil.Run("parted", $"-s {efiDrive.disk} set 1 esp on", asAdmin:true, useBash:false);
+        ProcessUtil.Run("parted", $"-s {efiDrive.disk} name 1 \"{efiPartitionName}\"", asAdmin:true, useBash:false);
+        ProcessUtil.Run("parted", $"-s {efiDrive.disk} name 2 \"{ext4PartitionName}\"", asAdmin:true, useBash:false);
         
         // format partitions
-        if (efiDrive.PartitionsUseP()) ProcessUtil.Run("mkfs.fat", $"-F32 {efiDrive.disk}p1", asAdmin:true);
-        else ProcessUtil.Run("mkfs.fat", $"-F32 {efiDrive.disk}1", asAdmin:true);
+        if (efiDrive.PartitionsUseP()) ProcessUtil.Run("mkfs.fat", $"-F32 {efiDrive.disk}p1", asAdmin:true, useBash:false);
+        else ProcessUtil.Run("mkfs.fat", $"-F32 {efiDrive.disk}1", asAdmin:true, useBash:false);
 
-        if (ext4Drive.PartitionsUseP()) ProcessUtil.Run("mkfs.ext4", $"{ext4Drive.disk}p2", asAdmin: true);
-        else ProcessUtil.Run("mkfs.ext4", $"{ext4Drive.disk}2", asAdmin:true);
+        if (ext4Drive.PartitionsUseP()) ProcessUtil.Run("mkfs.ext4", $"{ext4Drive.disk}p2", asAdmin: true, useBash:false);
+        else ProcessUtil.Run("mkfs.ext4", $"{ext4Drive.disk}2", asAdmin:true, useBash:false);
         
         // finish
         RefreshDrivePage();
@@ -608,8 +608,8 @@ public partial class MainView : UserControl
 
     public static void FormatExistingPartitions(Partition efiPartition, Partition ext4Partition)
     {
-        ProcessUtil.Run("mkfs.fat", $"-F32 {efiPartition.path}", asAdmin:true);
-        ProcessUtil.Run("mkfs.ext4", $"{ext4Partition.path}", asAdmin:true);
+        ProcessUtil.Run("mkfs.fat", $"-F32 {efiPartition.path}", asAdmin:true, useBash:false);
+        ProcessUtil.Run("mkfs.ext4", $"{ext4Partition.path}", asAdmin:true, useBash:false);
     }
 
     private void OpenGPartedButton_OnClick(object sender, RoutedEventArgs e)

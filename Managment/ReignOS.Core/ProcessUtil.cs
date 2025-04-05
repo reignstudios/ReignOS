@@ -144,7 +144,7 @@ public static class ProcessUtil
 
     public static void CreateDirectoryAdmin(string path)
     {
-        ProcessUtil.Run("mkdir", path, asAdmin:true);
+        Run("mkdir", path, asAdmin:true);
     }
 
     public static string ReadAllTextAdmin(string path)

@@ -673,7 +673,7 @@ public partial class MainView : UserControl
         
         drives = new List<Drive>();
         driveListBox.Items.Clear();
-        ProcessUtil.Run("parted", "-l", asAdmin:true, standardOut:standardOutput);
+        ProcessUtil.Run("parted", "-l", asAdmin:true, useBash:false, standardOut:standardOutput);
         foreach (var d in drives)
         {
             var item = new ListBoxItem();
@@ -692,23 +692,23 @@ public partial class MainView : UserControl
         // delete old partitions
         foreach (var parition in drive.partitions)
         {
-            ProcessUtil.Run("parted", $"-s {drive.disk} rm {parition.number}", asAdmin:true);
+            ProcessUtil.Run("parted", $"-s {drive.disk} rm {parition.number}", asAdmin:true, useBash:false);
         }
         
         // make sure gpt partition scheme
-        ProcessUtil.Run("parted", $"-s {drive.disk} mklabel gpt", asAdmin:true);
+        ProcessUtil.Run("parted", $"-s {drive.disk} mklabel gpt", asAdmin:true, useBash:false);
         
         // make new partitions
-        ProcessUtil.Run("parted", $"-s {drive.disk} mkpart primary ext4 1MiB 100%", asAdmin:true);
+        ProcessUtil.Run("parted", $"-s {drive.disk} mkpart primary ext4 1MiB 100%", asAdmin:true, useBash:false);
         
         // format partitions
         if (drive.PartitionsUseP())
         {
-            ProcessUtil.Run("mkfs.ext4", $"{drive.disk}p1", asAdmin:true);
+            ProcessUtil.Run("mkfs.ext4", $"{drive.disk}p1", asAdmin:true, useBash:false);
         }
         else
         {
-            ProcessUtil.Run("mkfs.ext4", $"{drive.disk}1", asAdmin:true);
+            ProcessUtil.Run("mkfs.ext4", $"{drive.disk}1", asAdmin:true, useBash:false);
         }
         
         // finish
