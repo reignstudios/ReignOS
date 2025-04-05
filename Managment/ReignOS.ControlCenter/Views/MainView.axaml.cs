@@ -461,7 +461,6 @@ public partial class MainView : UserControl
         var ssids = new List<string>();
         void ssidOut(string line)
         {
-            lock (this) Console.WriteLine("LINE: " + line);
             if (line.Contains("-------") || line.Contains("Network name")) return;
             try
             {
@@ -469,11 +468,8 @@ public partial class MainView : UserControl
                 if (match.Success)
                 {
                     string value = match.Groups[1].Value;
-                    lock (this)
-                    {
-                        if (line.Contains(">")) ssids.Add(value + " (Connected)");
-                        else ssids.Add(value);
-                    }
+                    if (line.Contains(">")) ssids.Add(value + " (Connected)");
+                    else ssids.Add(value);
                 }
             }
             catch (Exception e)

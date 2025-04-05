@@ -68,38 +68,35 @@ public partial class MainView : UserControl
 
     private void ConnectedTimer(object sender, ElapsedEventArgs e)
     {
-        lock (this)
+        lock (this) if (connectedTimer == null) return;
+        try
         {
-            if (connectedTimer == null) return;
-            try
+            Dispatcher.UIThread.InvokeAsync(() =>
             {
-                Dispatcher.UIThread.Invoke(() =>
+                try
                 {
-                    try
+                    isConnected = App.IsOnline();
+                    if (stage == InstallerStage.Network) nextButton.IsEnabled = isConnected;
+                    if (isConnected)
                     {
-                        isConnected = App.IsOnline();
-                        if (stage == InstallerStage.Network) nextButton.IsEnabled = isConnected;
-                        if (isConnected)
-                        {
-                            isConnectedText.Text = "Network Connected";
-                            isConnectedText.Foreground = new SolidColorBrush(Colors.Green);
-                        }
-                        else
-                        {
-                            isConnectedText.Text = "Network Disconnected";
-                            isConnectedText.Foreground = new SolidColorBrush(Colors.Red);
-                        }
+                        isConnectedText.Text = "Network Connected";
+                        isConnectedText.Foreground = new SolidColorBrush(Colors.Green);
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        Console.WriteLine(ex);
+                        isConnectedText.Text = "Network Disconnected";
+                        isConnectedText.Foreground = new SolidColorBrush(Colors.Red);
                     }
-                });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
         }
     }
 
@@ -282,7 +279,6 @@ public partial class MainView : UserControl
         var ssids = new List<string>();
         void ssidOut(string line)
         {
-            lock (this) Console.WriteLine("LINE: " + line);
             if (line.Contains("-------") || line.Contains("Network name")) return;
             try
             {
@@ -290,11 +286,8 @@ public partial class MainView : UserControl
                 if (match.Success)
                 {
                     string value = match.Groups[1].Value;
-                    lock (this)
-                    {
-                        if (line.Contains(">")) ssids.Add(value + " (Connected)");
-                        else ssids.Add(value);
-                    }
+                    if (line.Contains(">")) ssids.Add(value + " (Connected)");
+                    else ssids.Add(value);
                 }
             }
             catch (Exception e)
