@@ -704,11 +704,11 @@ public partial class MainView : UserControl
         // format partitions
         if (drive.PartitionsUseP())
         {
-            ProcessUtil.Run("mkfs.ext4", $"{drive.disk}p2", asAdmin:true);
+            ProcessUtil.Run("mkfs.ext4", $"{drive.disk}p1", asAdmin:true);
         }
         else
         {
-            ProcessUtil.Run("mkfs.ext4", $"{drive.disk}2", asAdmin:true);
+            ProcessUtil.Run("mkfs.ext4", $"{drive.disk}1", asAdmin:true);
         }
         
         // finish

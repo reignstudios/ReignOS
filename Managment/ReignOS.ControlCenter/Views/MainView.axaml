@@ -141,7 +141,7 @@
 			</Grid>
 			
 			<Grid Grid.Column="1">
-				<Button Content="Format Selected Drive" Click="FormatDriveButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,16,0,0"/>
+				<Button Content="Format Selected Drive" Background="DarkRed" Click="FormatDriveButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,16,0,0"/>
 				<Button Content="Back" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="DriveManagerBackButton_OnClick"/>
 			</Grid>
 		</Grid>

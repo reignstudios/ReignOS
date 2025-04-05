@@ -61,7 +61,7 @@
 						<RadioButton Name="cleanInstallRadioButton" Content="Clean Install (Uses Entire Drive)" Click="CleanInstallButton_OnClick" IsChecked="True"/>
 						<RadioButton Name="dualBootInstallRadioButton" Content="Dual Boot (Keep Other OS)" Click="DualInstallButton_OnClick"/>
 						<Grid Name="cleanDriveGrid" IsVisible="True">
-							<Button Content="Format Selected Drive" Click="FormatDriveButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,16,0,0"/>
+							<Button Content="Format Selected Drive" Background="DarkRed" Click="FormatDriveButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,16,0,0"/>
 							<TextBlock Text="NOTE: This will delete all data on the entire drive selected." Margin="4,52,0,0" TextWrapping="Wrap"/>
 						</Grid>
 						<Grid Name="keepOSDriveGrid" IsVisible="False">
