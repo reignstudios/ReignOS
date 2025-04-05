@@ -121,23 +121,27 @@ static class InstallUtil
         Run("umount", "-R /mnt");
         UpdateProgress(5);
 
+        // make sure we re-format drives before installing
+        Views.MainView.singleton.FormatExistingPartitions();
+        UpdateProgress(10);
+
         // mount partitions
         Run("mount", $"{ext4Partition.path} /mnt");
         Run("rm", "-rf /mnt/*");
         Run("mkdir", "-p /mnt/boot");
         Run("mount", $"{efiPartition.path} /mnt/boot");
         Run("rm", "-rf /mnt/boot/*");
-        UpdateProgress(10);
+        UpdateProgress(11);
         
         // store package cache on install drive
         Run("mkdir", "-p /mnt/var/cache/pacman/pkg");
         Run("mount", "--bind /mnt/var/cache/pacman/pkg /var/cache/pacman/pkg");
-        UpdateProgress(11);
+        UpdateProgress(12);
         
         // map nuget cache path to use install drive
         Run("mkdir", "-p /mnt/root/.nuget");
         Run("mount", "--bind /mnt/root/.nuget /root/.nuget");
-        UpdateProgress(12);
+        UpdateProgress(13);
         
         // install arch base
         Run("pacstrap", "/mnt base linux linux-firmware systemd");

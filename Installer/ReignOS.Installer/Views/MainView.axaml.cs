@@ -585,7 +585,7 @@ public partial class MainView : UserControl
         // make new partitions
         ProcessUtil.Run("parted", $"-s {efiDrive.disk} mkpart ESP fat32 1MiB 513MiB", asAdmin:true);
         ProcessUtil.Run("parted", $"-s {efiDrive.disk} mkpart primary ext4 513MiB 100%", asAdmin:true);
-        
+
         // configure partition
         ProcessUtil.Run("parted", $"-s {efiDrive.disk} set 1 boot on", asAdmin:true);
         ProcessUtil.Run("parted", $"-s {efiDrive.disk} set 1 esp on", asAdmin:true);
@@ -593,6 +593,14 @@ public partial class MainView : UserControl
         ProcessUtil.Run("parted", $"-s {efiDrive.disk} name 2 \"{ext4PartitionName}\"", asAdmin:true);
         
         // format partitions
+        FormatExistingPartitions();
+        
+        // finish
+        RefreshDrivePage();
+    }
+
+    public void FormatExistingPartitions()
+    {
         if (efiDrive.PartitionsUseP())
         {
             ProcessUtil.Run("mkfs.fat", $"-F32 {efiDrive.disk}p1", asAdmin:true);
@@ -603,9 +611,6 @@ public partial class MainView : UserControl
             ProcessUtil.Run("mkfs.fat", $"-F32 {efiDrive.disk}1", asAdmin:true);
             ProcessUtil.Run("mkfs.ext4", $"{ext4Drive.disk}2", asAdmin:true);
         }
-        
-        // finish
-        RefreshDrivePage();
     }
 
     private void OpenGPartedButton_OnClick(object sender, RoutedEventArgs e)
