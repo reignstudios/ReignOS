@@ -514,10 +514,11 @@ public partial class MainView : UserControl
                 if (partitionEFI == null) return false;
                 
                 const ulong size512MB = 512ul * 1024 * 1024;
+                bool validNameEFI = partitionEFI.name == efiPartitionName;
                 bool validSizeEFI = partitionEFI.size >= size512MB;
                 bool validFormatEFI = partitionEFI.fileSystem == "fat32";
                 bool validFlagsEFI = partitionEFI.flags.Contains("boot") && partitionEFI.flags.Contains("esp");
-                if (!validSizeEFI || !validFormatEFI || !validFlagsEFI) return false;
+                if (!validNameEFI || !validSizeEFI || !validFormatEFI || !validFlagsEFI) return false;
             }
 
             if (ext4Check)
@@ -525,9 +526,10 @@ public partial class MainView : UserControl
                 if (partitionEXT4 == null) return false;
                 
                 const ulong size32GB = 32ul * 1024 * 1024 * 1024;
+                bool validNameEXT4 = partitionEXT4.name == ext4PartitionName;
                 bool validSizeEXT4 = partitionEXT4.size >= size32GB;
                 bool validFormatExt4 = partitionEXT4.fileSystem == "ext4";
-                if (!validSizeEXT4 || !validFormatExt4) return false;
+                if (!validNameEXT4 || !validSizeEXT4 || !validFormatExt4) return false;
             }
 
             return true;
@@ -543,9 +545,8 @@ public partial class MainView : UserControl
                 if (IsValidDrive(item, false, true)) ext4Drive = (Drive)item.Tag;
             }
             
-            if (efiDrive != null) efiPartition = efiDrive.partitions.First(x => x.name == efiPartitionName);
-            if (ext4Drive != null) ext4Partition = ext4Drive.partitions.First(x => x.name == ext4PartitionName);
-            nextButton.IsEnabled = efiDrive != null && ext4Drive != null;
+            if (efiDrive != null) efiPartition = efiDrive.partitions.FirstOrDefault(x => x.name == efiPartitionName);
+            if (ext4Drive != null) ext4Partition = ext4Drive.partitions.FirstOrDefault(x => x.name == ext4PartitionName);
         }
         else
         {
@@ -556,12 +557,17 @@ public partial class MainView : UserControl
             }
         
             var item = (ListBoxItem)driveListBox.Items[driveListBox.SelectedIndex];
-            nextButton.IsEnabled = IsValidDrive(item, true, true);
+            if (!IsValidDrive(item, true, true))
+            {
+                nextButton.IsEnabled = false;
+                return;
+            }
             efiDrive = ext4Drive = (Drive)item.Tag;
             if (efiDrive.partitions != null) efiPartition = efiDrive.partitions.FirstOrDefault(x => x.name == efiPartitionName);
             if (ext4Drive.partitions != null) ext4Partition = ext4Drive.partitions.FirstOrDefault(x => x.name == ext4PartitionName);
         }
         
+        nextButton.IsEnabled = efiDrive != null && ext4Drive != null && efiPartition != null && ext4Partition != null;
         if (cleanInstallRadioButton.IsChecked != true && dualBootInstallRadioButton.IsChecked != true) nextButton.IsEnabled = false;
     }
     
