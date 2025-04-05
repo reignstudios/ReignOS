@@ -708,11 +708,15 @@ public partial class MainView : UserControl
         // format partitions
         if (drive.PartitionsUseP())
         {
-            ProcessUtil.Run("mkfs.ext4", $"{drive.disk}p1", asAdmin:true, useBash:false);
+            ProcessUtil.Run("chown", $"gamer {drive.disk}p1", asAdmin:true, useBash:false);
+            ProcessUtil.Run("mkfs.ext4", $"{drive.disk}p1", asAdmin:false, useBash:false);
+            //ProcessUtil.Run("mkfs.ext4", $"{drive.disk}p1", asAdmin:true, useBash:false);
         }
         else
         {
-            ProcessUtil.Run("mkfs.ext4", $"{drive.disk}1", asAdmin:true, useBash:false);
+            ProcessUtil.Run("chown", $"gamer {drive.disk}1", asAdmin:true, useBash:false);
+            ProcessUtil.Run("mkfs.ext4", $"{drive.disk}1", asAdmin:false, useBash:false);
+            //ProcessUtil.Run("mkfs.ext4", $"{drive.disk}1", asAdmin:true, useBash:false);
         }
 
         // start auto mount back up
