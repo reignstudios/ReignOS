@@ -706,23 +706,28 @@ public partial class MainView : UserControl
         ProcessUtil.Run("parted", $"-s {drive.disk} mkpart primary ext4 1MiB 100%", asAdmin:true, useBash:false);
         
         // format partitions
+        string partitionPath;
         if (drive.PartitionsUseP())
         {
-            ProcessUtil.Run("chown", $"gamer {drive.disk}p1", asAdmin:true, useBash:false);
-            ProcessUtil.Run("mkfs.ext4", $"{drive.disk}p1", asAdmin:false, useBash:false);
+            partitionPath = $"{drive.disk}p1";
             //ProcessUtil.Run("mkfs.ext4", $"{drive.disk}p1", asAdmin:true, useBash:false);
         }
         else
         {
-            ProcessUtil.Run("chown", $"gamer {drive.disk}1", asAdmin:true, useBash:false);
-            ProcessUtil.Run("mkfs.ext4", $"{drive.disk}1", asAdmin:false, useBash:false);
+            partitionPath = $"{drive.disk}1";
             //ProcessUtil.Run("mkfs.ext4", $"{drive.disk}1", asAdmin:true, useBash:false);
         }
 
+        ProcessUtil.Run("mkfs.ext4", partitionPath, asAdmin:true, useBash:false);
+        ProcessUtil.Run("mount", $"{partitionPath} /mnt", asAdmin:true, useBash:false);
+        ProcessUtil.Run("chown", "gamer:gamer /mnt", asAdmin:true, useBash:false);
+        ProcessUtil.Run("umount", "/mnt", asAdmin:true, useBash:false);
+
         // start auto mount back up
-        ProcessUtil.Run("udiskie", "--no-tray", out _, wait:false, useBash:false);
+        //ProcessUtil.Run("udiskie", "--no-tray", out _, wait:false, useBash:false);
+        RestartButton_Click(null, null);
         
         // finish
-        RefreshDrivePage();
+        //RefreshDrivePage();
     }
 }
