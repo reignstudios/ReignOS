@@ -4,7 +4,7 @@ using ReignOS.Core;
 
 namespace ReignOS.Installer;
 
-class Partition
+public class Partition
 {
     public Drive drive;
     public int number;
@@ -28,7 +28,7 @@ class Partition
     }
 }
 
-class Drive
+public class Drive
 {
     public string model;
     public string disk;
@@ -47,6 +47,7 @@ static class InstallUtil
     public static event InstallProgressDelegate InstallProgress;
 
     private static bool archRootMode;
+    private static Drive efiDrive, ext4Drive;
     private static Partition efiPartition, ext4Partition;
     private static Thread installThread;
     private static float progress;
@@ -73,8 +74,10 @@ static class InstallUtil
         }
     }
     
-    public static void Install(Partition efiPartition, Partition ext4Partition)
+    public static void Install(Drive efiDrive, Drive ext4Drive, Partition efiPartition, Partition ext4Partition)
     {
+        InstallUtil.efiDrive = efiDrive;
+        InstallUtil.ext4Drive = ext4Drive;
         InstallUtil.efiPartition = efiPartition;
         InstallUtil.ext4Partition = ext4Partition;
         installThread = new Thread(InstallThread);
@@ -122,7 +125,7 @@ static class InstallUtil
         UpdateProgress(5);
 
         // make sure we re-format drives before installing
-        Views.MainView.singleton.FormatExistingPartitions();
+        Views.MainView.FormatExistingPartitions(efiDrive, ext4Drive);
         UpdateProgress(10);
 
         // mount partitions

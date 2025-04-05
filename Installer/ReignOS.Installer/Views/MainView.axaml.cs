@@ -207,7 +207,7 @@ public partial class MainView : UserControl
                 installProgressBar.IsVisible = true;
                 installTerminalText.Text = "";
                 installTerminalScroll.IsVisible = true;
-                InstallUtil.Install(efiPartition, ext4Partition);
+                InstallUtil.Install(efiDrive, ext4Drive, efiPartition, ext4Partition);
                 break;
             
             case InstallerStage.DoneInstalling:
@@ -563,7 +563,7 @@ public partial class MainView : UserControl
             nextButton.IsEnabled = IsValidDrive(item, true, true);
             efiDrive = ext4Drive = (Drive)item.Tag;
             if (efiDrive.partitions != null) efiPartition = efiDrive.partitions.FirstOrDefault(x => x.name == efiPartitionName);
-            if (ext4Drive.partitions != null) ext4Partition = efiDrive.partitions.FirstOrDefault(x => x.name == ext4PartitionName);
+            if (ext4Drive.partitions != null) ext4Partition = ext4Drive.partitions.FirstOrDefault(x => x.name == ext4PartitionName);
         }
         
         if (cleanInstallRadioButton.IsChecked != true && dualBootInstallRadioButton.IsChecked != true) nextButton.IsEnabled = false;
@@ -593,13 +593,13 @@ public partial class MainView : UserControl
         ProcessUtil.Run("parted", $"-s {efiDrive.disk} name 2 \"{ext4PartitionName}\"", asAdmin:true);
         
         // format partitions
-        FormatExistingPartitions();
+        FormatExistingPartitions(efiDrive, ext4Drive);
         
         // finish
         RefreshDrivePage();
     }
 
-    public void FormatExistingPartitions()
+    public static void FormatExistingPartitions(Drive efiDrive, Drive ext4Drive)
     {
         if (efiDrive.PartitionsUseP())
         {
