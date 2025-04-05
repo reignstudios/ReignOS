@@ -689,11 +689,9 @@ public partial class MainView : UserControl
         var item = (ListBoxItem)driveListBox.Items[driveListBox.SelectedIndex];
         var drive = (Drive)item.Tag;
 
-        // unmount partitions
-        foreach (var parition in drive.partitions)
-        {
-            ProcessUtil.Run("umount", $"-R {parition.path}", asAdmin:true, useBash:false);
-        }
+        // unmount partitions and kill auto mount
+        ProcessUtil.Run("udiskie-umount", "-a", out _, useBash:false);
+        ProcessUtil.KillHard("udiskie", true, out _);
         
         // delete old partitions
         foreach (var parition in drive.partitions)
@@ -716,6 +714,9 @@ public partial class MainView : UserControl
         {
             ProcessUtil.Run("mkfs.ext4", $"{drive.disk}1", asAdmin:true, useBash:false);
         }
+
+        // start auto mount back up
+        ProcessUtil.Run("udiskie", "--no-tray", out _, wait:false, useBash:false);
         
         // finish
         RefreshDrivePage();
