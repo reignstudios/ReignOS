@@ -491,6 +491,9 @@ public partial class MainView : UserControl
             item.Tag = d;
             driveListBox.Items.Add(item);
         }
+        
+        // refresh found drives
+        DriveListBox_OnSelectionChanged(null, null);
     }
     
     private void DriveListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -604,11 +607,18 @@ public partial class MainView : UserControl
         if (efiDrive.PartitionsUseP())
         {
             ProcessUtil.Run("mkfs.fat", $"-F32 {efiDrive.disk}p1", asAdmin:true);
-            ProcessUtil.Run("mkfs.ext4", $"{ext4Drive.disk}p2", asAdmin:true);
         }
         else
         {
             ProcessUtil.Run("mkfs.fat", $"-F32 {efiDrive.disk}1", asAdmin:true);
+        }
+
+        if (ext4Drive.PartitionsUseP())
+        {
+            ProcessUtil.Run("mkfs.ext4", $"{ext4Drive.disk}p2", asAdmin: true);
+        }
+        else
+        {
             ProcessUtil.Run("mkfs.ext4", $"{ext4Drive.disk}2", asAdmin:true);
         }
     }
@@ -643,7 +653,6 @@ public partial class MainView : UserControl
     private void UseMultipleDrivesCheckBox_OnIsCheckedChanged(object sender, RoutedEventArgs e)
     {
         RefreshDrivePage();
-        DriveListBox_OnSelectionChanged(null, null);
     }
 
     private void ExitButton_OnClick(object sender, RoutedEventArgs e)
