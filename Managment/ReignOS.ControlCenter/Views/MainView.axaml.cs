@@ -707,27 +707,14 @@ public partial class MainView : UserControl
         
         // format partitions
         string partitionPath;
-        if (drive.PartitionsUseP())
-        {
-            partitionPath = $"{drive.disk}p1";
-            //ProcessUtil.Run("mkfs.ext4", $"{drive.disk}p1", asAdmin:true, useBash:false);
-        }
-        else
-        {
-            partitionPath = $"{drive.disk}1";
-            //ProcessUtil.Run("mkfs.ext4", $"{drive.disk}1", asAdmin:true, useBash:false);
-        }
-
+        if (drive.PartitionsUseP()) partitionPath = $"{drive.disk}p1";
+        else partitionPath = $"{drive.disk}1";
         ProcessUtil.Run("mkfs.ext4", partitionPath, asAdmin:true, useBash:false);
         ProcessUtil.Run("mount", $"{partitionPath} /mnt", asAdmin:true, useBash:false);
         ProcessUtil.Run("chown", "gamer:gamer /mnt", asAdmin:true, useBash:false);
         ProcessUtil.Run("umount", "/mnt", asAdmin:true, useBash:false);
 
         // start auto mount back up
-        //ProcessUtil.Run("udiskie", "--no-tray", out _, wait:false, useBash:false);
         RestartButton_Click(null, null);
-        
-        // finish
-        //RefreshDrivePage();
     }
 }

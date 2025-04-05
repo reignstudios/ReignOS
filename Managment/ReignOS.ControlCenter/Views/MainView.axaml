@@ -123,7 +123,7 @@
 					<TextBox Name="networkPasswordText"/>
 					<Button Name="networkConnectButton" Content="Connect" Margin="0,8,0,0" Click="NetworkConnectButton_OnClick"/>
 				</StackPanel>
-				<Button Content="Back" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="NetworkManagerBackButton_OnClick"/>
+				<Button Content="Back" Width="128" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="NetworkManagerBackButton_OnClick"/>
 			</Grid>
 		</Grid>
 		
@@ -142,7 +142,8 @@
 			
 			<Grid Grid.Column="1">
 				<Button Content="Format Selected Drive" Background="DarkRed" Click="FormatDriveButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,16,0,0"/>
-				<Button Content="Back" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="DriveManagerBackButton_OnClick"/>
+				<TextBlock Text="NOTE: This will restart device once finished" Foreground="DarkRed" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,54,0,0"/>
+				<Button Content="Back" Width="128" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="DriveManagerBackButton_OnClick"/>
 			</Grid>
 		</Grid>
 	</Grid>
