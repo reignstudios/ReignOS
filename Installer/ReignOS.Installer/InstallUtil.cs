@@ -403,12 +403,23 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm vulkan-dzn vulkan-gfxstream vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio");// all steam options
         Run("pacman", "-S --noconfirm lib32-vulkan-dzn lib32-vulkan-gfxstream lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio");// all steam options
         Run("pacman", "-S --noconfirm steam");//steam-native-runtime (use Arch libs)
-        Run("pacman", "-R amdvlk lib32-amdvlk nvidia-utils lib32-nvidia-utils");// remove amd or nvidia driver defaults steam might try to install
         UpdateProgress(95);
+
+        // remove AMD driver defaults steam might try to install
+        Run("pacman", "-R amdvlk");
+        Run("pacman", "-R lib32-amdvlk");
+        Run("pacman", "-R amdvlk-pro");
+        Run("pacman", "-R amdvlk-git");
+        UpdateProgress(96);
+
+        // remove Nvidia driver defaults steam might try to install
+        Run("pacman", "-R nvidia-utils");
+        Run("pacman", "-R lib32-nvidia-utils");
+        UpdateProgress(97);
 
         // install wayland mouse util
         Run("pacman", "-S --noconfirm unclutter");
-        UpdateProgress(96);
+        UpdateProgress(98);
     }
     
     private static void InstallReignOSRepo()
