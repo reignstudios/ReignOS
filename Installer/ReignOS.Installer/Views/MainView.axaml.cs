@@ -207,7 +207,7 @@ public partial class MainView : UserControl
                 installProgressBar.IsVisible = true;
                 installTerminalText.Text = "";
                 installTerminalScroll.IsVisible = true;
-                InstallUtil.Install(efiDrive, ext4Drive, efiPartition, ext4Partition);
+                InstallUtil.Install(efiPartition, ext4Partition);
                 break;
             
             case InstallerStage.DoneInstalling:
@@ -596,31 +596,20 @@ public partial class MainView : UserControl
         ProcessUtil.Run("parted", $"-s {efiDrive.disk} name 2 \"{ext4PartitionName}\"", asAdmin:true);
         
         // format partitions
-        FormatExistingPartitions(efiDrive, ext4Drive);
+        if (efiDrive.PartitionsUseP()) ProcessUtil.Run("mkfs.fat", $"-F32 {efiDrive.disk}p1", asAdmin:true);
+        else ProcessUtil.Run("mkfs.fat", $"-F32 {efiDrive.disk}1", asAdmin:true);
+
+        if (ext4Drive.PartitionsUseP()) ProcessUtil.Run("mkfs.ext4", $"{ext4Drive.disk}p2", asAdmin: true);
+        else ProcessUtil.Run("mkfs.ext4", $"{ext4Drive.disk}2", asAdmin:true);
         
         // finish
         RefreshDrivePage();
     }
 
-    public static void FormatExistingPartitions(Drive efiDrive, Drive ext4Drive)
+    public static void FormatExistingPartitions(Partition efiPartition, Partition ext4Partition)
     {
-        if (efiDrive.PartitionsUseP())
-        {
-            ProcessUtil.Run("mkfs.fat", $"-F32 {efiDrive.disk}p1", asAdmin:true);
-        }
-        else
-        {
-            ProcessUtil.Run("mkfs.fat", $"-F32 {efiDrive.disk}1", asAdmin:true);
-        }
-
-        if (ext4Drive.PartitionsUseP())
-        {
-            ProcessUtil.Run("mkfs.ext4", $"{ext4Drive.disk}p2", asAdmin: true);
-        }
-        else
-        {
-            ProcessUtil.Run("mkfs.ext4", $"{ext4Drive.disk}2", asAdmin:true);
-        }
+        ProcessUtil.Run("mkfs.fat", $"-F32 {efiPartition.path}", asAdmin:true);
+        ProcessUtil.Run("mkfs.ext4", $"{ext4Partition.path}", asAdmin:true);
     }
 
     private void OpenGPartedButton_OnClick(object sender, RoutedEventArgs e)
