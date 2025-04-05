@@ -688,6 +688,12 @@ public partial class MainView : UserControl
         if (driveListBox.SelectedIndex < 0) return;
         var item = (ListBoxItem)driveListBox.Items[driveListBox.SelectedIndex];
         var drive = (Drive)item.Tag;
+
+        // unmount partitions
+        foreach (var parition in drive.partitions)
+        {
+            ProcessUtil.Run("umount", $"-R {parition.path}", asAdmin:true, useBash:false);
+        }
         
         // delete old partitions
         foreach (var parition in drive.partitions)
