@@ -557,12 +557,13 @@ public partial class MainView : UserControl
             }
         
             var item = (ListBoxItem)driveListBox.Items[driveListBox.SelectedIndex];
-            if (!IsValidDrive(item, true, true))
+            if (dualBootInstallRadioButton.IsChecked == true && !IsValidDrive(item, true, true))
             {
                 nextButton.IsEnabled = false;
                 return;
             }
-            efiDrive = ext4Drive = (Drive)item.Tag;
+
+            efiDrive = ext4Drive = (Drive)item.Tag;// always select drive in clean install even if not currently valid
             if (efiDrive.partitions != null) efiPartition = efiDrive.partitions.FirstOrDefault(x => x.name == efiPartitionName);
             if (ext4Drive.partitions != null) ext4Partition = ext4Drive.partitions.FirstOrDefault(x => x.name == ext4PartitionName);
         }
