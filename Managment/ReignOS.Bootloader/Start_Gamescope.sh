@@ -27,9 +27,8 @@
 #printenv &
 
 # start steam
-steam -bigpicture -steamdeck -steamos3
+steam -gamepadui -steamdeck -steamos3
 
-# -steamos or -steamos3 (this starts making it try to update SteamOS incorrectly for a generic distro)
 # -gamepadui (newer)
 # -tenfoot (older)
 # -bigpicture (oldest)

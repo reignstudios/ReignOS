@@ -235,7 +235,7 @@ internal class Program
     {
         Log.WriteLine("Starting Weston with Steam...");
         string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
-        string result = ProcessUtil.Run("weston", $"./Start_Weston.sh{useMangoHubArg}", useBash:false);
+        string result = ProcessUtil.Run("weston", $"--shell=kiosk-shell.so --xwayland -- ./Start_Weston.sh{useMangoHubArg}", useBash:false);
         Log.WriteLine(result);
     }
     
