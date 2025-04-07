@@ -450,7 +450,7 @@ public partial class MainView : UserControl
         }
 
         wlanDevices.Clear();
-        ProcessUtil.Run("iwctl", "device list", standardOut:deviceOut);
+        ProcessUtil.Run("iwctl", "device list", standardOut:deviceOut, useBash:false);
         
         // choose device
         if (wlanDevices.Count == 0) return;
@@ -478,8 +478,8 @@ public partial class MainView : UserControl
             }
         }
 
-        ProcessUtil.Run("iwctl", $"station {wlanDevice} scan");
-        ProcessUtil.Run("iwctl", $"station {wlanDevice} get-networks", standardOut:ssidOut);
+        ProcessUtil.Run("iwctl", $"station {wlanDevice} scan", useBash:false);
+        ProcessUtil.Run("iwctl", $"station {wlanDevice} get-networks", standardOut:ssidOut, useBash:false);
         connectionListBox.Items.Clear();
         foreach (var ssid in ssids) connectionListBox.Items.Add(new ListBoxItem { Content = ssid });
     }
@@ -487,14 +487,32 @@ public partial class MainView : UserControl
     // NOTE: forget network for debugger: iwctl known-networks <SSID> forget
     private void NetworkConnectButton_OnClick(object sender, RoutedEventArgs e)
     {
-        if (connectionListBox.SelectedIndex < 0) return;
+        if (connectionListBox.SelectedIndex < 0 || wlanDevice == null) return;
 
         var item = (ListBoxItem)connectionListBox.Items[connectionListBox.SelectedIndex];
         var ssid = (string)item.Content;
         ProcessUtil.KillHard("iwctl", true, out _);// make sure any failed processes are not open
-        ProcessUtil.Run("iwctl", $"--passphrase {networkPasswordText.Text} station {wlanDevice} connect {ssid}", asAdmin:true);
-        string result = ProcessUtil.Run("iwctl", $"station {wlanDevice} show");
+        ProcessUtil.Run("iwctl", $"--passphrase {networkPasswordText.Text} station {wlanDevice} connect {ssid}", useBash:false);
+        string result = ProcessUtil.Run("iwctl", $"station {wlanDevice} show", useBash:false);
         Console.WriteLine(result);
+    }
+
+    private void NetworkDisconnectButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (wlanDevice == null) return;
+        ProcessUtil.Run("iwctl", $"station {wlanDevice} disconnect");
+        connectionListBox.Items.Clear();
+    }
+
+    private void NetworkClearSettingsButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        NetworkDisconnectButton_OnClick(null, null);
+
+        if (wlanDevice == null) return;
+        ProcessUtil.Run("systemctl", "stop iwd", asAdmin:true, useBash:false);
+        ProcessUtil.Run("rm", "-r /var/lib/iwd/*");
+        ProcessUtil.Run("systemctl", "start iwd", asAdmin:true, useBash:false);
+        connectionListBox.Items.Clear();
     }
     
     private void DriveManagerButton_OnClick(object sender, RoutedEventArgs e)

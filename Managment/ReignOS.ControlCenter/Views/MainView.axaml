@@ -121,7 +121,9 @@
 				<StackPanel Orientation="Vertical" Margin="16,50,0,0">
 					<Label Content="Password" FontSize="24"/>
 					<TextBox Name="networkPasswordText"/>
-					<Button Name="networkConnectButton" Content="Connect" Margin="0,8,0,0" Click="NetworkConnectButton_OnClick"/>
+					<Button Content="Connect" Background="Green" Margin="0,8,0,0" Click="NetworkConnectButton_OnClick"/>
+					<Button Content="Disconnect" Background="OrangeRed" Margin="0,8,0,0" Click="NetworkDisconnectButton_OnClick"/>
+					<Button Content="Clear Settings" Margin="0,8,0,0" Click="NetworkClearSettingsButton_OnClick"/>
 				</StackPanel>
 				<Button Content="Back" Width="128" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="NetworkManagerBackButton_OnClick"/>
 			</Grid>
