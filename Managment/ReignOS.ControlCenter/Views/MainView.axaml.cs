@@ -510,7 +510,7 @@ public partial class MainView : UserControl
 
         if (wlanDevice == null) return;
         ProcessUtil.Run("systemctl", "stop iwd", asAdmin:true, useBash:false);
-        ProcessUtil.Run("rm", "-r /var/lib/iwd/*");
+        ProcessUtil.Run("rm", "-r /var/lib/iwd/*", asAdmin:true);
         ProcessUtil.Run("systemctl", "start iwd", asAdmin:true, useBash:false);
         connectionListBox.Items.Clear();
     }
