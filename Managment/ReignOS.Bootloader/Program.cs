@@ -13,6 +13,7 @@ enum Compositor
 {
     None,
     Gamescope,
+    Weston,
     Cage,
     Labwc,
     X11
@@ -39,6 +40,7 @@ internal class Program
 
         ProcessUtil.Run("chmod", "+x ./Start_ControlCenter.sh", useBash:false);
         ProcessUtil.Run("chmod", "+x ./Start_Gamescope.sh", useBash:false);
+        ProcessUtil.Run("chmod", "+x ./Start_Weston.sh", useBash:false);
         ProcessUtil.Run("chmod", "+x ./Start_Cage.sh", useBash:false);
         ProcessUtil.Run("chmod", "+x ./Start_Labwc.sh", useBash:false);
         ProcessUtil.Run("chmod", "+x ./Start_X11.sh", useBash:false);
@@ -116,6 +118,7 @@ internal class Program
         foreach (string arg in args)
         {
             if (arg == "--gamescope") compositor = Compositor.Gamescope;
+            else if (arg == "--weston") compositor = Compositor.Weston;
             else if (arg == "--cage") compositor = Compositor.Cage;
             else if (arg == "--labwc") compositor = Compositor.Labwc;
             else if (arg == "--x11") compositor = Compositor.X11;
@@ -141,6 +144,7 @@ internal class Program
                         break;
 
                     case Compositor.Gamescope: StartCompositor_Gamescope(useMangoHub); break;
+                    case Compositor.Weston: StartCompositor_Weston(useMangoHub); break;
                     case Compositor.Cage: StartCompositor_Cage(useMangoHub); break;
                     case Compositor.Labwc: StartCompositor_Labwc(); break;
                     case Compositor.X11: StartCompositor_X11(); break;
@@ -173,9 +177,10 @@ internal class Program
                 Console.WriteLine(result);
                 if (exitCode == 0) break;
                 else if (exitCode == 1) compositor = Compositor.Gamescope;
-                else if (exitCode == 2) compositor = Compositor.Cage;
-                else if (exitCode == 3) compositor = Compositor.Labwc;
-                else if (exitCode == 4) compositor = Compositor.X11;
+                else if (exitCode == 2) compositor = Compositor.Weston;
+                else if (exitCode == 3) compositor = Compositor.Cage;
+                else if (exitCode == 4) compositor = Compositor.Labwc;
+                else if (exitCode == 5) compositor = Compositor.X11;
                 else break;// exit with control-center exit-code
 
                 // reset things for new compositor
@@ -222,29 +227,37 @@ internal class Program
     {
         Log.WriteLine("Starting Gamescope with Steam...");
         string useMangoHubArg = useMangoHub ? "MANGOHUD=1 " : "";
-        string result = ProcessUtil.Run($"{useMangoHubArg}gamescope", $"-e -f --adaptive-sync --hdr-enabled --framerate-limit -- ./Start_Gamescope.sh", useBash:true);// start Gamescope with Steam in console mode, VRR
+        string result = ProcessUtil.Run($"{useMangoHubArg}gamescope", $"-e -f --adaptive-sync --hdr-enabled --framerate-limit -- ./Start_Gamescope.sh", useBash:true);
         Log.WriteLine(result);
     }
 
+    private static void StartCompositor_Weston(bool useMangoHub)
+    {
+        Log.WriteLine("Starting Weston with Steam...");
+        string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
+        string result = ProcessUtil.Run("weston", $"./Start_Weston.sh{useMangoHubArg}", useBash:false);
+        Log.WriteLine(result);
+    }
+    
     private static void StartCompositor_Cage(bool useMangoHub)
     {
         Log.WriteLine("Starting Cage with Steam...");
         string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
-        string result = ProcessUtil.Run("cage", $"-d -s -- ./Start_Cage.sh{useMangoHubArg}", useBash:false);// start Cage with Steam in console mode
+        string result = ProcessUtil.Run("cage", $"-d -s -- ./Start_Cage.sh{useMangoHubArg}", useBash:false);
         Log.WriteLine(result);
     }
 
     private static void StartCompositor_Labwc()
     {
         Log.WriteLine("Starting Labwc with Steam...");
-        string result = ProcessUtil.Run("labwc", "--startup ./Start_Labwc.sh", useBash:false);// start Labwc with Steam in desktop mode
+        string result = ProcessUtil.Run("labwc", "--startup ./Start_Labwc.sh", useBash:false);
         Log.WriteLine(result);
     }
 
     private static void StartCompositor_X11()
     {
         Log.WriteLine("Starting X11 with Steam...");
-        string result = ProcessUtil.Run("startx", "", useBash:false);// start X11 with Steam in console mode
+        string result = ProcessUtil.Run("startx", "", useBash:false);
         Log.WriteLine(result);
     }
 }

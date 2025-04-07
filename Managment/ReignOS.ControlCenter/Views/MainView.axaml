@@ -22,6 +22,13 @@
 						<TextBlock Text="Gamescope" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
 					</Grid>
 				</Button>
+				
+				<Button Click="WestonButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#006000">
+					<Grid Margin="0">
+						<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
+						<TextBlock Text="Weston" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
+					</Grid>
+				</Button>
 
 				<Button Click="CageButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#006000">
 					<Grid Margin="0">
@@ -52,7 +59,8 @@
 						<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="BootApplyButton_OnClick"/>
 						<RadioButton Name="boot_ControlCenter" Content="Control Center" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						<RadioButton Name="boot_Gamescope" Content="Gamescope" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-						<RadioButton Name="boot_Cage" Content="Cage" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						<RadioButton Name="boot_Weston" Content="Weston" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						<RadioButton Name="boot_Cage" Content="Cage" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 					</Grid>
 				</Grid>
 				
