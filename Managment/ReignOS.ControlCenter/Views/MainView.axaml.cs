@@ -310,6 +310,7 @@ public partial class MainView : UserControl
             writer.WriteLine("name=HDMI-A-1");// TODO: get display name using weston-info
             writer.WriteLine($"transform={rotation}");
             //writer.WriteLine("enable_vrr=true");// TODO: test
+            //writer.WriteLine("vrr-mode=game");
             
             //writer.WriteLine("eotf-mode=st2084");// HDR PQ curve
             //writer.WriteLine("colorimetry-mode=bt2020rgb");// HDR wide‑gamut space

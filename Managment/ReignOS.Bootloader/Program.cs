@@ -45,6 +45,13 @@ internal class Program
         ProcessUtil.Run("chmod", "+x ./Start_Labwc.sh", useBash:false);
         ProcessUtil.Run("chmod", "+x ./Start_X11.sh", useBash:false);
         
+        // detect if system needs package updates
+        if (PackageUpdates.NeedsUpdate())
+        {
+            Environment.ExitCode = 123;
+            return;
+        }
+        
         // configure X11
         const string x11ConfigFile = "/home/gamer/.xinitrc";
         using (var writer = new StreamWriter(x11ConfigFile))
