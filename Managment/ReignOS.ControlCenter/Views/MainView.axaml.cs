@@ -329,7 +329,7 @@ public partial class MainView : UserControl
         {
             using (var writer = new StreamWriter(x11File)) WriteX11Settings(writer, "right");
             using (var writer = new StreamWriter(waylandFile)) WriteWaylandSettings(writer, "90");
-            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()}--transform 90", useBash:false);// 90, flipped-90 (options)
+            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 90", useBash:false);// 90, flipped-90 (options)
         }
         else if (rot_Flip.IsChecked == true)
         {
