@@ -350,7 +350,7 @@ static class InstallUtil
         UpdateProgress(82);
 
         // install compositors
-        Run("pacman", "-S --noconfirm wlr-randr wlroots gamescope cage labwc");
+        Run("pacman", "-S --noconfirm wlr-randr wlroots gamescope cage labwc weston");
         UpdateProgress(83);
 
         // install audio
