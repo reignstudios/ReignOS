@@ -131,6 +131,44 @@ public partial class MainView : UserControl
 
     private void RotationToggleButton_OnIsCheckedChanged(object sender, RoutedEventArgs e)
     {
+        static void WriteWestonSettings(StreamWriter writer, string rotation, string display)
+        {
+            writer.WriteLine("[output]");
+            writer.WriteLine($"name={display}");
+            writer.WriteLine($"transform={rotation}");
+        }
+
+        static string GetWestonDisplay()
+        {
+            try
+            {
+                string result = ProcessUtil.Run("wayland-info", "", useBash:false);
+                var lines = result.Split('\n');
+                bool outputMode = false;
+                foreach (string line in lines)
+                {
+                    if (outputMode)
+                    {
+                        if (line.Contains("name: "))
+                        {
+                            var match = Regex.Match(line, @"name:\s*(.*)");
+                            if (match.Success)
+                            {
+                                return match.Groups[1].Value.Trim();
+                            }
+                            break;
+                        }
+                    }
+                    else if (line.Contains("'wl_output'"))
+                    {
+                        outputMode = true;
+                    }
+                }
+            }
+            catch {}
+            return "ERROR";
+        }
+
         static string GetWaylandDisplay()
         {
             try
@@ -144,21 +182,48 @@ public partial class MainView : UserControl
             return "ERROR";
         }
         
-        if (defaultRotRadioButton.IsChecked == true)
+        if (Program.compositorMode == CompositorMode.Weston)
         {
-            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform normal", out _);
+            const string westonConfigFile = "/home/gamer/.config/weston.ini";
+            using (var writer = new StreamWriter(westonConfigFile))
+            {
+                if (defaultRotRadioButton.IsChecked == true)
+                {
+                     WriteWestonSettings(writer, "normal", GetWestonDisplay());
+                }
+                else if (leftRotRadioButton.IsChecked == true)
+                {
+                    WriteWestonSettings(writer, "rotate-270", GetWestonDisplay());
+                }
+                else if (rightRotRadioButton.IsChecked == true)
+                {
+                    WriteWestonSettings(writer, "rotate-90", GetWestonDisplay());
+                }
+                else if (flipRotRadioButton.IsChecked == true)
+                {
+                    WriteWestonSettings(writer, "rotate-180", GetWestonDisplay());
+                }
+            }
+            MainWindow.singleton.Close();// exit so rotation takes effect
         }
-        else if (leftRotRadioButton.IsChecked == true)
+        else
         {
-            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 270", out _);// 270, flipped-270 (options)
-        }
-        else if (rightRotRadioButton.IsChecked == true)
-        {
-            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 90", out _);// 90, flipped-90 (options)
-        }
-        else if (flipRotRadioButton.IsChecked == true)
-        {
-            ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 180", out _);// 180, flipped, flipped-180 (options)
+            if (defaultRotRadioButton.IsChecked == true)
+            {
+                ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform normal", out _);
+            }
+            else if (leftRotRadioButton.IsChecked == true)
+            {
+                ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 270", out _);// 270, flipped-270 (options)
+            }
+            else if (rightRotRadioButton.IsChecked == true)
+            {
+                ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 90", out _);// 90, flipped-90 (options)
+            }
+            else if (flipRotRadioButton.IsChecked == true)
+            {
+                ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 180", out _);// 180, flipped, flipped-180 (options)
+            }
         }
     }
 
@@ -614,14 +679,15 @@ public partial class MainView : UserControl
 
     private void OpenGPartedButton_OnClick(object sender, RoutedEventArgs e)
     {
-        if (Program.compositorMode == CompositorMode.Labwc)
+        if (Program.compositorMode == CompositorMode.Weston && Program.compositorMode == CompositorMode.Labwc)
         {
             ProcessUtil.Run("gparted", "", wait:true, asAdmin:true);
             driveListBox.Items.Clear();
         }
         else
         {
-            MainWindow.singleton.Close();// exit so Labwc will open
+            Console.WriteLine("Relaunch with 'install.sh -labwc'");
+            MainWindow.singleton.Close();// exit so user can use labwc
         }
     }
 

@@ -8,6 +8,7 @@ namespace ReignOS.Installer;
 
 enum CompositorMode
 {
+    Weston,
     Cage,
     Labwc
 }
@@ -26,7 +27,8 @@ class Program
 
         if (args != null)
         {
-            if (args.Contains("-cage")) compositorMode = CompositorMode.Cage;
+            if (args.Contains("-weston")) compositorMode = CompositorMode.Weston;
+            else if (args.Contains("-cage")) compositorMode = CompositorMode.Cage;
             else if (args.Contains("-labwc")) compositorMode = CompositorMode.Labwc;
         }
 

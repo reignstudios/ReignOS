@@ -309,6 +309,7 @@ git
 git-lfs
 gcc
 dotnet-sdk-8.0
+weston
 cage
 labwc
 wlr-randr
