@@ -184,7 +184,7 @@ internal class Program
                 //Log.WriteLine("Starting Cage with ReignOS.ControlCenter...");
                 //string result = ProcessUtil.Run("cage", "./Start_ControlCenter.sh", out exitCode, useBash:false);// start ControlCenter
                 Log.WriteLine("Starting Weston with ReignOS.ControlCenter...");
-                string result = ProcessUtil.Run("weston", "--shell=kiosk-shell.so --xwayland -- ./ReignOS.ControlCenter", out exitCode, useBash:false);// start ControlCenter
+                string result = ProcessUtil.Run("weston", "--shell=kiosk-shell.so --xwayland -- ./ReignOS.ControlCenter exit_code=$? && echo 'EXIT_CODE: $exit_code'", out exitCode, useBash:true);// start ControlCenter
                 Console.WriteLine(result);
                 if (exitCode == 0) break;
                 else if (exitCode == 1) compositor = Compositor.Gamescope;
