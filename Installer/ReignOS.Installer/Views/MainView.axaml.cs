@@ -60,13 +60,23 @@ public partial class MainView : UserControl
         // load rotation
         const string configPath = "/home/gamer/.config/";
         const string westonSettingsFile = configPath + "weston-settings.txt";
-        using (var readerSettings = new StreamReader(westonSettingsFile))
+        if (File.Exists(westonSettingsFile))
         {
-            string value = readerSettings.ReadLine();
-            if (value == "rot=default") defaultRotRadioButton.IsChecked = true;
-            else if (value == "rot=left") leftRotRadioButton.IsChecked = true;
-            else if (value == "rot=right") rightRotRadioButton.IsChecked = true;
-            else if (value == "rot=flip") flipRotRadioButton.IsChecked = true;
+            try
+            {
+                using (var readerSettings = new StreamReader(westonSettingsFile))
+                {
+                    string value = readerSettings.ReadLine();
+                    if (value == "rot=default") defaultRotRadioButton.IsChecked = true;
+                    else if (value == "rot=left") leftRotRadioButton.IsChecked = true;
+                    else if (value == "rot=right") rightRotRadioButton.IsChecked = true;
+                    else if (value == "rot=flip") flipRotRadioButton.IsChecked = true;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 
@@ -204,35 +214,42 @@ public partial class MainView : UserControl
         
         if (Program.compositorMode == CompositorMode.Weston)
         {
-            const string configPath = "/home/gamer/.config/";
-            if (!Directory.Exists(configPath)) Directory.CreateDirectory(configPath);
-            const string westonConfigFile = configPath + "weston.ini";
-            const string westonSettingsFile = configPath + "weston-settings.txt";
-            using (var writer = new StreamWriter(westonConfigFile))
-            using (var writerSettings = new StreamWriter(westonSettingsFile))
+            try
             {
-                if (defaultRotRadioButton.IsChecked == true)
+                const string configPath = "/home/gamer/.config/";
+                if (!Directory.Exists(configPath)) Directory.CreateDirectory(configPath);
+                const string westonConfigFile = configPath + "weston.ini";
+                const string westonSettingsFile = configPath + "weston-settings.txt";
+                using (var writer = new StreamWriter(westonConfigFile))
+                using (var writerSettings = new StreamWriter(westonSettingsFile))
                 {
-                    WriteWestonSettings(writer, "normal", GetWestonDisplay());
-                    writerSettings.WriteLine("rot=default");
+                    if (defaultRotRadioButton.IsChecked == true)
+                    {
+                        WriteWestonSettings(writer, "normal", GetWestonDisplay());
+                        writerSettings.WriteLine("rot=default");
+                    }
+                    else if (leftRotRadioButton.IsChecked == true)
+                    {
+                        WriteWestonSettings(writer, "rotate-270", GetWestonDisplay());
+                        writerSettings.WriteLine("rot=left");
+                    }
+                    else if (rightRotRadioButton.IsChecked == true)
+                    {
+                        WriteWestonSettings(writer, "rotate-90", GetWestonDisplay());
+                        writerSettings.WriteLine("rot=right");
+                    }
+                    else if (flipRotRadioButton.IsChecked == true)
+                    {
+                        WriteWestonSettings(writer, "rotate-180", GetWestonDisplay());
+                        writerSettings.WriteLine("rot=flip");
+                    }
                 }
-                else if (leftRotRadioButton.IsChecked == true)
-                {
-                    WriteWestonSettings(writer, "rotate-270", GetWestonDisplay());
-                    writerSettings.WriteLine("rot=left");
-                }
-                else if (rightRotRadioButton.IsChecked == true)
-                {
-                    WriteWestonSettings(writer, "rotate-90", GetWestonDisplay());
-                    writerSettings.WriteLine("rot=right");
-                }
-                else if (flipRotRadioButton.IsChecked == true)
-                {
-                    WriteWestonSettings(writer, "rotate-180", GetWestonDisplay());
-                    writerSettings.WriteLine("rot=flip");
-                }
+                MainWindow.singleton.Close();// exit so rotation takes effect
             }
-            MainWindow.singleton.Close();// exit so rotation takes effect
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
         else
         {
