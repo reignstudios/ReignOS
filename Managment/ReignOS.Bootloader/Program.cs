@@ -262,7 +262,8 @@ internal class Program
         Log.WriteLine("Starting Weston with Steam...");
         string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
         string windowedModeArg = !windowedMode ? "--shell=kiosk-shell.so " : "";
-        string result = ProcessUtil.Run("weston", $"{windowedModeArg}--xwayland -- ./Start_Weston.sh{useMangoHubArg}", useBash:false);
+        string windowedModeArg2 = windowedMode ? " --windowed-mode" : "";
+        string result = ProcessUtil.Run("weston", $"{windowedModeArg}--xwayland -- ./Start_Weston.sh{useMangoHubArg}{windowedModeArg2}", useBash:false);
         Log.WriteLine(result);
     }
     
