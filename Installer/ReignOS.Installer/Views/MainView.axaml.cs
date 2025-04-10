@@ -39,7 +39,7 @@ public partial class MainView : UserControl
     private const string efiPartitionName = "ReignOS_EFI";
     private const string ext4PartitionName = "ReignOS";
 
-    private bool allowCallbacks;
+    private bool allowRotApply;
     
     public MainView()
     {
@@ -68,8 +68,6 @@ public partial class MainView : UserControl
             else if (value == "rot=right") rightRotRadioButton.IsChecked = true;
             else if (value == "rot=flip") flipRotRadioButton.IsChecked = true;
         }
-
-        allowCallbacks = true;
     }
 
     private void Window_Closing(object sender, WindowClosingEventArgs e)
@@ -147,7 +145,11 @@ public partial class MainView : UserControl
 
     private void RotationToggleButton_OnIsCheckedChanged(object sender, RoutedEventArgs e)
     {
-        if (!allowCallbacks) return;
+        if (!allowRotApply)// disable first time its set
+        {
+            allowRotApply = true;
+            return;
+        }
 
         static void WriteWestonSettings(StreamWriter writer, string rotation, string display)
         {
