@@ -9,5 +9,6 @@ sudo pkill "steam"
 # kill compositors if they're stuck
 echo "Killing compositors"
 sudo pkill "gamescope"
+sudo pkill "weston"
 sudo pkill "cage"
 sudo pkill "labwc"

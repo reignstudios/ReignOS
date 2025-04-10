@@ -181,8 +181,9 @@ internal class Program
             // start control center
             if (useControlCenter)
             {
-                Log.WriteLine("Starting Cage with ReignOS.ControlCenter...");
+                //Log.WriteLine("Starting Cage with ReignOS.ControlCenter...");
                 //string result = ProcessUtil.Run("cage", "./Start_ControlCenter.sh", out exitCode, useBash:false);// start ControlCenter
+                Log.WriteLine("Starting Weston with ReignOS.ControlCenter...");
                 string result = ProcessUtil.Run("weston", "--shell=kiosk-shell.so --xwayland -- ./ReignOS.ControlCenter", out exitCode, useBash:false);// start ControlCenter
                 Console.WriteLine(result);
                 if (exitCode == 0) break;
@@ -195,8 +196,10 @@ internal class Program
 
                 // reset things for new compositor
                 exitCode = 0;
-                ProcessUtil.Wait("cage", 6);// wait for cage
-                ProcessUtil.KillHard("cage", true, out _);// kill cage in case its stuck
+                //ProcessUtil.Wait("cage", 6);// wait for cage
+                //ProcessUtil.KillHard("cage", true, out _);// kill cage in case its stuck
+                ProcessUtil.Wait("weston", 6);// wait for cage
+                ProcessUtil.KillHard("weston", true, out _);// kill cage in case its stuck
             }
         }
 
