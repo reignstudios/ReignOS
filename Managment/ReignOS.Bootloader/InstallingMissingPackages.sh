@@ -6,5 +6,5 @@ sudo pacman -Syu --noconfirm
 # nothing yet...
 
 # add new packages
-sudo pacman -S wayland-utils --noconfirm
-sudo pacman -S weston --noconfirm
+sudo pacman -S --noconfirm wayland-utils
+sudo pacman -S --noconfirm weston

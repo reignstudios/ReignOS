@@ -3,10 +3,10 @@
 sudo pacman -Syu
 
 echo "Uninstalling Nvidia Proprietary drivers"
-sudo pacman -R nvidia nvidia-utils lib32-nvidia-utils nvidia-settings nvidia-prime --noconfirm
+sudo pacman -R --noconfirm nvidia nvidia-utils lib32-nvidia-utils nvidia-settings nvidia-prime
 
 echo "Installing Nvidia Nouveau drivers"
-sudo pacman -S vulkan-nouveau lib32-vulkan-nouveau --noconfirm
+sudo pacman -S --noconfirm vulkan-nouveau lib32-vulkan-nouveau
 
 reboot
 exit 0
