@@ -68,6 +68,7 @@ public partial class MainView : UserControl
         if (Design.IsDesignMode) return;
 
         LoadSettings();
+        RotApplyButton_OnClick("init", null);// apply any rotation/screen settings
         
         connectedTimer = new System.Timers.Timer(1000 * 5);
         connectedTimer.Elapsed += ConnectedTimer;
@@ -288,6 +289,8 @@ public partial class MainView : UserControl
     
     private void RotApplyButton_OnClick(object sender, RoutedEventArgs e)
     {
+        bool isInitMode = (sender as string) == "init";
+
         static void WriteX11Settings(StreamWriter writer, string rotation)
         {
             writer.WriteLine("display=$(xrandr --query | awk '/ connected/ {print $1; exit}')");
@@ -302,9 +305,9 @@ public partial class MainView : UserControl
         
         static void WriteWestonSettings(StreamWriter writer, string rotation, string display)
         {
-            writer.WriteLine("[core]");
-            writer.WriteLine("color-management=true");// HDR color managment
-            writer.WriteLine();
+            //writer.WriteLine("[core]");
+            //writer.WriteLine("color-management=true");// HDR color managment
+            //writer.WriteLine();
             
             writer.WriteLine("[output]");
             writer.WriteLine($"name={display}");
@@ -312,8 +315,8 @@ public partial class MainView : UserControl
             writer.WriteLine("enable_vrr=true");
             writer.WriteLine("vrr-mode=game");
             
-            writer.WriteLine("eotf-mode=st2084");// HDR PQ curve
-            writer.WriteLine("colorimetry-mode=bt2020rgb");// HDR wide‑gamut space
+            //writer.WriteLine("eotf-mode=st2084");// HDR PQ curve
+            //writer.WriteLine("colorimetry-mode=bt2020rgb");// HDR wide‑gamut space
         }
         
         /*static string GetWaylandDisplay()
@@ -394,10 +397,13 @@ public partial class MainView : UserControl
             //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 180", useBash:false);// 180, flipped, flipped-180 (options)
         }
         
-        SaveSettings();
-
-        App.exitCode = 21;// reboot Managment
-        MainWindow.singleton.Close();
+        // finish
+        if (!isInitMode)
+        {
+            SaveSettings();
+            App.exitCode = 21;// reboot Managment
+            MainWindow.singleton.Close();
+        }
     }
     
     private void NvidiaApplyButton_OnClick(object sender, RoutedEventArgs e)
