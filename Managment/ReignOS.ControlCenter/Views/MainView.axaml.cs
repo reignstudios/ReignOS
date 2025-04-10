@@ -384,16 +384,16 @@ public partial class MainView : UserControl
         else if (rot_Left.IsChecked == true)
         {
             using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "left");
-            using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "270");
-            using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-270", GetWestonDisplay());
-            //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 270", useBash:false);// 270, flipped-270 (options)
+            using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "90");
+            using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-90", GetWestonDisplay());
+            //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 90", useBash:false);// 90, flipped-90 (options)
         }
         else if (rot_Right.IsChecked == true)
         {
             using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "right");
-            using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "90");
-            using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-90", GetWestonDisplay());
-            //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 90", useBash:false);// 90, flipped-90 (options)
+            using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "270");
+            using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-270", GetWestonDisplay());
+            //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 270", useBash:false);// 270, flipped-270 (options)
         }
         else if (rot_Flip.IsChecked == true)
         {

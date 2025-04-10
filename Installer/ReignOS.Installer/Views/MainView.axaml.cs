@@ -228,12 +228,12 @@ public partial class MainView : UserControl
                     }
                     else if (leftRotRadioButton.IsChecked == true)
                     {
-                        WriteWestonSettings(writer, "rotate-270", GetWestonDisplay());
+                        WriteWestonSettings(writer, "rotate-90", GetWestonDisplay());
                         writerSettings.WriteLine("rot=left");
                     }
                     else if (rightRotRadioButton.IsChecked == true)
                     {
-                        WriteWestonSettings(writer, "rotate-90", GetWestonDisplay());
+                        WriteWestonSettings(writer, "rotate-270", GetWestonDisplay());
                         writerSettings.WriteLine("rot=right");
                     }
                     else if (flipRotRadioButton.IsChecked == true)
@@ -257,11 +257,11 @@ public partial class MainView : UserControl
             }
             else if (leftRotRadioButton.IsChecked == true)
             {
-                ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 270", out _);// 270, flipped-270 (options)
+                ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 90", out _);// 270, flipped-270 (options)
             }
             else if (rightRotRadioButton.IsChecked == true)
             {
-                ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 90", out _);// 90, flipped-90 (options)
+                ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 270", out _);// 90, flipped-90 (options)
             }
             else if (flipRotRadioButton.IsChecked == true)
             {

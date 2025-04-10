@@ -433,6 +433,9 @@ static class InstallUtil
         // clone ReignOS repo
         Run("git", "clone https://github.com/reignstudios/ReignOS.git /mnt/home/gamer/ReignOS");
         Run("NUGET_PACKAGES=/mnt/root/.nuget dotnet", "publish -r linux-x64 -c Release", workingDir:"/mnt/home/gamer/ReignOS/Managment");
+
+        // copy wifi settings
+        Run("cp", "-r /var/lib/iwd/* /mnt/var/lib/iwd/");
         
         UpdateProgress(100);
     }
