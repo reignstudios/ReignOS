@@ -340,7 +340,7 @@ public partial class MainView : UserControl
                 {
                     if (outputMode)
                     {
-                        if (line.Contains("name:"))
+                        if (line.Contains("name: "))
                         {
                             var match = Regex.Match(line, @"name:\s*(.*)");
                             if (match.Success)
@@ -350,12 +350,11 @@ public partial class MainView : UserControl
                             break;
                         }
                     }
-                    else if (line.StartsWith("wl_output"))
+                    else if (line.Contains("'wl_output'"))
                     {
                         outputMode = true;
                     }
                 }
-                return result;
             }
             catch {}
             return "ERROR";
