@@ -187,11 +187,13 @@ internal class Program
                 Log.WriteLine("Starting Weston with ReignOS.ControlCenter...");
                 string result = ProcessUtil.Run("weston", "--shell=kiosk-shell.so --xwayland -- ./Start_ControlCenter.sh", out exitCode, useBash:false);// start ControlCenter
                 Console.WriteLine(result);
+
                 var resultValues = result.Split('\n');
-                Log.WriteLine(resultValues[resultValues.Length - 2]);
-                Log.WriteLine(resultValues[resultValues.Length - 1]);
-                var exitCodeValue = resultValues.LastOrDefault(x => x.Contains("EXIT_CODE: "));
-                Log.WriteLine(exitCodeValue);
+                var exitCodeValue = resultValues.FirstOrDefault(x => x.Contains("EXIT_CODE: "));// get ControlCenter exit code
+                if (exitCodeValue != null)
+                {
+                    if (!int.TryParse(exitCodeValue, out exitCode)) exitCode = 0;
+                }
 
                 if (exitCode == 0) break;
                 else if (exitCode == 1) compositor = Compositor.Gamescope;
