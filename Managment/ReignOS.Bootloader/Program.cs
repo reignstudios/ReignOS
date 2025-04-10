@@ -190,7 +190,7 @@ internal class Program
                 var resultValues = result.Split('\n');
                 Log.WriteLine(resultValues[resultValues.Length - 2]);
                 Log.WriteLine(resultValues[resultValues.Length - 1]);
-                var exitCodeValue = resultValues.FirstOrDefault(x => x.Contains("EXIT_CODE: "));
+                var exitCodeValue = resultValues.LastOrDefault(x => x.Contains("EXIT_CODE: "));
                 Log.WriteLine(exitCodeValue);
 
                 if (exitCode == 0) break;
