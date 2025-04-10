@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # args
-USE_MANGOHUB=0
+USE_MANGOHUB=false
 for arg in "$@"; do
     if [ "$arg" = "--use-mangohub" ]; then
-        USE_MANGOHUB=1
+        USE_MANGOHUB=true
     fi
 done
 
@@ -19,7 +19,7 @@ fi
 unclutter -idle 3 &
 
 # start steam
-if [ "$USE_MANGOHUB" -eq 1 ]; then
+if [ "$USE_MANGOHUB" = "true" ]; then
     mangohud steam -bigpicture -steamdeck
 else
     steam -bigpicture -steamdeck

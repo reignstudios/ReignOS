@@ -1,16 +1,16 @@
 #!/bin/bash
 
 # args
-DISABLE_UPDATE=0
+DISABLE_UPDATE=false
 for arg in "$@"; do
     if [ "$arg" = "--disable-update" ]; then
-        DISABLE_UPDATE=1
+        DISABLE_UPDATE=true
     fi
 done
 
 # wait for network
 NetworkUp=false
-if [ "$DISABLE_UPDATE" -eq 0 ]; then
+if [ "$DISABLE_UPDATE" = "true" ]; then
     for i in $(seq 1 30); do
         # Try to ping Google's DNS server
         if ping -c 1 -W 1 8.8.8.8 &> /dev/null; then
