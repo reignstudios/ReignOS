@@ -192,7 +192,7 @@ internal class Program
                 var exitCodeValue = resultValues.FirstOrDefault(x => x.Contains("EXIT_CODE: "));// get ControlCenter exit code
                 if (exitCodeValue != null)
                 {
-                    if (!int.TryParse(exitCodeValue, out exitCode)) exitCode = 0;
+                    if (!int.TryParse(exitCodeValue.Replace("EXIT_CODE: ", ""), out exitCode)) exitCode = 0;
                 }
 
                 if (exitCode == 0) break;
