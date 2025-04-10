@@ -99,7 +99,7 @@ fi
 if [ $exit_code -ne 20 ]; then
   echo ""
   echo "ReignOS (Re-Launching re-signin)..."
-  #loginctl terminate-user gamer
+  loginctl terminate-user gamer
   exit 0
 fi
 
