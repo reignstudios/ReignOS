@@ -302,18 +302,18 @@ public partial class MainView : UserControl
         
         static void WriteWestonSettings(StreamWriter writer, string rotation, string display)
         {
-            //writer.WriteLine("[core]");
-            //writer.WriteLine("color-management=true");// HDR color managment
-            //writer.WriteLine();
+            writer.WriteLine("[core]");
+            writer.WriteLine("color-management=true");// HDR color managment
+            writer.WriteLine();
             
             writer.WriteLine("[output]");
-            writer.WriteLine($"name={display}");// TODO: get display name using weston-info
+            writer.WriteLine($"name={display}");
             writer.WriteLine($"transform={rotation}");
-            //writer.WriteLine("enable_vrr=true");// TODO: test
-            //writer.WriteLine("vrr-mode=game");
+            writer.WriteLine("enable_vrr=true");
+            writer.WriteLine("vrr-mode=game");
             
-            //writer.WriteLine("eotf-mode=st2084");// HDR PQ curve
-            //writer.WriteLine("colorimetry-mode=bt2020rgb");// HDR wide‑gamut space
+            writer.WriteLine("eotf-mode=st2084");// HDR PQ curve
+            writer.WriteLine("colorimetry-mode=bt2020rgb");// HDR wide‑gamut space
         }
         
         /*static string GetWaylandDisplay()
