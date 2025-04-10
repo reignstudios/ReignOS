@@ -1,19 +1,29 @@
 #!/bin/bash
 
-# wait for network
-NetworkUp=false
-for i in $(seq 1 30); do
-    # Try to ping Google's DNS server
-    if ping -c 1 -W 1 8.8.8.8 &> /dev/null; then
-        echo "Network is up!"
-        NetworkUp=true
-        sleep 1
-        break
-    else
-        echo "Waiting for network... $i/$timeout"
-        sleep 1
+# args
+DISABLE_UPDATE=0
+for arg in "$@"; do
+    if [ "$arg" = "--disable-update" ]; then
+        DISABLE_UPDATE=1
     fi
 done
+
+# wait for network
+NetworkUp=false
+if [ "DISABLE_UPDATE" -eq 1 ]; then
+    for i in $(seq 1 30); do
+        # Try to ping Google's DNS server
+        if ping -c 1 -W 1 8.8.8.8 &> /dev/null; then
+            echo "Network is up!"
+            NetworkUp=true
+            sleep 1
+            break
+        else
+            echo "Waiting for network... $i/$timeout"
+            sleep 1
+        fi
+    done
+fi
 
 # run updates (if network avaliable)
 if [ "$NetworkUp" = "true" ]; then
@@ -68,10 +78,27 @@ if [ $exit_code -eq 31 ]; then
   exit 0
 fi
 
+# install missing packages
+if [ $exit_code -eq 21 ]; then
+  echo ""
+  echo "ReignOS (Installing missing packages)..."
+  ./InstallingMissingPackages.sh
+  reboot
+  exit 0
+fi
+
+# re-launch launcher and exit without update check
+if [ $exit_code -eq 21 ]; then
+  echo ""
+  echo "ReignOS (Re-Launching no update check)..."
+  ./Launch.sh $@ --disable-update &
+  exit 0
+fi
+
 # re-launch launcher and exit (ALWAYS CALL THIS LAST)
 if [ $exit_code -ne 20 ]; then
   echo ""
-  echo "ReignOS (Re-Launching)..."
+  echo "ReignOS (Re-Launching re-signin)..."
   loginctl terminate-user gamer
   exit 0
 fi

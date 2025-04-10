@@ -318,6 +318,7 @@ python
 xorg-server-xwayland
 wayland
 wayland-protocols
+wayland-utils
 xorg-xev
 xbindkeys
 xorg-xinput

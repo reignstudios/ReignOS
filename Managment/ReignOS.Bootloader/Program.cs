@@ -33,6 +33,7 @@ internal class Program
         // ensure permissions
         ProcessUtil.Run("chmod", "+x ./Launch.sh", useBash:false);
         ProcessUtil.Run("chmod", "+x ./Update.sh", useBash:false);
+        ProcessUtil.Run("chmod", "+x ./InstallingMissingPackages.sh", useBash:false);
         ProcessUtil.Run("chmod", "+x ./PostKill.sh", useBash:false);
         
         ProcessUtil.Run("chmod", "+x ./Nvidia_Install_Nouveau.sh", useBash:false);
@@ -46,9 +47,10 @@ internal class Program
         ProcessUtil.Run("chmod", "+x ./Start_X11.sh", useBash:false);
         
         // detect if system needs package updates
-        if (PackageUpdates.NeedsUpdate())
+        if (PackageUpdates.NeedsUpdate() && IsOnline())
         {
-            Environment.ExitCode = 123;
+            Log.WriteLine("Missing packages...");
+            Environment.ExitCode = 100;
             return;
         }
         
@@ -180,7 +182,8 @@ internal class Program
             if (useControlCenter)
             {
                 Log.WriteLine("Starting Cage with ReignOS.ControlCenter...");
-                string result = ProcessUtil.Run("cage", "./Start_ControlCenter.sh", out exitCode, useBash:false);// start ControlCenter
+                //string result = ProcessUtil.Run("cage", "./Start_ControlCenter.sh", out exitCode, useBash:false);// start ControlCenter
+                string result = ProcessUtil.Run("weston", "--shell=kiosk-shell.so --xwayland -- ./ReignOS.ControlCenter", out exitCode, useBash:false);// start ControlCenter
                 Console.WriteLine(result);
                 if (exitCode == 0) break;
                 else if (exitCode == 1) compositor = Compositor.Gamescope;
@@ -266,5 +269,11 @@ internal class Program
         Log.WriteLine("Starting X11 with Steam...");
         string result = ProcessUtil.Run("startx", "", useBash:false);
         Log.WriteLine(result);
+    }
+
+    public static bool IsOnline()
+    {
+        string result = ProcessUtil.Run("ping", "-c 1 google.com", consoleLogOut:false);
+        return result.Contains("1 received");
     }
 }
