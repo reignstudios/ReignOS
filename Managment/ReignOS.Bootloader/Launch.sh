@@ -10,7 +10,7 @@ done
 
 # wait for network
 NetworkUp=false
-if [ "$DISABLE_UPDATE" = "true" ]; then
+if [ "$DISABLE_UPDATE" = "false" ]; then
     for i in $(seq 1 30); do
         # Try to ping Google's DNS server
         if ping -c 1 -W 1 8.8.8.8 &> /dev/null; then
