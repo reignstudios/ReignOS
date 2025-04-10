@@ -39,7 +39,7 @@ public partial class MainView : UserControl
     private const string efiPartitionName = "ReignOS_EFI";
     private const string ext4PartitionName = "ReignOS";
 
-    private bool allowRotApply;
+    private DateTime allowRotApplyTime;
     
     public MainView()
     {
@@ -58,6 +58,7 @@ public partial class MainView : UserControl
         ConnectedTimer(null, null);
 
         // load rotation
+        allowRotApplyTime = DateTime.Now;
         const string configPath = "/home/gamer/.config/";
         const string westonSettingsFile = configPath + "weston-settings.txt";
         if (File.Exists(westonSettingsFile))
@@ -155,11 +156,8 @@ public partial class MainView : UserControl
 
     private void RotationToggleButton_OnIsCheckedChanged(object sender, RoutedEventArgs e)
     {
-        if (!allowRotApply)// disable first time its set
-        {
-            allowRotApply = true;
-            return;
-        }
+        var now = DateTime.Now;
+        if ((now - allowRotApplyTime).TotalSeconds < 3) return;
 
         static void WriteWestonSettings(StreamWriter writer, string rotation, string display)
         {
