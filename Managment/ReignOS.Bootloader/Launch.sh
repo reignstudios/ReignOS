@@ -79,7 +79,7 @@ if [ $exit_code -eq 31 ]; then
 fi
 
 # install missing packages
-if [ $exit_code -eq 21 ]; then
+if [ $exit_code -eq 100 ]; then
   echo ""
   echo "ReignOS (Installing missing packages)..."
   ./InstallingMissingPackages.sh
