@@ -435,6 +435,7 @@ static class InstallUtil
         Run("NUGET_PACKAGES=/mnt/root/.nuget dotnet", "publish -r linux-x64 -c Release", workingDir:"/mnt/home/gamer/ReignOS/Managment");
 
         // copy wifi settings
+        Run("mkdir", "-p /mnt/var/lib/iwd/");
         Run("cp", "-r /var/lib/iwd/* /mnt/var/lib/iwd/");
         
         UpdateProgress(100);
