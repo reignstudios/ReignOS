@@ -205,22 +205,28 @@ public partial class MainView : UserControl
         App.exitCode = 2;// open Steam in Weston
         MainWindow.singleton.Close();
     }
+
+    private void WestonWindowedButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        App.exitCode = 3;// open Steam in Weston-Windowed
+        MainWindow.singleton.Close();
+    }
     
     private void CageButton_OnClick(object sender, RoutedEventArgs e)
     {
-        App.exitCode = 3;// open Steam in Cage
+        App.exitCode = 4;// open Steam in Cage
         MainWindow.singleton.Close();
     }
     
     private void LabwcButton_OnClick(object sender, RoutedEventArgs e)
     {
-        App.exitCode = 4;// open Steam in Labwc
+        App.exitCode = 5;// open Steam in Labwc
         MainWindow.singleton.Close();
     }
     
     private void X11Button_OnClick(object sender, RoutedEventArgs e)
     {
-        App.exitCode = 5;// open Steam in X11
+        App.exitCode = 6;// open Steam in X11
         MainWindow.singleton.Close();
     }
     

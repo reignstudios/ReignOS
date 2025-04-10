@@ -15,6 +15,7 @@ enum Compositor
     None,
     Gamescope,
     Weston,
+    WestonWindowed,
     Cage,
     Labwc,
     X11
@@ -129,6 +130,7 @@ internal class Program
         {
             if (arg == "--gamescope") compositor = Compositor.Gamescope;
             else if (arg == "--weston") compositor = Compositor.Weston;
+            else if (arg == "--weston-windowed") compositor = Compositor.Weston;
             else if (arg == "--cage") compositor = Compositor.Cage;
             else if (arg == "--labwc") compositor = Compositor.Labwc;
             else if (arg == "--x11") compositor = Compositor.X11;
@@ -154,7 +156,8 @@ internal class Program
                         break;
 
                     case Compositor.Gamescope: StartCompositor_Gamescope(useMangoHub); break;
-                    case Compositor.Weston: StartCompositor_Weston(useMangoHub); break;
+                    case Compositor.Weston: StartCompositor_Weston(useMangoHub, false); break;
+                    case Compositor.WestonWindowed: StartCompositor_Weston(useMangoHub, true); break;
                     case Compositor.Cage: StartCompositor_Cage(useMangoHub); break;
                     case Compositor.Labwc: StartCompositor_Labwc(); break;
                     case Compositor.X11: StartCompositor_X11(); break;
@@ -198,9 +201,10 @@ internal class Program
                 if (exitCode == 0) break;
                 else if (exitCode == 1) compositor = Compositor.Gamescope;
                 else if (exitCode == 2) compositor = Compositor.Weston;
-                else if (exitCode == 3) compositor = Compositor.Cage;
-                else if (exitCode == 4) compositor = Compositor.Labwc;
-                else if (exitCode == 5) compositor = Compositor.X11;
+                else if (exitCode == 3) compositor = Compositor.WestonWindowed;
+                else if (exitCode == 4) compositor = Compositor.Cage;
+                else if (exitCode == 5) compositor = Compositor.Labwc;
+                else if (exitCode == 6) compositor = Compositor.X11;
                 else break;// exit with control-center exit-code
 
                 // reset things for new compositor
@@ -253,11 +257,12 @@ internal class Program
         Log.WriteLine(result);
     }
 
-    private static void StartCompositor_Weston(bool useMangoHub)
+    private static void StartCompositor_Weston(bool useMangoHub, bool windowedMode)
     {
         Log.WriteLine("Starting Weston with Steam...");
         string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
-        string result = ProcessUtil.Run("weston", $"--shell=kiosk-shell.so --xwayland -- ./Start_Weston.sh{useMangoHubArg}", useBash:false);
+        string windowedModeArg = !windowedMode ? "--shell=kiosk-shell.so " : "";
+        string result = ProcessUtil.Run("weston", $"{windowedModeArg}--xwayland -- ./Start_Weston.sh{useMangoHubArg}", useBash:false);
         Log.WriteLine(result);
     }
     

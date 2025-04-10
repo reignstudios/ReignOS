@@ -30,6 +30,13 @@
 					</Grid>
 				</Button>
 
+				<Button Click="WestonWindowedButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#603000">
+					<Grid Margin="0">
+						<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
+						<TextBlock Text="Weston-W" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
+					</Grid>
+				</Button>
+
 				<Button Click="CageButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#006000">
 					<Grid Margin="0">
 						<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
