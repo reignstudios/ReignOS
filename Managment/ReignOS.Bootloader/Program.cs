@@ -185,7 +185,7 @@ internal class Program
                 //Log.WriteLine("Starting Cage with ReignOS.ControlCenter...");
                 //string result = ProcessUtil.Run("cage", "./Start_ControlCenter.sh", out exitCode, useBash:false);// start ControlCenter
                 Log.WriteLine("Starting Weston with ReignOS.ControlCenter...");
-                string result = ProcessUtil.Run("weston", "--shell=kiosk-shell.so --xwayland -- bash -c \"./ReignOS.ControlCenter exit_code=$? && echo 'EXIT_CODE: $exit_code'\"", out exitCode, useBash:false);// start ControlCenter
+                string result = ProcessUtil.Run("weston", "--shell=kiosk-shell.so --xwayland -- ./Start_ControlCenter.sh", out exitCode, useBash:false);// start ControlCenter
                 Console.WriteLine(result);
                 var resultValues = result.Split('\n');
                 Log.WriteLine(resultValues[resultValues.Length - 2]);

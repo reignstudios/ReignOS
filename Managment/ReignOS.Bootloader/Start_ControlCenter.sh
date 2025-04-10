@@ -9,3 +9,5 @@ fi
 
 # start ControlCenter
 ./ReignOS.ControlCenter
+exit_code=$?
+echo "EXIT_CODE: $exit_code"
