@@ -1,10 +1,10 @@
 #!/bin/bash
 
-sudo pacman -Syu
+sudo pacman -Syu --noconfirm
 
 # remove old packages
 # nothing yet...
 
 # add new packages
-sudo pacman -S wayland-utils
-sudo pacman -S weston
+sudo pacman -S wayland-utils --noconfirm
+sudo pacman -S weston --noconfirm
