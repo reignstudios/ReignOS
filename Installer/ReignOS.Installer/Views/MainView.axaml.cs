@@ -722,7 +722,7 @@ public partial class MainView : UserControl
 
     private void OpenGPartedButton_OnClick(object sender, RoutedEventArgs e)
     {
-        if (Program.compositorMode == CompositorMode.Weston && Program.compositorMode == CompositorMode.Labwc)
+        if (Program.compositorMode == CompositorMode.Weston || Program.compositorMode == CompositorMode.Labwc)
         {
             ProcessUtil.Run("gparted", "", wait:true, asAdmin:true);
             driveListBox.Items.Clear();
