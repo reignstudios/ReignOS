@@ -90,6 +90,27 @@
 						<RadioButton Name="nvidia_Proprietary" Content="Proprietary" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 					</Grid>
 				</Grid>
+
+				<Grid Margin="8,8,8,4" Background="#444444" Height="40">
+					<Grid>
+						<TextBlock Text="Default GPU" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+						<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="NvidiaApplyButton_OnClick"/>
+						<RadioButton Name="gpuButton1" Content="GPU 1" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						<RadioButton Name="gpuButton2" Content="GPU 2" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						<RadioButton Name="gpuButton3" Content="GPU 3" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						<RadioButton Name="gpuButton4" Content="GPU 4" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+					</Grid>
+				</Grid>
+
+				<Grid Margin="8,8,8,4" Background="#444444" Height="40">
+					<Grid>
+						<TextBlock Text="Quick Settings" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+						<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="NvidiaApplyButton_OnClick"/>
+						<CheckBox Name="mangohubCheckbox" Content="MangoHub" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						<CheckBox Name="vrrCheckbox" Content="VRR" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						<CheckBox Name="hdrCheckbox" Content="HDR" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+					</Grid>
+				</Grid>
 			</StackPanel>
 
 			<StackPanel Margin="4" Width="235" Height="42" HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="#000040" Orientation="Horizontal">
@@ -99,10 +120,11 @@
 			</StackPanel>
 			
 			<StackPanel Margin="245,0,4,4" Height="42" VerticalAlignment="Bottom" Background="#000040" Orientation="Horizontal" FlowDirection="RightToLeft">
-				<Button Content="Check Updates" Margin="4,0,0,0" Click="CheckUpdatesButton_Click"/>
+				<Button Content="Check Updates" Background="OrangeRed" Margin="4,0,0,0" Click="CheckUpdatesButton_Click"/>
 				<Button Content="Boot Manager" Margin="4,0,0,0" Click="BootManagerButton_OnClick"/>
 				<Button Content="Disk Manager" Margin="4,0,0,0" Click="DriveManagerButton_OnClick"/>
 				<Button Content="Network Manager" Margin="4,0,0,0" Click="NetworkManagerButton_OnClick"/>
+				<Button Content="GPU Utils" Margin="4,0,0,0" Click="GPUUtilsButton_OnClick"/>
 			</StackPanel>
 		</Grid>
 		
@@ -162,6 +184,23 @@
 				<TextBlock Text="NOTE: This will restart device once finished" Foreground="DarkRed" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,54,0,0"/>
 				<Button Content="Back" Width="128" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="DriveManagerBackButton_OnClick"/>
 			</Grid>
+		</Grid>
+
+		<Grid Name="gpuUtilsGrid" Margin="4" IsVisible="False">
+			<StackPanel Orientation="Vertical">
+				<TextBlock Text="GPUs" FontSize="24"/>
+				<ListBox Height="64"/>
+
+				<TextBlock Text="GPU Names" FontSize="24" Margin="0,10,0,0"/>
+				<ListBox Height="64"/>
+
+				<TextBlock Text="GPU Drivers" FontSize="24" Margin="0,10,0,0"/>
+				<ListBox Height="64"/>
+				
+				<Separator Margin="0,10,0,10"/>
+				<Button Content="Nvidia Settings" Background="DarkGreen"/>
+			</StackPanel>
+			<Button Content="Back" Width="128" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="GPUUtilsBackButton_OnClick"/>
 		</Grid>
 	</Grid>
 </UserControl>

@@ -374,33 +374,40 @@ public partial class MainView : UserControl
         string x11SettingsFile = Path.Combine(folder, "X11_Settings.sh");
         string waylandSettingsFile = Path.Combine(folder, "Wayland_Settings.sh");
         const string westonConfigFile = "/home/gamer/.config/weston.ini";
-        if (rot_Default.IsChecked == true)
+        try
         {
-            using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "normal");
-            using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "normal");
-            using (var writer = new StreamWriter(westonConfigFile))  WriteWestonSettings(writer, "normal", GetWestonDisplay());
-            //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform normal", useBash:false);
+            if (rot_Default.IsChecked == true)
+            {
+                using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "normal");
+                using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "normal");
+                using (var writer = new StreamWriter(westonConfigFile))  WriteWestonSettings(writer, "normal", GetWestonDisplay());
+                //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform normal", useBash:false);
+            }
+            else if (rot_Left.IsChecked == true)
+            {
+                using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "left");
+                using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "90");
+                using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-90", GetWestonDisplay());
+                //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 90", useBash:false);// 90, flipped-90 (options)
+            }
+            else if (rot_Right.IsChecked == true)
+            {
+                using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "right");
+                using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "270");
+                using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-270", GetWestonDisplay());
+                //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 270", useBash:false);// 270, flipped-270 (options)
+            }
+            else if (rot_Flip.IsChecked == true)
+            {
+                using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "inverted");
+                using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "180");
+                using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-180", GetWestonDisplay());
+                //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 180", useBash:false);// 180, flipped, flipped-180 (options)
+            }
         }
-        else if (rot_Left.IsChecked == true)
+        catch (Exception ex)
         {
-            using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "left");
-            using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "90");
-            using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-90", GetWestonDisplay());
-            //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 90", useBash:false);// 90, flipped-90 (options)
-        }
-        else if (rot_Right.IsChecked == true)
-        {
-            using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "right");
-            using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "270");
-            using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-270", GetWestonDisplay());
-            //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 270", useBash:false);// 270, flipped-270 (options)
-        }
-        else if (rot_Flip.IsChecked == true)
-        {
-            using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "inverted");
-            using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "180");
-            using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-180", GetWestonDisplay());
-            //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 180", useBash:false);// 180, flipped, flipped-180 (options)
+            Console.WriteLine(ex);
         }
         
         // finish
@@ -801,5 +808,17 @@ public partial class MainView : UserControl
 
         // start auto mount back up
         RestartButton_Click(null, null);
+    }
+
+    private void GPUUtilsButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        mainGrid.IsVisible = false;
+        gpuUtilsGrid.IsVisible = true;
+    }
+    
+    private void GPUUtilsBackButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        mainGrid.IsVisible = true;
+        gpuUtilsGrid.IsVisible = false;
     }
 }
