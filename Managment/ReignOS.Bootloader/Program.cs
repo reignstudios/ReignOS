@@ -252,8 +252,8 @@ internal class Program
     private static void StartCompositor_Gamescope(bool useMangoHub)
     {
         Log.WriteLine("Starting Gamescope with Steam...");
-        string useMangoHubArg = useMangoHub ? "MANGOHUD=1 " : "";
-        string result = ProcessUtil.Run($"{useMangoHubArg}gamescope", $"-e -f --adaptive-sync --hdr-enabled --framerate-limit -- ./Start_Gamescope.sh", useBash:true);
+        string useMangoHubArg = useMangoHub ? "MANGOHUD=1 " : "";//--mangoapp
+        string result = ProcessUtil.Run($"{useMangoHubArg}gamescope", $"-e -f --adaptive-sync --hdr-enabled -- ./Start_Gamescope.sh", useBash:true);// --framerate-limit
         Log.WriteLine(result);
     }
 
@@ -294,4 +294,17 @@ internal class Program
         string result = ProcessUtil.Run("ping", "-c 1 google.com", consoleLogOut:false);
         return result.Contains("1 received");
     }
+
+    //List card infos
+    //ls /dev/dri # cards (card0, card1 etc)
+    //lspci | grep -E "VGA|3D" # card names
+    //ls -l /sys/class/drm/card*/device/driver # driver names
+
+    //nvidia-settings # open nvidia control-panel
+
+    //DRI_PRIME=1 WLR_DRM_DEVICES=/dev/dri/card1 weston # mesa
+    //weston --drm-device=card1 # other weston option
+    //prime-run weston #proprietary
+
+    //__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia # same as prime-run
 }

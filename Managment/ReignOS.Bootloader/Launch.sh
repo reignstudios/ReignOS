@@ -19,7 +19,7 @@ if [ "$DISABLE_UPDATE" = "false" ]; then
             sleep 1
             break
         else
-            echo "Waiting for network... $i/$timeout"
+            echo "Waiting for network... $i"
             sleep 1
         fi
     done
