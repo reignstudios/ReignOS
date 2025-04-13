@@ -234,7 +234,7 @@ public partial class MainView : UserControl
             Console.WriteLine(e);
         }
 
-        SaveSystemSettings();
+        //SaveSystemSettings();
     }
 
     private void SaveSystemSettings()
@@ -324,6 +324,7 @@ public partial class MainView : UserControl
         
         const string folder = "/home/gamer/ReignOS_Ext";
         if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+        if (!Directory.Exists("/home/gamer/.config")) Directory.CreateDirectory("/home/gamer/.config");
         string x11SettingsFile = Path.Combine(folder, "X11_Settings.sh");
         string waylandSettingsFile = Path.Combine(folder, "Wayland_Settings.sh");
         const string westonConfigFile = "/home/gamer/.config/weston.ini";
