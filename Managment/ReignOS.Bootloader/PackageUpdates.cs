@@ -1,4 +1,6 @@
 using ReignOS.Core;
+using System;
+using System.IO;
 
 namespace ReignOS.Bootloader;
 
@@ -11,14 +13,44 @@ static class PackageUpdates
     }
 
 
-    public static bool NeedsUpdate()
+    public static bool CheckUpdates()
     {
+        if (CheckBadConfigs()) return true;
+
         // check old packages
         // nothing yet...
 
         // check for missing packages
         if (!PackageExits("wayland-utils")) return true;
         if (!PackageExits("weston")) return true;
+
+        return false;
+    }
+
+    private static bool CheckBadConfigs()
+    {
+        try
+        {
+            const string path = "/etc/hostname";
+            string hostname = File.ReadAllText(path).Trim();
+            if (hostname == "reignos")
+            {
+                hostname = $"reignos_{Guid.NewGuid()}";
+                void getStandardInput_hostname(StreamWriter writer)
+                {
+                    writer.WriteLine(hostname);
+                    writer.Flush();
+                    writer.Close();
+                }
+                ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_hostname);
+
+                return true;
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
 
         return false;
     }

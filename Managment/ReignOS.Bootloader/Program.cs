@@ -55,7 +55,7 @@ internal class Program
         ProcessUtil.Run("chmod", "+x ./Start_X11.sh", useBash:false);
         
         // detect if system needs package updates
-        if (PackageUpdates.NeedsUpdate() && IsOnline())
+        if (PackageUpdates.CheckUpdates() && IsOnline())
         {
             Log.WriteLine("Missing packages...");
             Environment.ExitCode = 100;

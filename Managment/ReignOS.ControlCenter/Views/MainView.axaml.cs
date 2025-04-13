@@ -295,11 +295,12 @@ public partial class MainView : UserControl
         {
             try
             {
-                string result = ProcessUtil.Run("timeout 5s", "wayland-info", useBash:true);
+                string result = ProcessUtil.Run("wayland-info", "", useBash:false);
                 var lines = result.Split('\n');
                 bool outputMode = false;
                 foreach (string line in lines)
                 {
+                    break;
                     if (outputMode)
                     {
                         if (line.Contains("name: "))
@@ -318,7 +319,11 @@ public partial class MainView : UserControl
                     }
                 }
             }
-            catch {}
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
             return "ERROR";
         }
         

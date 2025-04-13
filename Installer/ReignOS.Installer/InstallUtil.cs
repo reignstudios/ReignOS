@@ -204,7 +204,8 @@ static class InstallUtil
         UpdateProgress(40);
 
         // configure hosts file
-        Run("echo", "\"reignos\" > /etc/hostname");
+        string hostname = $"reignos_{Guid.NewGuid()}";
+        Run("echo", $"\"{hostname}\" > /etc/hostname");
         path = "/mnt/etc/hosts";
         fileBuilder = new StringBuilder(File.ReadAllText(path));
         fileBuilder.AppendLine("127.0.0.1 localhost");
