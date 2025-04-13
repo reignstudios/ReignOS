@@ -261,6 +261,11 @@ internal class Program
         else Log.WriteLine("Unhandled exception: Unknown");
     }
 
+    private static string GetGPUArg(int gpu)
+    {
+        return gpu >= 1 ? $"DRI_PRIME={gpu} WLR_DRM_DEVICES=/dev/dri/card{gpu} __NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia " : "";
+    }
+
     private static void StartCompositor_Gamescope(bool useMangoHub, bool vrr, bool hdr, int gpu)
     {
         Log.WriteLine("Starting Gamescope with Steam...");
@@ -268,7 +273,7 @@ internal class Program
         string useMangoHubArg2 = useMangoHub ? " --mangoapp" : "";
         string vrrArg = vrr ? " --adaptive-sync" : "";
         string hdrArg = hdr ? " --hdr-enabled" : "";
-        string gpuArg = gpu >= 1 ? $"DRI_PRIME={gpu} __NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia " : "";
+        string gpuArg = GetGPUArg(gpu);
         string result = ProcessUtil.Run($"{gpuArg}{useMangoHubArg}gamescope", $"-e -f{useMangoHubArg2}{vrrArg}{hdrArg} -- ./Start_Gamescope.sh", useBash:true);// --framerate-limit
         Log.WriteLine(result);
     }
@@ -279,7 +284,7 @@ internal class Program
         string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
         string windowedModeArg = !windowedMode ? "--shell=kiosk-shell.so " : "";
         string windowedModeArg2 = windowedMode ? " --windowed-mode" : "";
-        string gpuArg = gpu >= 1 ? $"DRI_PRIME={gpu} __NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia " : "";
+        string gpuArg = GetGPUArg(gpu);
         string gpuArg2 = gpu >= 1 ? $"--drm-device=card{gpu} " : "";
         string result = ProcessUtil.Run($"{gpuArg}weston", $"{gpuArg2}{windowedModeArg}--xwayland -- ./Start_Weston.sh{useMangoHubArg}{windowedModeArg2}", useBash:true);
         Log.WriteLine(result);
@@ -289,7 +294,7 @@ internal class Program
     {
         Log.WriteLine("Starting Cage with Steam...");
         string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
-        string gpuArg = gpu >= 1 ? $"DRI_PRIME={gpu} __NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia " : "";
+        string gpuArg = GetGPUArg(gpu);
         string result = ProcessUtil.Run($"{gpuArg}cage", $"-d -s -- ./Start_Cage.sh{useMangoHubArg}", useBash:true);
         Log.WriteLine(result);
     }
@@ -297,7 +302,7 @@ internal class Program
     private static void StartCompositor_Labwc(int gpu)
     {
         Log.WriteLine("Starting Labwc with Steam...");
-        string gpuArg = gpu >= 1 ? $"DRI_PRIME={gpu} __NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia " : "";
+        string gpuArg = GetGPUArg(gpu);
         string result = ProcessUtil.Run($"{gpuArg}labwc", "--startup ./Start_Labwc.sh", useBash:true);
         Log.WriteLine(result);
     }
@@ -305,8 +310,8 @@ internal class Program
     private static void StartCompositor_X11(int gpu)
     {
         Log.WriteLine("Starting X11 with Steam...");
-        string gpuArg = gpu >= 1 ? $"DRI_PRIME={gpu} __NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia " : "";
-        string result = ProcessUtil.Run($"{gpuArg}startx", "", useBash:false);
+        string gpuArg = GetGPUArg(gpu);
+        string result = ProcessUtil.Run($"{gpuArg}startx", "", useBash:true);
         Log.WriteLine(result);
     }
 
