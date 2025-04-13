@@ -287,7 +287,7 @@ internal class Program
     private static void StartCompositor_Gamescope(bool useMangoHub, bool vrr, bool hdr, int gpu)
     {
         Log.WriteLine("Starting Gamescope with Steam...");
-        string useMangoHubArg = useMangoHub ? "MANGOHUD=1 " : "";
+        string useMangoHubArg = "";//useMangoHub ? "MANGOHUD=1 " : "";
         string useMangoHubArg2 = useMangoHub ? " --mangoapp" : "";
         string vrrArg = vrr ? " --adaptive-sync" : "";
         string hdrArg = hdr ? " --hdr-enabled" : "";
