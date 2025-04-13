@@ -941,6 +941,7 @@ public partial class MainView : UserControl
         gpuUtilsGrid.IsVisible = true;
 
         // add gpus
+        gpusListBox.Items.Clear();
         foreach (var gpu in gpus)
         {
             var item = new ListBoxItem()
@@ -951,6 +952,7 @@ public partial class MainView : UserControl
         }
 
         // add gpu names
+        gpuNamesListBox.Items.Clear();
         string result = ProcessUtil.Run("lspci", "| grep -E \"VGA|3D\"", useBash:true);
         foreach (var name in result.Split('\n'))
         {
@@ -958,10 +960,11 @@ public partial class MainView : UserControl
             {
                 Content = name
             };
-            gpusListBox.Items.Add(item);
+            gpuNamesListBox.Items.Add(item);
         }
 
         // add gpu drivers
+        gpuDriversListBox.Items.Clear();
         result = ProcessUtil.Run("ls", "-l /sys/class/drm/card*/device/driver", useBash:true);
         foreach (var driver in result.Split('\n'))
         {
@@ -969,7 +972,7 @@ public partial class MainView : UserControl
             {
                 Content = driver
             };
-            gpusListBox.Items.Add(item);
+            gpuDriversListBox.Items.Add(item);
         }
     }
     
