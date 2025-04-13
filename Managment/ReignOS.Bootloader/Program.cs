@@ -10,6 +10,12 @@ using System.Threading;
 using System.IO;
 using System.Linq;
 
+enum ControlCenterCompositor
+{
+    Weston,
+    Cage
+}
+
 enum Compositor
 {
     None,
@@ -123,6 +129,7 @@ internal class Program
         Thread.Sleep(1000);// give service a sec to config anything needed before launching compositor
 
         // process args
+        var controlCenterCompositor = ControlCenterCompositor.Weston;
         var compositor = Compositor.None;
         bool useControlCenter = false;
         bool useMangoHub = false;
@@ -131,13 +138,16 @@ internal class Program
         int gpu = 0;
         foreach (string arg in args)
         {
-            if (arg == "--gamescope") compositor = Compositor.Gamescope;
+            if (arg == "--use-controlcenter") useControlCenter = true;
+            else if (arg == "--controlcenter-weston") controlCenterCompositor = ControlCenterCompositor.Weston;
+            else if (arg == "--controlcenter-cage") controlCenterCompositor = ControlCenterCompositor.Cage;
+
+            else if (arg == "--gamescope") compositor = Compositor.Gamescope;
             else if (arg == "--weston") compositor = Compositor.Weston;
             else if (arg == "--weston-windowed") compositor = Compositor.WestonWindowed;
             else if (arg == "--cage") compositor = Compositor.Cage;
             else if (arg == "--labwc") compositor = Compositor.Labwc;
             else if (arg == "--x11") compositor = Compositor.X11;
-            else if (arg == "--use-controlcenter") useControlCenter = true;
 
             else if (arg.StartsWith("--gpu-"))
             {
@@ -197,12 +207,19 @@ internal class Program
             // start control center
             if (useControlCenter)
             {
-                //Log.WriteLine("Starting Cage with ReignOS.ControlCenter...");
-                //string result = ProcessUtil.Run("cage", "./Start_ControlCenter.sh", out exitCode, useBash:false);// start ControlCenter
-                Log.WriteLine("Starting Weston with ReignOS.ControlCenter...");
-                string result = ProcessUtil.Run("weston", "--shell=kiosk-shell.so --xwayland -- ./Start_ControlCenter.sh", out exitCode, useBash:false);// start ControlCenter
-                Console.WriteLine(result);
+                string result;
+                if (controlCenterCompositor == ControlCenterCompositor.Cage)
+                {
+                    Log.WriteLine("Starting Cage with ReignOS.ControlCenter...");
+                    result = ProcessUtil.Run("cage", "./Start_ControlCenter.sh", out exitCode, useBash:false);// start ControlCenter
+                }
+                else// default weston
+                {
+                    Log.WriteLine("Starting Weston with ReignOS.ControlCenter...");
+                    result = ProcessUtil.Run("weston", "--shell=kiosk-shell.so --xwayland -- ./Start_ControlCenter.sh", out exitCode, useBash:true);// start ControlCenter
+                }
 
+                Console.WriteLine(result);
                 var resultValues = result.Split('\n');
                 var exitCodeValue = resultValues.FirstOrDefault(x => x.Contains("EXIT_CODE: "));// get ControlCenter exit code (Weston doesn't pass this back like Cage)
                 if (exitCodeValue != null)
