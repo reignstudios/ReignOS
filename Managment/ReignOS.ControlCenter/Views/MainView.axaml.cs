@@ -334,7 +334,7 @@ public partial class MainView : UserControl
             {
                 using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "normal");
                 using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "normal");
-                //using (var writer = new StreamWriter(westonConfigFile))  WriteWestonSettings(writer, "normal", GetWestonDisplay());
+                using (var writer = new StreamWriter(westonConfigFile))  WriteWestonSettings(writer, "normal", GetWestonDisplay());
                 //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform normal", useBash:false);
             }
             else if (rot_Left.IsChecked == true)
