@@ -9,5 +9,5 @@ echo "Installing Nvidia Nouveau drivers"
 sudo pacman -S --noconfirm vulkan-nouveau lib32-vulkan-nouveau
 sudo mkinitcpio -P
 
-reboot
+reboot -f
 exit 0

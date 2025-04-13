@@ -41,7 +41,7 @@ exit_code=$?
 if [ $exit_code -eq 10 ]; then
   echo ""
   echo "ReignOS (rebooting)..."
-  reboot
+  reboot -f
   exit 0
 fi
 
@@ -49,7 +49,7 @@ fi
 if [ $exit_code -eq 11 ]; then
   echo ""
   echo "ReignOS (shutting down)..."
-  poweroff
+  poweroff -f
   exit 0
 fi
 
