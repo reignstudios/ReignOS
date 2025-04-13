@@ -8,6 +8,6 @@ if [ -e "$rot_script" ]; then
 fi
 
 # start ControlCenter
-./ReignOS.ControlCenter
+./ReignOS.ControlCenter $@
 exit_code=$?
 echo "EXIT_CODE: $exit_code"
