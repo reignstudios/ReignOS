@@ -133,7 +133,7 @@ internal class Program
         {
             if (arg == "--gamescope") compositor = Compositor.Gamescope;
             else if (arg == "--weston") compositor = Compositor.Weston;
-            else if (arg == "--weston-windowed") compositor = Compositor.Weston;
+            else if (arg == "--weston-windowed") compositor = Compositor.WestonWindowed;
             else if (arg == "--cage") compositor = Compositor.Cage;
             else if (arg == "--labwc") compositor = Compositor.Labwc;
             else if (arg == "--x11") compositor = Compositor.X11;

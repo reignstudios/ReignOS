@@ -135,6 +135,7 @@ public partial class MainView : UserControl
                     {
                         if (parts[1] == "ControlCenter") boot_ControlCenter.IsChecked = true;
                         else if (parts[1] == "Gamescope") boot_Gamescope.IsChecked = true;
+                        else if (parts[1] == "Weston") boot_Weston.IsChecked = true;
                         else if (parts[1] == "Cage") boot_Cage.IsChecked = true;
                     }
                     else if (parts[0] == "ScreenRotation")
@@ -196,6 +197,7 @@ public partial class MainView : UserControl
             {
                 if (boot_ControlCenter.IsChecked == true) writer.WriteLine("Boot=ControlCenter");
                 else if (boot_Gamescope.IsChecked == true) writer.WriteLine("Boot=Gamescope");
+                else if (boot_Weston.IsChecked == true) writer.WriteLine("Boot=Weston");
                 else if (boot_Cage.IsChecked == true) writer.WriteLine("Boot=Cage");
                 else writer.WriteLine("Boot=ControlCenter");
             
