@@ -280,9 +280,8 @@ internal class Program
 
     private static string GetGPUArg(int gpu)
     {
-        return "";
         //return "VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json prime-run ";//__NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia __VK_LAYER_NV_optimus=NVIDIA_only VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json
-        //return gpu >= 1 ? $"DRI_PRIME={gpu} WLR_DRM_DEVICES=/dev/dri/card{gpu} " : "";
+        return gpu >= 1 ? $"DRI_PRIME={gpu - 1} " : "";// WLR_DRM_DEVICES=/dev/dri/card{gpu - 1}
     }
 
     private static void StartCompositor_Gamescope(bool useMangoHub, bool vrr, bool hdr, int gpu)
@@ -304,7 +303,7 @@ internal class Program
         string windowedModeArg = !windowedMode ? "--shell=kiosk-shell.so " : "";
         string windowedModeArg2 = windowedMode ? " --windowed-mode" : "";
         string gpuArg = GetGPUArg(gpu);
-        string gpuArg2 = gpu >= 1 ? $"--drm-device=card{gpu} " : "";
+        string gpuArg2 = "";//gpu >= 1 ? $"--drm-device=card{gpu} " : "";
         string result = ProcessUtil.Run($"{gpuArg}weston", $"{gpuArg2}{windowedModeArg}--xwayland -- ./Start_Weston.sh{useMangoHubArg}{windowedModeArg2}", useBash:true);
         Log.WriteLine(result);
     }
