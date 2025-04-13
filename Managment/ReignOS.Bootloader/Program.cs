@@ -211,7 +211,7 @@ internal class Program
                 if (controlCenterCompositor == ControlCenterCompositor.Cage)
                 {
                     Log.WriteLine("Starting Cage with ReignOS.ControlCenter...");
-                    result = ProcessUtil.Run("cage", "-- ./Start_ControlCenter.sh -cage", out exitCode, useBash:true);// start ControlCenter
+                    result = ProcessUtil.Run("cage", "./Start_ControlCenter.sh -cage", out exitCode, useBash:false);// start ControlCenter
                 }
                 else// default weston
                 {
