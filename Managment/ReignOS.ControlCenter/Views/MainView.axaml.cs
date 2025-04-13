@@ -295,31 +295,7 @@ public partial class MainView : UserControl
         {
             try
             {
-                bool outputMode = false;
-                string result = null;
-                void standardOut(string line)
-	            {
-                    if (result != null) return;
-		            if (outputMode)
-                    {
-                        if (line.Contains("name: "))
-                        {
-                            var match = Regex.Match(line, @"name:\s*(.*)");
-                            if (match.Success)
-                            {
-                                result = match.Groups[1].Value.Trim();
-                            }
-                        }
-                    }
-                    else if (line.Contains("'wl_output'"))
-                    {
-                        outputMode = true;
-                    }
-	            }
-
-                ProcessUtil.Run("wayland-info", "", useBash:false, standardOut:standardOut);
-                return result == null ? "ERROR" : result;
-                /*string result = ProcessUtil.Run("wayland-info", "", useBash:false);
+                string result = ProcessUtil.Run("wayland-info", "", useBash:false, disableStdRead:true);
                 var lines = result.Split('\n');
                 bool outputMode = false;
                 foreach (string line in lines)
@@ -340,7 +316,7 @@ public partial class MainView : UserControl
                     {
                         outputMode = true;
                     }
-                }*/
+                }
             }
             catch (Exception e)
             {

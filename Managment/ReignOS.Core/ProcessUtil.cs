@@ -17,12 +17,12 @@ public static class ProcessUtil
     public delegate void ProcessInputDelegate(StreamWriter writer);
     public static event ProcessOutputDelegate ProcessOutput;
     
-    public static string Run(string name, string args, Dictionary<string, string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, bool useBash = true, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, string workingDir = null, bool consoleLogOut = true)
+    public static string Run(string name, string args, Dictionary<string, string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, bool useBash = true, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, string workingDir = null, bool consoleLogOut = true, bool disableStdRead = false)
     {
-        return Run(name, args, out _, enviromentVars, wait, asAdmin, enterAdminPass, useBash, standardOut, getStandardInput, workingDir, consoleLogOut);
+        return Run(name, args, out _, enviromentVars, wait, asAdmin, enterAdminPass, useBash, standardOut, getStandardInput, workingDir, consoleLogOut, disableStdRead);
     }
 
-    public static string Run(string name, string args, out int exitCode, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, bool useBash = true, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, string workingDir = null, bool consoleLogOut = true)
+    public static string Run(string name, string args, out int exitCode, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, bool useBash = true, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, string workingDir = null, bool consoleLogOut = true, bool disableStdRead = false)
     {
         try
         {
@@ -61,8 +61,11 @@ public static class ProcessUtil
                     ProcessOutput?.Invoke(l);
                 }
                 process.StartInfo.UseShellExecute = false;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.RedirectStandardError = true;
+                if (!disableStdRead)
+                {
+                    process.StartInfo.RedirectStandardOutput = true;
+                    process.StartInfo.RedirectStandardError = true;
+                }
                 if (getStandardInput != null) process.StartInfo.RedirectStandardInput = true;
                 if (workingDir != null) process.StartInfo.WorkingDirectory = workingDir;
                 process.Start();
@@ -77,7 +80,7 @@ public static class ProcessUtil
 
                 if (wait)
                 {
-                    if (standardOut != null)
+                    if (standardOut != null && !disableStdRead)
                     {
                         void ReadLine(object sender, DataReceivedEventArgs args)
                         {
@@ -111,7 +114,7 @@ public static class ProcessUtil
                     process.WaitForExit();
                     exitCode = process.ExitCode;
                     string resultOutput = string.Empty;
-                    if (standardOut == null)
+                    if (standardOut == null && !disableStdRead)
                     {
                         var builder = new StringBuilder();
                         builder.Append(process.StandardOutput.ReadToEnd());
