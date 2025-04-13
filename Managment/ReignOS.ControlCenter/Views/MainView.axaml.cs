@@ -487,10 +487,10 @@ public partial class MainView : UserControl
     private void NvidiaApplyButton_OnClick(object sender, RoutedEventArgs e)
     {
         // invoke Nvidia driver install script
+        SaveSettings();
         if (nvidia_Nouveau.IsChecked == true) App.exitCode = 30;
         else if (nvidia_Proprietary.IsChecked == true) App.exitCode = 31;
         MainWindow.singleton.Close();
-        SaveSettings();
     }
 
     private void DefaultGPUApplyButton_Click(object sender, RoutedEventArgs e)
