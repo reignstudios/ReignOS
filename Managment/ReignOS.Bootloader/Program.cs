@@ -286,7 +286,7 @@ internal class Program
         string windowedModeArg = !windowedMode ? "--shell=kiosk-shell.so " : "";
         string windowedModeArg2 = windowedMode ? " --windowed-mode" : "";
         string gpuArg = GetGPUArg(gpu);
-        string gpuArg2 = gpu >= 1 ? $"--drm-device=card{gpu} " : "";
+        string gpuArg2 = "";//gpu >= 1 ? $"--drm-device=card{gpu} " : "";
         string result = ProcessUtil.Run($"{gpuArg}weston", $"{gpuArg2}{windowedModeArg}--xwayland -- ./Start_Weston.sh{useMangoHubArg}{windowedModeArg2}", useBash:true);
         Log.WriteLine(result);
     }
