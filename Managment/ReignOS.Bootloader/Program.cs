@@ -263,7 +263,7 @@ internal class Program
 
     private static string GetGPUArg(int gpu)
     {
-        return gpu >= 1 ? $"DRI_PRIME={gpu} WLR_DRM_DEVICES=/dev/dri/card{gpu} __NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia " : "";
+        return gpu >= 1 ? $"DRI_PRIME={gpu} WLR_DRM_DEVICES=/dev/dri/card{gpu} prime-run " : "";//__NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia 
     }
 
     private static void StartCompositor_Gamescope(bool useMangoHub, bool vrr, bool hdr, int gpu)
