@@ -15,7 +15,7 @@ enum CompositorMode
 
 class Program
 {
-    public static CompositorMode compositorMode = CompositorMode.Cage;
+    public static CompositorMode compositorMode = CompositorMode.Weston;
 
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized

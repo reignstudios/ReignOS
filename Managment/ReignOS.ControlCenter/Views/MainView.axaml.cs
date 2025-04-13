@@ -10,6 +10,7 @@ using System.Timers;
 using Avalonia.Media;
 using Avalonia.Threading;
 using ReignOS.Core;
+using ReignOS.ControlCenter.Desktop;
 
 namespace ReignOS.ControlCenter.Views;
 
@@ -73,6 +74,7 @@ public partial class MainView : UserControl
         InitializeComponent();
         versionText.Text = "Version: " + VersionInfo.version;
         if (Design.IsDesignMode) return;
+        compositorText.Text = "Control-Center Compositor: " + Program.compositorMode.ToString();
 
         RefreshGPUs();
         LoadSettings();
