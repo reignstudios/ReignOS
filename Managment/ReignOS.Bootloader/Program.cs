@@ -321,7 +321,7 @@ internal class Program
     {
         Log.WriteLine("Starting Labwc with Steam...");
         string gpuArg = GetGPUArg(gpu);
-        string result = ProcessUtil.Run($"{gpuArg}MESA_GL_VERSION_OVERRIDE=1.3 labwc", "--startup ./Start_Labwc.sh", useBash:true);
+        string result = ProcessUtil.Run($"{gpuArg}labwc", "--startup ./Start_Labwc.sh", useBash:true);
         Log.WriteLine(result);
     }
 
