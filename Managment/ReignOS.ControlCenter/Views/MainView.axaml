@@ -188,16 +188,16 @@
 		<Grid Name="gpuUtilsGrid" Margin="4" IsVisible="False">
 			<StackPanel Orientation="Vertical">
 				<TextBlock Text="GPUs" FontSize="24"/>
-				<ListBox Name="gpusListBox" Height="84"/>
+				<ListBox Name="gpusListBox" Height="100"/>
 
 				<TextBlock Text="GPU Names" FontSize="24" Margin="0,10,0,0"/>
-				<ListBox Name="gpuNamesListBox" Height="84"/>
+				<ListBox Name="gpuNamesListBox" Height="100"/>
 
 				<TextBlock Text="GPU Drivers" FontSize="24" Margin="0,10,0,0"/>
-				<ListBox Name="gpuDriversListBox" Height="84"/>
+				<ListBox Name="gpuDriversListBox" Height="100"/>
 				
 				<Separator Margin="0,10,0,10"/>
-				<Button Name="nvidiaSettingsButton" Content="Nvidia Settings" Background="DarkGreen" Click="NvidiaSettingsButton_Click"/>
+				<Button Name="nvidiaSettingsButton" Content="Proprietary Nvidia Settings" Background="DarkGreen" Click="NvidiaSettingsButton_Click"/>
 			</StackPanel>
 			<Button Content="Back" Width="128" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="GPUUtilsBackButton_OnClick"/>
 		</Grid>

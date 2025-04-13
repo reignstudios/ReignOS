@@ -104,15 +104,15 @@ public partial class MainView : UserControl
                     gpus.Add(gpu);
                 }
             }
-
-            gpuButton2.IsVisible = gpus.Count < 2;
-            gpuButton3.IsVisible = gpus.Count < 3;
-            gpuButton4.IsVisible = gpus.Count < 4;
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex);
         }
+
+        gpuButton2.IsVisible = gpus.Count >= 2;
+        gpuButton3.IsVisible = gpus.Count >= 3;
+        gpuButton4.IsVisible = gpus.Count >= 4;
     }
     
     private void LoadSettings()
