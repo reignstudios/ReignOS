@@ -90,6 +90,7 @@ public partial class MainView : UserControl
     private void RefreshGPUs()
     {
         gpus = new List<GPU>();
+        return;
         try
         {
             foreach (string gpuFilename in Directory.GetFiles("/dev/dri"))
