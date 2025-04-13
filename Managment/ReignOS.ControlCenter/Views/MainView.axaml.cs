@@ -520,7 +520,7 @@ public partial class MainView : UserControl
         File.WriteAllText(profileFile, text);
         SaveSettings();
 
-        App.exitCode = 21;// reopen
+        App.exitCode = 0;// reopen with full logout so env vars reset
         MainWindow.singleton.Close();
     }
 
