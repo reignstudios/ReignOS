@@ -282,7 +282,6 @@ internal class Program
 
     private static string GetGPUArg(int gpu)
     {
-        return "";
         //return "VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json prime-run ";//__NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia __VK_LAYER_NV_optimus=NVIDIA_only VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json
         return gpu >= 1 ? $"DRI_PRIME={gpu - 1} " : "";// WLR_DRM_DEVICES=/dev/dri/card{gpu - 1}
     }
