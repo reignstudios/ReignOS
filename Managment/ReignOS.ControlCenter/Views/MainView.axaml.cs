@@ -50,6 +50,12 @@ class Drive
     }
 }
 
+class GPU
+{
+    public string card;
+    public int number;
+}
+
 public partial class MainView : UserControl
 {
     private const string settingsFile = "/home/gamer/ReignOS_Ext/Settings.txt";
@@ -60,6 +66,7 @@ public partial class MainView : UserControl
     private bool isConnected;
     
     private List<Drive> drives;
+    private List<GPU> gpus;
     
     public MainView()
     {
@@ -67,14 +74,44 @@ public partial class MainView : UserControl
         versionText.Text = "Version: " + VersionInfo.version;
         if (Design.IsDesignMode) return;
 
+        RefreshGPUs();
         LoadSettings();
-        RotApplyButton_OnClick("init", null);// apply any rotation/screen settings
+        SaveSystemSettings();// apply any system settings in case things get updated
         
         connectedTimer = new System.Timers.Timer(1000 * 5);
         connectedTimer.Elapsed += ConnectedTimer;
         connectedTimer.AutoReset = true;
         connectedTimer.Start();
         ConnectedTimer(null, null);
+    }
+
+    private void RefreshGPUs()
+    {
+        gpus = new List<GPU>();
+        try
+        {
+            foreach (string gpuFilename in Directory.GetFiles("/dev/dri"))
+            {
+                var match = Regex.Match(gpuFilename, @"card(\d)");
+                if (match.Success)
+                {
+                    var gpu = new GPU()
+                    {
+                        card = gpuFilename,
+                        number = int.Parse(match.Groups[1].Value)
+                    };
+                    gpus.Add(gpu);
+                }
+            }
+
+            gpuButton2.IsVisible = gpus.Count < 2;
+            gpuButton3.IsVisible = gpus.Count < 3;
+            gpuButton4.IsVisible = gpus.Count < 4;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
     }
     
     private void LoadSettings()
@@ -108,13 +145,36 @@ public partial class MainView : UserControl
                     }
                     else if (parts[0] == "NvidiaDrivers")
                     {
-                        if (parts[1] == "Nouveau") nvidia_Nouveau.IsChecked = true;
-                        else if (parts[1] == "Proprietary") nvidia_Proprietary.IsChecked = true;
+                        if (parts[1] == "Nouveau")
+                        {
+                            nvidia_Nouveau.IsChecked = true;
+                            nvidiaSettingsButton.IsEnabled = false;
+                        }
+                        else if (parts[1] == "Proprietary")
+                        {
+                            nvidia_Proprietary.IsChecked = true;
+                            nvidiaSettingsButton.IsEnabled = true;
+                        }
+                    }
+                    else if (parts[0] == "GPU")
+                    {
+                        if (parts[1] == "1") gpuButton1.IsChecked = true;
+                        else if (parts[1] == "2" && gpus.Count >= 2) gpuButton2.IsChecked = true;
+                        else if (parts[1] == "3" && gpus.Count >= 3) gpuButton3.IsChecked = true;
+                        else if (parts[1] == "4" && gpus.Count >= 4) gpuButton4.IsChecked = true;
+                        else gpuButton0.IsChecked = true;
                     }
                     else if (parts[0] == "MangoHub")
                     {
-                        if (parts[1] == "On") useMangohubCheckbox.IsChecked = true;
-                        else useMangohubCheckbox.IsChecked = false;
+                        mangohubCheckbox.IsChecked = parts[1] == "On";
+                    }
+                    else if (parts[0] == "VRR")
+                    {
+                        vrrCheckbox.IsChecked = parts[1] == "On";
+                    }
+                    else if (parts[0] == "HDR")
+                    {
+                        hdrCheckbox.IsChecked = parts[1] == "On";
                     }
                 } while (!reader.EndOfStream);
             }
@@ -148,13 +208,154 @@ public partial class MainView : UserControl
                 else if (nvidia_Proprietary.IsChecked == true) writer.WriteLine("NvidiaDrivers=Proprietary");
                 else writer.WriteLine("NvidiaDrivers=Nouveau");
 
-                if (useMangohubCheckbox.IsChecked == true) writer.WriteLine("MangoHub=On");
+                if (gpuButton1.IsChecked == true) writer.WriteLine("GPU=1");
+                else if (gpuButton2.IsChecked == true) writer.WriteLine("GPU=2");
+                else if (gpuButton3.IsChecked == true) writer.WriteLine("GPU=3");
+                else if (gpuButton4.IsChecked == true) writer.WriteLine("GPU=4");
+                else writer.WriteLine("GPU=0");
+
+                if (mangohubCheckbox.IsChecked == true) writer.WriteLine("MangoHub=On");
                 else writer.WriteLine("MangoHub=Off");
+
+                if (vrrCheckbox.IsChecked == true) writer.WriteLine("VRR=On");
+                else writer.WriteLine("VRR=Off");
+
+                if (hdrCheckbox.IsChecked == true) writer.WriteLine("HDR=On");
+                else writer.WriteLine("HDR=Off");
             }
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
+        }
+
+        SaveSystemSettings();
+    }
+
+    private void SaveSystemSettings()
+    {
+        static void WriteX11Settings(StreamWriter writer, string rotation)
+        {
+            writer.WriteLine("display=$(xrandr --query | awk '/ connected/ {print $1; exit}')");
+            writer.WriteLine($"xrandr --output $display --rotate {rotation}");
+        }
+        
+        void WriteWaylandSettings(StreamWriter writer, string rotation)
+        {
+            string vrrArg = vrrCheckbox.IsChecked == true ? " --adaptive-sync enabled" : "";
+            writer.WriteLine("display=$(wlr-randr | awk '/^[^ ]+/{print $1; exit}')");
+            writer.WriteLine($"wlr-randr --output $display --transform {rotation}{vrrArg}");
+        }
+        
+        void WriteWestonSettings(StreamWriter writer, string rotation, string display)
+        {
+            if (hdrCheckbox.IsChecked == true)
+            {
+                writer.WriteLine("[core]");
+                writer.WriteLine("color-management=true");// HDR color managment
+                writer.WriteLine();
+            }
+            
+            writer.WriteLine("[output]");
+            writer.WriteLine($"name={display}");
+            writer.WriteLine($"transform={rotation}");
+
+            if (vrrCheckbox.IsChecked == true)
+            {
+                writer.WriteLine("enable_vrr=true");
+                writer.WriteLine("vrr-mode=game");
+            }
+            
+            if (hdrCheckbox.IsChecked == true)
+            {
+                writer.WriteLine("eotf-mode=st2084");// HDR PQ curve
+                writer.WriteLine("colorimetry-mode=bt2020rgb");// HDR wide‑gamut space
+            }
+        }
+        
+        /*static string GetWaylandDisplay()
+        {
+            try
+            {
+                string result = ProcessUtil.Run("wlr-randr", "", useBash:false);
+                var lines = result.Split('\n');
+                result = lines[0].Split(" ")[0];
+                return result;
+            }
+            catch {}
+            return "ERROR";
+        }*/
+
+        static string GetWestonDisplay()
+        {
+            try
+            {
+                string result = ProcessUtil.Run("wayland-info", "", useBash:false);
+                var lines = result.Split('\n');
+                bool outputMode = false;
+                foreach (string line in lines)
+                {
+                    if (outputMode)
+                    {
+                        if (line.Contains("name: "))
+                        {
+                            var match = Regex.Match(line, @"name:\s*(.*)");
+                            if (match.Success)
+                            {
+                                return match.Groups[1].Value.Trim();
+                            }
+                            break;
+                        }
+                    }
+                    else if (line.Contains("'wl_output'"))
+                    {
+                        outputMode = true;
+                    }
+                }
+            }
+            catch {}
+            return "ERROR";
+        }
+        
+        const string folder = "/home/gamer/ReignOS_Ext";
+        if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+        string x11SettingsFile = Path.Combine(folder, "X11_Settings.sh");
+        string waylandSettingsFile = Path.Combine(folder, "Wayland_Settings.sh");
+        const string westonConfigFile = "/home/gamer/.config/weston.ini";
+        try
+        {
+            if (rot_Default.IsChecked == true)
+            {
+                using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "normal");
+                using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "normal");
+                using (var writer = new StreamWriter(westonConfigFile))  WriteWestonSettings(writer, "normal", GetWestonDisplay());
+                //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform normal", useBash:false);
+            }
+            else if (rot_Left.IsChecked == true)
+            {
+                using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "left");
+                using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "90");
+                using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-90", GetWestonDisplay());
+                //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 90", useBash:false);// 90, flipped-90 (options)
+            }
+            else if (rot_Right.IsChecked == true)
+            {
+                using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "right");
+                using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "270");
+                using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-270", GetWestonDisplay());
+                //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 270", useBash:false);// 270, flipped-270 (options)
+            }
+            else if (rot_Flip.IsChecked == true)
+            {
+                using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "inverted");
+                using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "180");
+                using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-180", GetWestonDisplay());
+                //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 180", useBash:false);// 180, flipped, flipped-180 (options)
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
         }
     }
     
@@ -272,151 +473,12 @@ public partial class MainView : UserControl
         File.WriteAllText(profileFile, text);
         SaveSettings();
     }
-
-    private void UseMangoHubCheckBox_Click(object sender, RoutedEventArgs e)
-    {
-        const string profileFile = "/home/gamer/.bash_profile";
-        string text = File.ReadAllText(profileFile);
-        foreach (string line in text.Split('\n'))
-        {
-            if (line.Contains("--use-controlcenter"))
-            {
-                if (useMangohubCheckbox.IsChecked == true) text = text.Replace(line, line + " --use-mangohub");
-                else text = text.Replace(" --use-mangohub", "");
-                break;
-            }
-        }
-        File.WriteAllText(profileFile, text);
-        SaveSettings();
-
-        App.exitCode = 0;// reopen
-        MainWindow.singleton.Close();
-    }
     
     private void RotApplyButton_OnClick(object sender, RoutedEventArgs e)
     {
-        bool isInitMode = (sender as string) == "init";
-
-        static void WriteX11Settings(StreamWriter writer, string rotation)
-        {
-            writer.WriteLine("display=$(xrandr --query | awk '/ connected/ {print $1; exit}')");
-            writer.WriteLine($"xrandr --output $display --rotate {rotation}");
-        }
-        
-        static void WriteWaylandSettings(StreamWriter writer, string rotation)
-        {
-            writer.WriteLine("display=$(wlr-randr | awk '/^[^ ]+/{print $1; exit}')");
-            writer.WriteLine($"wlr-randr --output $display --transform {rotation}");// "--adaptive-sync enabled" (this can break rotation)
-        }
-        
-        static void WriteWestonSettings(StreamWriter writer, string rotation, string display)
-        {
-            //writer.WriteLine("[core]");
-            //writer.WriteLine("color-management=true");// HDR color managment
-            //writer.WriteLine();
-            
-            writer.WriteLine("[output]");
-            writer.WriteLine($"name={display}");
-            writer.WriteLine($"transform={rotation}");
-            writer.WriteLine("enable_vrr=true");
-            writer.WriteLine("vrr-mode=game");
-            
-            //writer.WriteLine("eotf-mode=st2084");// HDR PQ curve
-            //writer.WriteLine("colorimetry-mode=bt2020rgb");// HDR wide‑gamut space
-        }
-        
-        /*static string GetWaylandDisplay()
-        {
-            try
-            {
-                string result = ProcessUtil.Run("wlr-randr", "", useBash:false);
-                var lines = result.Split('\n');
-                result = lines[0].Split(" ")[0];
-                return result;
-            }
-            catch {}
-            return "ERROR";
-        }*/
-
-        static string GetWestonDisplay()
-        {
-            try
-            {
-                string result = ProcessUtil.Run("wayland-info", "", useBash:false);
-                var lines = result.Split('\n');
-                bool outputMode = false;
-                foreach (string line in lines)
-                {
-                    if (outputMode)
-                    {
-                        if (line.Contains("name: "))
-                        {
-                            var match = Regex.Match(line, @"name:\s*(.*)");
-                            if (match.Success)
-                            {
-                                return match.Groups[1].Value.Trim();
-                            }
-                            break;
-                        }
-                    }
-                    else if (line.Contains("'wl_output'"))
-                    {
-                        outputMode = true;
-                    }
-                }
-            }
-            catch {}
-            return "ERROR";
-        }
-        
-        const string folder = "/home/gamer/ReignOS_Ext";
-        if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
-        string x11SettingsFile = Path.Combine(folder, "X11_Settings.sh");
-        string waylandSettingsFile = Path.Combine(folder, "Wayland_Settings.sh");
-        const string westonConfigFile = "/home/gamer/.config/weston.ini";
-        try
-        {
-            if (rot_Default.IsChecked == true)
-            {
-                using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "normal");
-                using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "normal");
-                using (var writer = new StreamWriter(westonConfigFile))  WriteWestonSettings(writer, "normal", GetWestonDisplay());
-                //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform normal", useBash:false);
-            }
-            else if (rot_Left.IsChecked == true)
-            {
-                using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "left");
-                using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "90");
-                using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-90", GetWestonDisplay());
-                //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 90", useBash:false);// 90, flipped-90 (options)
-            }
-            else if (rot_Right.IsChecked == true)
-            {
-                using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "right");
-                using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "270");
-                using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-270", GetWestonDisplay());
-                //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 270", useBash:false);// 270, flipped-270 (options)
-            }
-            else if (rot_Flip.IsChecked == true)
-            {
-                using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "inverted");
-                using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "180");
-                using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-180", GetWestonDisplay());
-                //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 180", useBash:false);// 180, flipped, flipped-180 (options)
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-        }
-        
-        // finish
-        if (!isInitMode)
-        {
-            SaveSettings();
-            App.exitCode = 21;// reboot Managment
-            MainWindow.singleton.Close();
-        }
+        SaveSettings();
+        App.exitCode = 21;// reboot Managment
+        MainWindow.singleton.Close();
     }
     
     private void NvidiaApplyButton_OnClick(object sender, RoutedEventArgs e)
@@ -426,6 +488,69 @@ public partial class MainView : UserControl
         else if (nvidia_Proprietary.IsChecked == true) App.exitCode = 31;
         MainWindow.singleton.Close();
         SaveSettings();
+    }
+
+    private void DefaultGPUApplyButton_Click(object sender, RoutedEventArgs e)
+    {
+        const string profileFile = "/home/gamer/.bash_profile";
+        string text = File.ReadAllText(profileFile);
+        foreach (string line in text.Split('\n'))
+        {
+            if (line.Contains("--use-controlcenter"))
+            {
+                // remove existing options
+                for (int i = 0; i != 4 + 1; ++i) text = text.Replace($" --gpu-{i}", "");
+
+                // gather new options
+                int gpu = 0;
+                if (gpuButton1.IsChecked == true) gpu = 1;
+                else if (gpuButton2.IsChecked == true) gpu = 2;
+                else if (gpuButton3.IsChecked == true) gpu = 3;
+                else if (gpuButton4.IsChecked == true) gpu = 4;
+
+                // apply options
+                text = text.Replace(line, line + $" --gpu-{gpu}");
+
+                break;
+            }
+        }
+        File.WriteAllText(profileFile, text);
+        SaveSettings();
+
+        App.exitCode = 21;// reopen
+        MainWindow.singleton.Close();
+    }
+
+    private void OtherSettingsApplyButton_Click(object sender, RoutedEventArgs e)
+    {
+        const string profileFile = "/home/gamer/.bash_profile";
+        string text = File.ReadAllText(profileFile);
+        foreach (string line in text.Split('\n'))
+        {
+            if (line.Contains("--use-controlcenter"))
+            {
+                // remove existing options
+                text = text.Replace(" --use-mangohub", "");
+                text = text.Replace(" --vrr", "");
+                text = text.Replace(" --hdr", "");
+
+                // gather new options
+                string args = "";
+                if (mangohubCheckbox.IsChecked == true) args += " --use-mangohub";
+                if (vrrCheckbox.IsChecked == true) args += " --vrr";
+                if (hdrCheckbox.IsChecked == true) args += " --hdr";
+
+                // apply options
+                text = text.Replace(line, line + args);
+
+                break;
+            }
+        }
+        File.WriteAllText(profileFile, text);
+        SaveSettings();
+
+        App.exitCode = 21;// reopen
+        MainWindow.singleton.Close();
     }
 
     private void BootManagerButton_OnClick(object sender, RoutedEventArgs e)
@@ -814,6 +939,38 @@ public partial class MainView : UserControl
     {
         mainGrid.IsVisible = false;
         gpuUtilsGrid.IsVisible = true;
+
+        // add gpus
+        foreach (var gpu in gpus)
+        {
+            var item = new ListBoxItem()
+            {
+                Content = gpu.card
+            };
+            gpusListBox.Items.Add(item);
+        }
+
+        // add gpu names
+        string result = ProcessUtil.Run("lspci", "| grep -E \"VGA|3D\"", useBash:true);
+        foreach (var name in result.Split('\n'))
+        {
+            var item = new ListBoxItem()
+            {
+                Content = name
+            };
+            gpusListBox.Items.Add(item);
+        }
+
+        // add gpu drivers
+        result = ProcessUtil.Run("ls", "-l /sys/class/drm/card*/device/driver", useBash:true);
+        foreach (var driver in result.Split('\n'))
+        {
+            var item = new ListBoxItem()
+            {
+                Content = driver
+            };
+            gpusListBox.Items.Add(item);
+        }
     }
     
     private void GPUUtilsBackButton_OnClick(object sender, RoutedEventArgs e)
@@ -821,4 +978,9 @@ public partial class MainView : UserControl
         mainGrid.IsVisible = true;
         gpuUtilsGrid.IsVisible = false;
     }
+
+    private void NvidiaSettingsButton_Click(object sender, RoutedEventArgs e)
+	{
+        ProcessUtil.Run("nvidia-settings", "", wait:true);
+	}
 }

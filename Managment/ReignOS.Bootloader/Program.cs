@@ -126,6 +126,9 @@ internal class Program
         var compositor = Compositor.None;
         bool useControlCenter = false;
         bool useMangoHub = false;
+        bool vrr = false;
+        bool hdr = false;
+        string gpu = "0";
         foreach (string arg in args)
         {
             if (arg == "--gamescope") compositor = Compositor.Gamescope;
@@ -135,7 +138,12 @@ internal class Program
             else if (arg == "--labwc") compositor = Compositor.Labwc;
             else if (arg == "--x11") compositor = Compositor.X11;
             else if (arg == "--use-controlcenter") useControlCenter = true;
+
+            else if (arg.StartsWith("--gpu-")) gpu = arg.Substring("--gpu-".Length);
+
             else if (arg == "--use-mangohub") useMangoHub = true;
+            else if (arg == "--vrr") vrr = true;
+            else if (arg == "--hdr") hdr = true;
         }
 
         // manage interfaces
@@ -155,7 +163,7 @@ internal class Program
                         compositorRan = false;
                         break;
 
-                    case Compositor.Gamescope: StartCompositor_Gamescope(useMangoHub); break;
+                    case Compositor.Gamescope: StartCompositor_Gamescope(useMangoHub, vrr, hdr); break;
                     case Compositor.Weston: StartCompositor_Weston(useMangoHub, false); break;
                     case Compositor.WestonWindowed: StartCompositor_Weston(useMangoHub, true); break;
                     case Compositor.Cage: StartCompositor_Cage(useMangoHub); break;
@@ -249,11 +257,14 @@ internal class Program
         else Log.WriteLine("Unhandled exception: Unknown");
     }
 
-    private static void StartCompositor_Gamescope(bool useMangoHub)
+    private static void StartCompositor_Gamescope(bool useMangoHub, bool vrr, bool hdr)
     {
         Log.WriteLine("Starting Gamescope with Steam...");
-        string useMangoHubArg = useMangoHub ? "MANGOHUD=1 " : "";//--mangoapp
-        string result = ProcessUtil.Run($"{useMangoHubArg}gamescope", $"-e -f --adaptive-sync --hdr-enabled -- ./Start_Gamescope.sh", useBash:true);// --framerate-limit
+        string useMangoHubArg = useMangoHub ? "MANGOHUD=1 " : "";
+        string useMangoHubArg2 = useMangoHub ? " --mangoapp" : "";
+        string vrrArg = vrr ? " --adaptive-sync" : "";
+        string hdrArg = hdr ? " --hdr-enabled" : "";
+        string result = ProcessUtil.Run($"{useMangoHubArg}gamescope", $"-e -f{useMangoHubArg2}{vrrArg}{hdrArg} -- ./Start_Gamescope.sh", useBash:true);// --framerate-limit
         Log.WriteLine(result);
     }
 
@@ -263,7 +274,7 @@ internal class Program
         string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
         string windowedModeArg = !windowedMode ? "--shell=kiosk-shell.so " : "";
         string windowedModeArg2 = windowedMode ? " --windowed-mode" : "";
-        string result = ProcessUtil.Run("weston", $"{windowedModeArg}--xwayland -- ./Start_Weston.sh{useMangoHubArg}{windowedModeArg2}", useBash:false);
+        string result = ProcessUtil.Run("weston", $"{windowedModeArg}--xwayland -- ./Start_Weston.sh{useMangoHubArg}{windowedModeArg2}", useBash:true);
         Log.WriteLine(result);
     }
     
@@ -271,14 +282,14 @@ internal class Program
     {
         Log.WriteLine("Starting Cage with Steam...");
         string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
-        string result = ProcessUtil.Run("cage", $"-d -s -- ./Start_Cage.sh{useMangoHubArg}", useBash:false);
+        string result = ProcessUtil.Run("cage", $"-d -s -- ./Start_Cage.sh{useMangoHubArg}", useBash:true);
         Log.WriteLine(result);
     }
 
     private static void StartCompositor_Labwc()
     {
         Log.WriteLine("Starting Labwc with Steam...");
-        string result = ProcessUtil.Run("labwc", "--startup ./Start_Labwc.sh", useBash:false);
+        string result = ProcessUtil.Run("labwc", "--startup ./Start_Labwc.sh", useBash:true);
         Log.WriteLine(result);
     }
 
@@ -291,7 +302,7 @@ internal class Program
 
     public static bool IsOnline()
     {
-        string result = ProcessUtil.Run("ping", "-c 1 google.com", consoleLogOut:false);
+        string result = ProcessUtil.Run("ping", "-c 1 google.com", consoleLogOut:false, useBash:false);
         return result.Contains("1 received");
     }
 
