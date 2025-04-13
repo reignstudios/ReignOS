@@ -292,10 +292,10 @@ public partial class MainView : UserControl
         }*/
 
         static string GetWestonDisplay()
-        {return "ERROR";
+        {
             try
             {
-                string result = ProcessUtil.Run("wayland-info", "", useBash:false);
+                string result = ProcessUtil.Run("timeout 5s", "wayland-info", useBash:true);
                 var lines = result.Split('\n');
                 bool outputMode = false;
                 foreach (string line in lines)
