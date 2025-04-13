@@ -292,7 +292,7 @@ public partial class MainView : UserControl
         }*/
 
         static string GetWestonDisplay()
-        {
+        {return "ERROR";
             try
             {
                 string result = ProcessUtil.Run("wayland-info", "", useBash:false);
