@@ -92,7 +92,8 @@ public partial class MainView : UserControl
         {
             foreach (string gpuFilename in Directory.GetFiles("/dev/dri"))
             {
-                var match = Regex.Match(gpuFilename, @"card(\d)");
+                string filename = Path.GetFileName(gpuFilename);
+                var match = Regex.Match(filename, @"card(\d)");
                 if (match.Success)
                 {
                     var gpu = new GPU()
@@ -953,7 +954,7 @@ public partial class MainView : UserControl
 
         // add gpu names
         gpuNamesListBox.Items.Clear();
-        string result = ProcessUtil.Run("lspci", "| grep -E \"VGA|3D\"", useBash:true);
+        string result = ProcessUtil.Run("lspci", "| grep -E 'VGA|3D'", useBash:true);
         foreach (var name in result.Split('\n'))
         {
             var item = new ListBoxItem()
