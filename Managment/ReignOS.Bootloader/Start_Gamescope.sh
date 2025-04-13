@@ -26,9 +26,20 @@
 # print env vars
 #printenv &
 
+# args
+DISABLE_STEAM_GPU=false
+for arg in "$@"; do
+    if [ "$arg" = "--disable-steam-gpu" ]; then
+        DISABLE_STEAM_GPU=true
+    fi
+done
+
 # start steam
-#env MESA_GL_VERSION_OVERRIDE=1.3 steam -gamepadui -steamdeck -steamos3
-DRI_PRIME=1 steam -gamepadui -steamdeck -steamos3
+if [ "$DISABLE_STEAM_GPU" = "true" ]; then
+    env MESA_GL_VERSION_OVERRIDE=1.3 steam -gamepadui -steamdeck -steamos3
+else
+    DRI_PRIME=1 steam -gamepadui -steamdeck -steamos3
+fi
 
 # -gamepadui (newer)
 # -tenfoot (older)
