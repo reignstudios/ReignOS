@@ -559,7 +559,7 @@ public partial class MainView : UserControl
         File.WriteAllText(profileFile, text);
         SaveSettings();
 
-        App.exitCode = 21;// reopen
+        App.exitCode = 0;// reopen with full logout so bash_profile reloads args
         MainWindow.singleton.Close();
     }
 
