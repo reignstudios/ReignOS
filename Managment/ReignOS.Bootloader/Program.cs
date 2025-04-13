@@ -263,8 +263,8 @@ internal class Program
 
     private static string GetGPUArg(int gpu)
     {
-        return "prime-run ";
-        //return gpu >= 1 ? $"DRI_PRIME={gpu} WLR_DRM_DEVICES=/dev/dri/card{gpu} prime-run " : "";//__NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia 
+        return "VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json prime-run ";
+        //return gpu >= 1 ? $"DRI_PRIME={gpu} WLR_DRM_DEVICES=/dev/dri/card{gpu} prime-run " : "";//__NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia __VK_LAYER_NV_optimus=NVIDIA_only VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json
     }
 
     private static void StartCompositor_Gamescope(bool useMangoHub, bool vrr, bool hdr, int gpu)
@@ -333,5 +333,5 @@ internal class Program
     //weston --drm-device=card1 # other weston option
     //prime-run weston #proprietary
 
-    //__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia # same as prime-run
+    //__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia __VK_LAYER_NV_optimus=NVIDIA_only # same as prime-run
 }
