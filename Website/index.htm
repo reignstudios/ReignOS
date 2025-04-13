@@ -137,10 +137,38 @@
         </div>
 
         <div>
-            <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">Other Notes</h2>
+            <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">GPU Troubleshooting</h2>
+            <ul style="color: #888;">
+                <li>
+                    Launch Control-Center with Cage (solves stability issues with some Nvidia GPUs):<br>
+                    * Exit to terminal<br>
+                    * Type: nano ~/.bash_profile<br>
+                    * Add the argument '--controlcenter-cage' after '--use-controlcenter' arg<br>
+                    * Ctrl+X then Y to save<br>
+                    * Type: exit
+                </li>
+                <li>
+                    Change Nvidia drivers without Control-Center:<br>
+                    * Exit to terminal<br>
+                    * Type: cd ~/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish<br>
+                    * Type: './Nvidia_Install_Nouveau.sh' or './Nvidia_Install_Proprietary.sh' <br>
+                </li>
+                <li>Disable Steam GPU acceleration in Control-Center can work around some Nvidia issues</li>
+                <li>If you install Proprietary Nvidia drivers, make sure you see a driver listed in 'GPU Utils'</li>
+            </ul>
+        </div>
+
+        <div>
+            <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">Misc Notes</h2>
             <ul style="color: #888;">
                 <li>Linux User: 'gamer' (changing this can break operation)</li>
                 <li>Linux Pass: 'gamer' (changing this can break operation)</li>
+            </ul>
+        </div>
+
+        <div>
+            <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">BIOS Notes</h2>
+            <ul style="color: #888;">
                 <li>Some Acer Laptops need 'Touchpad' in BIOS to be set to 'Basic' not 'Advanced' to work</li>
                 <li>Some Acer Laptops need you to set BIOS password before you can disable Secure-Boot</li>
             </ul>

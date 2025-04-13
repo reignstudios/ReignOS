@@ -8,7 +8,8 @@ if [ -e "$rot_script" ]; then
 fi
 
 # start steam
-env MESA_GL_VERSION_OVERRIDE=1.3 steam -nobigpicture
+#env MESA_GL_VERSION_OVERRIDE=1.3 steam -nobigpicture
+steam -nobigpicture
 
 # run post kill
 ./PostKill.sh &

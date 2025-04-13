@@ -27,7 +27,8 @@
 #printenv &
 
 # start steam
-env MESA_GL_VERSION_OVERRIDE=1.3 steam -gamepadui -steamdeck -steamos3
+#env MESA_GL_VERSION_OVERRIDE=1.3 steam -gamepadui -steamdeck -steamos3
+steam -gamepadui -steamdeck -steamos3
 
 # -gamepadui (newer)
 # -tenfoot (older)
