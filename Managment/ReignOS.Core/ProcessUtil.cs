@@ -17,12 +17,12 @@ public static class ProcessUtil
     public delegate void ProcessInputDelegate(StreamWriter writer);
     public static event ProcessOutputDelegate ProcessOutput;
     
-    public static string Run(string name, string args, Dictionary<string, string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, bool useBash = true, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, string workingDir = null, bool consoleLogOut = true, bool disableStdRead = false)
+    public static string Run(string name, string args, Dictionary<string, string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, bool useBash = true, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, string workingDir = null, bool consoleLogOut = true, bool disableStdRead = false, int killAfterSec = -1)
     {
-        return Run(name, args, out _, enviromentVars, wait, asAdmin, enterAdminPass, useBash, standardOut, getStandardInput, workingDir, consoleLogOut, disableStdRead);
+        return Run(name, args, out _, enviromentVars, wait, asAdmin, enterAdminPass, useBash, standardOut, getStandardInput, workingDir, consoleLogOut, disableStdRead, killAfterSec);
     }
 
-    public static string Run(string name, string args, out int exitCode, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, bool useBash = true, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, string workingDir = null, bool consoleLogOut = true, bool disableStdRead = false)
+    public static string Run(string name, string args, out int exitCode, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, bool useBash = true, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, string workingDir = null, bool consoleLogOut = true, bool disableStdRead = false, int killAfterSec = -1)
     {
         try
         {
@@ -111,7 +111,20 @@ public static class ProcessUtil
                         process.BeginErrorReadLine();
                     }
                     
-                    process.WaitForExit();
+                    if (killAfterSec <= 0)
+                    {
+                        process.WaitForExit();
+                    }
+                    else
+                    {
+                        int sec = 0;
+                        while (!process.HasExited && sec < killAfterSec)
+                        {
+                            Thread.Sleep(1000);
+                            sec++;
+                        }
+                        process.Kill();
+                    }
                     exitCode = process.ExitCode;
                     string resultOutput = string.Empty;
                     if (standardOut == null && !disableStdRead)
