@@ -135,6 +135,7 @@ internal class Program
         bool useMangoHub = false;
         bool vrr = false;
         bool hdr = false;
+        bool disableSteamGPU = false;
         int gpu = 0;
         foreach (string arg in args)
         {
@@ -158,6 +159,7 @@ internal class Program
             else if (arg == "--use-mangohub") useMangoHub = true;
             else if (arg == "--vrr") vrr = true;
             else if (arg == "--hdr") hdr = true;
+            else if (arg == "--disable-steam-gpu") disableSteamGPU = true;
         }
 
         // manage interfaces
@@ -177,12 +179,12 @@ internal class Program
                         compositorRan = false;
                         break;
 
-                    case Compositor.Gamescope: StartCompositor_Gamescope(useMangoHub, vrr, hdr, gpu); break;
-                    case Compositor.Weston: StartCompositor_Weston(useMangoHub, false, gpu); break;
-                    case Compositor.WestonWindowed: StartCompositor_Weston(useMangoHub, true, gpu); break;
-                    case Compositor.Cage: StartCompositor_Cage(useMangoHub, gpu); break;
-                    case Compositor.Labwc: StartCompositor_Labwc(gpu); break;
-                    case Compositor.X11: StartCompositor_X11(gpu); break;
+                    case Compositor.Gamescope: StartCompositor_Gamescope(useMangoHub, vrr, hdr, disableSteamGPU, gpu); break;
+                    case Compositor.Weston: StartCompositor_Weston(useMangoHub, false, disableSteamGPU, gpu); break;
+                    case Compositor.WestonWindowed: StartCompositor_Weston(useMangoHub, true, disableSteamGPU, gpu); break;
+                    case Compositor.Cage: StartCompositor_Cage(useMangoHub, disableSteamGPU, gpu); break;
+                    case Compositor.Labwc: StartCompositor_Labwc(disableSteamGPU, gpu); break;
+                    case Compositor.X11: StartCompositor_X11(); break;
                 }
             }
             catch (Exception e)
@@ -284,52 +286,54 @@ internal class Program
         return gpu >= 1 ? $"DRI_PRIME={gpu - 1} " : "";// WLR_DRM_DEVICES=/dev/dri/card{gpu - 1}
     }
 
-    private static void StartCompositor_Gamescope(bool useMangoHub, bool vrr, bool hdr, int gpu)
+    private static void StartCompositor_Gamescope(bool useMangoHub, bool vrr, bool hdr, bool disableSteamGPU, int gpu)
     {
         Log.WriteLine("Starting Gamescope with Steam...");
-        string useMangoHubArg = "";//useMangoHub ? "MANGOHUD=1 " : "";
-        string useMangoHubArg2 = useMangoHub ? " --mangoapp" : "";
+        string useMangoHubArg = useMangoHub ? " --mangoapp" : "";
         string vrrArg = vrr ? " --adaptive-sync" : "";
         string hdrArg = hdr ? " --hdr-enabled" : "";
+        string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
         string gpuArg = GetGPUArg(gpu);
-        string result = ProcessUtil.Run($"{gpuArg}{useMangoHubArg}gamescope", $"-e -f{useMangoHubArg2}{vrrArg}{hdrArg} -- ./Start_Gamescope.sh", useBash:true);// --framerate-limit
+        string result = ProcessUtil.Run($"{gpuArg}gamescope", $"-e -f{useMangoHubArg}{vrrArg}{hdrArg} -- ./Start_Gamescope.sh{steamGPUArg}", useBash:true);// --framerate-limit
         Log.WriteLine(result);
     }
 
-    private static void StartCompositor_Weston(bool useMangoHub, bool windowedMode, int gpu)
+    private static void StartCompositor_Weston(bool useMangoHub, bool windowedMode, bool disableSteamGPU, int gpu)
     {
         Log.WriteLine("Starting Weston with Steam...");
         string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
         string windowedModeArg = !windowedMode ? "--shell=kiosk-shell.so " : "";
         string windowedModeArg2 = windowedMode ? " --windowed-mode" : "";
+        string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
         string gpuArg = GetGPUArg(gpu);
         string gpuArg2 = "";//gpu >= 1 ? $"--drm-device=card{gpu} " : "";
-        string result = ProcessUtil.Run($"{gpuArg}weston", $"{gpuArg2}{windowedModeArg}--xwayland -- ./Start_Weston.sh{useMangoHubArg}{windowedModeArg2}", useBash:true);
+        string result = ProcessUtil.Run($"{gpuArg}weston", $"{gpuArg2}{windowedModeArg}--xwayland -- ./Start_Weston.sh{useMangoHubArg}{windowedModeArg2}{steamGPUArg}", useBash:true);
         Log.WriteLine(result);
     }
     
-    private static void StartCompositor_Cage(bool useMangoHub, int gpu)
+    private static void StartCompositor_Cage(bool useMangoHub, bool disableSteamGPU, int gpu)
     {
         Log.WriteLine("Starting Cage with Steam...");
         string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
+        string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
         string gpuArg = GetGPUArg(gpu);
-        string result = ProcessUtil.Run($"{gpuArg}cage", $"-d -s -- ./Start_Cage.sh{useMangoHubArg}", useBash:true);
+        string result = ProcessUtil.Run($"{gpuArg}cage", $"-d -s -- ./Start_Cage.sh{useMangoHubArg}{steamGPUArg}", useBash:true);
         Log.WriteLine(result);
     }
 
-    private static void StartCompositor_Labwc(int gpu)
+    private static void StartCompositor_Labwc(bool disableSteamGPU, int gpu)
     {
         Log.WriteLine("Starting Labwc with Steam...");
+        string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
         string gpuArg = GetGPUArg(gpu);
-        string result = ProcessUtil.Run($"{gpuArg}labwc", "--startup ./Start_Labwc.sh", useBash:true);
+        string result = ProcessUtil.Run($"{gpuArg}labwc", $"--startup ./Start_Labwc.sh{steamGPUArg}", useBash:true);
         Log.WriteLine(result);
     }
 
-    private static void StartCompositor_X11(int gpu)
+    private static void StartCompositor_X11()
     {
         Log.WriteLine("Starting X11 with Steam...");
-        string gpuArg = GetGPUArg(gpu);
-        string result = ProcessUtil.Run($"{gpuArg}startx", "", useBash:true);
+        string result = ProcessUtil.Run("startx", "", useBash:true);
         Log.WriteLine(result);
     }
 

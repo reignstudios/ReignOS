@@ -180,6 +180,10 @@ public partial class MainView : UserControl
                     {
                         hdrCheckbox.IsChecked = parts[1] == "On";
                     }
+                    else if (parts[0] == "DisableSteamGPU")
+                    {
+                        disableSteamGPUCheckbox.IsChecked = parts[1] == "On";
+                    }
                 } while (!reader.EndOfStream);
             }
         }
@@ -227,6 +231,9 @@ public partial class MainView : UserControl
 
                 if (hdrCheckbox.IsChecked == true) writer.WriteLine("HDR=On");
                 else writer.WriteLine("HDR=Off");
+
+                if (disableSteamGPUCheckbox.IsChecked == true) writer.WriteLine("DisableSteamGPU=On");
+                else writer.WriteLine("DisableSteamGPU=Off");
             }
         }
         catch (Exception e)
@@ -549,6 +556,7 @@ public partial class MainView : UserControl
                 if (mangohubCheckbox.IsChecked == true) args += " --use-mangohub";
                 if (vrrCheckbox.IsChecked == true) args += " --vrr";
                 if (hdrCheckbox.IsChecked == true) args += " --hdr";
+                if (disableSteamGPUCheckbox.IsChecked == true) args += " --disable-steam-gpu";
 
                 // apply options
                 text = text.Replace(line, line + args);

@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# args
+DISABLE_STEAM_GPU=false
+for arg in "$@"; do
+    if [ "$arg" = "--disable-steam-gpu" ]; then
+        DISABLE_STEAM_GPU=true
+    fi
+done
+
 # Wayland settings
 rot_script=/home/gamer/ReignOS_Ext/Wayland_Settings.sh
 if [ -e "$rot_script" ]; then
@@ -8,8 +16,11 @@ if [ -e "$rot_script" ]; then
 fi
 
 # start steam
-#env MESA_GL_VERSION_OVERRIDE=1.3 steam -nobigpicture
-steam -nobigpicture
+if [ "$DISABLE_STEAM_GPU" = "true" ]; then
+    env MESA_GL_VERSION_OVERRIDE=1.3 steam -nobigpicture
+else
+    steam -nobigpicture
+fi
 
 # run post kill
 ./PostKill.sh &

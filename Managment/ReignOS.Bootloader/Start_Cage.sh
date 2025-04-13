@@ -2,9 +2,14 @@
 
 # args
 USE_MANGOHUB=false
+DISABLE_STEAM_GPU=false
 for arg in "$@"; do
     if [ "$arg" = "--use-mangohub" ]; then
         USE_MANGOHUB=true
+    fi
+
+    if [ "$arg" = "--disable-steam-gpu" ]; then
+        DISABLE_STEAM_GPU=true
     fi
 done
 
@@ -22,8 +27,11 @@ unclutter -idle 3 &
 if [ "$USE_MANGOHUB" = "true" ]; then
     mangohud steam -bigpicture -steamdeck
 else
-    #env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -steamdeck
-    steam -bigpicture -steamdeck
+    if [ "$DISABLE_STEAM_GPU" = "true" ]; then
+        env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -steamdeck
+    else
+        steam -bigpicture -steamdeck
+    fi
 fi
 
 # close unclutter
