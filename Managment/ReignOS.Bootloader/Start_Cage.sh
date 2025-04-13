@@ -30,7 +30,7 @@ else
     if [ "$DISABLE_STEAM_GPU" = "true" ]; then
         env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -steamdeck
     else
-         env DRI_PRIME=1 steam -bigpicture -steamdeck
+         DRI_PRIME=1 steam -bigpicture -steamdeck
     fi
 fi
 
