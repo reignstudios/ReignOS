@@ -128,7 +128,7 @@ internal class Program
         bool useMangoHub = false;
         bool vrr = false;
         bool hdr = false;
-        string gpu = "0";
+        int gpu = 0;
         foreach (string arg in args)
         {
             if (arg == "--gamescope") compositor = Compositor.Gamescope;
@@ -139,7 +139,11 @@ internal class Program
             else if (arg == "--x11") compositor = Compositor.X11;
             else if (arg == "--use-controlcenter") useControlCenter = true;
 
-            else if (arg.StartsWith("--gpu-")) gpu = arg.Substring("--gpu-".Length);
+            else if (arg.StartsWith("--gpu-"))
+            {
+                string value = arg.Substring("--gpu-".Length);
+                if (!int.TryParse(value, out gpu)) gpu = 0;
+            }
 
             else if (arg == "--use-mangohub") useMangoHub = true;
             else if (arg == "--vrr") vrr = true;
@@ -163,12 +167,12 @@ internal class Program
                         compositorRan = false;
                         break;
 
-                    case Compositor.Gamescope: StartCompositor_Gamescope(useMangoHub, vrr, hdr); break;
-                    case Compositor.Weston: StartCompositor_Weston(useMangoHub, false); break;
-                    case Compositor.WestonWindowed: StartCompositor_Weston(useMangoHub, true); break;
-                    case Compositor.Cage: StartCompositor_Cage(useMangoHub); break;
-                    case Compositor.Labwc: StartCompositor_Labwc(); break;
-                    case Compositor.X11: StartCompositor_X11(); break;
+                    case Compositor.Gamescope: StartCompositor_Gamescope(useMangoHub, vrr, hdr, gpu); break;
+                    case Compositor.Weston: StartCompositor_Weston(useMangoHub, false, gpu); break;
+                    case Compositor.WestonWindowed: StartCompositor_Weston(useMangoHub, true, gpu); break;
+                    case Compositor.Cage: StartCompositor_Cage(useMangoHub, gpu); break;
+                    case Compositor.Labwc: StartCompositor_Labwc(gpu); break;
+                    case Compositor.X11: StartCompositor_X11(gpu); break;
                 }
             }
             catch (Exception e)
@@ -257,46 +261,52 @@ internal class Program
         else Log.WriteLine("Unhandled exception: Unknown");
     }
 
-    private static void StartCompositor_Gamescope(bool useMangoHub, bool vrr, bool hdr)
+    private static void StartCompositor_Gamescope(bool useMangoHub, bool vrr, bool hdr, int gpu)
     {
         Log.WriteLine("Starting Gamescope with Steam...");
         string useMangoHubArg = useMangoHub ? "MANGOHUD=1 " : "";
         string useMangoHubArg2 = useMangoHub ? " --mangoapp" : "";
         string vrrArg = vrr ? " --adaptive-sync" : "";
         string hdrArg = hdr ? " --hdr-enabled" : "";
-        string result = ProcessUtil.Run($"{useMangoHubArg}gamescope", $"-e -f{useMangoHubArg2}{vrrArg}{hdrArg} -- ./Start_Gamescope.sh", useBash:true);// --framerate-limit
+        string gpuArg = gpu >= 1 ? $"DRI_PRIME={gpu} __NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia " : "";
+        string result = ProcessUtil.Run($"{gpuArg}{useMangoHubArg}gamescope", $"-e -f{useMangoHubArg2}{vrrArg}{hdrArg} -- ./Start_Gamescope.sh", useBash:true);// --framerate-limit
         Log.WriteLine(result);
     }
 
-    private static void StartCompositor_Weston(bool useMangoHub, bool windowedMode)
+    private static void StartCompositor_Weston(bool useMangoHub, bool windowedMode, int gpu)
     {
         Log.WriteLine("Starting Weston with Steam...");
         string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
         string windowedModeArg = !windowedMode ? "--shell=kiosk-shell.so " : "";
         string windowedModeArg2 = windowedMode ? " --windowed-mode" : "";
-        string result = ProcessUtil.Run("weston", $"{windowedModeArg}--xwayland -- ./Start_Weston.sh{useMangoHubArg}{windowedModeArg2}", useBash:true);
+        string gpuArg = gpu >= 1 ? $"DRI_PRIME={gpu} __NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia " : "";
+        string gpuArg2 = gpu >= 1 ? $"--drm-device=card{gpu} " : "";
+        string result = ProcessUtil.Run($"{gpuArg}weston", $"{gpuArg2}{windowedModeArg}--xwayland -- ./Start_Weston.sh{useMangoHubArg}{windowedModeArg2}", useBash:true);
         Log.WriteLine(result);
     }
     
-    private static void StartCompositor_Cage(bool useMangoHub)
+    private static void StartCompositor_Cage(bool useMangoHub, int gpu)
     {
         Log.WriteLine("Starting Cage with Steam...");
         string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
-        string result = ProcessUtil.Run("cage", $"-d -s -- ./Start_Cage.sh{useMangoHubArg}", useBash:true);
+        string gpuArg = gpu >= 1 ? $"DRI_PRIME={gpu} __NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia " : "";
+        string result = ProcessUtil.Run($"{gpuArg}cage", $"-d -s -- ./Start_Cage.sh{useMangoHubArg}", useBash:true);
         Log.WriteLine(result);
     }
 
-    private static void StartCompositor_Labwc()
+    private static void StartCompositor_Labwc(int gpu)
     {
         Log.WriteLine("Starting Labwc with Steam...");
-        string result = ProcessUtil.Run("labwc", "--startup ./Start_Labwc.sh", useBash:true);
+        string gpuArg = gpu >= 1 ? $"DRI_PRIME={gpu} __NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia " : "";
+        string result = ProcessUtil.Run($"{gpuArg}labwc", "--startup ./Start_Labwc.sh", useBash:true);
         Log.WriteLine(result);
     }
 
-    private static void StartCompositor_X11()
+    private static void StartCompositor_X11(int gpu)
     {
         Log.WriteLine("Starting X11 with Steam...");
-        string result = ProcessUtil.Run("startx", "", useBash:false);
+        string gpuArg = gpu >= 1 ? $"DRI_PRIME={gpu} __NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia " : "";
+        string result = ProcessUtil.Run($"{gpuArg}startx", "", useBash:false);
         Log.WriteLine(result);
     }
 

@@ -243,7 +243,7 @@ public partial class MainView : UserControl
         
         void WriteWaylandSettings(StreamWriter writer, string rotation)
         {
-            string vrrArg = vrrCheckbox.IsChecked == true ? " --adaptive-sync enabled" : "";
+            string vrrArg = vrrCheckbox.IsChecked == true ? " --adaptive-sync enabled" : "";//--vrr on
             writer.WriteLine("display=$(wlr-randr | awk '/^[^ ]+/{print $1; exit}')");
             writer.WriteLine($"wlr-randr --output $display --transform {rotation}{vrrArg}");
         }
