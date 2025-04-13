@@ -20,9 +20,9 @@ unclutter -idle 3 &
 
 # start steam
 if [ "$USE_MANGOHUB" = "true" ]; then
-    mangohud steam -bigpicture -steamdeck
+    env MESA_GL_VERSION_OVERRIDE=1.3 mangohud steam -bigpicture -steamdeck
 else
-    steam -bigpicture -steamdeck
+    env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -steamdeck
 fi
 
 # close unclutter
