@@ -26,7 +26,7 @@ if [ "$WINDOWED_MODE" = "true" ]; then
     if [ "$DISABLE_STEAM_GPU" = "true" ]; then
         env MESA_GL_VERSION_OVERRIDE=1.3 steam -nobigpicture
     else
-        steam -nobigpicture
+        env DRI_PRIME=1 steam -nobigpicture
     fi
 else
     if [ "$USE_MANGOHUB" = "true" ]; then
@@ -35,7 +35,7 @@ else
         if [ "$DISABLE_STEAM_GPU" = "true" ]; then
             env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -steamdeck
         else
-            steam -bigpicture -steamdeck
+            env DRI_PRIME=1 steam -bigpicture -steamdeck
         fi
     fi
 fi

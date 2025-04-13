@@ -19,7 +19,7 @@ fi
 if [ "$DISABLE_STEAM_GPU" = "true" ]; then
     env MESA_GL_VERSION_OVERRIDE=1.3 steam -nobigpicture
 else
-    steam -nobigpicture
+    env DRI_PRIME=1 steam -nobigpicture
 fi
 
 # run post kill
