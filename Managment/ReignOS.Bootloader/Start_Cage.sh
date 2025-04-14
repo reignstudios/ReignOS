@@ -25,12 +25,12 @@ unclutter -idle 3 &
 
 # start steam
 if [ "$USE_MANGOHUB" = "true" ]; then
-    DRI_PRIME=1 mangohud steam -bigpicture -steamdeck
+    mangohud steam -bigpicture -steamdeck
 else
     if [ "$DISABLE_STEAM_GPU" = "true" ]; then
-        env MESA_GL_VERSION_OVERRIDE=1.3 DRI_PRIME=1 steam -bigpicture -steamdeck
+        env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -steamdeck
     else
-        DRI_PRIME=1 steam -bigpicture -steamdeck
+        steam -bigpicture -steamdeck
     fi
 fi
 

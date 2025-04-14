@@ -36,9 +36,9 @@ done
 
 # start steam
 if [ "$DISABLE_STEAM_GPU" = "true" ]; then
-    env MESA_GL_VERSION_OVERRIDE=1.3 DRI_PRIME=1 steam -gamepadui -steamdeck -steamos3
+    env MESA_GL_VERSION_OVERRIDE=1.3 steam -gamepadui -steamdeck -steamos3
 else
-    DRI_PRIME=1 steam -gamepadui -steamdeck -steamos3
+    steam -gamepadui -steamdeck -steamos3
 fi
 
 # -gamepadui (newer)
