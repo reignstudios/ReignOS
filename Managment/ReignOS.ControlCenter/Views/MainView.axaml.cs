@@ -115,11 +115,21 @@ public partial class MainView : UserControl
         gpuButton2.IsVisible = gpus.Count >= 2;
         gpuButton3.IsVisible = gpus.Count >= 3;
         gpuButton4.IsVisible = gpus.Count >= 4;
+
+        gpuButtonNvidiaPrime.IsVisible = nvidia_Proprietary.IsChecked == true;
+        if (gpuButtonNvidiaPrime.IsVisible)
+        {
+            if (!gpuButton2.IsVisible) gpuButtonNvidiaPrime.Margin = gpuButton2.Margin;
+            else if (!gpuButton3.IsVisible) gpuButtonNvidiaPrime.Margin = gpuButton3.Margin;
+            else if (!gpuButton4.IsVisible) gpuButtonNvidiaPrime.Margin = gpuButton4.Margin;
+        }
     }
     
     private void LoadSettings()
     {
         if (!File.Exists(settingsFile)) return;
+
+        bool needsReset = false;
         try
         {
             using (var reader = new StreamReader(settingsFile))
@@ -162,11 +172,35 @@ public partial class MainView : UserControl
                     }
                     else if (parts[0] == "GPU")
                     {
-                        if (parts[1] == "1") gpuButton1.IsChecked = true;
-                        else if (parts[1] == "2" && gpus.Count >= 2) gpuButton2.IsChecked = true;
-                        else if (parts[1] == "3" && gpus.Count >= 3) gpuButton3.IsChecked = true;
-                        else if (parts[1] == "4" && gpus.Count >= 4) gpuButton4.IsChecked = true;
-                        else gpuButton0.IsChecked = true;
+                        if (parts[1] == "1")
+                        {
+                            gpuButton1.IsChecked = true;
+                        }
+                        else if (parts[1] == "2")
+                        {
+                            if (gpus.Count >= 2) gpuButton2.IsChecked = true;
+                            else needsReset = true;
+                        }
+                        else if (parts[1] == "3")
+                        {
+                            if (gpus.Count >= 3) gpuButton3.IsChecked = true;
+                            else needsReset = true;
+                        }
+                        else if (parts[1] == "4")
+                        {
+                            if (gpus.Count >= 4) gpuButton4.IsChecked = true;
+                            else needsReset = true;
+                        }
+                        else if (parts[1] == "100")
+                        {
+                            if (nvidia_Proprietary.IsChecked == true) gpuButtonNvidiaPrime.IsChecked = true;
+                            else needsReset = true;
+                        }
+                        else
+                        {
+                            gpuButton0.IsChecked = true;
+                            if (parts[1] != "0") needsReset = true;
+                        }
                     }
                     else if (parts[0] == "MangoHub")
                     {
@@ -190,6 +224,13 @@ public partial class MainView : UserControl
         catch (Exception e)
         {
             Console.WriteLine(e);
+        }
+
+        if (needsReset)
+        {
+            SaveSettings();
+            App.exitCode = 0;
+            MainWindow.singleton.Close();
         }
     }
     
@@ -221,6 +262,7 @@ public partial class MainView : UserControl
                 else if (gpuButton2.IsChecked == true) writer.WriteLine("GPU=2");
                 else if (gpuButton3.IsChecked == true) writer.WriteLine("GPU=3");
                 else if (gpuButton4.IsChecked == true) writer.WriteLine("GPU=4");
+                else if (gpuButtonNvidiaPrime.IsChecked == true) writer.WriteLine("GPU=100");
                 else writer.WriteLine("GPU=0");
 
                 if (mangohubCheckbox.IsChecked == true) writer.WriteLine("MangoHub=On");
@@ -524,6 +566,7 @@ public partial class MainView : UserControl
                 else if (gpuButton2.IsChecked == true) gpu = 2;
                 else if (gpuButton3.IsChecked == true) gpu = 3;
                 else if (gpuButton4.IsChecked == true) gpu = 4;
+                else if (gpuButtonNvidiaPrime.IsChecked == true) gpu = 100;
 
                 // apply options
                 text = text.Replace(line, line + $" --gpu-{gpu}");

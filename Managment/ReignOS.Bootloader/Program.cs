@@ -240,10 +240,16 @@ internal class Program
 
                 // reset things for new compositor
                 exitCode = 0;
-                //ProcessUtil.Wait("cage", 6);// wait for cage
-                //ProcessUtil.KillHard("cage", true, out _);// kill cage in case its stuck
-                ProcessUtil.Wait("weston", 6);// wait for cage
-                ProcessUtil.KillHard("weston", true, out _);// kill cage in case its stuck
+                if (controlCenterCompositor == ControlCenterCompositor.Cage)
+                {
+                    ProcessUtil.Wait("cage", 6);// wait for cage
+                    ProcessUtil.KillHard("cage", true, out _);// kill cage in case its stuck
+                }
+                else
+                {
+                    ProcessUtil.Wait("weston", 6);// wait for cage
+                    ProcessUtil.KillHard("weston", true, out _);// kill cage in case its stuck
+                }
             }
         }
 
@@ -282,10 +288,23 @@ internal class Program
 
     private static string GetGPUArg(int gpu)
     {
-        //ProcessUtil.Run("export", $"DRI_PRIME={gpu - 1}");
+        if (gpu == 100)
+        {
+            //ProcessUtil.Run("export", "VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.x86_64.json");
+            return "prime-run ";
+        }
+
+        if (gpu >= 1)
+        {
+            gpu--;
+            ProcessUtil.Run("export", $"DRI_PRIME={gpu}");
+            ProcessUtil.Run("export", $"NESA_VK_DEVICE_SELECT={gpu}");
+            ProcessUtil.Run("export", $"VK_DEVICE_SELECT={gpu}");
+            //ProcessUtil.Run("export", "VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nouveau_icd.x86_64.json");
+        }
         return "";
         //return "VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json prime-run ";//__NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia __VK_LAYER_NV_optimus=NVIDIA_only VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json
-        return gpu >= 1 ? $"DRI_PRIME={gpu - 1} " : "";// WLR_DRM_DEVICES=/dev/dri/card{gpu - 1}
+        //return gpu >= 1 ? $"DRI_PRIME={gpu - 1} " : "";// WLR_DRM_DEVICES=/dev/dri/card{gpu - 1}
     }
 
     private static void StartCompositor_Gamescope(bool useMangoHub, bool vrr, bool hdr, bool disableSteamGPU, int gpu)

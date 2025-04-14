@@ -24,6 +24,13 @@ static class PackageUpdates
         if (!PackageExits("wayland-utils")) return true;
         if (!PackageExits("weston")) return true;
 
+        if (!PackageExits("vulkan-tools")) return true;
+        if (!PackageExits("vulkan-mesa-layers")) return true;
+        if (!PackageExits("lib32-vulkan-mesa-layers")) return true;
+
+        if (!PackageExits("bluez")) return true;
+        if (!PackageExits("bluez-utils")) return true;
+
         return false;
     }
 
