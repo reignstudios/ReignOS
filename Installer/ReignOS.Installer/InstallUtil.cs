@@ -341,7 +341,7 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm libva-mesa-driver lib32-libva-mesa-driver amd-ucode vulkan-radeon lib32-vulkan-radeon radeontop");// AMD
         Run("pacman", "-S --noconfirm vulkan-nouveau lib32-vulkan-nouveau");// Nvida
         Run("pacman", "-S --noconfirm vulkan-icd-loader lib32-vulkan-icd-loader lib32-libglvnd");
-        Run("pacman", "-S --noconfirm vulkan-tools lib32-vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-layers");
+        Run("pacman", "-S --noconfirm vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-layers");
         Run("pacman", "-S --noconfirm egl-wayland");
         UpdateProgress(80);
 
