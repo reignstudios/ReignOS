@@ -11,6 +11,7 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using ReignOS.Core;
 using ReignOS.ControlCenter.Desktop;
+using System.Text;
 
 namespace ReignOS.ControlCenter.Views;
 
@@ -410,6 +411,44 @@ public partial class MainView : UserControl
                 using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "180");
                 using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-180", GetWestonDisplay());
                 //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 180", useBash:false);// 180, flipped, flipped-180 (options)
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+
+        // default gpu settings
+        try
+        {
+            const string bashrc = "/home/gamer/.bashrc";
+            const string gpuSettings = folder + "/DefaultGPU.sh";
+            string text = File.ReadAllText(bashrc);
+            if (!text.Contains(gpuSettings))
+            {
+                var builder = new StringBuilder(text);
+                builder.AppendLine();
+                builder.AppendLine(gpuSettings);
+                File.WriteAllText(bashrc, builder.ToString());
+            }
+
+            if (!File.Exists(gpuSettings))
+            {
+                int gpu = 0;
+                if (gpuButton1.IsChecked == true) gpu = 1;
+                else if (gpuButton2.IsChecked == true) gpu = 2;
+                else if (gpuButton3.IsChecked == true) gpu = 3;
+                else if (gpuButton4.IsChecked == true) gpu = 4;
+
+                var builder = new StringBuilder();
+                if (gpu >= 1)
+                {
+                    gpu--;
+                    builder.AppendLine($"export DRI_PRIME={gpu}");
+                    builder.AppendLine($"export NESA_VK_DEVICE_SELECT={gpu}");
+                    builder.AppendLine($"export VK_DEVICE_SELECT={gpu}");
+                }
+                File.WriteAllText(gpuSettings, builder.ToString());
             }
         }
         catch (Exception ex)

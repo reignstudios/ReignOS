@@ -294,18 +294,14 @@ internal class Program
             return "prime-run ";// __NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia __VK_LAYER_NV_optimus=NVIDIA_only
         }
 
-        if (gpu >= 1)
+        /*if (gpu >= 1)// this will be set in .bashrc to work correctly
         {
             gpu--;
-            int count = Enum.GetNames<EnvironmentVariableTarget>().Length;
-            for (int i = 0; i != count; ++i)
-            {
-                Environment.SetEnvironmentVariable("export", $"DRI_PRIME={gpu}", (EnvironmentVariableTarget)i);// WLR_DRM_DEVICES=/dev/dri/card1
-                Environment.SetEnvironmentVariable("export", $"NESA_VK_DEVICE_SELECT={gpu}", (EnvironmentVariableTarget)i);
-                Environment.SetEnvironmentVariable("export", $"VK_DEVICE_SELECT={gpu}", (EnvironmentVariableTarget)i);
-            }
+            Environment.SetEnvironmentVariable("export", $"DRI_PRIME={gpu}", EnvironmentVariableTarget.User);// WLR_DRM_DEVICES=/dev/dri/card1
+            Environment.SetEnvironmentVariable("export", $"NESA_VK_DEVICE_SELECT={gpu}", EnvironmentVariableTarget.User);
+            Environment.SetEnvironmentVariable("export", $"VK_DEVICE_SELECT={gpu}", EnvironmentVariableTarget.User);
             //ProcessUtil.Run("export", "VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nouveau_icd.x86_64.json");
-        }
+        }*/
 
         return "";
         //return "VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json prime-run ";//__NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia __VK_LAYER_NV_optimus=NVIDIA_only VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json
