@@ -16,8 +16,9 @@ if [ "$HAS_UPDATES" = "true" ]; then
   echo "ReignOS Updating Arch..."
   sleep 2
   sudo pacman -Syu --noconfirm
-  if [ $? -ne 0 ]; then
-    echo "ReignOS Updating Arch failed: $?"
+  exit_code=$?
+  if [ $exit_code -ne 0 ]; then
+    echo "ReignOS Updating Arch failed: $exit_code"
     sleep 1
     exit 1
   else
