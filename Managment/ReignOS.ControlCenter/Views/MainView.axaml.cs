@@ -512,10 +512,10 @@ public partial class MainView : UserControl
                 builder.AppendLine($"export VK_DEVICE_SELECT={gpu}");
             }
 
-            //if (muxButton1.IsChecked == true) builder.AppendLine($"sudo supergfxctl -m {muxButton1.Content as string}");
-            //else if (muxButton2.IsChecked == true) builder.AppendLine($"sudo supergfxctl -m {muxButton2.Content as string}");
-            //else if (muxButton3.IsChecked == true) builder.AppendLine($"sudo supergfxctl -m {muxButton3.Content as string}");
-            //else if (muxButton4.IsChecked == true) builder.AppendLine($"sudo supergfxctl -m {muxButton4.Content as string}");
+            if (muxButton1.IsChecked == true) builder.AppendLine($"sudo supergfxctl -m {muxButton1.Content as string}");
+            else if (muxButton2.IsChecked == true) builder.AppendLine($"sudo supergfxctl -m {muxButton2.Content as string}");
+            else if (muxButton3.IsChecked == true) builder.AppendLine($"sudo supergfxctl -m {muxButton3.Content as string}");
+            else if (muxButton4.IsChecked == true) builder.AppendLine($"sudo supergfxctl -m {muxButton4.Content as string}");
 
             File.WriteAllText(gpuSettings, builder.ToString());
         }
@@ -690,16 +690,10 @@ public partial class MainView : UserControl
 
     private void GPUMUXApplyButton_Click(object sender, RoutedEventArgs e)
     {
-        if (muxButton0.IsChecked != true)
-        {
-            ProcessUtil.Run("systemctl", "enable supergfxd.service", asAdmin:true, useBash:false);
-            ProcessUtil.Run("systemctl", "start supergfxd.service", asAdmin:true, useBash:false);
-        }
-
         if (muxButton0.IsChecked == true)
         {
-            ProcessUtil.Run("systemctl", "disable supergfxd.service", asAdmin:true, useBash:false);
-            ProcessUtil.Run("systemctl", "stop supergfxd.service", asAdmin:true, useBash:false);
+            string value = muxButton1.IsEnabled ? muxButton1.Content as string : "";
+            ProcessUtil.Run("supergfxctl", $"-m {value}", asAdmin:true, useBash:false);
         }
         else if (muxButton1.IsChecked == true) ProcessUtil.Run("supergfxctl", $"-m {muxButton1.Content as string}", asAdmin:true, useBash:false);
         else if (muxButton2.IsChecked == true) ProcessUtil.Run("supergfxctl", $"-m {muxButton2.Content as string}", asAdmin:true, useBash:false);
