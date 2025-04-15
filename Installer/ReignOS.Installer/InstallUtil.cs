@@ -309,7 +309,7 @@ static class InstallUtil
         fileBuilder = new StringBuilder();
         fileBuilder.AppendLine("#!/bin/bash");
         fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/FirstRun_Invoke.sh");
-        fileBuilder.AppendLine("sudo chmod +x /home/gamer/FirstRun_Invoke.sh");
+        fileBuilder.AppendLine("chmod +x /home/gamer/FirstRun_Invoke.sh");
         fileBuilder.AppendLine("/home/gamer/FirstRun_Invoke.sh");
         File.WriteAllText(path, fileBuilder.ToString());
 
@@ -364,7 +364,7 @@ static class InstallUtil
         fileBuilder = new StringBuilder(fileText);
         fileBuilder.AppendLine();
         fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/FirstRun.sh");
-        fileBuilder.AppendLine("sudo chmod +x /home/gamer/FirstRun.sh");
+        fileBuilder.AppendLine("chmod +x /home/gamer/FirstRun.sh");
         fileBuilder.AppendLine("/home/gamer/FirstRun.sh");
         fileBuilder.AppendLine("sudo chown -R $USER /root/.nuget");
         fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS");
