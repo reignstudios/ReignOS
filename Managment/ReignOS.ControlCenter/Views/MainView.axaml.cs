@@ -230,34 +230,30 @@ public partial class MainView : UserControl
                     }
                     else if (parts[0] == "MUX")
                     {
-                        if (parts[1] == "1")
+                        if (parts[1] == muxButton1.Content as string)
                         {
-                            gpuButton1.IsChecked = true;
-                        }
-                        else if (parts[1] == "2")
-                        {
-                            if (gpus.Count >= 2) gpuButton2.IsChecked = true;
+                            if (muxes.Count >= 1) muxButton1.IsChecked = true;
                             else needsReset = true;
                         }
-                        else if (parts[1] == "3")
+                        else if (parts[1] == muxButton2.Content as string)
                         {
-                            if (gpus.Count >= 3) gpuButton3.IsChecked = true;
+                            if (muxes.Count >= 2) muxButton2.IsChecked = true;
                             else needsReset = true;
                         }
-                        else if (parts[1] == "4")
+                        else if (parts[1] == muxButton3.Content as string)
                         {
-                            if (gpus.Count >= 4) gpuButton4.IsChecked = true;
+                            if (muxes.Count >= 3) muxButton3.IsChecked = true;
                             else needsReset = true;
                         }
-                        else if (parts[1] == "100")
+                        else if (parts[1] == muxButton4.Content as string)
                         {
-                            if (nvidia_Proprietary.IsChecked == true) gpuButtonNvidiaPrime.IsChecked = true;
+                            if (muxes.Count >= 4) muxButton4.IsChecked = true;
                             else needsReset = true;
                         }
                         else
                         {
-                            gpuButton0.IsChecked = true;
-                            if (parts[1] != "0") needsReset = true;
+                            muxButton0.IsChecked = true;
+                            if (parts[1] != "Unset") needsReset = true;
                         }
                     }
                     else if (parts[0] == "MangoHub")
@@ -322,6 +318,12 @@ public partial class MainView : UserControl
                 else if (gpuButton4.IsChecked == true) writer.WriteLine("GPU=4");
                 else if (gpuButtonNvidiaPrime.IsChecked == true) writer.WriteLine("GPU=100");
                 else writer.WriteLine("GPU=0");
+
+                if (muxButton1.IsChecked == true) writer.WriteLine($"MUX={muxButton1.Content as string}");
+                else if (muxButton2.IsChecked == true) writer.WriteLine($"MUX={muxButton2.Content as string}");
+                else if (muxButton3.IsChecked == true) writer.WriteLine($"MUX={muxButton3.Content as string}");
+                else if (muxButton4.IsChecked == true) writer.WriteLine($"MUX={muxButton4.Content as string}");
+                else writer.WriteLine("MUX=Unset");
 
                 if (mangohubCheckbox.IsChecked == true) writer.WriteLine("MangoHub=On");
                 else writer.WriteLine("MangoHub=Off");
