@@ -213,12 +213,12 @@ internal class Program
                 if (controlCenterCompositor == ControlCenterCompositor.Cage)
                 {
                     Log.WriteLine("Starting Cage with ReignOS.ControlCenter...");
-                    result = ProcessUtil.Run("cage", "-d -s -- ./Start_ControlCenter.sh -cage", out exitCode, useBash:true);// start ControlCenter
+                    result = ProcessUtil.Run("env -u WAYLAND_DISPLAY cage", "-d -s -- ./Start_ControlCenter.sh -cage", out exitCode, useBash:true);// start ControlCenter
                 }
                 else// default weston
                 {
                     Log.WriteLine("Starting Weston with ReignOS.ControlCenter...");
-                    result = ProcessUtil.Run("weston", "--shell=kiosk-shell.so --xwayland -- ./Start_ControlCenter.sh -weston", out exitCode, useBash:true);// start ControlCenter
+                    result = ProcessUtil.Run("env -u WAYLAND_DISPLAY weston", "--shell=kiosk-shell.so --xwayland -- ./Start_ControlCenter.sh -weston", out exitCode, useBash:true);// start ControlCenter
                 }
 
                 Console.WriteLine(result);
