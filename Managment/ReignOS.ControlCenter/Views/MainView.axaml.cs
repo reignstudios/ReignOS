@@ -696,7 +696,11 @@ public partial class MainView : UserControl
             ProcessUtil.Run("systemctl", "start supergfxd.service", asAdmin:true, useBash:false);
         }
 
-        if (muxButton0.IsChecked == true) ProcessUtil.Run("systemctl", "disable supergfxd.service", asAdmin:true, useBash:false);
+        if (muxButton0.IsChecked == true)
+        {
+            ProcessUtil.Run("systemctl", "disable supergfxd.service", asAdmin:true, useBash:false);
+            ProcessUtil.Run("systemctl", "stop supergfxd.service", asAdmin:true, useBash:false);
+        }
         else if (muxButton1.IsChecked == true) ProcessUtil.Run("supergfxctl", $"-m {muxButton1.Content as string}", asAdmin:true, useBash:false);
         else if (muxButton2.IsChecked == true) ProcessUtil.Run("supergfxctl", $"-m {muxButton2.Content as string}", asAdmin:true, useBash:false);
         else if (muxButton3.IsChecked == true) ProcessUtil.Run("supergfxctl", $"-m {muxButton3.Content as string}", asAdmin:true, useBash:false);
