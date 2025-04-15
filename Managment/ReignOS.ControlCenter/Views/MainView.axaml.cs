@@ -449,6 +449,7 @@ public partial class MainView : UserControl
                     builder.AppendLine($"export VK_DEVICE_SELECT={gpu}");
                 }
                 File.WriteAllText(gpuSettings, builder.ToString());
+                ProcessUtil.Run("chmod", $"+x {gpuSettings}", useBash:false);
             }
         }
         catch (Exception ex)
