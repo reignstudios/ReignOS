@@ -423,12 +423,13 @@ public partial class MainView : UserControl
         {
             const string bashrc = "/home/gamer/.bashrc";
             const string gpuSettings = folder + "/DefaultGPU";
+            const string gpuInc = ". ~/ReignOS_Ext/DefaultGPU";
             string text = File.ReadAllText(bashrc);
-            if (!text.Contains(gpuSettings))
+            if (!text.Contains(gpuInc))
             {
                 var builder = new StringBuilder(text);
                 builder.AppendLine();
-                builder.AppendLine(". ~/ReignOS_Ext/DefaultGPU");
+                builder.AppendLine(gpuInc);
                 File.WriteAllText(bashrc, builder.ToString());
             }
 
