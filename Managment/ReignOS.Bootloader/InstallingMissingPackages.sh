@@ -23,4 +23,3 @@ if [ ! -d "/home/gamer/yay" ]; then
 fi
 
 yay -S supergfxctl
-sudo systemctl enable supergfxd.service
