@@ -38,7 +38,8 @@ sleep 1
 if [ $exit_code -ne 0 ]; then
     echo "ReignOS Updating Arch failed: $exit_code 'hit Ctrl+C to stop boot'"
     sleep 5
-    exit 1
+    #exit 1 # auto-stop
+    exit 0
 fi
 
 exit 0
