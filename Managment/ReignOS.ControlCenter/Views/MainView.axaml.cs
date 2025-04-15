@@ -690,7 +690,12 @@ public partial class MainView : UserControl
 
     private void GPUMUXApplyButton_Click(object sender, RoutedEventArgs e)
     {
-        if (muxButton1.IsChecked == true) ProcessUtil.Run("supergfxctl", $"-m {muxButton1.Content as string}", asAdmin:true, useBash:false);
+        if (muxButton0.IsChecked == true)
+        {
+            string value = muxButton1.IsEnabled ? muxButton1.Content as string : "";
+            ProcessUtil.Run("supergfxctl", $"-m {value}", asAdmin:true, useBash:false);
+        }
+        else if (muxButton1.IsChecked == true) ProcessUtil.Run("supergfxctl", $"-m {muxButton1.Content as string}", asAdmin:true, useBash:false);
         else if (muxButton2.IsChecked == true) ProcessUtil.Run("supergfxctl", $"-m {muxButton2.Content as string}", asAdmin:true, useBash:false);
         else if (muxButton3.IsChecked == true) ProcessUtil.Run("supergfxctl", $"-m {muxButton3.Content as string}", asAdmin:true, useBash:false);
         else if (muxButton4.IsChecked == true) ProcessUtil.Run("supergfxctl", $"-m {muxButton4.Content as string}", asAdmin:true, useBash:false);
