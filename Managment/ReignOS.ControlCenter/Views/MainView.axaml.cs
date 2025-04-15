@@ -81,6 +81,7 @@ public partial class MainView : UserControl
         RefreshGPUs();
         RefreshMUX();
         LoadSettings();
+        PostRefreshGPUs();
         SaveSystemSettings();// apply any system settings in case things get updated
         
         connectedTimer = new System.Timers.Timer(1000 * 5);
@@ -118,13 +119,16 @@ public partial class MainView : UserControl
         gpuButton2.IsVisible = gpus.Count >= 2;
         gpuButton3.IsVisible = gpus.Count >= 3;
         gpuButton4.IsVisible = gpus.Count >= 4;
+    }
 
+    private void PostRefreshGPUs()
+    {
         gpuButtonNvidiaPrime.IsVisible = nvidia_Proprietary.IsChecked == true;
         if (gpuButtonNvidiaPrime.IsVisible)
         {
-            //if (!gpuButton2.IsVisible) gpuButtonNvidiaPrime.Margin = gpuButton2.Margin;
-            //else if (!gpuButton3.IsVisible) gpuButtonNvidiaPrime.Margin = gpuButton3.Margin;
-            //else if (!gpuButton4.IsVisible) gpuButtonNvidiaPrime.Margin = gpuButton4.Margin;
+            if (!gpuButton2.IsVisible) gpuButtonNvidiaPrime.Margin = gpuButton2.Margin;
+            else if (!gpuButton3.IsVisible) gpuButtonNvidiaPrime.Margin = gpuButton3.Margin;
+            else if (!gpuButton4.IsVisible) gpuButtonNvidiaPrime.Margin = gpuButton4.Margin;
         }
     }
 
