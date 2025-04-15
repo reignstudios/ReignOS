@@ -421,17 +421,7 @@ public partial class MainView : UserControl
         // default gpu settings
         try
         {
-            const string bashrc = "/home/gamer/.bashrc";
             const string gpuSettings = folder + "/DefaultGPU.sh";
-            string text = File.ReadAllText(bashrc);
-            if (!text.Contains(gpuSettings))
-            {
-                var builder = new StringBuilder(text);
-                builder.AppendLine();
-                builder.AppendLine(gpuSettings);
-                File.WriteAllText(bashrc, builder.ToString());
-            }
-
             if (!File.Exists(gpuSettings))
             {
                 int gpu = 0;
