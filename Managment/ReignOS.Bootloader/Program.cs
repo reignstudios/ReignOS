@@ -296,7 +296,7 @@ internal class Program
 
         if (gpu >= 1)
         {
-            ProcessUtil.Run("supergfxctl", "-m dedicated", asAdmin:true, useBash:false);
+            ProcessUtil.Run("supergfxctl", "-m Hybrid", asAdmin:true, useBash:false);
         }
 
         /*if (gpu >= 1)// this will be set in .bashrc to work correctly
