@@ -10,7 +10,8 @@ namespace ReignOS.ControlCenter.Desktop;
 enum CompositorMode
 {
     Weston,
-    Cage
+    Cage,
+    X11
 }
 
 class Program
@@ -29,6 +30,7 @@ class Program
         {
             if (args.Contains("-weston")) compositorMode = CompositorMode.Weston;
             else if (args.Contains("-cage")) compositorMode = CompositorMode.Cage;
+            else if (args.Contains("-x11")) compositorMode = CompositorMode.X11;
         }
 
         var options = new X11PlatformOptions();

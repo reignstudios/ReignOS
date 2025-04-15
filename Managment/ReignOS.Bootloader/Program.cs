@@ -13,7 +13,8 @@ using System.Linq;
 enum ControlCenterCompositor
 {
     Weston,
-    Cage
+    Cage,
+    X11
 }
 
 enum Compositor
@@ -61,15 +62,6 @@ internal class Program
             Environment.ExitCode = 100;
             return;
         }
-        
-        // configure X11
-        const string x11ConfigFile = "/home/gamer/.xinitrc";
-        using (var writer = new StreamWriter(x11ConfigFile))
-        {
-            writer.WriteLine("#!/bin/bash");
-            writer.WriteLine("exec /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_X11.sh");
-        }
-        ProcessUtil.Run("chmod", "+x " + x11ConfigFile, useBash:false);
 
         // start auto mounting service
         ProcessUtil.KillHard("udiskie", true, out _);
@@ -142,6 +134,7 @@ internal class Program
             if (arg == "--use-controlcenter") useControlCenter = true;
             else if (arg == "--controlcenter-weston") controlCenterCompositor = ControlCenterCompositor.Weston;
             else if (arg == "--controlcenter-cage") controlCenterCompositor = ControlCenterCompositor.Cage;
+            else if (arg == "--controlcenter-x11") controlCenterCompositor = ControlCenterCompositor.X11;
 
             else if (arg == "--gamescope") compositor = Compositor.Gamescope;
             else if (arg == "--weston") compositor = Compositor.Weston;
@@ -184,7 +177,7 @@ internal class Program
                     case Compositor.WestonWindowed: StartCompositor_Weston(useMangoHub, true, disableSteamGPU, gpu); break;
                     case Compositor.Cage: StartCompositor_Cage(useMangoHub, disableSteamGPU, gpu); break;
                     case Compositor.Labwc: StartCompositor_Labwc(disableSteamGPU, gpu); break;
-                    case Compositor.X11: StartCompositor_X11(); break;
+                    case Compositor.X11: StartCompositor_X11(useMangoHub, disableSteamGPU, gpu); break;
                 }
             }
             catch (Exception e)
@@ -209,16 +202,22 @@ internal class Program
             // start control center
             if (useControlCenter)
             {
-                string result;
-                if (controlCenterCompositor == ControlCenterCompositor.Cage)
+                string result = string.Empty;
+                if (controlCenterCompositor == ControlCenterCompositor.Weston)
+                {
+                    Log.WriteLine("Starting Weston with ReignOS.ControlCenter...");
+                    result = ProcessUtil.Run("env -u WAYLAND_DISPLAY weston", "--shell=kiosk-shell.so --xwayland -- ./Start_ControlCenter.sh -weston", out exitCode, useBash:true);// start ControlCenter
+                }
+                else if (controlCenterCompositor == ControlCenterCompositor.Cage)
                 {
                     Log.WriteLine("Starting Cage with ReignOS.ControlCenter...");
                     result = ProcessUtil.Run("env -u WAYLAND_DISPLAY cage", "-d -s -- ./Start_ControlCenter.sh -cage", out exitCode, useBash:true);// start ControlCenter
                 }
-                else// default weston
+                else if (controlCenterCompositor == ControlCenterCompositor.X11)
                 {
-                    Log.WriteLine("Starting Weston with ReignOS.ControlCenter...");
-                    result = ProcessUtil.Run("env -u WAYLAND_DISPLAY weston", "--shell=kiosk-shell.so --xwayland -- ./Start_ControlCenter.sh -weston", out exitCode, useBash:true);// start ControlCenter
+                    Log.WriteLine("Starting X11 with ReignOS.ControlCenter...");
+                    ConfigureX11("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_ControlCenter.sh -x11");
+                    result = ProcessUtil.Run("startx", "", useBash:false);// start ControlCenter
                 }
 
                 Console.WriteLine(result);
@@ -240,15 +239,19 @@ internal class Program
 
                 // reset things for new compositor
                 exitCode = 0;
-                if (controlCenterCompositor == ControlCenterCompositor.Cage)
+                if (controlCenterCompositor == ControlCenterCompositor.Weston)
+                {
+                    ProcessUtil.Wait("weston", 6);// wait for cage
+                    ProcessUtil.KillHard("weston", true, out _);// kill cage in case its stuck
+                }
+                else if (controlCenterCompositor == ControlCenterCompositor.Cage)
                 {
                     ProcessUtil.Wait("cage", 6);// wait for cage
                     ProcessUtil.KillHard("cage", true, out _);// kill cage in case its stuck
                 }
-                else
+                else if (controlCenterCompositor == ControlCenterCompositor.X11)
                 {
-                    ProcessUtil.Wait("weston", 6);// wait for cage
-                    ProcessUtil.KillHard("weston", true, out _);// kill cage in case its stuck
+                    Thread.Sleep(5);// just wait a bit
                 }
             }
         }
@@ -288,29 +291,13 @@ internal class Program
 
     private static string GetGPUArg(int gpu)
     {
-        /*if (gpu >= 1)
-        {
-            ProcessUtil.Run("supergfxctl", "-m Hybrid", asAdmin:true, useBash:false);
-        }*/
-
         if (gpu == 100)
         {
             //ProcessUtil.Run("export", "VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.x86_64.json");
-            return "prime-run ";// __NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia __VK_LAYER_NV_optimus=NVIDIA_only
+            return "prime-run ";
         }
 
-        /*if (gpu >= 1)// this will be set in .bashrc to work correctly
-        {
-            gpu--;
-            Environment.SetEnvironmentVariable("export", $"DRI_PRIME={gpu}", EnvironmentVariableTarget.User);// WLR_DRM_DEVICES=/dev/dri/card1
-            Environment.SetEnvironmentVariable("export", $"NESA_VK_DEVICE_SELECT={gpu}", EnvironmentVariableTarget.User);
-            Environment.SetEnvironmentVariable("export", $"VK_DEVICE_SELECT={gpu}", EnvironmentVariableTarget.User);
-            //ProcessUtil.Run("export", "VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nouveau_icd.x86_64.json");
-        }*/
-
         return "";
-        //return "VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json prime-run ";//__NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia __VK_LAYER_NV_optimus=NVIDIA_only VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json
-        //return gpu >= 1 ? $"DRI_PRIME={gpu - 1} " : "";// WLR_DRM_DEVICES=/dev/dri/card{gpu - 1}
     }
 
     private static void StartCompositor_Gamescope(bool useMangoHub, bool vrr, bool hdr, bool disableSteamGPU, int gpu)
@@ -333,7 +320,7 @@ internal class Program
         string windowedModeArg2 = windowedMode ? " --windowed-mode" : "";
         string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
         string gpuArg = GetGPUArg(gpu);
-        string gpuArg2 = "";//gpu >= 1 ? $"--drm-device=card{gpu} " : "";
+        string gpuArg2 = "";//gpu >= 1 ? $"--drm-device=card{gpu} " : "";// probably not needed
         string result = ProcessUtil.Run($"{gpuArg}weston", $"{gpuArg2}{windowedModeArg}--xwayland -- ./Start_Weston.sh{useMangoHubArg}{windowedModeArg2}{steamGPUArg}", useBash:true);
         Log.WriteLine(result);
     }
@@ -357,10 +344,15 @@ internal class Program
         Log.WriteLine(result);
     }
 
-    private static void StartCompositor_X11()
+    private static void StartCompositor_X11(bool useMangoHub, bool disableSteamGPU, int gpu)
     {
         Log.WriteLine("Starting X11 with Steam...");
-        string result = ProcessUtil.Run("startx", "", useBash:true);
+
+        string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
+        string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
+        string gpuArg = GetGPUArg(gpu);
+        ConfigureX11($"{gpuArg}/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_X11.sh{useMangoHubArg}{steamGPUArg}");
+        string result = ProcessUtil.Run("startx", "", useBash:false);
         Log.WriteLine(result);
     }
 
@@ -368,5 +360,16 @@ internal class Program
     {
         string result = ProcessUtil.Run("ping", "-c 1 google.com", consoleLogOut:false, useBash:false);
         return result.Contains("1 received");
+    }
+
+    private static void ConfigureX11(string launch)
+    {
+        const string x11ConfigFile = "/home/gamer/.xinitrc";
+        using (var writer = new StreamWriter(x11ConfigFile))
+        {
+            writer.WriteLine("#!/bin/bash");
+            writer.WriteLine(launch);
+        }
+        ProcessUtil.Run("chmod", "+x " + x11ConfigFile, useBash:false);
     }
 }
