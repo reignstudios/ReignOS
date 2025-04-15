@@ -369,7 +369,6 @@ internal class Program
         {
             writer.WriteLine("#!/bin/bash");
             writer.WriteLine();
-            writer.WriteLine("xrdb -merge ~/.Xresources");
             writer.WriteLine(launch);
         }
         ProcessUtil.Run("chmod", "+x " + x11ConfigFile, useBash:false);
