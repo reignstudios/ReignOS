@@ -25,12 +25,18 @@ unclutter -idle 3 &
 
 # start steam
 if [ "$USE_MANGOHUB" = "true" ]; then
-    mangohud steam -bigpicture -steamdeck
+    mangohud steam -bigpicture -steamdeck &
+    STEAM_PID=$!
+    unset MESA_GL_VERSION_OVERRIDE
+    wait $STEAM_PID
 else
     if [ "$DISABLE_STEAM_GPU" = "true" ]; then
         env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -steamdeck
     else
-        steam -bigpicture -steamdeck
+        steam -bigpicture -steamdeck &
+        STEAM_PID=$!
+        unset MESA_GL_VERSION_OVERRIDE
+        wait $STEAM_PID
     fi
 fi
 
