@@ -8,6 +8,7 @@
         x:Class="ReignOS.ControlCenter.Views.MainWindow"
         Icon="/Assets/ReignOS_Icon.ico"
         Title="ReignOS.ControlCenter"
-		WindowState="Maximized">
+		WindowState="Maximized"
+		SystemDecorations="BorderOnly">
         <views:MainView />
 </Window>
