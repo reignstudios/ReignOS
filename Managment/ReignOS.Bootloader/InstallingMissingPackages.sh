@@ -22,5 +22,5 @@ if [ ! -d "/home/gamer/yay" ]; then
 	makepkg -si --noconfirm
 fi
 
-yay -S supergfxctl
+yay -S supergfxctl --noconfirm
 sudo systemctl enable supergfxd.service

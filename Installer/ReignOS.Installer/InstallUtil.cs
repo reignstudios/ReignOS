@@ -438,7 +438,7 @@ static class InstallUtil
         UpdateProgress(60);
 
         // install supergfxctl (for GPU MUX support)
-        Run("yay", "-S supergfxctl");
+        Run("yay", "-S supergfxctl --noconfirm");
         Run("systemctl", "enable supergfxd.service");
         UpdateProgress(65);
     }
