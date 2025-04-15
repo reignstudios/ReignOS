@@ -91,7 +91,6 @@ static class InstallUtil
         {
             InstallBaseArch();
             InstallArchPackages();
-            InstallYayPackages();
             InstallReignOSRepo();
             InstallProgress?.Invoke("Done", progress);
         }
@@ -305,18 +304,81 @@ static class InstallUtil
         Run("systemctl", "restart getty@tty1.service");
         UpdateProgress(28);
 
+        // create post-install first-run install tasks
+        path = "/mnt/home/gamer/FirstRun.sh";
+        if (File.Exists(path)) fileText = File.ReadAllText(path);
+        else fileText = "";
+        fileBuilder = new StringBuilder(fileText);
+        fileBuilder.AppendLine();
+        fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/FirstRun_Invoke.sh");
+        fileBuilder.AppendLine("sudo chmod +x /home/gamer/FirstRun_Invoke.sh");
+        fileBuilder.AppendLine("/home/gamer/FirstRun_Invoke.sh");
+        File.WriteAllText(path, fileBuilder.ToString());
+
+        path = "/mnt/home/gamer/FirstRun_Invoke.sh";// create extra first-run backup of tasks in case user needs to run again
+        if (File.Exists(path)) fileText = File.ReadAllText(path);
+        else fileText = "";
+        fileBuilder = new StringBuilder(fileText);
+        fileBuilder.AppendLine();
+        fileBuilder.AppendLine("echo \"ReignOS: Running FirstRun post-install tasks...\"");
+        fileBuilder.AppendLine();// make sure we have network still or install needs to fail until it does
+        fileBuilder.AppendLine("NetworkUp=false");
+        fileBuilder.AppendLine("if [ \"$DISABLE_UPDATE\" = \"false\" ]; then");
+        fileBuilder.AppendLine("    for i in $(seq 1 30); do");
+        fileBuilder.AppendLine("        # Try to ping Google's DNS server");
+        fileBuilder.AppendLine("        if ping -c 1 -W 1 8.8.8.8 &> /dev/null; then");
+        fileBuilder.AppendLine("            echo \"FirstRun: Network is up!\"");
+        fileBuilder.AppendLine("            NetworkUp=true");
+        fileBuilder.AppendLine("            sleep 1");
+        fileBuilder.AppendLine("            break");
+        fileBuilder.AppendLine("        else");
+        fileBuilder.AppendLine("            echo \"Waiting for network... $i\"");
+        fileBuilder.AppendLine("            sleep 1");
+        fileBuilder.AppendLine("        fi");
+        fileBuilder.AppendLine("    done");
+        fileBuilder.AppendLine("fi");
+        fileBuilder.AppendLine();
+        fileBuilder.AppendLine("if [ \"$NetworkUp\" = \"false\" ]; then");
+        fileBuilder.AppendLine("    echo \"Network is required for FirstRun to complete. FAILED!\"");
+        fileBuilder.AppendLine("    echo \"Type 'exit' to retry\"");
+        fileBuilder.AppendLine("    exit 1");
+        fileBuilder.AppendLine("fi");
+
+        fileBuilder.AppendLine();// install yay
+        fileBuilder.AppendLine("echo \"Installing yay support...\"");
+        fileBuilder.AppendLine("cd /home/gamer");
+        fileBuilder.AppendLine("git clone https://aur.archlinux.org/yay.git");
+        fileBuilder.AppendLine("cd /home/gamer/yay");
+        fileBuilder.AppendLine("makepkg -si --noconfirm");
+        fileBuilder.AppendLine("yay -Syy --noconfirm");
+
+        fileBuilder.AppendLine();// install NUX support
+        fileBuilder.AppendLine("echo \"Installing NUX support...\"");
+        fileBuilder.AppendLine("yay -S supergfxctl --noconfirm");
+        fileBuilder.AppendLine("sudo systemctl enable supergfxd.service");
+
+        fileBuilder.AppendLine();// disable FirstRun
+        fileBuilder.AppendLine("echo \"rebooting...\"");
+        fileBuilder.AppendLine("echo -n > /home/gamer/FirstRun.sh");
+        fileBuilder.AppendLine("reboot");
+        File.WriteAllText(path, fileBuilder.ToString());
+        UpdateProgress(29);
+
         // auto invoke launch after login
         path = "/mnt/home/gamer/.bash_profile";
         if (File.Exists(path)) fileText = File.ReadAllText(path);
         else fileText = "";
         fileBuilder = new StringBuilder(fileText);
         fileBuilder.AppendLine();
+        fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/FirstRun.sh");
+        fileBuilder.AppendLine("sudo chmod +x /home/gamer/FirstRun.sh");
+        fileBuilder.AppendLine("/home/gamer/FirstRun.sh");
         fileBuilder.AppendLine("sudo chown -R $USER /root/.nuget");
         fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS");
         fileBuilder.AppendLine("chmod +x /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh");
         fileBuilder.AppendLine("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh --use-controlcenter");
         File.WriteAllText(path, fileBuilder.ToString());
-        UpdateProgress(29);
+        UpdateProgress(30);
     }
     
     private static void InstallArchPackages()
@@ -327,16 +389,16 @@ static class InstallUtil
         // install misc apps
         Run("pacman", "-S --noconfirm nano evtest efibootmgr");
         Run("pacman", "-S --noconfirm dmidecode udev python");
-        UpdateProgress(30);
+        UpdateProgress(31);
 
         // install wayland
         Run("pacman", "-S --noconfirm xorg-server-xwayland wayland wayland-protocols wayland-utils");
         Run("pacman", "-S --noconfirm xorg-xev xbindkeys xorg-xinput xorg-xmodmap");
-        UpdateProgress(31);
+        UpdateProgress(32);
 
         // install x11
         Run("pacman", "-S --noconfirm xorg xorg-server xorg-xinit xf86-input-libinput xterm");
-        UpdateProgress(32);
+        UpdateProgress(33);
 
         // install wayland graphics drivers
         Run("pacman", "-S --noconfirm mesa lib32-mesa");
@@ -346,30 +408,30 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm vulkan-icd-loader lib32-vulkan-icd-loader lib32-libglvnd");
         Run("pacman", "-S --noconfirm vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-layers");
         Run("pacman", "-S --noconfirm egl-wayland");
-        UpdateProgress(35);
+        UpdateProgress(40);
 
         // install x11 graphics drivers
         Run("pacman", "-S --noconfirm xf86-video-intel xf86-video-amdgpu xf86-video-nouveau");
         Run("pacman", "-S --noconfirm glxinfo");
-        UpdateProgress(36);
+        UpdateProgress(46);
 
         // install compositors
         Run("pacman", "-S --noconfirm wlr-randr wlroots gamescope cage labwc weston");
         Run("pacman", "-S --noconfirm openbox");
-        UpdateProgress(37);
+        UpdateProgress(47);
 
         // install audio
         Run("pacman", "-S --noconfirm alsa-utils alsa-plugins");
         Run("pacman", "-S --noconfirm sof-firmware");
         Run("pacman", "-S --noconfirm pipewire pipewire-pulse pipewire-alsa pipewire-jack wireplumber");
         Run("systemctl", "--user enable pipewire pipewire-pulse wireplumber");
-        UpdateProgress(40);
+        UpdateProgress(50);
 
         // install power
         Run("pacman", "-S --noconfirm acpi acpid powertop power-profiles-daemon");
         Run("pacman", "-S --noconfirm python-gobject");
         Run("systemctl", "enable acpid power-profiles-daemon");
-        UpdateProgress(41);
+        UpdateProgress(51);
 
         // install auto-mount drives
         Run("pacman", "-S --noconfirm udiskie udisks2");
@@ -391,11 +453,11 @@ static class InstallUtil
         ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_99automount_rules);
         Run("udevadm", "control --reload-rules");
         Run("systemctl", "enable udisks2");
-        UpdateProgress(42);
+        UpdateProgress(52);
 
         // install compiler tools
         Run("pacman", "-S --noconfirm base-devel dotnet-sdk-8.0 git git-lfs");
-        UpdateProgress(45);
+        UpdateProgress(55);
 
         // install steam
         Run("pacman", "-S --noconfirm libxcomposite lib32-libxcomposite libxrandr lib32-libxrandr libgcrypt lib32-libgcrypt lib32-pipewire libpulse lib32-libpulse gtk2 lib32-gtk2 gtk3 lib32-gtk3 nss lib32-nss glib2 lib32-glib2");
@@ -408,43 +470,23 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm vulkan-dzn vulkan-gfxstream vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio");// all steam options
         Run("pacman", "-S --noconfirm lib32-vulkan-dzn lib32-vulkan-gfxstream lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio");// all steam options
         Run("pacman", "-S --noconfirm steam");//steam-native-runtime (use Arch libs)
-        UpdateProgress(50);
+        UpdateProgress(70);
 
         // remove AMD driver defaults steam might try to install
         Run("pacman", "-R amdvlk");
         Run("pacman", "-R lib32-amdvlk");
         Run("pacman", "-R amdvlk-pro");
         Run("pacman", "-R amdvlk-git");
-        UpdateProgress(51);
+        UpdateProgress(71);
 
         // remove Nvidia driver defaults steam might try to install
         Run("pacman", "-R nvidia-utils");
         Run("pacman", "-R lib32-nvidia-utils");
-        UpdateProgress(52);
+        UpdateProgress(72);
 
         // install wayland mouse util
         Run("pacman", "-S --noconfirm unclutter");
-        UpdateProgress(53);
-    }
-
-    private static void InstallYayPackages()
-    {
-        progressTask = "Installing Yay...";
-        archRootMode = true;
-
-        // install yay
-        archRootMode = false;
-        Run("git", "clone https://aur.archlinux.org/yay.git /mnt/home/gamer/yay");
-        archRootMode = true;
-        Run("chown", "-R gamer /home/gamer/yay");
-        Run("makepkg", "-si --noconfirm -p /home/gamer/yay");
-        Run("yay", "-Syy --noconfirm");
-        UpdateProgress(60);
-
-        // install supergfxctl (for GPU MUX support)
-        Run("yay", "-S supergfxctl --noconfirm");
-        Run("systemctl", "enable supergfxd.service");
-        UpdateProgress(65);
+        UpdateProgress(73);
     }
     
     private static void InstallReignOSRepo()
@@ -459,6 +501,7 @@ static class InstallUtil
         // clone ReignOS repo
         Run("git", "clone https://github.com/reignstudios/ReignOS.git /mnt/home/gamer/ReignOS");
         Run("NUGET_PACKAGES=/mnt/root/.nuget dotnet", "publish -r linux-x64 -c Release", workingDir:"/mnt/home/gamer/ReignOS/Managment");
+        UpdateProgress(80);
 
         // copy wifi settings
         Run("mkdir", "-p /mnt/var/lib/iwd/");
