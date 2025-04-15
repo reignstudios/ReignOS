@@ -36,8 +36,8 @@ sleep 1
 
 # just stop everything if Arch fails to update (but allow ReignOS git to update before this)
 if [ $exit_code -ne 0 ]; then
-    echo "ReignOS Updating Arch failed: $exit_code"
-    sleep 1
+    echo "ReignOS Updating Arch failed: $exit_code 'hit Ctrl+C to stop boot'"
+    sleep 5
     exit 1
 fi
 
