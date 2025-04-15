@@ -297,9 +297,13 @@ internal class Program
         if (gpu >= 1)
         {
             gpu--;
-            Environment.SetEnvironmentVariable("export", $"DRI_PRIME={gpu}", EnvironmentVariableTarget.User);// WLR_DRM_DEVICES=/dev/dri/card1
-            Environment.SetEnvironmentVariable("export", $"NESA_VK_DEVICE_SELECT={gpu}", EnvironmentVariableTarget.User);
-            Environment.SetEnvironmentVariable("export", $"VK_DEVICE_SELECT={gpu}", EnvironmentVariableTarget.User);
+            int count = Enum.GetNames<EnvironmentVariableTarget>().Length;
+            for (int i = 0; i != count; ++i)
+            {
+                Environment.SetEnvironmentVariable("export", $"DRI_PRIME={gpu}", (EnvironmentVariableTarget)i);// WLR_DRM_DEVICES=/dev/dri/card1
+                Environment.SetEnvironmentVariable("export", $"NESA_VK_DEVICE_SELECT={gpu}", (EnvironmentVariableTarget)i);
+                Environment.SetEnvironmentVariable("export", $"VK_DEVICE_SELECT={gpu}", (EnvironmentVariableTarget)i);
+            }
             //ProcessUtil.Run("export", "VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nouveau_icd.x86_64.json");
         }
 
