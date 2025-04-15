@@ -26,13 +26,20 @@ xsetroot -cursor_name left_ptr
 # start steam
 if [ "$USE_MANGOHUB" = "true" ]; then
     mangohud steam -nobigpicture
+    STEAM_PID=$!
 else
     if [ "$DISABLE_STEAM_GPU" = "true" ]; then
         env MESA_GL_VERSION_OVERRIDE=1.3 steam -nobigpicture
+        STEAM_PID=$!
     else
         steam -nobigpicture
+        STEAM_PID=$!
     fi
 fi
+
+sleep 10
+wmctrl -r :ACTIVE: -b add,maximized_vert,maximized_horz
+wait $STEAM_PID
 
 # run post kill
 ./PostKill.sh &
