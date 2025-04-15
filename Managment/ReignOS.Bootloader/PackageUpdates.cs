@@ -8,8 +8,8 @@ static class PackageUpdates
 {
     private static bool PackageExits(string package)
     {
-        string result = ProcessUtil.Run("pacman", $"-Qs {package}");
-        return result != null && result.Length != 0;
+        string result = ProcessUtil.Run("pacman", $"-Q {package}");
+        return result != null && !result.StartsWith("error:");
     }
 
 
