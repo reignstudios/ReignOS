@@ -306,42 +306,35 @@ static class InstallUtil
 
         // create post-install first-run install tasks
         path = "/mnt/home/gamer/FirstRun.sh";
-        if (File.Exists(path)) fileText = File.ReadAllText(path);
-        else fileText = "";
-        fileBuilder = new StringBuilder(fileText);
-        fileBuilder.AppendLine();
+        fileBuilder = new StringBuilder();
+        fileBuilder.AppendLine("#!/bin/bash");
         fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/FirstRun_Invoke.sh");
         fileBuilder.AppendLine("sudo chmod +x /home/gamer/FirstRun_Invoke.sh");
         fileBuilder.AppendLine("/home/gamer/FirstRun_Invoke.sh");
         File.WriteAllText(path, fileBuilder.ToString());
 
         path = "/mnt/home/gamer/FirstRun_Invoke.sh";// create extra first-run backup of tasks in case user needs to run again
-        if (File.Exists(path)) fileText = File.ReadAllText(path);
-        else fileText = "";
-        fileBuilder = new StringBuilder(fileText);
-        fileBuilder.AppendLine();
+        fileBuilder = new StringBuilder();
+        fileBuilder.AppendLine("#!/bin/bash");
         fileBuilder.AppendLine("echo \"ReignOS: Running FirstRun post-install tasks...\"");
         fileBuilder.AppendLine();// make sure we have network still or install needs to fail until it does
         fileBuilder.AppendLine("NetworkUp=false");
-        fileBuilder.AppendLine("if [ \"$DISABLE_UPDATE\" = \"false\" ]; then");
-        fileBuilder.AppendLine("    for i in $(seq 1 30); do");
-        fileBuilder.AppendLine("        # Try to ping Google's DNS server");
-        fileBuilder.AppendLine("        if ping -c 1 -W 1 8.8.8.8 &> /dev/null; then");
-        fileBuilder.AppendLine("            echo \"FirstRun: Network is up!\"");
-        fileBuilder.AppendLine("            NetworkUp=true");
-        fileBuilder.AppendLine("            sleep 1");
-        fileBuilder.AppendLine("            break");
-        fileBuilder.AppendLine("        else");
-        fileBuilder.AppendLine("            echo \"Waiting for network... $i\"");
-        fileBuilder.AppendLine("            sleep 1");
-        fileBuilder.AppendLine("        fi");
-        fileBuilder.AppendLine("    done");
-        fileBuilder.AppendLine("fi");
+        fileBuilder.AppendLine("for i in $(seq 1 30); do");
+        fileBuilder.AppendLine("    # Try to ping Google's DNS server");
+        fileBuilder.AppendLine("    if ping -c 1 -W 1 8.8.8.8 &> /dev/null; then");
+        fileBuilder.AppendLine("        echo \"FirstRun: Network is up!\"");
+        fileBuilder.AppendLine("        NetworkUp=true");
+        fileBuilder.AppendLine("        sleep 1");
+        fileBuilder.AppendLine("        break");
+        fileBuilder.AppendLine("    else");
+        fileBuilder.AppendLine("        echo \"FirstRun: Waiting for network... $i\"");
+        fileBuilder.AppendLine("        sleep 1");
+        fileBuilder.AppendLine("    fi");
+        fileBuilder.AppendLine("done");
         fileBuilder.AppendLine();
         fileBuilder.AppendLine("if [ \"$NetworkUp\" = \"false\" ]; then");
         fileBuilder.AppendLine("    echo \"Network is required for FirstRun to complete. FAILED!\"");
-        fileBuilder.AppendLine("    echo \"Type 'exit' to retry\"");
-        fileBuilder.AppendLine("    exit 1");
+        fileBuilder.AppendLine("    sleep infinity");
         fileBuilder.AppendLine("fi");
 
         fileBuilder.AppendLine();// install yay
