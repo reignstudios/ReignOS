@@ -294,6 +294,11 @@ internal class Program
             return "prime-run ";// __NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia __VK_LAYER_NV_optimus=NVIDIA_only
         }
 
+        if (gpu >= 1)
+        {
+            ProcessUtil.Run("supergfxctl", "-m dedicated", asAdmin:true, useBash:false);
+        }
+
         /*if (gpu >= 1)// this will be set in .bashrc to work correctly
         {
             gpu--;
