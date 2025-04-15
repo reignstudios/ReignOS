@@ -30,3 +30,8 @@ fi
 ./ReignOS.ControlCenter $@
 exit_code=$?
 echo "EXIT_CODE: $exit_code"
+
+if [ "$X11_MODE" = "true" ]; then
+    sleep 1
+    sudo pkill openbox
+fi

@@ -23,25 +23,21 @@ fi
 # set cursor to pointer
 xsetroot -cursor_name left_ptr
 
+exec openbox-session &
+
 # start steam
 if [ "$USE_MANGOHUB" = "true" ]; then
-    mangohud steam -bigpicture &
-    #STEAM_PID=$!
+    mangohud steam -bigpicture
 else
     if [ "$DISABLE_STEAM_GPU" = "true" ]; then
-        env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture &
-        #STEAM_PID=$!
+        env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture
     else
-        steam -bigpicture &
-        #STEAM_PID=$!
+        steam -bigpicture
     fi
 fi
 
-#sleep 10
-#wmctrl -r :ACTIVE: -b add,maximized_vert,maximized_horz
-#wait $STEAM_PID
-
-exec openbox-session
+sleep 1
+sudo pkill openbox
 
 # run post kill
 ./PostKill.sh &
