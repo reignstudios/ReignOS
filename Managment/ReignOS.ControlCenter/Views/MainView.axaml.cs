@@ -512,10 +512,10 @@ public partial class MainView : UserControl
                 builder.AppendLine($"export VK_DEVICE_SELECT={gpu}");
             }
 
-            if (muxButton1.IsChecked == true) builder.AppendLine($"supergfxctl -m {muxButton1.Content as string}");
-            else if (muxButton2.IsChecked == true) builder.AppendLine($"supergfxctl -m {muxButton2.Content as string}");
-            else if (muxButton3.IsChecked == true) builder.AppendLine($"supergfxctl -m {muxButton3.Content as string}");
-            else if (muxButton4.IsChecked == true) builder.AppendLine($"supergfxctl -m {muxButton4.Content as string}");
+            if (muxButton1.IsChecked == true) builder.AppendLine($"sudo supergfxctl -m {muxButton1.Content as string}");
+            else if (muxButton2.IsChecked == true) builder.AppendLine($"sudo supergfxctl -m {muxButton2.Content as string}");
+            else if (muxButton3.IsChecked == true) builder.AppendLine($"sudo supergfxctl -m {muxButton3.Content as string}");
+            else if (muxButton4.IsChecked == true) builder.AppendLine($"sudo supergfxctl -m {muxButton4.Content as string}");
 
             File.WriteAllText(gpuSettings, builder.ToString());
         }
