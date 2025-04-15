@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# set GPU env
-/home/gamer/ReignOS_Ext/DefaultGPU.sh
-
 # args
 DISABLE_UPDATE=false
 for arg in "$@"; do

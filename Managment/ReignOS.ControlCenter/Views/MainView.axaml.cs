@@ -421,7 +421,17 @@ public partial class MainView : UserControl
         // default gpu settings
         try
         {
-            const string gpuSettings = folder + "/DefaultGPU.sh";
+            const string bashrc = "/home/gamer/.bashrc";
+            const string gpuSettings = folder + "/DefaultGPU";
+            string text = File.ReadAllText(bashrc);
+            if (!text.Contains(gpuSettings))
+            {
+                var builder = new StringBuilder(text);
+                builder.AppendLine();
+                builder.AppendLine(". ~/ReignOS_Ext/DefaultGPU");
+                File.WriteAllText(bashrc, builder.ToString());
+            }
+
             if (!File.Exists(gpuSettings))
             {
                 int gpu = 0;
@@ -439,7 +449,6 @@ public partial class MainView : UserControl
                     builder.AppendLine($"export VK_DEVICE_SELECT={gpu}");
                 }
                 File.WriteAllText(gpuSettings, builder.ToString());
-                ProcessUtil.Run("chmod", $"+x {gpuSettings}", useBash:false);
             }
         }
         catch (Exception ex)
