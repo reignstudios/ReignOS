@@ -355,7 +355,7 @@ public partial class MainView : UserControl
         static void WriteX11Settings(StreamWriter writer, string rotation)
         {
             writer.WriteLine("display=$(xrandr --query | awk '/ connected/ {print $1; exit}')");
-            writer.WriteLine($"xrandr --output $display --rotate {rotation} --mode 1920x1080");
+            writer.WriteLine($"xrandr --output $display --rotate {rotation}");// --mode 1920x1080
         }
         
         void WriteWaylandSettings(StreamWriter writer, string rotation)
