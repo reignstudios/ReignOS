@@ -32,7 +32,9 @@ class Program
             else if (args.Contains("-labwc")) compositorMode = CompositorMode.Labwc;
         }
 
-        BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+        var options = new X11PlatformOptions();
+        options.RenderingMode = new List<X11RenderingMode>() { X11RenderingMode.Software };
+        BuildAvaloniaApp().With(options).StartWithClassicDesktopLifetime(args);
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.
