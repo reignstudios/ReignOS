@@ -188,7 +188,7 @@ static class InstallUtil
 
         // install BT support
         Run("pacman", "-S --noconfirm bluez bluez-utils");
-        Run("systemctl", "enable bluetoothd");
+        Run("systemctl", "enable bluetooth");
         UpdateProgress(19);
 
         // configure time and lang

@@ -12,7 +12,7 @@ sudo pacman -S --noconfirm weston
 sudo pacman -S --noconfirm vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-layers
 
 sudo pacman -S --noconfirm bluez bluez-utils
-sudo systemctl enable bluetoothd
+sudo systemctl enable bluetooth
 
 # add yay packages
 if [ ! -d "/home/gamer/yay" ]; then
