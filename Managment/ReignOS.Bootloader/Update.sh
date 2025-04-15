@@ -17,7 +17,8 @@ if [ "$HAS_UPDATES" = "true" ]; then
   sleep 2
   sudo pacman -Syu --noconfirm
   if [ $? -ne 0 ]; then
-    echo "ReignOS Updating Arch failed!"
+    echo "ReignOS Updating Arch failed: $?"
+    exit 100
   else
     reboot
   fi
