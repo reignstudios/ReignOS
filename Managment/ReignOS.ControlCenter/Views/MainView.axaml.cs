@@ -688,6 +688,18 @@ public partial class MainView : UserControl
         MainWindow.singleton.Close();
     }
 
+    private void GPUMUXApplyButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (muxButton1.IsChecked == true) ProcessUtil.Run("supergfxctl", $"-m {muxButton1.Content as string}", asAdmin:true, useBash:false);
+        else if (muxButton2.IsChecked == true) ProcessUtil.Run("supergfxctl", $"-m {muxButton2.Content as string}", asAdmin:true, useBash:false);
+        else if (muxButton3.IsChecked == true) ProcessUtil.Run("supergfxctl", $"-m {muxButton3.Content as string}", asAdmin:true, useBash:false);
+        else if (muxButton4.IsChecked == true) ProcessUtil.Run("supergfxctl", $"-m {muxButton4.Content as string}", asAdmin:true, useBash:false);
+        SaveSettings();
+
+        App.exitCode = 0;// reopen with full logout so env vars reset
+        MainWindow.singleton.Close();
+    }
+
     private void OtherSettingsApplyButton_Click(object sender, RoutedEventArgs e)
     {
         const string profileFile = "/home/gamer/.bash_profile";
