@@ -38,11 +38,7 @@ done
 if [ "$DISABLE_STEAM_GPU" = "true" ]; then
     env MESA_GL_VERSION_OVERRIDE=1.3 steam -gamepadui -steamdeck -steamos3
 else
-    steam -gamepadui -steamdeck -steamos3 &
-    STEAM_PID=$!
-    unset MESA_GL_VERSION_OVERRIDE
-    wait $STEAM_PID
-
+    env MESA_GL_VERSION_OVERRIDE=4.6 steam -gamepadui -steamdeck -steamos3
 fi
 
 # -gamepadui (newer)
