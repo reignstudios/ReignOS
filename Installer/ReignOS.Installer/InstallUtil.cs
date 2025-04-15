@@ -355,6 +355,7 @@ static class InstallUtil
 
         // install compositors
         Run("pacman", "-S --noconfirm wlr-randr wlroots gamescope cage labwc weston");
+        Run("pacman", "-S --noconfirm openbox");
         UpdateProgress(37);
 
         // install audio
@@ -432,7 +433,10 @@ static class InstallUtil
         archRootMode = true;
 
         // install yay
-        Run("git", "clone https://aur.archlinux.org/yay.git /home/gamer/yay");
+        archRootMode = false;
+        Run("git", "clone https://aur.archlinux.org/yay.git /mnt/home/gamer/yay");
+        archRootMode = true;
+        Run("chown", "-R gamer /home/gamer/yay");
         Run("makepkg", "-si --noconfirm -p /home/gamer/yay");
         Run("yay", "-Syy --noconfirm");
         UpdateProgress(60);
