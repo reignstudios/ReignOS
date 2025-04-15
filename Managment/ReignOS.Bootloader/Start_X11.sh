@@ -23,6 +23,8 @@ fi
 # set cursor to pointer
 xsetroot -cursor_name left_ptr
 
+exec openbox-session &
+
 # start steam
 if [ "$USE_MANGOHUB" = "true" ]; then
     mangohud steam -bigpicture
