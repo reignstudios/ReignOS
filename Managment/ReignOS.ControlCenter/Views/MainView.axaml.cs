@@ -634,6 +634,7 @@ public partial class MainView : UserControl
                 text = text.Replace(" --use-mangohub", "");
                 text = text.Replace(" --vrr", "");
                 text = text.Replace(" --hdr", "");
+                text = text.Replace(" --disable-steam-gpu", "");
 
                 // gather new options
                 string args = "";
