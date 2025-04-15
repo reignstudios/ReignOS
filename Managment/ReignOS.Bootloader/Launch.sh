@@ -31,7 +31,7 @@ if [ "$NetworkUp" = "true" ]; then
     chmod +x ./Update.sh
     ./Update.sh
     exit_code=$?
-    if [ $exit_code -eq 100 ]; then
+    if [ $exit_code -eq 1 ]; then
         exit 0
     fi
 fi
