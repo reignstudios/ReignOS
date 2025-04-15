@@ -291,17 +291,18 @@ internal class Program
         if (gpu == 100)
         {
             //ProcessUtil.Run("export", "VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.x86_64.json");
-            return "prime-run ";
+            return "prime-run ";// __NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia __VK_LAYER_NV_optimus=NVIDIA_only
         }
 
         if (gpu >= 1)
         {
             gpu--;
-            ProcessUtil.Run("export", $"DRI_PRIME={gpu}");
-            ProcessUtil.Run("export", $"NESA_VK_DEVICE_SELECT={gpu}");
-            ProcessUtil.Run("export", $"VK_DEVICE_SELECT={gpu}");
+            Environment.SetEnvironmentVariable("export", $"DRI_PRIME={gpu}", EnvironmentVariableTarget.User);// WLR_DRM_DEVICES=/dev/dri/card1
+            Environment.SetEnvironmentVariable("export", $"NESA_VK_DEVICE_SELECT={gpu}", EnvironmentVariableTarget.User);
+            Environment.SetEnvironmentVariable("export", $"VK_DEVICE_SELECT={gpu}", EnvironmentVariableTarget.User);
             //ProcessUtil.Run("export", "VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nouveau_icd.x86_64.json");
         }
+
         return "";
         //return "VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json prime-run ";//__NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia __VK_LAYER_NV_optimus=NVIDIA_only VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json
         //return gpu >= 1 ? $"DRI_PRIME={gpu - 1} " : "";// WLR_DRM_DEVICES=/dev/dri/card{gpu - 1}
@@ -363,17 +364,4 @@ internal class Program
         string result = ProcessUtil.Run("ping", "-c 1 google.com", consoleLogOut:false, useBash:false);
         return result.Contains("1 received");
     }
-
-    //List card infos
-    //ls /dev/dri # cards (card0, card1 etc)
-    //lspci | grep -E "VGA|3D" # card names
-    //ls -l /sys/class/drm/card*/device/driver # driver names
-
-    //nvidia-settings # open nvidia control-panel
-
-    //DRI_PRIME=1 WLR_DRM_DEVICES=/dev/dri/card1 weston # mesa
-    //weston --drm-device=card1 # other weston option
-    //prime-run weston #proprietary
-
-    //__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia __VK_LAYER_NV_optimus=NVIDIA_only # same as prime-run
 }
