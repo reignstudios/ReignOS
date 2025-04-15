@@ -15,9 +15,14 @@ if [ "$HAS_UPDATES" = "true" ]; then
   echo ""
   echo "ReignOS Updating Arch..."
   sleep 2
+
   sudo pacman -Syu --noconfirm
-  exit_code=$?
-  if [ $exit_code -eq 0 ]; then
+  arch_exit_code=$?
+
+  yay -Syu --noconfirm
+  yay_exit_code=$?
+
+  if [ $arch_exit_code -eq 0 ]; then
     reboot
     exit 0
   fi
@@ -35,10 +40,14 @@ dotnet publish -r linux-x64 -c Release
 sleep 1
 
 # just stop everything if Arch fails to update (but allow ReignOS git to update before this)
-if [ $exit_code -ne 0 ]; then
-    echo "ReignOS Updating Arch failed: $exit_code 'hit Ctrl+C to stop boot'"
+if [ $arch_exit_code -ne 0 ]; then
+    echo "ReignOS Updating Arch failed: $arch_exit_code 'hit Ctrl+C to stop boot'"
     sleep 5
-    exit 0
+fi
+
+if [ $yay_exit_code -ne 0 ]; then
+    echo "ReignOS Updating Yay failed: $yay_exit_code 'hit Ctrl+C to stop boot'"
+    sleep 5
 fi
 
 exit 0

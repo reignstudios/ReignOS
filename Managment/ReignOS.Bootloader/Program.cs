@@ -288,15 +288,15 @@ internal class Program
 
     private static string GetGPUArg(int gpu)
     {
+        /*if (gpu >= 1)
+        {
+            ProcessUtil.Run("supergfxctl", "-m Hybrid", asAdmin:true, useBash:false);
+        }*/
+
         if (gpu == 100)
         {
             //ProcessUtil.Run("export", "VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.x86_64.json");
             return "prime-run ";// __NV_PRIME_RENDER_OFFLOAD={gpu} __GLX_VENDOR_LIBRARY_NAME=nvidia __VK_LAYER_NV_optimus=NVIDIA_only
-        }
-
-        if (gpu >= 1)
-        {
-            ProcessUtil.Run("supergfxctl", "-m Hybrid", asAdmin:true, useBash:false);
         }
 
         /*if (gpu >= 1)// this will be set in .bashrc to work correctly

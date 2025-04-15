@@ -21,6 +21,8 @@ static class PackageUpdates
         // nothing yet...
 
         // check for missing packages
+        if (!PackageExits("linux-headers")) return true;
+
         if (!PackageExits("wayland-utils")) return true;
         if (!PackageExits("weston")) return true;
 
@@ -30,6 +32,9 @@ static class PackageUpdates
 
         if (!PackageExits("bluez")) return true;
         if (!PackageExits("bluez-utils")) return true;
+
+        if (!PackageExits("yay")) return true;
+        if (!PackageExits("supergfxctl")) return true;
 
         return false;
     }

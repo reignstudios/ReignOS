@@ -91,6 +91,7 @@ static class InstallUtil
         {
             InstallBaseArch();
             InstallArchPackages();
+            InstallYayPackages();
             InstallReignOSRepo();
             InstallProgress?.Invoke("Done", progress);
         }
@@ -119,11 +120,11 @@ static class InstallUtil
         Run("umount", "-R /root/.nuget");
         Run("umount", "-R /mnt/boot");
         Run("umount", "-R /mnt");
-        UpdateProgress(5);
+        UpdateProgress(1);
 
         // make sure we re-format drives before installing
         Views.MainView.FormatExistingPartitions(efiPartition, ext4Partition);
-        UpdateProgress(10);
+        UpdateProgress(5);
 
         // mount partitions
         Run("mount", $"{ext4Partition.path} /mnt");
@@ -131,23 +132,23 @@ static class InstallUtil
         Run("mkdir", "-p /mnt/boot");
         Run("mount", $"{efiPartition.path} /mnt/boot");
         Run("rm", "-rf /mnt/boot/*");
-        UpdateProgress(11);
+        UpdateProgress(6);
         
         // store package cache on install drive
         Run("mkdir", "-p /mnt/var/cache/pacman/pkg");
         Run("mount", "--bind /mnt/var/cache/pacman/pkg /var/cache/pacman/pkg");
-        UpdateProgress(12);
+        UpdateProgress(10);
         
         // map nuget cache path to use install drive
         Run("mkdir", "-p /mnt/root/.nuget");
         Run("mount", "--bind /mnt/root/.nuget /root/.nuget");
-        UpdateProgress(13);
+        UpdateProgress(11);
         
         // install arch base
-        Run("pacstrap", "/mnt base linux linux-firmware systemd");
+        Run("pacstrap", "/mnt base linux linux-headers linux-firmware systemd");
         Run("genfstab", "-U /mnt >> /mnt/etc/fstab");
         archRootMode = true;
-        UpdateProgress(20);
+        UpdateProgress(15);
 
         // configure pacman
         string path = "/mnt/etc/pacman.conf";
@@ -161,11 +162,11 @@ static class InstallUtil
         }
         ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_pacman_conf);
         Run("pacman", "-Syy --noconfirm");
-        UpdateProgress(25);
+        UpdateProgress(16);
         
         // install lib32-systemd
         Run("pacman", "-S --noconfirm lib32-systemd");
-        UpdateProgress(27);
+        UpdateProgress(17);
         
         // install network support
         Run("pacman", "-S --noconfirm networkmanager iwd iw iproute2 wireless_tools");
@@ -183,12 +184,12 @@ static class InstallUtil
         }
         ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_NetworkManager);
         Run("systemctl", "enable NetworkManager iwd");
-        UpdateProgress(30);
+        UpdateProgress(18);
 
         // install BT support
         Run("pacman", "-S --noconfirm bluez bluez-utils");
         Run("systemctl", "enable bluetoothd");
-        UpdateProgress(35);
+        UpdateProgress(19);
 
         // configure time and lang
         Run("ln", "-sf /usr/share/zoneinfo/Region/City /etc/localtime");
@@ -201,7 +202,7 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm noto-fonts-emoji");
         Run("pacman", "-S --noconfirm ttf-dejavu ttf-liberation");
         Run("fc-cache", "-fv");
-        UpdateProgress(40);
+        UpdateProgress(20);
 
         // configure hosts file
         string hostname = $"reignos_{Guid.NewGuid()}";
@@ -218,7 +219,7 @@ static class InstallUtil
             writer.Close();
         }
         ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_hostname);
-        UpdateProgress(45);
+        UpdateProgress(21);
         
         // configure systemd-boot
         Run("bootctl", "install");
@@ -236,7 +237,7 @@ static class InstallUtil
         }
         ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_arch_conf);
         Run("systemctl", "enable systemd-networkd systemd-resolved");
-        UpdateProgress(50);
+        UpdateProgress(22);
 
         // configure nvidia settings
         path = "/mnt/etc/modprobe.d/";
@@ -256,22 +257,22 @@ static class InstallUtil
             writer.Close();
         }
         ProcessUtil.Run("tee", Path.Combine(path, "99-nvidia.conf"), asAdmin:true, getStandardInput:getStandardInput_99nvidia_conf);
-        UpdateProgress(51);
+        UpdateProgress(23);
 
         // configure root pass
         Run("echo", "'root:gamer' | chpasswd");
-        UpdateProgress(53);
+        UpdateProgress(24);
 
         // install sudo
         Run("pacman", "-S --noconfirm sudo");
         Run("pacman", "-Qs sudo");
-        UpdateProgress(55);
+        UpdateProgress(25);
         
         // configure gamer user
         Run("useradd", "-m -G users -s /bin/bash gamer");
         Run("echo", "'gamer:gamer' | chpasswd");
         Run("usermod", "-aG wheel,audio,video,storage gamer");
-        UpdateProgress(58);
+        UpdateProgress(26);
 
         // make gamer user a sudo user without needing pass
         path = "/mnt/etc/sudoers";
@@ -284,7 +285,7 @@ static class InstallUtil
             writer.Close();
         }
         ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_sudoers);
-        UpdateProgress(60);
+        UpdateProgress(27);
 
         // make gamer user auto login
         path = "/mnt/etc/systemd/system/getty@tty1.service.d/";
@@ -302,7 +303,7 @@ static class InstallUtil
         ProcessUtil.Run("tee", Path.Combine(path, "autologin.conf"), asAdmin:true, getStandardInput:getStandardInput_autologin_conf);
         Run("systemctl", "daemon-reload");
         Run("systemctl", "restart getty@tty1.service");
-        UpdateProgress(61);
+        UpdateProgress(28);
 
         // auto invoke launch after login
         path = "/mnt/home/gamer/.bash_profile";
@@ -315,25 +316,27 @@ static class InstallUtil
         fileBuilder.AppendLine("chmod +x /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh");
         fileBuilder.AppendLine("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh --use-controlcenter");
         File.WriteAllText(path, fileBuilder.ToString());
-        UpdateProgress(63);
+        UpdateProgress(29);
     }
     
     private static void InstallArchPackages()
     {
         progressTask = "Installing packages...";
-        // install apps
+        archRootMode = true;
+
+        // install misc apps
         Run("pacman", "-S --noconfirm nano evtest efibootmgr");
         Run("pacman", "-S --noconfirm dmidecode udev python");
-        UpdateProgress(70);
+        UpdateProgress(30);
 
         // install wayland
         Run("pacman", "-S --noconfirm xorg-server-xwayland wayland wayland-protocols wayland-utils");
         Run("pacman", "-S --noconfirm xorg-xev xbindkeys xorg-xinput xorg-xmodmap");
-        UpdateProgress(72);
+        UpdateProgress(31);
 
         // install x11
         Run("pacman", "-S --noconfirm xorg xorg-server xorg-xinit xf86-input-libinput xterm");
-        UpdateProgress(75);
+        UpdateProgress(32);
 
         // install wayland graphics drivers
         Run("pacman", "-S --noconfirm mesa lib32-mesa");
@@ -343,29 +346,29 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm vulkan-icd-loader lib32-vulkan-icd-loader lib32-libglvnd");
         Run("pacman", "-S --noconfirm vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-layers");
         Run("pacman", "-S --noconfirm egl-wayland");
-        UpdateProgress(80);
+        UpdateProgress(35);
 
         // install x11 graphics drivers
         Run("pacman", "-S --noconfirm xf86-video-intel xf86-video-amdgpu xf86-video-nouveau");
         Run("pacman", "-S --noconfirm glxinfo");
-        UpdateProgress(82);
+        UpdateProgress(36);
 
         // install compositors
         Run("pacman", "-S --noconfirm wlr-randr wlroots gamescope cage labwc weston");
-        UpdateProgress(83);
+        UpdateProgress(37);
 
         // install audio
         Run("pacman", "-S --noconfirm alsa-utils alsa-plugins");
         Run("pacman", "-S --noconfirm sof-firmware");
         Run("pacman", "-S --noconfirm pipewire pipewire-pulse pipewire-alsa pipewire-jack wireplumber");
         Run("systemctl", "--user enable pipewire pipewire-pulse wireplumber");
-        UpdateProgress(85);
+        UpdateProgress(40);
 
         // install power
         Run("pacman", "-S --noconfirm acpi acpid powertop power-profiles-daemon");
         Run("pacman", "-S --noconfirm python-gobject");
         Run("systemctl", "enable acpid power-profiles-daemon");
-        UpdateProgress(86);
+        UpdateProgress(41);
 
         // install auto-mount drives
         Run("pacman", "-S --noconfirm udiskie udisks2");
@@ -387,11 +390,11 @@ static class InstallUtil
         ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_99automount_rules);
         Run("udevadm", "control --reload-rules");
         Run("systemctl", "enable udisks2");
-        UpdateProgress(87);
+        UpdateProgress(42);
 
         // install compiler tools
         Run("pacman", "-S --noconfirm base-devel dotnet-sdk-8.0 git git-lfs");
-        UpdateProgress(90);
+        UpdateProgress(45);
 
         // install steam
         Run("pacman", "-S --noconfirm libxcomposite lib32-libxcomposite libxrandr lib32-libxrandr libgcrypt lib32-libgcrypt lib32-pipewire libpulse lib32-libpulse gtk2 lib32-gtk2 gtk3 lib32-gtk3 nss lib32-nss glib2 lib32-glib2");
@@ -404,28 +407,46 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm vulkan-dzn vulkan-gfxstream vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio");// all steam options
         Run("pacman", "-S --noconfirm lib32-vulkan-dzn lib32-vulkan-gfxstream lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio");// all steam options
         Run("pacman", "-S --noconfirm steam");//steam-native-runtime (use Arch libs)
-        UpdateProgress(95);
+        UpdateProgress(50);
 
         // remove AMD driver defaults steam might try to install
         Run("pacman", "-R amdvlk");
         Run("pacman", "-R lib32-amdvlk");
         Run("pacman", "-R amdvlk-pro");
         Run("pacman", "-R amdvlk-git");
-        UpdateProgress(96);
+        UpdateProgress(51);
 
         // remove Nvidia driver defaults steam might try to install
         Run("pacman", "-R nvidia-utils");
         Run("pacman", "-R lib32-nvidia-utils");
-        UpdateProgress(97);
+        UpdateProgress(52);
 
         // install wayland mouse util
         Run("pacman", "-S --noconfirm unclutter");
-        UpdateProgress(98);
+        UpdateProgress(53);
+    }
+
+    private static void InstallYayPackages()
+    {
+        progressTask = "Installing Yay...";
+        archRootMode = true;
+
+        // install yay
+        Run("git", "clone https://aur.archlinux.org/yay.git /home/gamer/yay");
+        Run("makepkg", "-si --noconfirm -p /home/gamer/yay");
+        Run("yay", "-Syy --noconfirm");
+        UpdateProgress(60);
+
+        // install supergfxctl (for GPU MUX support)
+        Run("yay", "-S supergfxctl");
+        Run("systemctl", "enable supergfxd.service");
+        UpdateProgress(65);
     }
     
     private static void InstallReignOSRepo()
     {
         progressTask = "Installing ReignOS Repo...";
+        archRootMode = true;
 
         // clear package cache
         Run("rm", "-rf /var/cache/pacman/pkg/*");

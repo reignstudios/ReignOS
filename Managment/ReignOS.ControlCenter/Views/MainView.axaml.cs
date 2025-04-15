@@ -69,6 +69,7 @@ public partial class MainView : UserControl
     
     private List<Drive> drives;
     private List<GPU> gpus;
+    private List<string> muxes;
     
     public MainView()
     {
@@ -78,6 +79,7 @@ public partial class MainView : UserControl
         compositorText.Text = "Control-Center Compositor: " + Program.compositorMode.ToString();
 
         RefreshGPUs();
+        RefreshMUX();
         LoadSettings();
         SaveSystemSettings();// apply any system settings in case things get updated
         
@@ -124,6 +126,29 @@ public partial class MainView : UserControl
             else if (!gpuButton3.IsVisible) gpuButtonNvidiaPrime.Margin = gpuButton3.Margin;
             else if (!gpuButton4.IsVisible) gpuButtonNvidiaPrime.Margin = gpuButton4.Margin;
         }
+    }
+
+    private void RefreshMUX()
+    {
+        muxes = new List<string>();
+        string result = ProcessUtil.Run("supergfxctl", "-s", useBash:false);
+        result = result.Replace("[", "").Replace("]", "");
+        var lines = result.Split(',');
+        foreach (string line in lines)
+        {
+            string value = line.Trim();
+            muxes.Add(value);
+        }
+
+        muxButton1.IsVisible = muxes.Count >= 1;
+        muxButton2.IsVisible = muxes.Count >= 2;
+        muxButton3.IsVisible = muxes.Count >= 3;
+        muxButton4.IsVisible = muxes.Count >= 4;
+
+        if (muxes.Count >= 1) muxButton1.Content = muxes[0];
+        if (muxes.Count >= 2) muxButton2.Content = muxes[1];
+        if (muxes.Count >= 3) muxButton3.Content = muxes[2];
+        if (muxes.Count >= 4) muxButton4.Content = muxes[3];
     }
     
     private void LoadSettings()
@@ -172,6 +197,38 @@ public partial class MainView : UserControl
                         }
                     }
                     else if (parts[0] == "GPU")
+                    {
+                        if (parts[1] == "1")
+                        {
+                            gpuButton1.IsChecked = true;
+                        }
+                        else if (parts[1] == "2")
+                        {
+                            if (gpus.Count >= 2) gpuButton2.IsChecked = true;
+                            else needsReset = true;
+                        }
+                        else if (parts[1] == "3")
+                        {
+                            if (gpus.Count >= 3) gpuButton3.IsChecked = true;
+                            else needsReset = true;
+                        }
+                        else if (parts[1] == "4")
+                        {
+                            if (gpus.Count >= 4) gpuButton4.IsChecked = true;
+                            else needsReset = true;
+                        }
+                        else if (parts[1] == "100")
+                        {
+                            if (nvidia_Proprietary.IsChecked == true) gpuButtonNvidiaPrime.IsChecked = true;
+                            else needsReset = true;
+                        }
+                        else
+                        {
+                            gpuButton0.IsChecked = true;
+                            if (parts[1] != "0") needsReset = true;
+                        }
+                    }
+                    else if (parts[0] == "MUX")
                     {
                         if (parts[1] == "1")
                         {
@@ -422,8 +479,8 @@ public partial class MainView : UserControl
         try
         {
             const string bashrc = "/home/gamer/.bashrc";
-            const string gpuSettings = folder + "/DefaultGPU";
-            const string gpuInc = ". ~/ReignOS_Ext/DefaultGPU";
+            const string gpuSettings = folder + "/PrimeGPU";
+            const string gpuInc = ". ~/ReignOS_Ext/PrimeGPU";
 
             // add to bashrc
             string text = File.ReadAllText(bashrc);
@@ -436,14 +493,15 @@ public partial class MainView : UserControl
                 File.WriteAllText(bashrc, builder.ToString());
             }
 
-            // update default gpu
+            // update prime gpu and mux
+            builder = new StringBuilder();
+
             int gpu = 0;
             if (gpuButton1.IsChecked == true) gpu = 1;
             else if (gpuButton2.IsChecked == true) gpu = 2;
             else if (gpuButton3.IsChecked == true) gpu = 3;
             else if (gpuButton4.IsChecked == true) gpu = 4;
 
-            builder = new StringBuilder();
             if (gpu >= 1)
             {
                 gpu--;
@@ -451,6 +509,12 @@ public partial class MainView : UserControl
                 builder.AppendLine($"export NESA_VK_DEVICE_SELECT={gpu}");
                 builder.AppendLine($"export VK_DEVICE_SELECT={gpu}");
             }
+
+            if (muxButton1.IsChecked == true) builder.AppendLine($"supergfxctl -m {muxButton1.Content as string}");
+            else if (muxButton2.IsChecked == true) builder.AppendLine($"supergfxctl -m {muxButton2.Content as string}");
+            else if (muxButton3.IsChecked == true) builder.AppendLine($"supergfxctl -m {muxButton3.Content as string}");
+            else if (muxButton4.IsChecked == true) builder.AppendLine($"supergfxctl -m {muxButton4.Content as string}");
+
             File.WriteAllText(gpuSettings, builder.ToString());
         }
         catch (Exception ex)
@@ -590,7 +654,7 @@ public partial class MainView : UserControl
         MainWindow.singleton.Close();
     }
 
-    private void DefaultGPUApplyButton_Click(object sender, RoutedEventArgs e)
+    private void PrimeGPUApplyButton_Click(object sender, RoutedEventArgs e)
     {
         const string profileFile = "/home/gamer/.bash_profile";
         string text = File.ReadAllText(profileFile);

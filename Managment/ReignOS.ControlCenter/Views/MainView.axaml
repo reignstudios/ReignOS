@@ -92,14 +92,26 @@
 
 				<Grid Margin="8,8,8,4" Background="#444444" Height="40">
 					<Grid>
-						<TextBlock Text="Default GPU" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-						<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="DefaultGPUApplyButton_Click"/>
+						<TextBlock Text="Prime GPU" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+						<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="PrimeGPUApplyButton_Click"/>
 						<RadioButton Name="gpuButton0" Content="Unset" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						<RadioButton Name="gpuButton1" Content="GPU 1" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						<RadioButton Name="gpuButton2" Content="GPU 2" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						<RadioButton Name="gpuButton3" Content="GPU 3" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						<RadioButton Name="gpuButton4" Content="GPU 4" Margin="800,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						<RadioButton Name="gpuButtonNvidiaPrime" Content="Nvidia Prime" Margin="950,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+					</Grid>
+				</Grid>
+
+				<Grid Margin="8,8,8,4" Background="#444444" Height="40">
+					<Grid>
+						<TextBlock Text="GPU MUX" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+						<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="PrimeGPUApplyButton_Click"/>
+						<RadioButton Name="muxButton0" Content="Unset" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						<RadioButton Name="muxButton1" Content="MUX 1" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						<RadioButton Name="muxButton2" Content="MUX 2" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						<RadioButton Name="muxButton3" Content="MUX 3" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						<RadioButton Name="muxButton4" Content="MUX 4" Margin="800,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 					</Grid>
 				</Grid>
 
