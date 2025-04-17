@@ -168,6 +168,16 @@ public static class ProcessUtil
         return Run("cat", path, asAdmin:true);
     }
 
+    public static string DeleteFileAdmin(string path)
+    {
+        return Run("rm", path, asAdmin:true);
+    }
+
+    public static string DeleteFolderAdmin(string path)
+    {
+        return Run("rm", $"-rf {path}", asAdmin:true);
+    }
+
     public static void KillHard(string name, bool asAdmin, out int exitCode)
     {
         if (asAdmin)

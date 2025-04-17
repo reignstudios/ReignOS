@@ -190,6 +190,11 @@ static class InstallUtil
         Run("systemctl", "enable bluetooth");
         UpdateProgress(19);
 
+        // install thunderbold support (needed for eGPUs)
+        Run("pacman", "-S --noconfirm bolt");
+        Run("systemctl", "enable bolt.service");
+        UpdateProgress(19);
+
         // configure time and lang
         Run("ln", "-sf /usr/share/zoneinfo/Region/City /etc/localtime");
         Run("hwclock", "--systohc");
@@ -227,7 +232,7 @@ static class InstallUtil
         fileBuilder.AppendLine("title ReignOS");
         fileBuilder.AppendLine("linux /vmlinuz-linux");
         fileBuilder.AppendLine("initrd /initramfs-linux.img");
-        fileBuilder.AppendLine($"options root={ext4Partition.path} rw acpi_osi=Linux i915.enable_dc=2 i915.enable_psr=1 amdgpu.dpm=1 amdgpu.ppfeaturemask=0xffffffff amdgpu.dc=1 nouveau.pstate=1 nouveau.perflvl=N nouveau.perflvl_wr=7777 nouveau.config=NvGspRm=1 nvidia_drm.modeset=1");
+        fileBuilder.AppendLine($"options root={ext4Partition.path} rw pci=realloc");// pci=realloc (this helps resolve eGPU or thunderbolt issues)
         void getStandardInput_arch_conf(StreamWriter writer)
         {
             writer.WriteLine(fileBuilder);
@@ -238,7 +243,7 @@ static class InstallUtil
         Run("systemctl", "enable systemd-networkd systemd-resolved");
         UpdateProgress(22);
 
-        // configure nvidia settings
+        /*// configure nvidia settings
         path = "/mnt/etc/modprobe.d/";
         if (!Directory.Exists(path)) ProcessUtil.CreateDirectoryAdmin(path);
         void getStandardInput_nvidia_conf(StreamWriter writer)
@@ -256,7 +261,7 @@ static class InstallUtil
             writer.Close();
         }
         ProcessUtil.Run("tee", Path.Combine(path, "99-nvidia.conf"), asAdmin:true, getStandardInput:getStandardInput_99nvidia_conf);
-        UpdateProgress(23);
+        UpdateProgress(23);*/
 
         // configure root pass
         Run("echo", "'root:gamer' | chpasswd");
@@ -401,30 +406,30 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm vulkan-icd-loader lib32-vulkan-icd-loader lib32-libglvnd");
         Run("pacman", "-S --noconfirm vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-layers");
         Run("pacman", "-S --noconfirm egl-wayland");
-        UpdateProgress(40);
+        UpdateProgress(50);
 
         // install x11 graphics drivers
         Run("pacman", "-S --noconfirm xf86-video-intel xf86-video-amdgpu xf86-video-nouveau");
         Run("pacman", "-S --noconfirm glxinfo");
-        UpdateProgress(46);
+        UpdateProgress(56);
 
         // install compositors
         Run("pacman", "-S --noconfirm wlr-randr wlroots gamescope cage labwc weston");
         Run("pacman", "-S --noconfirm openbox");
-        UpdateProgress(47);
+        UpdateProgress(57);
 
         // install audio
         Run("pacman", "-S --noconfirm alsa-utils alsa-plugins");
         Run("pacman", "-S --noconfirm sof-firmware");
         Run("pacman", "-S --noconfirm pipewire pipewire-pulse pipewire-alsa pipewire-jack wireplumber");
         Run("systemctl", "--user enable pipewire pipewire-pulse wireplumber");
-        UpdateProgress(50);
+        UpdateProgress(60);
 
         // install power
         Run("pacman", "-S --noconfirm acpi acpid powertop power-profiles-daemon");
         Run("pacman", "-S --noconfirm python-gobject");
         Run("systemctl", "enable acpid power-profiles-daemon");
-        UpdateProgress(51);
+        UpdateProgress(61);
 
         // install auto-mount drives
         Run("pacman", "-S --noconfirm udiskie udisks2");
@@ -446,11 +451,11 @@ static class InstallUtil
         ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_99automount_rules);
         Run("udevadm", "control --reload-rules");
         Run("systemctl", "enable udisks2");
-        UpdateProgress(52);
+        UpdateProgress(62);
 
         // install compiler tools
         Run("pacman", "-S --noconfirm base-devel dotnet-sdk-8.0 git git-lfs");
-        UpdateProgress(55);
+        UpdateProgress(65);
 
         // install steam
         Run("pacman", "-S --noconfirm libxcomposite lib32-libxcomposite libxrandr lib32-libxrandr libgcrypt lib32-libgcrypt lib32-pipewire libpulse lib32-libpulse gtk2 lib32-gtk2 gtk3 lib32-gtk3 nss lib32-nss glib2 lib32-glib2");
@@ -463,23 +468,23 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm vulkan-dzn vulkan-gfxstream vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio");// all steam options
         Run("pacman", "-S --noconfirm lib32-vulkan-dzn lib32-vulkan-gfxstream lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio");// all steam options
         Run("pacman", "-S --noconfirm steam");//steam-native-runtime (use Arch libs)
-        UpdateProgress(70);
+        UpdateProgress(80);
 
         // remove AMD driver defaults steam might try to install
         Run("pacman", "-R amdvlk");
         Run("pacman", "-R lib32-amdvlk");
         Run("pacman", "-R amdvlk-pro");
         Run("pacman", "-R amdvlk-git");
-        UpdateProgress(71);
+        UpdateProgress(81);
 
         // remove Nvidia driver defaults steam might try to install
         Run("pacman", "-R nvidia-utils");
         Run("pacman", "-R lib32-nvidia-utils");
-        UpdateProgress(72);
+        UpdateProgress(82);
 
         // install wayland mouse util
         Run("pacman", "-S --noconfirm unclutter");
-        UpdateProgress(73);
+        UpdateProgress(83);
     }
     
     private static void InstallReignOSRepo()
@@ -494,12 +499,11 @@ static class InstallUtil
         // clone ReignOS repo
         Run("git", "clone https://github.com/reignstudios/ReignOS.git /mnt/home/gamer/ReignOS");
         Run("NUGET_PACKAGES=/mnt/root/.nuget dotnet", "publish -r linux-x64 -c Release", workingDir:"/mnt/home/gamer/ReignOS/Managment");
-        UpdateProgress(80);
+        UpdateProgress(90);
 
         // copy wifi settings
         Run("mkdir", "-p /mnt/var/lib/iwd/");
         Run("cp", "-r /var/lib/iwd/* /mnt/var/lib/iwd/");
-        
         UpdateProgress(100);
     }
 }

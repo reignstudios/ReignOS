@@ -15,6 +15,9 @@ sudo pacman -S --noconfirm vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-lay
 sudo pacman -S --noconfirm bluez bluez-utils
 sudo systemctl enable bluetooth
 
+sudo pacman -S --noconfirm bolt
+sudo systemctl enable bolt.service
+
 # add yay packages
 if [ ! -d "/home/gamer/yay" ]; then
 	cd /home/gamer

@@ -15,7 +15,11 @@ static class PackageUpdates
 
     public static bool CheckUpdates()
     {
-        if (CheckBadConfigs()) return true;
+        bool badConfig = false;
+        if (CheckBadHostname()) badConfig = true;
+        if (CheckBadKernelSettings()) badConfig = true;
+        if (CheckBadDriverSettings()) badConfig = true;
+        if (badConfig) return true;
 
         // check old packages
         // nothing yet...
@@ -40,7 +44,7 @@ static class PackageUpdates
         return false;
     }
 
-    private static bool CheckBadConfigs()
+    private static bool CheckBadHostname()
     {
         try
         {
@@ -59,6 +63,92 @@ static class PackageUpdates
 
                 return true;
             }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+        return false;
+    }
+
+    private static bool CheckBadKernelSettings()
+    {
+        try
+        {
+            const string path = "/boot/loader/entries/arch.conf";
+            string settings = File.ReadAllText(path);
+            if
+            (
+                settings == "acpi_osi=Linux" ||
+                settings == "i915.enable_dc=2" ||
+                settings == "i915.enable_psr=1" ||
+                settings == "amdgpu.dpm=1" ||
+                settings == "amdgpu.ppfeaturemask=0xffffffff" ||
+                settings == "amdgpu.dc=1 nouveau.pstate=1" ||
+                settings == "nouveau.perflvl=N" ||
+                settings == "nouveau.perflvl_wr=7777" ||
+                settings == "nouveau.config=NvGspRm=1" ||
+                settings == "nvidia_drm.modeset=1"
+            )
+            {
+                // remove bad args
+                settings = settings.Replace("acpi_osi=Linux", "");
+                settings = settings.Replace("i915.enable_dc=2", "");
+                settings = settings.Replace("i915.enable_psr=1", "");
+                settings = settings.Replace("amdgpu.dpm=1", "");
+                settings = settings.Replace("amdgpu.ppfeaturemask=0xffffffff", "");
+                settings = settings.Replace("amdgpu.dc=1 nouveau.pstate=1", "");
+                settings = settings.Replace("nouveau.perflvl=N", "");
+                settings = settings.Replace("nouveau.perflvl_wr=7777", "");
+                settings = settings.Replace("nouveau.config=NvGspRm=1", "");
+                settings = settings.Replace("nvidia_drm.modeset=1", "");
+
+                // add good args
+                settings = settings.Replace(" rw", " rw pci=realloc");
+                settings = settings.TrimEnd();
+
+                // update conf
+                void getStandardInput_hostname(StreamWriter writer)
+                {
+                    writer.WriteLine(settings);
+                    writer.Flush();
+                    writer.Close();
+                }
+                ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_hostname);
+
+                return true;
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+        return false;
+    }
+
+    private static bool CheckBadDriverSettings()
+    {
+        try
+        {
+            bool found = false;
+
+            const string nvidia = "/etc/modprobe.d/nvidia.conf";
+            if (File.Exists(nvidia))
+            {
+                ProcessUtil.DeleteFileAdmin(nvidia);
+                found = true;
+            }
+
+            const string nvidia99 = "/etc/modprobe.d/99-nvidia.conf";
+            if (File.Exists(nvidia99))
+            {
+                ProcessUtil.DeleteFileAdmin(nvidia99);
+                found = true;
+            }
+
+            if (found) return true;
         }
         catch (Exception e)
         {
