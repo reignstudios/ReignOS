@@ -333,14 +333,18 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm dmidecode udev python");
         UpdateProgress(31);
 
+        // install firmware update support
+        Run("pacman", "-S --noconfirm fwupd");
+        UpdateProgress(32);
+
         // install wayland
         Run("pacman", "-S --noconfirm xorg-server-xwayland wayland wayland-protocols wayland-utils");
         Run("pacman", "-S --noconfirm xorg-xev xbindkeys xorg-xinput xorg-xmodmap");
-        UpdateProgress(32);
+        UpdateProgress(33);
 
         // install x11
         Run("pacman", "-S --noconfirm xorg xorg-server xorg-xinit xf86-input-libinput xterm");
-        UpdateProgress(33);
+        UpdateProgress(34);
 
         // install wayland graphics drivers
         Run("pacman", "-S --noconfirm mesa lib32-mesa");

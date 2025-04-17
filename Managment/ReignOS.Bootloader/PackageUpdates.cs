@@ -41,6 +41,8 @@ static class PackageUpdates
         if (!PackageExits("yay")) return true;
         if (!PackageExits("supergfxctl")) return true;
 
+        if (!PackageExits("fwupd")) return true;
+
         return false;
     }
 

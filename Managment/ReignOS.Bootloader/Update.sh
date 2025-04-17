@@ -16,11 +16,17 @@ if [ "$HAS_UPDATES" = "true" ]; then
   echo "ReignOS Updating Arch..."
   sleep 2
 
+  # pacman
   sudo pacman -Syu --noconfirm
   arch_exit_code=$?
 
+  # yay
   yay -Syu --noconfirm
   yay_exit_code=$?
+
+  # firmware
+  sudo fwupdmgr refresh
+  sudo fwupdmgr update
 
   if [ $arch_exit_code -eq 0 ]; then
     reboot

@@ -28,3 +28,5 @@ fi
 
 yay -S supergfxctl --noconfirm
 sudo systemctl enable supergfxd.service
+
+sudo pacman -S --noconfirm fwupd
