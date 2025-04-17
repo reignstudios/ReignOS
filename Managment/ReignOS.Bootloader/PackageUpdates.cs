@@ -80,16 +80,16 @@ static class PackageUpdates
             string settings = File.ReadAllText(path);
             if
             (
-                settings == "acpi_osi=Linux" ||
-                settings == "i915.enable_dc=2" ||
-                settings == "i915.enable_psr=1" ||
-                settings == "amdgpu.dpm=1" ||
-                settings == "amdgpu.ppfeaturemask=0xffffffff" ||
-                settings == "amdgpu.dc=1 nouveau.pstate=1" ||
-                settings == "nouveau.perflvl=N" ||
-                settings == "nouveau.perflvl_wr=7777" ||
-                settings == "nouveau.config=NvGspRm=1" ||
-                settings == "nvidia_drm.modeset=1"
+                settings.Contains("acpi_osi=Linux") ||
+                settings.Contains("i915.enable_dc=2") ||
+                settings.Contains("i915.enable_psr=1") ||
+                settings.Contains("amdgpu.dpm=1") ||
+                settings.Contains("amdgpu.ppfeaturemask=0xffffffff") ||
+                settings.Contains("amdgpu.dc=1 nouveau.pstate=1") ||
+                settings.Contains("nouveau.perflvl=N") ||
+                settings.Contains("nouveau.perflvl_wr=7777") ||
+                settings.Contains("nouveau.config=NvGspRm=1") ||
+                settings.Contains("nvidia_drm.modeset=1")
             )
             {
                 // remove bad args
@@ -109,13 +109,7 @@ static class PackageUpdates
                 settings = settings.TrimEnd();
 
                 // update conf
-                void getStandardInput_hostname(StreamWriter writer)
-                {
-                    writer.WriteLine(settings);
-                    writer.Flush();
-                    writer.Close();
-                }
-                ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_hostname);
+                ProcessUtil.WriteAllTextAdmin(path, settings);
 
                 return true;
             }

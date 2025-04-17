@@ -168,6 +168,28 @@ public static class ProcessUtil
         return Run("cat", path, asAdmin:true);
     }
 
+    public static void WriteAllTextAdmin(string path, string text)
+    {
+        void getStandardInput(StreamWriter writer)
+        {
+            writer.WriteLine(text);
+            writer.Flush();
+            writer.Close();
+        }
+        Run("tee", path, asAdmin:true, getStandardInput:getStandardInput);
+    }
+
+    public static void WriteAllTextAdmin(string path, StringBuilder builder)
+    {
+        void getStandardInput(StreamWriter writer)
+        {
+            writer.WriteLine(builder);
+            writer.Flush();
+            writer.Close();
+        }
+        Run("tee", path, asAdmin:true, getStandardInput:getStandardInput);
+    }
+
     public static string DeleteFileAdmin(string path)
     {
         return Run("rm", path, asAdmin:true);

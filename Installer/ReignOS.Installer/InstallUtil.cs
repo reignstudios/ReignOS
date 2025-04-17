@@ -153,13 +153,14 @@ static class InstallUtil
         string path = "/mnt/etc/pacman.conf";
         string fileText = File.ReadAllText(path);
         fileText = fileText.Replace("#[multilib]\n#Include = /etc/pacman.d/mirrorlist", "[multilib]\nInclude = /etc/pacman.d/mirrorlist");
-        void getStandardInput_pacman_conf(StreamWriter writer)
+        /*void getStandardInput_pacman_conf(StreamWriter writer)
         {
             writer.WriteLine(fileText);
             writer.Flush();
             writer.Close();
         }
-        ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_pacman_conf);
+        ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_pacman_conf);*/
+        ProcessUtil.WriteAllTextAdmin(path, fileText);
         Run("pacman", "-Syy --noconfirm");
         UpdateProgress(16);
         
@@ -175,13 +176,14 @@ static class InstallUtil
         var fileBuilder = new StringBuilder();
         fileBuilder.AppendLine("[device]");
         fileBuilder.AppendLine("wifi.backend=iwd");
-        void getStandardInput_NetworkManager(StreamWriter writer)
+        /*void getStandardInput_NetworkManager(StreamWriter writer)
         {
             writer.WriteLine(fileBuilder);
             writer.Flush();
             writer.Close();
         }
-        ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_NetworkManager);
+        ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_NetworkManager);*/
+        ProcessUtil.WriteAllTextAdmin(path, fileBuilder);
         Run("systemctl", "enable NetworkManager iwd");
         UpdateProgress(18);
 
@@ -216,13 +218,14 @@ static class InstallUtil
         fileBuilder.AppendLine("127.0.0.1 localhost");
         fileBuilder.AppendLine("::1 localhost");
         fileBuilder.AppendLine("127.0.1.1 reignos.localdomain reignos");
-        void getStandardInput_hostname(StreamWriter writer)
+        /*void getStandardInput_hostname(StreamWriter writer)
         {
             writer.WriteLine(fileBuilder);
             writer.Flush();
             writer.Close();
         }
-        ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_hostname);
+        ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_hostname);*/
+        ProcessUtil.WriteAllTextAdmin(path, fileBuilder);
         UpdateProgress(21);
         
         // configure systemd-boot
@@ -233,13 +236,14 @@ static class InstallUtil
         fileBuilder.AppendLine("linux /vmlinuz-linux");
         fileBuilder.AppendLine("initrd /initramfs-linux.img");
         fileBuilder.AppendLine($"options root={ext4Partition.path} rw pci=realloc");// pci=realloc (this helps resolve eGPU or thunderbolt issues)
-        void getStandardInput_arch_conf(StreamWriter writer)
+        /*void getStandardInput_arch_conf(StreamWriter writer)
         {
             writer.WriteLine(fileBuilder);
             writer.Flush();
             writer.Close();
         }
-        ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_arch_conf);
+        ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_arch_conf);*/
+        ProcessUtil.WriteAllTextAdmin(path, fileBuilder);
         Run("systemctl", "enable systemd-networkd systemd-resolved");
         UpdateProgress(22);
 
@@ -282,13 +286,14 @@ static class InstallUtil
         path = "/mnt/etc/sudoers";
         fileText = ProcessUtil.ReadAllTextAdmin(path);
         fileText = fileText.Replace("# %wheel ALL=(ALL:ALL) ALL", "%wheel ALL=(ALL:ALL) ALL\ngamer ALL=(ALL) NOPASSWD:ALL");
-        void getStandardInput_sudoers(StreamWriter writer)
+        /*void getStandardInput_sudoers(StreamWriter writer)
         {
             writer.WriteLine(fileText);
             writer.Flush();
             writer.Close();
         }
-        ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_sudoers);
+        ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_sudoers);*/
+        ProcessUtil.WriteAllTextAdmin(path, fileText);
         UpdateProgress(27);
 
         // make gamer user auto login
@@ -298,13 +303,14 @@ static class InstallUtil
         fileBuilder.AppendLine("[Service]");
         fileBuilder.AppendLine("ExecStart=");
         fileBuilder.AppendLine("ExecStart=-/usr/bin/agetty --autologin gamer --noclear %I $TERM");
-        void getStandardInput_autologin_conf(StreamWriter writer)
+        /*void getStandardInput_autologin_conf(StreamWriter writer)
         {
             writer.WriteLine(fileBuilder.ToString());
             writer.Flush();
             writer.Close();
         }
-        ProcessUtil.Run("tee", Path.Combine(path, "autologin.conf"), asAdmin:true, getStandardInput:getStandardInput_autologin_conf);
+        ProcessUtil.Run("tee", Path.Combine(path, "autologin.conf"), asAdmin:true, getStandardInput:getStandardInput_autologin_conf);*/
+        ProcessUtil.WriteAllTextAdmin(Path.Combine(path, "autologin.conf"), fileBuilder);
         Run("systemctl", "daemon-reload");
         Run("systemctl", "restart getty@tty1.service");
         UpdateProgress(28);
@@ -442,13 +448,14 @@ static class InstallUtil
         var fileBuilder = new StringBuilder(fileText);
         fileBuilder.AppendLine();
         fileBuilder.AppendLine("ACTION==\"add\", SUBSYSTEM==\"block\", ENV{ID_FS_TYPE}!=\"\", RUN+=\"/usr/bin/udisksctl mount -b $env{DEVNAME}\"");
-        void getStandardInput_99automount_rules(StreamWriter writer)
+        /*void getStandardInput_99automount_rules(StreamWriter writer)
         {
             writer.WriteLine(fileBuilder.ToString());
             writer.Flush();
             writer.Close();
         }
-        ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_99automount_rules);
+        ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput_99automount_rules);*/
+        ProcessUtil.WriteAllTextAdmin(path, fileBuilder);
         Run("udevadm", "control --reload-rules");
         Run("systemctl", "enable udisks2");
         UpdateProgress(62);
