@@ -338,7 +338,7 @@ static class InstallUtil
         UpdateProgress(32);
 
         // install wayland
-        Run("pacman", "-S --noconfirm xorg-server-xwayland wayland wayland-protocols wayland-utils");
+        Run("pacman", "-S --noconfirm xorg-server-xwayland wayland lib32-wayland wayland-protocols wayland-utils");
         Run("pacman", "-S --noconfirm xorg-xev xbindkeys xorg-xinput xorg-xmodmap");
         UpdateProgress(33);
 
