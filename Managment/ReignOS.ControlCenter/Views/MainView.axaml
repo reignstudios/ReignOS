@@ -80,17 +80,6 @@
 						<RadioButton Name="rot_Flip" Content="Flip 180" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 					</Grid>
 				</Grid>
-
-				<Grid Margin="8,8,8,4" Background="#444444" Height="40">
-					<Grid>
-						<TextBlock Text="Gamescope Rot" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-						<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RotApplyButton_OnClick"/>
-						<RadioButton Name="gamescopeRot_Default" Content="Default" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-						<RadioButton Name="gamescopeRot_Left" Content="Left 90" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-						<RadioButton Name="gamescopeRot_Right" Content="Right 90" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-						<RadioButton Name="gamescopeRot_Flip" Content="Flip 180" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-					</Grid>
-				</Grid>
 				
 				<Grid Margin="8,8,8,4" Background="#444444" Height="40">
 					<Grid>

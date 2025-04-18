@@ -187,13 +187,6 @@ public partial class MainView : UserControl
                         else if (parts[1] == "Right") rot_Right.IsChecked = true;
                         else if (parts[1] == "Flip") rot_Flip.IsChecked = true;
                     }
-                    else if (parts[0] == "GamescopeScreenRotation")
-                    {
-                        if (parts[1] == "Default") gamescopeRot_Default.IsChecked = true;
-                        else if (parts[1] == "Left") gamescopeRot_Left.IsChecked = true;
-                        else if (parts[1] == "Right") gamescopeRot_Right.IsChecked = true;
-                        else if (parts[1] == "Flip") gamescopeRot_Flip.IsChecked = true;
-                    }
                     else if (parts[0] == "NvidiaDrivers")
                     {
                         if (parts[1] == "Nouveau")
@@ -318,12 +311,6 @@ public partial class MainView : UserControl
                 else if (rot_Right.IsChecked == true) writer.WriteLine("ScreenRotation=Right");
                 else if (rot_Flip.IsChecked == true) writer.WriteLine("ScreenRotation=Flip");
                 else writer.WriteLine("ScreenRotation=Default");
-
-                if (gamescopeRot_Default.IsChecked == true) writer.WriteLine("GamescopeScreenRotation=Default");
-                else if (gamescopeRot_Left.IsChecked == true) writer.WriteLine("GamescopeScreenRotation=Left");
-                else if (gamescopeRot_Right.IsChecked == true) writer.WriteLine("GamescopeScreenRotation=Right");
-                else if (gamescopeRot_Flip.IsChecked == true) writer.WriteLine("GamescopeScreenRotation=Flip");
-                else writer.WriteLine("GamescopeScreenRotation=Default");
             
                 if (nvidia_Nouveau.IsChecked == true) writer.WriteLine("NvidiaDrivers=Nouveau");
                 else if (nvidia_Proprietary.IsChecked == true) writer.WriteLine("NvidiaDrivers=Proprietary");
@@ -408,11 +395,11 @@ public partial class MainView : UserControl
         {
             const string profileFile = "/home/gamer/.bash_profile";
             string text = File.ReadAllText(profileFile);
-            text = text.Replace(" --gamescope-rot-default", "");
-            text = text.Replace(" --gamescope-rot-left", "");
-            text = text.Replace(" --gamescope-rot-right", "");
-            text = text.Replace(" --gamescope-rot-flip", "");
-            text = text.Replace("--use-controlcenter", $"--use-controlcenter --gamescope-rot-{rotation}");
+            text = text.Replace(" --rotation-default", "");
+            text = text.Replace(" --rotation-left", "");
+            text = text.Replace(" --rotation-right", "");
+            text = text.Replace(" --rotation-flip", "");
+            text = text.Replace("--use-controlcenter", $"--use-controlcenter --rotation-{rotation}");
             File.WriteAllText(profileFile, text);
         }
         
@@ -477,6 +464,7 @@ public partial class MainView : UserControl
                 using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "normal");
                 using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "normal");
                 using (var writer = new StreamWriter(westonConfigFile))  WriteWestonSettings(writer, "normal", GetWestonDisplay());
+                WriteBootloaderArgSetting("default");
                 //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform normal", useBash:false);
             }
             else if (rot_Left.IsChecked == true)
@@ -484,6 +472,7 @@ public partial class MainView : UserControl
                 using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "left");
                 using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "90");
                 using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-90", GetWestonDisplay());
+                WriteBootloaderArgSetting("left");
                 //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 90", useBash:false);// 90, flipped-90 (options)
             }
             else if (rot_Right.IsChecked == true)
@@ -491,6 +480,7 @@ public partial class MainView : UserControl
                 using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "right");
                 using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "270");
                 using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-270", GetWestonDisplay());
+                WriteBootloaderArgSetting("right");
                 //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 270", useBash:false);// 270, flipped-270 (options)
             }
             else if (rot_Flip.IsChecked == true)
@@ -498,13 +488,9 @@ public partial class MainView : UserControl
                 using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "inverted");
                 using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "180");
                 using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-180", GetWestonDisplay());
+                WriteBootloaderArgSetting("flip");
                 //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 180", useBash:false);// 180, flipped, flipped-180 (options)
             }
-
-            if (gamescopeRot_Default.IsChecked == true) WriteBootloaderArgSetting("default");
-            else if (gamescopeRot_Left.IsChecked == true) WriteBootloaderArgSetting("left");
-            else if (gamescopeRot_Right.IsChecked == true) WriteBootloaderArgSetting("right");
-            else if (gamescopeRot_Flip.IsChecked == true) WriteBootloaderArgSetting("flip");
         }
         catch (Exception ex)
         {
@@ -677,7 +663,7 @@ public partial class MainView : UserControl
     private void RotApplyButton_OnClick(object sender, RoutedEventArgs e)
     {
         SaveSettings();
-        App.exitCode = 21;// reboot Managment
+        App.exitCode = 0;// user reboot so gamescope rotation works
         MainWindow.singleton.Close();
     }
     

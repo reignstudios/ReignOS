@@ -28,7 +28,7 @@ enum Compositor
     X11
 }
 
-enum GamescopeScreenRotation
+enum ScreenRotation
 {
     Default,
     Left,
@@ -137,7 +137,7 @@ internal class Program
         bool hdr = false;
         bool disableSteamGPU = false;
         int gpu = 0;
-        var gamescopeScreenRotation = GamescopeScreenRotation.Default;
+        var screenRotation = ScreenRotation.Default;
         foreach (string arg in args)
         {
             if (arg == "--use-controlcenter") useControlCenter = true;
@@ -163,10 +163,10 @@ internal class Program
             else if (arg == "--hdr") hdr = true;
             else if (arg == "--disable-steam-gpu") disableSteamGPU = true;
 
-            else if (arg == "--gamescope-rot-default") gamescopeScreenRotation = GamescopeScreenRotation.Default;
-            else if (arg == "--gamescope-rot-left") gamescopeScreenRotation = GamescopeScreenRotation.Left;
-            else if (arg == "--gamescope-rot-right") gamescopeScreenRotation = GamescopeScreenRotation.Right;
-            else if (arg == "--gamescope-rot-flip") gamescopeScreenRotation = GamescopeScreenRotation.Flip;
+            else if (arg == "--rotation-default") screenRotation = ScreenRotation.Default;
+            else if (arg == "--rotation-left") screenRotation = ScreenRotation.Left;
+            else if (arg == "--rotation-right") screenRotation = ScreenRotation.Right;
+            else if (arg == "--rotation-flip") screenRotation = ScreenRotation.Flip;
         }
 
         // manage interfaces
@@ -186,7 +186,7 @@ internal class Program
                         compositorRan = false;
                         break;
 
-                    case Compositor.Gamescope: StartCompositor_Gamescope(useMangoHub, vrr, hdr, disableSteamGPU, gpu, gamescopeScreenRotation); break;
+                    case Compositor.Gamescope: StartCompositor_Gamescope(useMangoHub, vrr, hdr, disableSteamGPU, gpu, screenRotation); break;
                     case Compositor.Weston: StartCompositor_Weston(useMangoHub, false, disableSteamGPU, gpu); break;
                     case Compositor.WestonWindowed: StartCompositor_Weston(useMangoHub, true, disableSteamGPU, gpu); break;
                     case Compositor.Cage: StartCompositor_Cage(useMangoHub, disableSteamGPU, gpu); break;
@@ -314,7 +314,7 @@ internal class Program
         return "";
     }
 
-    private static void StartCompositor_Gamescope(bool useMangoHub, bool vrr, bool hdr, bool disableSteamGPU, int gpu, GamescopeScreenRotation screenRotation)
+    private static void StartCompositor_Gamescope(bool useMangoHub, bool vrr, bool hdr, bool disableSteamGPU, int gpu, ScreenRotation screenRotation)
     {
         Log.WriteLine("Starting Gamescope with Steam...");
         string useMangoHubArg = useMangoHub ? " --mangoapp" : "";
@@ -325,10 +325,10 @@ internal class Program
         string rotArg = "";
         switch (screenRotation)
         {
-            case GamescopeScreenRotation.Default: rotArg = " --force-orientation normal"; break;
-            case GamescopeScreenRotation.Left: rotArg = " --force-orientation left"; break;
-            case GamescopeScreenRotation.Right: rotArg = " --force-orientation right"; break;
-            case GamescopeScreenRotation.Flip: rotArg = " --force-orientation upsidedown"; break;
+            case ScreenRotation.Default: rotArg = " --force-orientation normal"; break;
+            case ScreenRotation.Left: rotArg = " --force-orientation left"; break;
+            case ScreenRotation.Right: rotArg = " --force-orientation right"; break;
+            case ScreenRotation.Flip: rotArg = " --force-orientation upsidedown"; break;
         }
         string result = ProcessUtil.Run($"{gpuArg}gamescope", $"-e -f{useMangoHubArg}{vrrArg}{hdrArg}{rotArg} -- ./Start_Gamescope.sh{steamGPUArg}", useBash:true);// --framerate-limit
         Log.WriteLine(result);
