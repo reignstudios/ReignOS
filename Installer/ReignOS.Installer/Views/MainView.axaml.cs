@@ -308,6 +308,10 @@ public partial class MainView : UserControl
                 backButton.IsEnabled = false;
                 nextButton.IsEnabled = false;
                 exitButton.IsEnabled = false;
+                defaultRotRadioButton.IsEnabled = false;
+                leftRotRadioButton.IsEnabled = false;
+                rightRotRadioButton.IsEnabled = false;
+                flipRotRadioButton.IsEnabled = false;
                 installProgressBar.Value = 0;
                 installProgressBar.IsVisible = true;
                 installTerminalText.Text = "";
