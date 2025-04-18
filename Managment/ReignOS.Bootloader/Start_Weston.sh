@@ -24,18 +24,18 @@ unclutter -idle 3 &
 # start steam
 if [ "$WINDOWED_MODE" = "true" ]; then
     if [ "$DISABLE_STEAM_GPU" = "true" ]; then
-        env MESA_GL_VERSION_OVERRIDE=1.3 steam -nobigpicture -no-cef-sandbox
+        env MESA_GL_VERSION_OVERRIDE=1.3 steam -nobigpicture -no-cef-sandbox -nocloud
     else
-        steam -nobigpicture -no-cef-sandbox
+        steam -nobigpicture -no-cef-sandbox -nocloud
     fi
 else
     if [ "$USE_MANGOHUB" = "true" ]; then
-        mangohud steam -bigpicture -steamdeck -no-cef-sandbox
+        mangohud steam -bigpicture -steamdeck -no-cef-sandbox -nocloud
     else
         if [ "$DISABLE_STEAM_GPU" = "true" ]; then
-            env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -steamdeck -no-cef-sandbox
+            env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -steamdeck -no-cef-sandbox -nocloud
         else
-            steam -bigpicture -steamdeck -no-cef-sandbox
+            steam -bigpicture -steamdeck -no-cef-sandbox -nocloud
         fi
     fi
 fi

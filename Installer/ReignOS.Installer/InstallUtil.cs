@@ -366,6 +366,10 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm openbox");
         UpdateProgress(57);
 
+        // install desktop portal
+        Run("pacman", "-S --noconfirm xdg-desktop-portal xdg-desktop-portal-wlr");
+        UpdateProgress(58);
+
         // install audio
         Run("pacman", "-S --noconfirm alsa-utils alsa-plugins");
         Run("pacman", "-S --noconfirm sof-firmware");

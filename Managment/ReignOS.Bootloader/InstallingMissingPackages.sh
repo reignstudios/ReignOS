@@ -9,6 +9,7 @@ sudo pacman -S --noconfirm linux-headers
 sudo pacman -S --noconfirm wayland-utils
 sudo pacman -S --noconfirm weston
 sudo pacman -S --noconfirm openbox
+sudo pacman -S --noconfirm xdg-desktop-portal xdg-desktop-portal-wlr
 
 sudo pacman -S --noconfirm vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-layers
 
