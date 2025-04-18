@@ -27,12 +27,12 @@ exec openbox-session &
 
 # start steam
 if [ "$USE_MANGOHUB" = "true" ]; then
-    mangohud steam -bigpicture
+    mangohud steam -bigpicture -no-cef-sandbox
 else
     if [ "$DISABLE_STEAM_GPU" = "true" ]; then
-        env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture
+        env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -no-cef-sandbox
     else
-        steam -bigpicture
+        steam -bigpicture -no-cef-sandbox
     fi
 fi
 
