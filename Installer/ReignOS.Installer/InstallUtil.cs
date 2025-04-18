@@ -186,8 +186,8 @@ static class InstallUtil
         // configure time and lang
         Run("ln", "-sf /usr/share/zoneinfo/Region/City /etc/localtime");
         Run("hwclock", "--systohc");
-        Run("locale-gen", "en_US.UTF-8");
         Run("echo", "'LANG=en_US.UTF-8' > /etc/locale.conf");
+        Run("locale-gen", "");
         Run("pacman", "-S --noconfirm noto-fonts");
         Run("pacman", "-S --noconfirm noto-fonts-cjk");
         Run("pacman", "-S --noconfirm noto-fonts-extra");
