@@ -408,11 +408,11 @@ public partial class MainView : UserControl
         {
             const string profileFile = "/home/gamer/.bash_profile";
             string text = File.ReadAllText(profileFile);
-            text = text.Replace(" --rotation-default", "");
-            text = text.Replace(" --rotation-left", "");
-            text = text.Replace(" --rotation-right", "");
-            text = text.Replace(" --rotation-flip", "");
-            text = text.Replace("--use-controlcenter", $"--use-controlcenter --rotation-{rotation}");
+            text = text.Replace(" --gamescope-rot-default", "");
+            text = text.Replace(" --gamescope-rot-left", "");
+            text = text.Replace(" --gamescope-rot-right", "");
+            text = text.Replace(" --gamescope-rot-flip", "");
+            text = text.Replace("--use-controlcenter", $"--use-controlcenter --gamescope-rot-{rotation}");
             File.WriteAllText(profileFile, text);
         }
         
