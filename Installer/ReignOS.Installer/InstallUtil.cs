@@ -271,7 +271,7 @@ static class InstallUtil
         fileBuilder.AppendLine("NetworkUp=false");
         fileBuilder.AppendLine("for i in $(seq 1 30); do");
         fileBuilder.AppendLine("    # Try to ping Google's DNS server");
-        fileBuilder.AppendLine("    if ping -c 1 -W 1 8.8.8.8 &> /dev/null; then");
+        fileBuilder.AppendLine("    if ping -c 1 -W 1 google.com &> /dev/null; then");
         fileBuilder.AppendLine("        echo \"FirstRun: Network is up!\"");
         fileBuilder.AppendLine("        NetworkUp=true");
         fileBuilder.AppendLine("        sleep 1");
