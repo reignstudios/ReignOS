@@ -36,9 +36,9 @@ done
 
 # start steam
 if [ "$DISABLE_STEAM_GPU" = "true" ]; then
-    env MESA_GL_VERSION_OVERRIDE=1.3 steam -gamepadui -steamdeck -steamos3 -no-cef-sandbox -nocloud
+    env MESA_GL_VERSION_OVERRIDE=1.3 steam -gamepadui -steamdeck -steamos3 -no-cef-sandbox
 else
-    steam -gamepadui -steamdeck -steamos3 -no-cef-sandbox -nocloud
+    steam -gamepadui -steamdeck -steamos3 -no-cef-sandbox
 fi
 
 # -gamepadui (newer)

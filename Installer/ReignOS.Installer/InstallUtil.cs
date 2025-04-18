@@ -187,12 +187,13 @@ static class InstallUtil
         Run("ln", "-sf /usr/share/zoneinfo/Region/City /etc/localtime");
         Run("hwclock", "--systohc");
         Run("locale-gen", "en_US.UTF-8");
-        Run("echo", "\"LANG=en_US.UTF-8\" > /etc/locale.conf");
+        Run("echo", "'LANG=en_US.UTF-8' > /etc/locale.conf");
         Run("pacman", "-S --noconfirm noto-fonts");
         Run("pacman", "-S --noconfirm noto-fonts-cjk");
         Run("pacman", "-S --noconfirm noto-fonts-extra");
         Run("pacman", "-S --noconfirm noto-fonts-emoji");
-        Run("pacman", "-S --noconfirm ttf-dejavu ttf-liberation");
+        Run("pacman", "-S --noconfirm ttf-dejavu");
+        Run("pacman", "-S --noconfirm ttf-liberation");
         Run("fc-cache", "-fv");
         UpdateProgress(20);
 
@@ -298,6 +299,15 @@ static class InstallUtil
         fileBuilder.AppendLine("echo \"Installing NUX support...\"");
         fileBuilder.AppendLine("yay -S supergfxctl --noconfirm");
         fileBuilder.AppendLine("sudo systemctl enable supergfxd.service");
+
+        fileBuilder.AppendLine();// install extra fonts
+        fileBuilder.AppendLine("echo \"Installing extra fonts...\"");
+        fileBuilder.AppendLine("yay -S ttf-ms-fonts");
+        fileBuilder.AppendLine("fc-cache -fv");
+
+        fileBuilder.AppendLine();// install steamcmd
+        fileBuilder.AppendLine("echo \"Installing steamcmd...\"");
+        fileBuilder.AppendLine("yay -S steamcmd");
 
         fileBuilder.AppendLine();// disable FirstRun
         fileBuilder.AppendLine("echo \"rebooting...\"");

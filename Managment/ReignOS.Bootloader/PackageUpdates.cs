@@ -43,6 +43,8 @@ static class PackageUpdates
 
         if (!PackageExits("yay")) return true;
         if (!PackageExits("supergfxctl")) return true;
+        if (!PackageExits("ttf-ms-fonts")) return true;
+        if (!PackageExits("steamcmd")) return true;
 
         if (!PackageExits("fwupd")) return true;
 

@@ -17,9 +17,9 @@ fi
 
 # start steam
 if [ "$DISABLE_STEAM_GPU" = "true" ]; then
-    env MESA_GL_VERSION_OVERRIDE=1.3 steam -nobigpicture -no-cef-sandbox -nocloud
+    env MESA_GL_VERSION_OVERRIDE=1.3 steam -nobigpicture -no-cef-sandbox
 else
-    steam -nobigpicture -no-cef-sandbox -nocloud
+    steam -nobigpicture -no-cef-sandbox
 fi
 
 # run post kill
