@@ -302,12 +302,12 @@ static class InstallUtil
 
         fileBuilder.AppendLine();// install extra fonts
         fileBuilder.AppendLine("echo \"Installing extra fonts...\"");
-        fileBuilder.AppendLine("yay -S ttf-ms-fonts");
+        fileBuilder.AppendLine("yay -S ttf-ms-fonts --noconfirm");
         fileBuilder.AppendLine("fc-cache -fv");
 
         fileBuilder.AppendLine();// install steamcmd
         fileBuilder.AppendLine("echo \"Installing steamcmd...\"");
-        fileBuilder.AppendLine("yay -S steamcmd");
+        fileBuilder.AppendLine("yay -S steamcmd --noconfirm");
 
         fileBuilder.AppendLine();// disable FirstRun
         fileBuilder.AppendLine("echo \"rebooting...\"");
