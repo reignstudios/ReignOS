@@ -30,9 +30,9 @@ fi
 yay -S supergfxctl --noconfirm
 sudo systemctl enable supergfxd.service
 
-yay -S ttf-ms-fonts
+yay -S --noconfirm ttf-ms-fonts
 fc-cache -fv
 
-yay -S steamcmd
+yay -S --noconfirm steamcmd
 
 sudo pacman -S --noconfirm fwupd
