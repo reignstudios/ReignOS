@@ -390,6 +390,18 @@ public partial class MainView : UserControl
                 writer.WriteLine("colorimetry-mode=bt2020rgb");// HDR wide‑gamut space
             }
         }
+
+        void WriteBootloaderArgSetting(string rotation)
+        {
+            const string profileFile = "/home/gamer/.bash_profile";
+            string text = File.ReadAllText(profileFile);
+            text = text.Replace(" --rotation-default", "");
+            text = text.Replace(" --rotation-left", "");
+            text = text.Replace(" --rotation-right", "");
+            text = text.Replace(" --rotation-flip", "");
+            text = text.Replace("--use-controlcenter", $"--use-controlcenter --rotation-{rotation}");
+            File.WriteAllText(profileFile, text);
+        }
         
         /*static string GetWaylandDisplay()
         {
@@ -452,6 +464,7 @@ public partial class MainView : UserControl
                 using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "normal");
                 using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "normal");
                 using (var writer = new StreamWriter(westonConfigFile))  WriteWestonSettings(writer, "normal", GetWestonDisplay());
+                WriteBootloaderArgSetting("default");
                 //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform normal", useBash:false);
             }
             else if (rot_Left.IsChecked == true)
@@ -459,6 +472,7 @@ public partial class MainView : UserControl
                 using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "left");
                 using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "90");
                 using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-90", GetWestonDisplay());
+                WriteBootloaderArgSetting("left");
                 //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 90", useBash:false);// 90, flipped-90 (options)
             }
             else if (rot_Right.IsChecked == true)
@@ -466,6 +480,7 @@ public partial class MainView : UserControl
                 using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "right");
                 using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "270");
                 using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-270", GetWestonDisplay());
+                WriteBootloaderArgSetting("right");
                 //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 270", useBash:false);// 270, flipped-270 (options)
             }
             else if (rot_Flip.IsChecked == true)
@@ -473,6 +488,7 @@ public partial class MainView : UserControl
                 using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "inverted");
                 using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "180");
                 using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-180", GetWestonDisplay());
+                WriteBootloaderArgSetting("flip");
                 //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 180", useBash:false);// 180, flipped, flipped-180 (options)
             }
         }
