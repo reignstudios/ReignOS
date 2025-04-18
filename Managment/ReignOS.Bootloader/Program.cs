@@ -325,6 +325,7 @@ internal class Program
         string rotArg = "";
         switch (screenRotation)
         {
+            case ScreenRotation.Default: rotArg = " --force-orientation normal"; break;
             case ScreenRotation.Left: rotArg = " --force-orientation left"; break;
             case ScreenRotation.Right: rotArg = " --force-orientation right"; break;
             case ScreenRotation.Flip: rotArg = " --force-orientation upsidedown"; break;
