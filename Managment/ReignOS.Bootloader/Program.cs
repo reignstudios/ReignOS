@@ -325,7 +325,7 @@ internal class Program
         string rotArg = "";
         switch (screenRotation)
         {
-            case ScreenRotation.Default: rotArg = " --force-orientation normal"; break;
+            case GamescopeScreenRotation.Default: rotArg = " --force-orientation normal"; break;
             case GamescopeScreenRotation.Left: rotArg = " --force-orientation left"; break;
             case GamescopeScreenRotation.Right: rotArg = " --force-orientation right"; break;
             case GamescopeScreenRotation.Flip: rotArg = " --force-orientation upsidedown"; break;
