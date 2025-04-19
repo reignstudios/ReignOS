@@ -166,9 +166,12 @@ internal class Program
 
     private static void ReadBootloaderCommands()
     {
-        string line = Console.ReadLine();
-        if (line == "stop-inhibit") DbusMonitor.Shutdown();
-        else if (line == "start-inhibit") DbusMonitor.Init();
+        while (true)
+        {
+            string line = Console.ReadLine();
+            if (line == "stop-inhibit") DbusMonitor.Shutdown();
+            else if (line == "start-inhibit") DbusMonitor.Init();
+        }
     }
 
     private static void SignalCloseEvent(int signal)
