@@ -660,7 +660,7 @@ public partial class MainView : UserControl
             }
 	    }
 
-        if (!PackageExits("plasma"))
+        if (!PackageExits("konsole"))
         {
             MessageBoxShow("This will install KDE.\nYou have two options, full or minimal\n\n* Full installs all KDE apps\n* Minimal installs only whats needed.", "Minimal", "Full", MsgBoxCallback);
             return;

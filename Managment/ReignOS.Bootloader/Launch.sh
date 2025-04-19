@@ -48,7 +48,7 @@ if [ $exit_code -eq 8 ]; then
 fi
 
 # install kde full
-if [ $exit_code -eq 8 ]; then
+if [ $exit_code -eq 9 ]; then
   echo ""
   echo "Installing KDE Full..."
   sudo pacman -Syu --noconfirm
