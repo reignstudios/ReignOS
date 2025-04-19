@@ -226,7 +226,7 @@
 
 		<Grid Name="messageBoxGrid" Background="#BB000000" IsVisible="False">
 			<Border BorderThickness="4"  BorderBrush="White" Width="512" Height="256">
-				<Grid Background="Gray">
+				<Grid Background="#333333">
 					<TextBlock Name="msgBoxText" Margin="4,0,0,40"/>
 					<Button Name="msgBoxOption1" Content="Option1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4" Click="MessageBoxButton_OnClick"/>
 					<Button Name="msgBoxOption2" Content="Option2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4,0,80,4" Click="MessageBoxButton_OnClick"/>
