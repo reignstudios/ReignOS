@@ -56,6 +56,13 @@
 						<TextBlock Text="X11" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
 					</Grid>
 				</Button>
+			
+				<Button Click="KDEButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#000060">
+					<Grid Margin="0">
+						<Image Source="avares://ReignOS.ControlCenter/Assets/kde.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,20"/>
+						<TextBlock Text="KDE" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
+					</Grid>
+				</Button>
 			</StackPanel>
 			
 			<StackPanel Margin="4,250,4,50" Background="#202020" Orientation="Vertical">
@@ -215,6 +222,17 @@
 				<Button Name="nvidiaSettingsButton" Content="Proprietary Nvidia Settings" Background="DarkGreen" Click="NvidiaSettingsButton_Click"/>
 			</StackPanel>
 			<Button Content="Back" Width="128" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="GPUUtilsBackButton_OnClick"/>
+		</Grid>
+
+		<Grid Name="messageBoxGrid" Background="#BB000000" IsVisible="False">
+			<Border BorderThickness="4"  BorderBrush="White" Width="512" Height="256">
+				<Grid Background="Gray">
+					<TextBlock Name="msgBoxText" Margin="4,0,0,40"/>
+					<Button Name="msgBoxOption1" Content="Option1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4" Click="MessageBoxButton_OnClick"/>
+					<Button Name="msgBoxOption2" Content="Option2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4,0,80,4" Click="MessageBoxButton_OnClick"/>
+					<Button Name="msgBoxCancel" Content="Cancel" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4" Click="MessageBoxButton_OnClick"/>
+				</Grid>
+			</Border>
 		</Grid>
 	</Grid>
 </UserControl>

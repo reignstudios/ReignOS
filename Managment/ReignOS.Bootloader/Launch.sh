@@ -37,6 +37,26 @@ cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64
 ./ReignOS.Bootloader $@
 exit_code=$?
 
+# install kde min
+if [ $exit_code -eq 8 ]; then
+  echo ""
+  echo "Installing KDE Minimal..."
+  sudo pacman -Syu
+  sudo pacman -S plasma konsole flatpak
+  sudo reboot -f
+  exit 0
+fi
+
+# install kde full
+if [ $exit_code -eq 8 ]; then
+  echo ""
+  echo "Installing KDE Full..."
+  sudo pacman -Syu
+  sudo pacman -S plasma kde-applications flatpak
+  sudo reboot -f
+  exit 0
+fi
+
 # reboot
 if [ $exit_code -eq 10 ]; then
   echo ""

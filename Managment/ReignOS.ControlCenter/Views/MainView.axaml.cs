@@ -58,6 +58,13 @@ class GPU
     public int number;
 }
 
+enum MessageBoxOption
+{
+    Cancel,
+    Option1,
+    Option2
+}
+
 public partial class MainView : UserControl
 {
     private const string settingsFile = "/home/gamer/ReignOS_Ext/Settings.txt";
@@ -580,6 +587,26 @@ public partial class MainView : UserControl
             }
         }
     }
+
+    private delegate void MessageBoxDelegate(MessageBoxOption option);
+    private MessageBoxDelegate messageBoxCallback;
+    private void MessageBoxShow(string message, string optionText1, string optionText2, MessageBoxDelegate callback)
+    {
+        msgBoxText.Text = message;
+        msgBoxOption1.Content = optionText1;
+        msgBoxOption2.Content = optionText2;
+        msgBoxOption2.IsVisible = optionText2 != null;
+        messageBoxCallback = callback;
+        messageBoxGrid.IsVisible = true;
+    }
+
+    private void MessageBoxButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (sender == msgBoxOption1) messageBoxCallback?.Invoke(MessageBoxOption.Option1);
+        else if (sender == msgBoxOption2) messageBoxCallback?.Invoke(MessageBoxOption.Option2);
+        else if (sender == msgBoxCancel) messageBoxCallback?.Invoke(MessageBoxOption.Cancel);
+        messageBoxGrid.IsVisible = false;
+    }
     
     private void GamescopeButton_OnClick(object sender, RoutedEventArgs e)
     {
@@ -615,6 +642,38 @@ public partial class MainView : UserControl
     {
         App.exitCode = 6;// open Steam in X11
         MainWindow.singleton.Close();
+    }
+
+    private void KDEButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        void MsgBoxCallback(MessageBoxOption option)
+	    {
+            if (option == MessageBoxOption.Option1)
+            {
+		        App.exitCode = 8;// install KDE minimal
+                MainWindow.singleton.Close();
+            }
+            else if (option == MessageBoxOption.Option2)
+            {
+		        App.exitCode = 9;// install KDE full
+                MainWindow.singleton.Close();
+            }
+	    }
+
+        if (!PackageExits("plasma"))
+        {
+            MessageBoxShow("This will install KDE.\nYou have two full or minimal.", "Minimal", "Full", MsgBoxCallback);
+            return;
+        }
+
+        App.exitCode = 7;// open KDE
+        MainWindow.singleton.Close();
+    }
+
+	private static bool PackageExits(string package)
+    {
+        string result = ProcessUtil.Run("pacman", $"-Q {package}");
+        return result != null && !result.StartsWith("error:");
     }
     
     private void SleepButton_Click(object sender, RoutedEventArgs e)

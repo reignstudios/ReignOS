@@ -25,7 +25,8 @@ enum Compositor
     WestonWindowed,
     Cage,
     Labwc,
-    X11
+    X11,
+    KDE
 }
 
 enum ScreenRotation
@@ -151,6 +152,7 @@ internal class Program
             else if (arg == "--cage") compositor = Compositor.Cage;
             else if (arg == "--labwc") compositor = Compositor.Labwc;
             else if (arg == "--x11") compositor = Compositor.X11;
+            else if (arg == "--kde") compositor = Compositor.KDE;
 
             else if (arg.StartsWith("--gpu-"))
             {
@@ -192,6 +194,7 @@ internal class Program
                     case Compositor.Cage: StartCompositor_Cage(useMangoHub, disableSteamGPU, gpu); break;
                     case Compositor.Labwc: StartCompositor_Labwc(disableSteamGPU, gpu); break;
                     case Compositor.X11: StartCompositor_X11(useMangoHub, disableSteamGPU, gpu); break;
+                    case Compositor.KDE: StartCompositor_KDE(useMangoHub, disableSteamGPU, gpu); break;
                 }
             }
             catch (Exception e)
@@ -242,17 +245,18 @@ internal class Program
                     if (!int.TryParse(exitCodeValue.Replace("EXIT_CODE: ", ""), out exitCode)) exitCode = 0;
                 }
 
-                if (exitCode == 0) break;
+                bool exitLoop = false;
+                if (exitCode == 0) exitLoop = true;
                 else if (exitCode == 1) compositor = Compositor.Gamescope;
                 else if (exitCode == 2) compositor = Compositor.Weston;
                 else if (exitCode == 3) compositor = Compositor.WestonWindowed;
                 else if (exitCode == 4) compositor = Compositor.Cage;
                 else if (exitCode == 5) compositor = Compositor.Labwc;
                 else if (exitCode == 6) compositor = Compositor.X11;
-                else break;// exit with control-center exit-code
+                else if (exitCode == 7) compositor = Compositor.KDE;
+                else exitLoop = true;// exit with control-center exit-code
 
-                // reset things for new compositor
-                exitCode = 0;
+                // wait for soft shutdown
                 if (controlCenterCompositor == ControlCenterCompositor.Weston)
                 {
                     ProcessUtil.Wait("weston", 6);// wait for cage
@@ -267,6 +271,10 @@ internal class Program
                 {
                     Thread.Sleep(5);// just wait a bit
                 }
+
+                // reset things for new compositor
+                if (exitLoop) break;
+                else exitCode = 0;
             }
         }
 
@@ -375,6 +383,14 @@ internal class Program
         string gpuArg = GetGPUArg(gpu);
         ConfigureX11($"{gpuArg}/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_X11.sh{useMangoHubArg}{steamGPUArg}");
         string result = ProcessUtil.Run("startx", "", useBash:false);
+        Log.WriteLine(result);
+    }
+
+    private static void StartCompositor_KDE(bool useMangoHub, bool disableSteamGPU, int gpu)
+    {
+        Log.WriteLine("Starting KDE...");
+        string gpuArg = GetGPUArg(gpu);
+        string result = ProcessUtil.Run($"{gpuArg}startplasma-wayland", "", useBash:true);// .xinitrc "startplasma-x11" (to start in X11 mode)
         Log.WriteLine(result);
     }
 

@@ -12,7 +12,6 @@ static class PackageUpdates
         return result != null && !result.StartsWith("error:");
     }
 
-
     public static bool CheckUpdates()
     {
         bool badConfig = false;
@@ -30,7 +29,6 @@ static class PackageUpdates
         if (!PackageExits("wayland-utils")) return true;
         if (!PackageExits("weston")) return true;
         if (!PackageExits("openbox")) return true;
-        if (!PackageExits("openbox")) return true;
         if (!PackageExits("xdg-desktop-portal")) return true;
         if (!PackageExits("xdg-desktop-portal-wlr")) return true;
 
@@ -40,6 +38,8 @@ static class PackageUpdates
 
         if (!PackageExits("bluez")) return true;
         if (!PackageExits("bluez-utils")) return true;
+
+        if (!PackageExits("flatpak")) return true;
 
         if (!PackageExits("yay")) return true;
         if (!PackageExits("supergfxctl")) return true;

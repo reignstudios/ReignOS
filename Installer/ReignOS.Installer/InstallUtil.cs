@@ -441,6 +441,10 @@ static class InstallUtil
         // install wayland mouse util
         Run("pacman", "-S --noconfirm unclutter");
         UpdateProgress(83);
+
+        // install wayland mouse util
+        Run("pacman", "-S --noconfirm flatpak");
+        UpdateProgress(84);
     }
     
     private static void InstallReignOSRepo()

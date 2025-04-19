@@ -19,6 +19,8 @@ sudo systemctl enable bluetooth
 sudo pacman -S --noconfirm bolt
 sudo systemctl enable bolt.service
 
+sudo pacman -S flatpak --noconfirm
+
 # add yay packages
 if [ ! -d "/home/gamer/yay" ]; then
 	cd /home/gamer
