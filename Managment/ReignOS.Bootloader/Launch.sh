@@ -42,7 +42,7 @@ if [ $exit_code -eq 8 ]; then
   echo ""
   echo "Installing KDE Minimal..."
   sudo pacman -Syu
-  sudo pacman -S plasma konsole flatpak
+  sudo pacman -S --noconfirm plasma konsole flatpak
   sudo reboot -f
   exit 0
 fi
@@ -52,7 +52,7 @@ if [ $exit_code -eq 8 ]; then
   echo ""
   echo "Installing KDE Full..."
   sudo pacman -Syu
-  sudo pacman -S plasma kde-applications flatpak
+  sudo pacman -S --noconfirm plasma kde-applications flatpak
   sudo reboot -f
   exit 0
 fi
