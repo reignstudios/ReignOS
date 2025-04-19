@@ -88,6 +88,7 @@ internal class Program
             serviceProcess.StartInfo.Arguments = "./ReignOS.Service";
             serviceProcess.StartInfo.RedirectStandardOutput = true;
             serviceProcess.StartInfo.RedirectStandardError = true;
+            serviceProcess.StartInfo.RedirectStandardInput = true;
             serviceProcess.OutputDataReceived += (sender, args) =>
             {
                 if (args != null && args.Data != null)
@@ -194,7 +195,7 @@ internal class Program
                     case Compositor.Cage: StartCompositor_Cage(useMangoHub, disableSteamGPU, gpu); break;
                     case Compositor.Labwc: StartCompositor_Labwc(disableSteamGPU, gpu); break;
                     case Compositor.X11: StartCompositor_X11(useMangoHub, disableSteamGPU, gpu); break;
-                    case Compositor.KDE: StartCompositor_KDE(useMangoHub, disableSteamGPU, gpu); break;
+                    case Compositor.KDE: StartCompositor_KDE(useMangoHub, gpu, serviceProcess); break;
                 }
             }
             catch (Exception e)
@@ -386,12 +387,14 @@ internal class Program
         Log.WriteLine(result);
     }
 
-    private static void StartCompositor_KDE(bool useMangoHub, bool disableSteamGPU, int gpu)
+    private static void StartCompositor_KDE(bool useMangoHub, int gpu, Process serviceProcess)
     {
         Log.WriteLine("Starting KDE...");
+        serviceProcess.StandardInput.WriteLine("stop-inhibit");
         string gpuArg = GetGPUArg(gpu);
         string result = ProcessUtil.Run($"{gpuArg}startplasma-wayland", "", useBash:true);// .xinitrc "startplasma-x11" (to start in X11 mode)
         Log.WriteLine(result);
+        serviceProcess.StandardInput.WriteLine("start-inhibit");
     }
 
     public static bool IsOnline()

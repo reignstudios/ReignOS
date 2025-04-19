@@ -115,6 +115,11 @@ internal class Program
         // start Dbus monitor
         DbusMonitor.Init();
 
+        // start bootloader command listener
+        var bootloaderListenThread = new Thread(ReadBootloaderCommands);
+        bootloaderListenThread.IsBackground = true;
+        bootloaderListenThread.Start();
+
         // run events
         Log.WriteLine("Running events...");
         var time = DateTime.Now;
@@ -157,6 +162,13 @@ internal class Program
         VirtualGamepad.Dispose();
         keyboardInput.Dispose();
         Environment.ExitCode = DbusMonitor.isRebootMode == null ? 0 : (DbusMonitor.isRebootMode == true ? 10 : 11);
+    }
+
+    private static void ReadBootloaderCommands()
+    {
+        string line = Console.ReadLine();
+        if (line == "stop-inhibit") DbusMonitor.Shutdown();
+        else if (line == "start-inhibit") DbusMonitor.Init();
     }
 
     private static void SignalCloseEvent(int signal)
