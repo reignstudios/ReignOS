@@ -145,7 +145,7 @@ public partial class MainView : UserControl
         try
         {
             string result = ProcessUtil.Run("supergfxctl", "-s", useBash:false);
-            if (!result.Contains("Graphics mode change error"))
+            if (!result.Contains("Zbus error"))
             {
                 result = result.Replace("[", "").Replace("]", "");
                 var lines = result.Split(',');
