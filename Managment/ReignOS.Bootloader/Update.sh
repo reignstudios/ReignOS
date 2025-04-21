@@ -25,8 +25,8 @@ if [ "$HAS_UPDATES" = "true" ]; then
   yay_exit_code=$?
 
   # firmware
-  sudo fwupdmgr refresh
-  sudo fwupdmgr update
+  sudo fwupdmgr refresh --noconfirm
+  sudo fwupdmgr update --noconfirm
 
   if [ $arch_exit_code -eq 0 ]; then
     reboot
