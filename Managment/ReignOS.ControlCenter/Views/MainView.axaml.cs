@@ -145,7 +145,7 @@ public partial class MainView : UserControl
         try
         {
             string result = ProcessUtil.Run("supergfxctl", "-s", useBash:false);
-            if (!result.Contains("Zbus error"))
+            /*if (!result.Contains("Zbus error"))
             {
                 result = result.Replace("[", "").Replace("]", "");
                 var lines = result.Split(',');
@@ -154,7 +154,7 @@ public partial class MainView : UserControl
                     string value = line.Trim();
                     muxes.Add(value);
                 }
-            }
+            }*/
         }
         catch (Exception ex)
         {
@@ -258,22 +258,18 @@ public partial class MainView : UserControl
                         if (parts[1] == muxButton1.Content as string)
                         {
                             if (muxes.Count >= 1) muxButton1.IsChecked = true;
-                            else needsReset = true;
                         }
                         else if (parts[1] == muxButton2.Content as string)
                         {
                             if (muxes.Count >= 2) muxButton2.IsChecked = true;
-                            else needsReset = true;
                         }
                         else if (parts[1] == muxButton3.Content as string)
                         {
                             if (muxes.Count >= 3) muxButton3.IsChecked = true;
-                            else needsReset = true;
                         }
                         else if (parts[1] == muxButton4.Content as string)
                         {
                             if (muxes.Count >= 4) muxButton4.IsChecked = true;
-                            else needsReset = true;
                         }
                     }
                     else if (parts[0] == "MangoHub")
@@ -346,7 +342,6 @@ public partial class MainView : UserControl
                     else if (muxButton2.IsChecked == true) writer.WriteLine($"MUX={muxButton2.Content as string}");
                     else if (muxButton3.IsChecked == true) writer.WriteLine($"MUX={muxButton3.Content as string}");
                     else if (muxButton4.IsChecked == true) writer.WriteLine($"MUX={muxButton4.Content as string}");
-                    else writer.WriteLine("MUX=Unset");
                 }
                 else
                 {
