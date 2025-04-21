@@ -338,7 +338,7 @@ public partial class MainView : UserControl
 
                 if (muxButton0.IsChecked == true)
                 {
-                    writer.WriteLine("MUX_ENABLED=On"));
+                    writer.WriteLine("MUX_ENABLED=On");
                     if (muxButton1.IsChecked == true) writer.WriteLine($"MUX={muxButton1.Content as string}");
                     else if (muxButton2.IsChecked == true) writer.WriteLine($"MUX={muxButton2.Content as string}");
                     else if (muxButton3.IsChecked == true) writer.WriteLine($"MUX={muxButton3.Content as string}");
@@ -346,7 +346,7 @@ public partial class MainView : UserControl
                 }
                 else
                 {
-                    writer.WriteLine("MUX_ENABLED=Off"));
+                    writer.WriteLine("MUX_ENABLED=Off");
                 }
 
                 if (mangohubCheckbox.IsChecked == true) writer.WriteLine("MangoHub=On");
