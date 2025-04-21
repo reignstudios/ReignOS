@@ -142,7 +142,6 @@ public partial class MainView : UserControl
     private void RefreshMUX()
     {
         muxes = new List<string>();
-        return;
         try
         {
             string result = ProcessUtil.Run("supergfxctl", "-s", useBash:false);
