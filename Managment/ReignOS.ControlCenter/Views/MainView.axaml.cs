@@ -805,7 +805,7 @@ public partial class MainView : UserControl
 
         SaveSettings();
 
-        App.exitCode = 0;// reopen with full logout so env vars reset
+        App.exitCode = 10;// reboot
         MainWindow.singleton.Close();
     }
 
