@@ -145,7 +145,7 @@ public partial class MainView : UserControl
         try
         {
             string result = ProcessUtil.Run("supergfxctl", "-s", useBash:false);
-            if (!result.Contains("supergfxd is not enabled"))
+            if (!result.Contains("Graphics mode change error"))
             {
                 result = result.Replace("[", "").Replace("]", "");
                 var lines = result.Split(',');
