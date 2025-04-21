@@ -145,7 +145,7 @@ public partial class MainView : UserControl
         try
         {
             string result = ProcessUtil.Run("supergfxctl", "-s", useBash:false);
-            if (!result.Contains("error"))
+            if (false)//!result.Contains("error"))
             {
                 result = result.Replace("[", "").Replace("]", "");
                 var lines = result.Split(',');
