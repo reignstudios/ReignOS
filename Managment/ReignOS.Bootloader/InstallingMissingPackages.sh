@@ -29,7 +29,7 @@ if [ ! -d "/home/gamer/yay" ]; then
 	makepkg -si --noconfirm
 fi
 
-#yay -S supergfxctl --noconfirm
+yay -S --noconfirm supergfxctl
 
 yay -S --noconfirm ttf-ms-fonts
 fc-cache -fv
