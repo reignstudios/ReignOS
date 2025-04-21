@@ -142,10 +142,11 @@ public partial class MainView : UserControl
     private void RefreshMUX()
     {
         muxes = new List<string>();
+        return;
         try
         {
             string result = ProcessUtil.Run("supergfxctl", "-s", useBash:false);
-            /*if (!result.Contains("Zbus error"))
+            if (!result.Contains("Zbus error"))
             {
                 result = result.Replace("[", "").Replace("]", "");
                 var lines = result.Split(',');
@@ -154,7 +155,7 @@ public partial class MainView : UserControl
                     string value = line.Trim();
                     muxes.Add(value);
                 }
-            }*/
+            }
         }
         catch (Exception ex)
         {
