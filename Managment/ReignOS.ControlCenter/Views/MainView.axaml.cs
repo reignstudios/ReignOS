@@ -145,7 +145,7 @@ public partial class MainView : UserControl
         try
         {
             string result = ProcessUtil.Run("supergfxctl", "-s", useBash:false);
-            if (false)//!result.Contains("error"))
+            if (!result.Contains("Zbus error"))
             {
                 result = result.Replace("[", "").Replace("]", "");
                 var lines = result.Split(',');
@@ -351,7 +351,6 @@ public partial class MainView : UserControl
                 else
                 {
                     writer.WriteLine("MUX_ENABLED=Off"));
-                    writer.WriteLine("MUX=Unset");
                 }
 
                 if (mangohubCheckbox.IsChecked == true) writer.WriteLine("MangoHub=On");
