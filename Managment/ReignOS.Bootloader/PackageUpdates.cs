@@ -42,7 +42,7 @@ static class PackageUpdates
         if (!PackageExits("flatpak")) return true;
 
         if (!PackageExits("yay")) return true;
-        if (!PackageExits("supergfxctl")) return true;
+        //if (!PackageExits("supergfxctl")) return true;
         if (!PackageExits("ttf-ms-fonts")) return true;
         if (!PackageExits("steamcmd")) return true;
 
