@@ -30,7 +30,6 @@ if [ ! -d "/home/gamer/yay" ]; then
 fi
 
 yay -S supergfxctl --noconfirm
-#sudo systemctl enable supergfxd.service
 
 yay -S --noconfirm ttf-ms-fonts
 fc-cache -fv

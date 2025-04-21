@@ -298,7 +298,6 @@ static class InstallUtil
         fileBuilder.AppendLine();// install NUX support
         fileBuilder.AppendLine("echo \"Installing NUX support...\"");
         fileBuilder.AppendLine("yay -S supergfxctl --noconfirm");
-        fileBuilder.AppendLine("sudo systemctl enable supergfxd.service");
 
         fileBuilder.AppendLine();// install extra fonts
         fileBuilder.AppendLine("echo \"Installing extra fonts...\"");
