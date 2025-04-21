@@ -142,13 +142,20 @@ public partial class MainView : UserControl
     private void RefreshMUX()
     {
         muxes = new List<string>();
-        string result = ProcessUtil.Run("supergfxctl", "-s", useBash:false);
-        result = result.Replace("[", "").Replace("]", "");
-        var lines = result.Split(',');
-        foreach (string line in lines)
+        try
         {
-            string value = line.Trim();
-            muxes.Add(value);
+            string result = ProcessUtil.Run("supergfxctl", "-s", useBash: false);
+            result = result.Replace("[", "").Replace("]", "");
+            var lines = result.Split(',');
+            foreach (string line in lines)
+            {
+                string value = line.Trim();
+                muxes.Add(value);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
         }
 
         muxButton1.IsVisible = muxes.Count >= 1;
@@ -263,9 +270,12 @@ public partial class MainView : UserControl
                         }
                         else
                         {
-                            muxButton0.IsChecked = true;
-                            if (parts[1] != "Unset") needsReset = true;
+                            needsReset = true;
                         }
+                    }
+                    else if (parts[0] == "MUX_ENABLED")
+                    {
+                        muxButton0.IsChecked = parts[1] == "On";
                     }
                     else if (parts[0] == "MangoHub")
                     {
@@ -335,6 +345,8 @@ public partial class MainView : UserControl
                 else if (muxButton3.IsChecked == true) writer.WriteLine($"MUX={muxButton3.Content as string}");
                 else if (muxButton4.IsChecked == true) writer.WriteLine($"MUX={muxButton4.Content as string}");
                 else writer.WriteLine("MUX=Unset");
+                
+                writer.WriteLine("MUX_ENABLED=" + (muxButton0.IsChecked == true ? "On" : "Off"));
 
                 if (mangohubCheckbox.IsChecked == true) writer.WriteLine("MangoHub=On");
                 else writer.WriteLine("MangoHub=Off");
@@ -539,10 +551,13 @@ public partial class MainView : UserControl
                 builder.AppendLine($"export VK_DEVICE_SELECT={gpu}");
             }
 
-            if (muxButton1.IsChecked == true) builder.AppendLine($"sudo supergfxctl -m {muxButton1.Content as string}");
-            else if (muxButton2.IsChecked == true) builder.AppendLine($"sudo supergfxctl -m {muxButton2.Content as string}");
-            else if (muxButton3.IsChecked == true) builder.AppendLine($"sudo supergfxctl -m {muxButton3.Content as string}");
-            else if (muxButton4.IsChecked == true) builder.AppendLine($"sudo supergfxctl -m {muxButton4.Content as string}");
+            if (muxButton0.IsChecked == true)
+            {
+                if (muxButton1.IsChecked == true) builder.AppendLine($"sudo supergfxctl -m {muxButton1.Content as string}");
+                else if (muxButton2.IsChecked == true) builder.AppendLine($"sudo supergfxctl -m {muxButton2.Content as string}");
+                else if (muxButton3.IsChecked == true) builder.AppendLine($"sudo supergfxctl -m {muxButton3.Content as string}");
+                else if (muxButton4.IsChecked == true) builder.AppendLine($"sudo supergfxctl -m {muxButton4.Content as string}");
+            }
 
             File.WriteAllText(gpuSettings, builder.ToString());
         }
@@ -776,13 +791,17 @@ public partial class MainView : UserControl
     {
         if (muxButton0.IsChecked == true)
         {
-            string value = muxButton1.IsEnabled ? muxButton1.Content as string : "";
-            ProcessUtil.Run("supergfxctl", $"-m {value}", asAdmin:true, useBash:false);
+            ProcessUtil.Run("systemctl", "enable supergfxd.service", asAdmin:true, useBash:false);
+            
+            if (muxButton1.IsChecked == true) ProcessUtil.Run("supergfxctl", $"-m {muxButton1.Content as string}", asAdmin:true, useBash:false);
+            else if (muxButton2.IsChecked == true) ProcessUtil.Run("supergfxctl", $"-m {muxButton2.Content as string}", asAdmin:true, useBash:false);
+            else if (muxButton3.IsChecked == true) ProcessUtil.Run("supergfxctl", $"-m {muxButton3.Content as string}", asAdmin:true, useBash:false);
+            else if (muxButton4.IsChecked == true) ProcessUtil.Run("supergfxctl", $"-m {muxButton4.Content as string}", asAdmin:true, useBash:false);
         }
-        else if (muxButton1.IsChecked == true) ProcessUtil.Run("supergfxctl", $"-m {muxButton1.Content as string}", asAdmin:true, useBash:false);
-        else if (muxButton2.IsChecked == true) ProcessUtil.Run("supergfxctl", $"-m {muxButton2.Content as string}", asAdmin:true, useBash:false);
-        else if (muxButton3.IsChecked == true) ProcessUtil.Run("supergfxctl", $"-m {muxButton3.Content as string}", asAdmin:true, useBash:false);
-        else if (muxButton4.IsChecked == true) ProcessUtil.Run("supergfxctl", $"-m {muxButton4.Content as string}", asAdmin:true, useBash:false);
+        else
+        {
+            ProcessUtil.Run("systemctl", "disable supergfxd.service", asAdmin:true, useBash:false);
+        }
 
         SaveSettings();
 
