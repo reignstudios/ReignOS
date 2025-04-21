@@ -144,13 +144,16 @@ public partial class MainView : UserControl
         muxes = new List<string>();
         try
         {
-            string result = ProcessUtil.Run("supergfxctl", "-s", useBash: false);
-            result = result.Replace("[", "").Replace("]", "");
-            var lines = result.Split(',');
-            foreach (string line in lines)
+            string result = ProcessUtil.Run("supergfxctl", "-s", useBash:false);
+            if (!result.Contains("supergfxd is not enabled"))
             {
-                string value = line.Trim();
-                muxes.Add(value);
+                result = result.Replace("[", "").Replace("]", "");
+                var lines = result.Split(',');
+                foreach (string line in lines)
+                {
+                    string value = line.Trim();
+                    muxes.Add(value);
+                }
             }
         }
         catch (Exception ex)
@@ -246,6 +249,10 @@ public partial class MainView : UserControl
                             if (parts[1] != "0") needsReset = true;
                         }
                     }
+                    else if (parts[0] == "MUX_ENABLED")
+                    {
+                        muxButton0.IsChecked = parts[1] == "On";
+                    }
                     else if (parts[0] == "MUX")
                     {
                         if (parts[1] == muxButton1.Content as string)
@@ -268,14 +275,6 @@ public partial class MainView : UserControl
                             if (muxes.Count >= 4) muxButton4.IsChecked = true;
                             else needsReset = true;
                         }
-                        else
-                        {
-                            needsReset = true;
-                        }
-                    }
-                    else if (parts[0] == "MUX_ENABLED")
-                    {
-                        muxButton0.IsChecked = parts[1] == "On";
                     }
                     else if (parts[0] == "MangoHub")
                     {
@@ -340,13 +339,20 @@ public partial class MainView : UserControl
                 else if (gpuButtonNvidiaPrime.IsChecked == true) writer.WriteLine("GPU=100");
                 else writer.WriteLine("GPU=0");
 
-                if (muxButton1.IsChecked == true) writer.WriteLine($"MUX={muxButton1.Content as string}");
-                else if (muxButton2.IsChecked == true) writer.WriteLine($"MUX={muxButton2.Content as string}");
-                else if (muxButton3.IsChecked == true) writer.WriteLine($"MUX={muxButton3.Content as string}");
-                else if (muxButton4.IsChecked == true) writer.WriteLine($"MUX={muxButton4.Content as string}");
-                else writer.WriteLine("MUX=Unset");
-                
-                writer.WriteLine("MUX_ENABLED=" + (muxButton0.IsChecked == true ? "On" : "Off"));
+                if (muxButton0.IsChecked == true)
+                {
+                    writer.WriteLine("MUX_ENABLED=On"));
+                    if (muxButton1.IsChecked == true) writer.WriteLine($"MUX={muxButton1.Content as string}");
+                    else if (muxButton2.IsChecked == true) writer.WriteLine($"MUX={muxButton2.Content as string}");
+                    else if (muxButton3.IsChecked == true) writer.WriteLine($"MUX={muxButton3.Content as string}");
+                    else if (muxButton4.IsChecked == true) writer.WriteLine($"MUX={muxButton4.Content as string}");
+                    else writer.WriteLine("MUX=Unset");
+                }
+                else
+                {
+                    writer.WriteLine("MUX_ENABLED=Off"));
+                    writer.WriteLine("MUX=Unset");
+                }
 
                 if (mangohubCheckbox.IsChecked == true) writer.WriteLine("MangoHub=On");
                 else writer.WriteLine("MangoHub=Off");
