@@ -439,7 +439,8 @@ public partial class MainView : UserControl
         {
             try
             {
-                string result = ProcessUtil.Run("wayland-info", "", useBash:false);
+                ProcessUtil.KillHard("wayland-info", true, out _);
+                string result = ProcessUtil.Run("wayland-info", "", useBash:false, killAfterSec:2);
                 var lines = result.Split('\n');
                 bool outputMode = false;
                 foreach (string line in lines)
