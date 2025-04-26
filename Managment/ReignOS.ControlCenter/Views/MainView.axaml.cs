@@ -773,12 +773,12 @@ public partial class MainView : UserControl
             if (line.Contains("--use-controlcenter"))
             {
                 // remove existing options
+                text = text.Replace(" --gpu-100", "");// remove this before remove of 0
                 text = text.Replace(" --gpu-0", "");
                 text = text.Replace(" --gpu-1", "");
                 text = text.Replace(" --gpu-2", "");
                 text = text.Replace(" --gpu-3", "");
                 text = text.Replace(" --gpu-4", "");
-                text = text.Replace(" --gpu-100", "");
 
                 // gather new options
                 int gpu = 0;
