@@ -33,6 +33,6 @@ public static class FileUtils
             Log.WriteLine(e.Message);
         }
 
-        ProcessUtil.Run("chmod", $"+x \"{dstPath}\"", out _, wait:true);
+        ProcessUtil.Run("chmod", $"+x {dstPath}", out _, wait:true);
     }
 }

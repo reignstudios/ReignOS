@@ -78,6 +78,10 @@ internal class Program
         FileUtils.InstallScript(Path.Combine(srcPath, "steamos-session-select"), Path.Combine(dstPath, "steamos-session-select"));
         FileUtils.InstallScript(Path.Combine(srcPath, "steamos-update"), Path.Combine(dstPath, "steamos-update"));
 
+        srcPath = Path.Combine(processPath, "SteamOS3/polkit-1/");
+        dstPath = "/usr/share/polkit-1/actions";
+        FileUtils.InstallScript(Path.Combine(srcPath, "org.reignos.update.policy"), Path.Combine(dstPath, "org.reignos.update.policy"));
+
         // configure pwr button for sleep
         dstPath = "/etc/systemd/logind.conf.d/";
         if (!Directory.Exists(dstPath)) Directory.CreateDirectory(dstPath);

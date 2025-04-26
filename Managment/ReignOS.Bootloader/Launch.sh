@@ -13,7 +13,7 @@ NetworkUp=false
 if [ "$DISABLE_UPDATE" = "false" ]; then
     for i in $(seq 1 30); do
         # Try to ping Google's DNS server
-        if ping -c 1 -W 1 google.com &> /dev/null; then
+        if ping -c 1 -W 2 google.com &> /dev/null; then
             echo "Network is up!"
             NetworkUp=true
             sleep 1

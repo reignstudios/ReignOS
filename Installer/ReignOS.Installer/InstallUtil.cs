@@ -121,6 +121,10 @@ static class InstallUtil
         Run("umount", "-R /mnt");
         UpdateProgress(1);
 
+        // sync pacman db
+        Run("pacman", "-Sy");
+        UpdateProgress(2);
+
         // make sure we re-format drives before installing
         Views.MainView.FormatExistingPartitions(efiPartition, ext4Partition);
         UpdateProgress(5);
@@ -187,6 +191,7 @@ static class InstallUtil
         Run("ln", "-sf /usr/share/zoneinfo/Region/City /etc/localtime");
         Run("hwclock", "--systohc");
         Run("echo", "'LANG=en_US.UTF-8' > /etc/locale.conf");
+        Run("echo", "'en_US.UTF-8 UTF-8' > /etc/locale.gen");
         Run("locale-gen", "");
         Run("pacman", "-S --noconfirm noto-fonts");
         Run("pacman", "-S --noconfirm noto-fonts-cjk");
@@ -271,7 +276,7 @@ static class InstallUtil
         fileBuilder.AppendLine("NetworkUp=false");
         fileBuilder.AppendLine("for i in $(seq 1 30); do");
         fileBuilder.AppendLine("    # Try to ping Google's DNS server");
-        fileBuilder.AppendLine("    if ping -c 1 -W 1 google.com &> /dev/null; then");
+        fileBuilder.AppendLine("    if ping -c 1 -W 2 google.com &> /dev/null; then");
         fileBuilder.AppendLine("        echo \"FirstRun: Network is up!\"");
         fileBuilder.AppendLine("        NetworkUp=true");
         fileBuilder.AppendLine("        sleep 1");
@@ -295,7 +300,7 @@ static class InstallUtil
         fileBuilder.AppendLine("makepkg -si --noconfirm");
         fileBuilder.AppendLine("yay -Syy --noconfirm");
 
-        fileBuilder.AppendLine();// install NUX support
+        fileBuilder.AppendLine();// install MUX support
         fileBuilder.AppendLine("echo \"Installing NUX support...\"");
         fileBuilder.AppendLine("yay -S supergfxctl --noconfirm");
 
@@ -450,6 +455,9 @@ static class InstallUtil
     {
         progressTask = "Installing ReignOS Repo...";
         archRootMode = true;
+
+        // enable timezone
+        Run("systemctl", "enable systemd-timesyncd");
 
         // clear package cache
         Run("rm", "-rf /var/cache/pacman/pkg/*");

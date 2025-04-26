@@ -12,11 +12,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="SteamOS3\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Update="SteamOS3\jupiter-biosupdate">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="SteamOS3\polkit-1\org.reignos.update.policy">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="SteamOS3\steam-http-loader">
