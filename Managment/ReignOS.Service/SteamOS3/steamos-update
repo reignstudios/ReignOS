@@ -1,7 +1,5 @@
 #! /bin/bash
 
-exit 7
-
 # The Steam client is known to call this script with the following parameter combinations:
 # steamos-update --supports-duplicate-detection     -- should do nothing
 # steamos-update --enable-duplicate-detection check -- should check for update
@@ -9,33 +7,5 @@ exit 7
 # steamos-update --enable-duplicate-detection       -- should perform an update
 # steamos-update                                    -- should perform an update
 
-while [[ $# -gt 0 ]]; do
-  case $1 in
-    check)
-      CHECK=1
-      shift
-      ;;
-    --supports-duplicate-detection)
-      EXIT=1
-      shift
-      ;;
-    *)
-      shift
-      ;;
-  esac
-done
-
-
-if [ -n "$CHECK" ]; then
-    if sudo pacman -Qu | grep -q '^'; then
-        echo "Has Updates"
-        exit 0
-    else
-        echo "No Updates"
-        exit 7
-    fi
-elif [ -n "$EXIT" ]; then
-	exit 0
-else
-	steam -shutdown
-fi
+# just tell steam there are no updates
+exit 7
