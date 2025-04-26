@@ -26,7 +26,8 @@ enum Compositor
     Cage,
     Labwc,
     X11,
-    KDE
+    KDE,
+    KDE_X11
 }
 
 enum ScreenRotation
@@ -154,6 +155,7 @@ internal class Program
             else if (arg == "--labwc") compositor = Compositor.Labwc;
             else if (arg == "--x11") compositor = Compositor.X11;
             else if (arg == "--kde") compositor = Compositor.KDE;
+            else if (arg == "--kde-x11") compositor = Compositor.KDE_X11;
 
             else if (arg.StartsWith("--gpu-"))
             {
@@ -195,7 +197,8 @@ internal class Program
                     case Compositor.Cage: StartCompositor_Cage(useMangoHub, disableSteamGPU, gpu); break;
                     case Compositor.Labwc: StartCompositor_Labwc(disableSteamGPU, gpu); break;
                     case Compositor.X11: StartCompositor_X11(useMangoHub, disableSteamGPU, gpu); break;
-                    case Compositor.KDE: StartCompositor_KDE(useMangoHub, gpu, serviceProcess); break;
+                    case Compositor.KDE: StartCompositor_KDE(gpu, false, serviceProcess); break;
+                    case Compositor.KDE_X11: StartCompositor_KDE(gpu, true, serviceProcess); break;
                 }
             }
             catch (Exception e)
@@ -255,6 +258,7 @@ internal class Program
                 else if (exitCode == 5) compositor = Compositor.Labwc;
                 else if (exitCode == 6) compositor = Compositor.X11;
                 else if (exitCode == 7) compositor = Compositor.KDE;
+                else if (exitCode == 8) compositor = Compositor.KDE_X11;
                 else exitLoop = true;// exit with control-center exit-code
 
                 // wait for soft shutdown
@@ -387,12 +391,21 @@ internal class Program
         Log.WriteLine(result);
     }
 
-    private static void StartCompositor_KDE(bool useMangoHub, int gpu, Process serviceProcess)
+    private static void StartCompositor_KDE(int gpu, bool useX11, Process serviceProcess)
     {
         Log.WriteLine("Starting KDE...");
         serviceProcess.StandardInput.WriteLine("stop-inhibit");
         string gpuArg = GetGPUArg(gpu);
-        string result = ProcessUtil.Run($"{gpuArg}startplasma-wayland", "", useBash:true);// .xinitrc "startplasma-x11" (to start in X11 mode)
+        string result;
+        if (useX11)
+        {
+            ConfigureX11($"{gpuArg}startplasma-x11");
+            result = ProcessUtil.Run("startx", "", useBash:false);
+        }
+        else
+        {
+            result = ProcessUtil.Run($"{gpuArg}startplasma-wayland", "", useBash:true);
+        }
         Log.WriteLine(result);
         serviceProcess.StandardInput.WriteLine("start-inhibit");
     }

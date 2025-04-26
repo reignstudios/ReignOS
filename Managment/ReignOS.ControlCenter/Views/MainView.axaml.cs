@@ -660,29 +660,42 @@ public partial class MainView : UserControl
         MainWindow.singleton.Close();
     }
 
-    private void KDEButton_OnClick(object sender, RoutedEventArgs e)
+    private bool ValidateKDE()
     {
         void MsgBoxCallback(MessageBoxOption option)
-	    {
+        {
             if (option == MessageBoxOption.Option1)
             {
-		        App.exitCode = 8;// install KDE minimal
+                App.exitCode = 10;// install KDE minimal
                 MainWindow.singleton.Close();
             }
             else if (option == MessageBoxOption.Option2)
             {
-		        App.exitCode = 9;// install KDE full
+                App.exitCode = 11;// install KDE full
                 MainWindow.singleton.Close();
             }
-	    }
+        }
 
         if (!PackageExits("konsole"))
         {
             MessageBoxShow("This will install KDE.\nYou have two options, full or minimal\n\n* Full installs all KDE apps\n* Minimal installs only whats needed.", "Minimal", "Full", MsgBoxCallback);
-            return;
+            return false;
         }
+        
+        return true;
+    }
 
+    private void KDEButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (!ValidateKDE()) return;
         App.exitCode = 7;// open KDE
+        MainWindow.singleton.Close();
+    }
+    
+    private void KDEX11Button_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (!ValidateKDE()) return;
+        App.exitCode = 8;// open KDE
         MainWindow.singleton.Close();
     }
 
@@ -699,19 +712,19 @@ public partial class MainView : UserControl
     
     private void RestartButton_Click(object sender, RoutedEventArgs e)
     {
-        App.exitCode = 10;
+        App.exitCode = 15;
         MainWindow.singleton.Close();
     }
     
     private void ShutdownButton_Click(object sender, RoutedEventArgs e)
     {
-        App.exitCode = 11;
+        App.exitCode = 16;
         MainWindow.singleton.Close();
     }
     
     private void CheckUpdatesButton_Click(object sender, RoutedEventArgs e)
     {
-        App.exitCode = 12;// close Managment and launch CheckUpdates.sh
+        App.exitCode = 17;// close Managment and launch CheckUpdates.sh
         MainWindow.singleton.Close();
     }
     

@@ -38,7 +38,6 @@ fi
 echo ""
 echo "ReignOS Updating Git packages..."
 cd /home/gamer/ReignOS
-git reset --hard
 git pull
 cd /home/gamer/ReignOS/Managment
 echo "ReignOS Building packages..."

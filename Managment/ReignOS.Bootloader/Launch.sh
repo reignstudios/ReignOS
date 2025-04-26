@@ -38,7 +38,7 @@ cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64
 exit_code=$?
 
 # install kde min
-if [ $exit_code -eq 8 ]; then
+if [ $exit_code -eq 10 ]; then
   echo ""
   echo "Installing KDE Minimal..."
   sudo pacman -Syu --noconfirm
@@ -48,7 +48,7 @@ if [ $exit_code -eq 8 ]; then
 fi
 
 # install kde full
-if [ $exit_code -eq 9 ]; then
+if [ $exit_code -eq 11 ]; then
   echo ""
   echo "Installing KDE Full..."
   sudo pacman -Syu --noconfirm
@@ -58,7 +58,7 @@ if [ $exit_code -eq 9 ]; then
 fi
 
 # reboot
-if [ $exit_code -eq 10 ]; then
+if [ $exit_code -eq 15 ]; then
   echo ""
   echo "ReignOS (rebooting)..."
   sudo reboot -f
@@ -66,7 +66,7 @@ if [ $exit_code -eq 10 ]; then
 fi
 
 # shutdown
-if [ $exit_code -eq 11 ]; then
+if [ $exit_code -eq 16 ]; then
   echo ""
   echo "ReignOS (shutting down)..."
   sudo poweroff -f
@@ -74,7 +74,7 @@ if [ $exit_code -eq 11 ]; then
 fi
 
 # check updates
-if [ $exit_code -eq 12 ]; then
+if [ $exit_code -eq 17 ]; then
   echo ""
   echo "ReignOS (Re-Launching to check for updates)..."
   loginctl terminate-user gamer
