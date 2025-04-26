@@ -789,7 +789,7 @@ public partial class MainView : UserControl
                 else if (gpuButtonNvidiaPrime.IsChecked == true) gpu = 100;
 
                 // apply options
-                text = text.Replace(line, line + $" --gpu-{gpu}");
+                if (gpu >= 1) text = text.Replace(line, line + $" --gpu-{gpu}");
 
                 break;
             }
