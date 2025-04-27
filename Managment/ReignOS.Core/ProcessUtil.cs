@@ -139,8 +139,36 @@ public static class ProcessUtil
                     if (standardOut == null && !disableStdRead)
                     {
                         var builder = new StringBuilder();
-                        builder.Append(process.StandardOutput.ReadToEnd());
-                        builder.Append(process.StandardError.ReadToEnd());
+
+                        try
+                        {
+                            if (killAfterSec > 0)
+                            {
+                                var stream = process.StandardOutput;
+                                var time = DateTime.Now;
+                                while (!stream.EndOfStream && (DateTime.Now - time).TotalSeconds <= killAfterSec)
+                                {
+                                    builder.Append(stream.ReadLine());
+                                }
+
+                                stream = process.StandardError;
+                                time = DateTime.Now;
+                                while (!stream.EndOfStream && (DateTime.Now - time).TotalSeconds <= killAfterSec)
+                                {
+                                    builder.Append(stream.ReadLine());
+                                }
+                            }
+                            else
+                            {
+                                builder.Append(process.StandardOutput.ReadToEnd());
+                                builder.Append(process.StandardError.ReadToEnd());
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                        }
+
                         resultOutput = builder.ToString();
                         if (consoleLogOut)
                         {

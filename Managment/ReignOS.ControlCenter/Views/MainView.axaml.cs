@@ -459,7 +459,7 @@ public partial class MainView : UserControl
             try
             {
                 ProcessUtil.KillHard("wayland-info", true, out _);
-                string result = ProcessUtil.Run("wayland-info", "", useBash:false, killAfterSec:2, disableStdRead:true);
+                string result = ProcessUtil.Run("wayland-info", "", useBash:false, killAfterSec:2);
                 var lines = result.Split('\n');
                 bool outputMode = false;
                 foreach (string line in lines)
@@ -1315,7 +1315,7 @@ public partial class MainView : UserControl
 
         // add gpu names
         gpuNamesListBox.Items.Clear();
-        string result = ProcessUtil.Run("lspci", "| grep -E 'VGA|3D'", useBash:true);
+        string result = ProcessUtil.Run("lspci", "| grep -E 'VGA|3D'", useBash:true, killAfterSec:4);
         foreach (var name in result.Split('\n'))
         {
             var item = new ListBoxItem()
