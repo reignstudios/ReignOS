@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Interactivity;
 using ReignOS.Core;
 
 namespace ReignOS.ControlCenter.Views;
@@ -12,5 +13,11 @@ public partial class MainWindow : Window
         singleton = this;
         InitializeComponent();
         Title = $"{Title} ({VersionInfo.version})";
+    }
+
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+        mainView.WindowLoaded();
     }
 }

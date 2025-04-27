@@ -138,31 +138,11 @@ public static class ProcessUtil
                         {
                             if (killAfterSec > 0)
                             {
-                                /*var task = process.StandardOutput.ReadToEndAsync();
+                                var task = process.StandardOutput.ReadToEndAsync();
                                 if (task.Wait(killAfterSec * 1000)) builder.Append(task.Result);
                                 
                                 task = process.StandardError.ReadToEndAsync();
-                                if (task.Wait(killAfterSec * 1000)) builder.Append(task.Result);*/
-
-                                using (var stream = new MemoryStream())
-                                {
-                                    var task = process.StandardOutput.BaseStream.CopyToAsync(stream);
-                                    if (task.Wait(killAfterSec * 1000))
-                                    {
-                                        stream.Position = 0;
-                                        using (var reader = new StreamReader(stream)) builder.Append(reader.ReadToEnd());
-                                    }
-                                }
-                                
-                                using (var stream = new MemoryStream())
-                                {
-                                    var task = process.StandardError.BaseStream.CopyToAsync(stream);
-                                    if (task.Wait(killAfterSec * 1000))
-                                    {
-                                        stream.Position = 0;
-                                        using (var reader = new StreamReader(stream)) builder.Append(reader.ReadToEnd());
-                                    }
-                                }
+                                if (task.Wait(killAfterSec * 1000)) builder.Append(task.Result);
                             }
                             else
                             {

@@ -10,5 +10,5 @@
         Title="ReignOS.ControlCenter"
 		WindowState="Maximized"
 		SystemDecorations="BorderOnly">
-        <views:MainView />
+        <views:MainView Name="mainView"/>
 </Window>
