@@ -422,21 +422,40 @@ public partial class MainView : UserControl
             File.WriteAllText(profileFile, text);
         }
         
-        /*static string GetWaylandDisplay()
+        static List<string> GetWaylandDisplays()
         {
+            var results = new List<string>();
             try
             {
-                string result = ProcessUtil.Run("wlr-randr", "", useBash:false);
+                ProcessUtil.KillHard("wlr-randr", true, out _);
+                string result = ProcessUtil.Run("wlr-randr", "", useBash:false, killAfterSec:2);
                 var lines = result.Split('\n');
-                result = lines[0].Split(" ")[0];
-                return result;
+                foreach (string line in lines)
+                {
+                    var parts = line.Split(' ');
+                    if (parts.Length >= 2 && !parts[0].StartsWith(' ') && parts[1].StartsWith('"'))
+                    {
+                        results.Add(parts[0].Trim());
+                    }
+                }
             }
-            catch {}
-            return "ERROR";
-        }*/
-
-        static string GetWestonDisplay()
+            catch (Exception e)
+            {
+               Console.WriteLine(e);
+            }
+            return results;
+        }
+        
+        static string GetWaylandDisplay()
         {
+            var results = GetWaylandDisplays();
+            if (results.Count >= 1) return results[0];
+            return "ERROR";
+        }
+
+        static List<string> GetWestonDisplays()
+        {
+            var results = new List<string>();
             try
             {
                 ProcessUtil.KillHard("wayland-info", true, out _);
@@ -450,11 +469,7 @@ public partial class MainView : UserControl
                         if (line.Contains("name: "))
                         {
                             var match = Regex.Match(line, @"name:\s*(.*)");
-                            if (match.Success)
-                            {
-                                return match.Groups[1].Value.Trim();
-                            }
-                            break;
+                            if (match.Success) results.Add(match.Groups[1].Value.Trim());
                         }
                     }
                     else if (line.Contains("'wl_output'"))
@@ -467,7 +482,50 @@ public partial class MainView : UserControl
             {
                 Console.WriteLine(e);
             }
+            return results;
+        }
 
+        static string GetWestonDisplay()
+        {
+            var results = GetWestonDisplays();
+            if (results.Count >= 1) return results[0];
+            return "ERROR";
+        }
+
+        static List<string> GetX11Displays()
+        {
+            var results = new List<string>();
+            try
+            {
+                ProcessUtil.KillHard("xrandr", true, out _);
+                string result = ProcessUtil.Run("xrandr", "", useBash:false, killAfterSec:2);
+                var lines = result.Split('\n');
+                bool screenMode = false;
+                foreach (string line in lines)
+                {
+                    if (screenMode)
+                    {
+                        var parts = line.Split(' ');
+                        if (parts.Length >= 1) results.Add(parts[0].Trim());
+                        screenMode = false;
+                    }
+                    else if (line.StartsWith("Screen "))
+                    {
+                        screenMode = true;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            return results;
+        }
+        
+        static string GetX11Display()
+        {
+            var results = GetX11Displays();
+            if (results.Count >= 1) return results[0];
             return "ERROR";
         }
         
