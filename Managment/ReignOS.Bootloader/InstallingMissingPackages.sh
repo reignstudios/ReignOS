@@ -35,5 +35,6 @@ yay -S --noconfirm ttf-ms-fonts
 fc-cache -fv
 
 yay -S --noconfirm steamcmd
+yay -S --noconfirm proton-ge-custom
 
 sudo pacman -S --noconfirm fwupd

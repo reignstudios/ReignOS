@@ -45,6 +45,7 @@ static class PackageUpdates
         if (!PackageExits("supergfxctl")) return true;
         if (!PackageExits("ttf-ms-fonts")) return true;
         if (!PackageExits("steamcmd")) return true;
+        if (!PackageExits("proton-ge-custom")) return true;
 
         if (!PackageExits("fwupd")) return true;
 
