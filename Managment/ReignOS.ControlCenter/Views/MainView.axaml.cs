@@ -877,7 +877,7 @@ public partial class MainView : UserControl
 
         SaveSettings();
 
-        App.exitCode = 10;// reboot
+        App.exitCode = 15;// reboot
         MainWindow.singleton.Close();
     }
 
