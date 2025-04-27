@@ -89,7 +89,7 @@ public partial class MainView : UserControl
         RefreshMUX();
         LoadSettings();
         PostRefreshGPUs();
-        //SaveSystemSettings();// apply any system settings in case things get updated
+        SaveSystemSettings();// apply any system settings in case things get updated
         
         connectedTimer = new System.Timers.Timer(1000 * 5);
         connectedTimer.Elapsed += ConnectedTimer;
@@ -487,8 +487,8 @@ public partial class MainView : UserControl
 
         static string GetWestonDisplay()
         {
-            var results = GetWestonDisplays();
-            if (results.Count >= 1) return results[0];
+            //var results = GetWestonDisplays();
+            //if (results.Count >= 1) return results[0];
             return "ERROR";
         }
 
