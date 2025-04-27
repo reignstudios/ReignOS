@@ -84,12 +84,12 @@ public partial class MainView : UserControl
         versionText.Text = "Version: " + VersionInfo.version;
         if (Design.IsDesignMode) return;
         compositorText.Text = "Control-Center Compositor: " + Program.compositorMode.ToString();
-        return;
+        
         RefreshGPUs();
         RefreshMUX();
         LoadSettings();
         PostRefreshGPUs();
-        SaveSystemSettings();// apply any system settings in case things get updated
+        //SaveSystemSettings();// apply any system settings in case things get updated
         
         connectedTimer = new System.Timers.Timer(1000 * 5);
         connectedTimer.Elapsed += ConnectedTimer;
@@ -144,7 +144,7 @@ public partial class MainView : UserControl
         muxes = new List<string>();
         try
         {
-            string result = ProcessUtil.Run("supergfxctl", "-s", useBash:false);
+            string result = ProcessUtil.Run("supergfxctl", "-s", useBash:false, killAfterSec:2);
             if (!result.Contains("Zbus error"))
             {
                 result = result.Replace("[", "").Replace("]", "");
