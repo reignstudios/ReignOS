@@ -118,16 +118,10 @@ public static class ProcessUtil
                     }
                     else
                     {
-                        int sec = 0;
-                        while (!process.HasExited && sec < killAfterSec)
-                        {
-                            Thread.Sleep(1000);
-                            sec++;
-                        }
-
                         try
                         {
-                            exitCode = process.ExitCode;
+                            if (process.WaitForExit(killAfterSec * 1000)) exitCode = process.ExitCode;
+                            else exitCode = -1;
                         }
                         catch
                         {
@@ -144,19 +138,11 @@ public static class ProcessUtil
                         {
                             if (killAfterSec > 0)
                             {
-                                var stream = process.StandardOutput;
-                                var time = DateTime.Now;
-                                while (!stream.EndOfStream && (DateTime.Now - time).TotalSeconds <= killAfterSec)
-                                {
-                                    builder.Append(stream.ReadLine());
-                                }
-
-                                stream = process.StandardError;
-                                time = DateTime.Now;
-                                while (!stream.EndOfStream && (DateTime.Now - time).TotalSeconds <= killAfterSec)
-                                {
-                                    builder.Append(stream.ReadLine());
-                                }
+                                var task = process.StandardOutput.ReadToEndAsync();
+                                if (task.Wait(killAfterSec * 1000)) builder.Append(task.Result);
+                                
+                                task = process.StandardError.ReadToEndAsync();
+                                if (task.Wait(killAfterSec * 1000)) builder.Append(task.Result);
                             }
                             else
                             {
