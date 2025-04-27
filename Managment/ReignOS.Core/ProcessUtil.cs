@@ -114,6 +114,7 @@ public static class ProcessUtil
                     if (killAfterSec <= 0)
                     {
                         process.WaitForExit();
+                        exitCode = process.ExitCode;
                     }
                     else
                     {
@@ -123,9 +124,17 @@ public static class ProcessUtil
                             Thread.Sleep(1000);
                             sec++;
                         }
-                        process.Kill();
+
+                        try
+                        {
+                            exitCode = process.ExitCode;
+                        }
+                        catch
+                        {
+                            exitCode = -1;
+                        }
                     }
-                    exitCode = process.ExitCode;
+
                     string resultOutput = string.Empty;
                     if (standardOut == null && !disableStdRead)
                     {
@@ -139,6 +148,17 @@ public static class ProcessUtil
                             ProcessOutput?.Invoke(resultOutput);
                         }
                     }
+                    
+                    if (killAfterSec > 0 && !process.HasExited)
+                    {
+                        Thread.Sleep(1000);// process may exit after reading input (so wait 1 extra sec)
+                        try
+                        {
+                            process.Kill();
+                        }
+                        catch {}
+                    }
+                    
                     return resultOutput;
                 }
                 else
