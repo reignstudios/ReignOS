@@ -487,8 +487,8 @@ public partial class MainView : UserControl
 
         static string GetWestonDisplay()
         {
-            //var results = GetWestonDisplays();
-            //if (results.Count >= 1) return results[0];
+            var results = GetWestonDisplays();
+            if (results.Count >= 1) return results[0];
             return "ERROR";
         }
 
