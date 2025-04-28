@@ -11,6 +11,8 @@ if pacman -Qu &> /dev/null; then
 fi
 
 # update Arch
+arch_exit_code=0
+yay_exit_code=0
 if [ "$HAS_UPDATES" = "true" ]; then
   echo ""
   echo "ReignOS Updating Arch..."
