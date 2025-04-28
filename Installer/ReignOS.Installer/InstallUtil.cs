@@ -331,6 +331,16 @@ static class InstallUtil
         fileBuilder.AppendLine("/home/gamer/FirstRun.sh");
         fileBuilder.AppendLine("sudo chown -R $USER /root/.nuget");
         fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS");
+        fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS_Launch.sh");
+        fileBuilder.AppendLine("chmod +x /home/gamer/ReignOS_Launch.sh");
+        fileBuilder.AppendLine("/home/gamer/ReignOS_Launch.sh");
+        File.WriteAllText(path, fileBuilder.ToString());
+        UpdateProgress(30);
+        
+        // add login launch script
+        path = "/mnt/home/gamer/ReignOS_Launch.sh";
+        fileBuilder = new StringBuilder();
+        fileBuilder.AppendLine("#!/bin/bash");
         fileBuilder.AppendLine("chmod +x /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh");
         fileBuilder.AppendLine("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh --use-controlcenter");
         File.WriteAllText(path, fileBuilder.ToString());

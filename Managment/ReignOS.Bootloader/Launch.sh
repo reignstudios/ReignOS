@@ -25,7 +25,7 @@ if [ "$DISABLE_UPDATE" = "false" ]; then
     done
 fi
 
-# run updates (if network avaliable)
+# run updates (if network available)
 if [ "$NetworkUp" = "true" ]; then
     cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
     chmod +x ./Update.sh

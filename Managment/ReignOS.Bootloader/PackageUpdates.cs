@@ -1,6 +1,7 @@
 using ReignOS.Core;
 using System;
 using System.IO;
+using System.Text;
 
 namespace ReignOS.Bootloader;
 
@@ -14,6 +15,9 @@ static class PackageUpdates
 
     public static bool CheckUpdates()
     {
+        // non-restart changes
+        AddLaunchScript();
+        
         // check bad configs
         bool badConfig = false;
         if (CheckBadHostname()) badConfig = true;
@@ -51,6 +55,52 @@ static class PackageUpdates
         if (!PackageExits("fwupd")) return true;
 
         return false;
+    }
+
+    private static void AddLaunchScript()
+    {
+        try
+        {
+            const string bash = "/home/gamer/.bash_profile";
+            const string launch = "/home/gamer/ReignOS_Launch.sh";
+            if (!File.Exists(launch))
+            {
+                string bashText = File.ReadAllText(bash);
+                var lines = bashText.Split('\n');
+                string reignOSLaunchLine = null;
+                foreach (string line in lines)
+                {
+                    if (line == "chmod +x /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh")
+                    {
+                        bashText = bashText.Replace(line, "chmod +x /home/gamer/ReignOS_Launch.sh");
+                    }
+                    else if (line.StartsWith("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh"))
+                    {
+                        reignOSLaunchLine = line;
+                        bashText = bashText.Replace(line, "");
+                        break;
+                    }
+                }
+
+                if (reignOSLaunchLine != null)
+                {
+                    File.WriteAllText(bash, bashText);
+
+                    var builder = new StringBuilder();
+                    builder.AppendLine("chmod +x /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh");
+                    builder.AppendLine(reignOSLaunchLine);
+                    File.WriteAllText(launch, builder.ToString());
+                }
+                else
+                {
+                    Log.WriteLine("Failed to find ReignOS Launcher line in bash profile");
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Log.WriteLine(e);
+        }
     }
 
     private static bool CheckBadHostname()
