@@ -72,13 +72,12 @@ static class PackageUpdates
                 {
                     if (line == "chmod +x /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh")
                     {
-                        bashText = bashText.Replace(line, "chmod +x /home/gamer/ReignOS_Launch.sh");
+                        bashText = bashText.Replace(line, "chmod +x /home/gamer/ReignOS_Launch.sh\n/home/gamer/ReignOS_Launch.sh");
                     }
                     else if (line.StartsWith("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh"))
                     {
                         reignOSLaunchLine = line;
                         bashText = bashText.Replace(line, "");
-                        break;
                     }
                 }
 
