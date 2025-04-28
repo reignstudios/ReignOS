@@ -498,7 +498,7 @@ public partial class MainView : UserControl
             try
             {
                 ProcessUtil.KillHard("xrandr", true, out _);
-                string result = ProcessUtil.Run("xrandr", "", useBash:false, killAfterSec:2);
+                string result = ProcessUtil.Run("xrandr", "", useBash:false);
                 var lines = result.Split('\n');
                 bool screenMode = false;
                 foreach (string line in lines)
@@ -1315,7 +1315,7 @@ public partial class MainView : UserControl
 
         // add gpu names
         gpuNamesListBox.Items.Clear();
-        string result = ProcessUtil.Run("lspci", "| grep -E 'VGA|3D'", useBash:true, killAfterSec:4);
+        string result = ProcessUtil.Run("lspci", "| grep -E 'VGA|3D'", useBash:true);
         foreach (var name in result.Split('\n'))
         {
             var item = new ListBoxItem()
