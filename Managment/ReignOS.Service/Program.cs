@@ -40,7 +40,7 @@ internal class Program
     
     static void Main(string[] args)
     {
-        Log.prefix = "ReignOS.Service: ";
+        Log.Init("ReignOS.Service");
         Log.WriteLine("Service started: " + VersionInfo.version);
 
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;

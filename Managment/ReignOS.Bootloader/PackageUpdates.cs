@@ -14,6 +14,7 @@ static class PackageUpdates
 
     public static bool CheckUpdates()
     {
+        // check bad configs
         bool badConfig = false;
         if (CheckBadHostname()) badConfig = true;
         if (CheckBadKernelSettings()) badConfig = true;
@@ -74,7 +75,7 @@ static class PackageUpdates
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Log.WriteLine(e);
         }
 
         return false;
@@ -124,7 +125,7 @@ static class PackageUpdates
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Log.WriteLine(e);
         }
 
         return false;
@@ -154,7 +155,7 @@ static class PackageUpdates
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Log.WriteLine(e);
         }
 
         return false;

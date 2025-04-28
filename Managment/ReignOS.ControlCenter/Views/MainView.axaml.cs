@@ -84,10 +84,7 @@ public partial class MainView : UserControl
         versionText.Text = "Version: " + VersionInfo.version;
         if (Design.IsDesignMode) return;
         compositorText.Text = "Control-Center Compositor: " + Program.compositorMode.ToString();
-    }
-
-    public void WindowLoaded()
-    {
+        
         RefreshGPUs();
         RefreshMUX();
         LoadSettings();
@@ -123,7 +120,7 @@ public partial class MainView : UserControl
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
+            Log.WriteLine(ex);
         }
 
         gpuButton2.IsVisible = gpus.Count >= 2;
@@ -161,7 +158,7 @@ public partial class MainView : UserControl
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
+            Log.WriteLine(ex);
         }
 
         muxButton1.IsVisible = muxes.Count >= 1;
@@ -296,7 +293,7 @@ public partial class MainView : UserControl
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Log.WriteLine(e);
         }
 
         if (needsReset)
@@ -366,7 +363,7 @@ public partial class MainView : UserControl
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Log.WriteLine(e);
         }
 
         SaveSystemSettings();
@@ -444,7 +441,7 @@ public partial class MainView : UserControl
             }
             catch (Exception e)
             {
-               Console.WriteLine(e);
+                Log.WriteLine(e);
             }
             return results;
         }
@@ -462,7 +459,7 @@ public partial class MainView : UserControl
             try
             {
                 ProcessUtil.KillHard("wayland-info", true, out _);
-                string result = ProcessUtil.Run("wayland-info", "", useBash:false, killAfterSec:2, consoleLogOut:false);
+                string result = ProcessUtil.Run("wayland-info", "", useBash:false, killAfterSec:2, log:false);
                 var lines = result.Split('\n');
                 bool outputMode = false;
                 foreach (string line in lines)
@@ -483,7 +480,7 @@ public partial class MainView : UserControl
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Log.WriteLine(e);
             }
             return results;
         }
@@ -520,7 +517,7 @@ public partial class MainView : UserControl
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Log.WriteLine(e);
             }
             return results;
         }
@@ -575,7 +572,7 @@ public partial class MainView : UserControl
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
+            Log.WriteLine(ex);
         }
 
         // default gpu settings
@@ -625,7 +622,7 @@ public partial class MainView : UserControl
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
+            Log.WriteLine(ex);
         }
     }
 
@@ -654,13 +651,13 @@ public partial class MainView : UserControl
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex);
+                        Log.WriteLine(ex);
                     }
                 });
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Log.WriteLine(ex);
             }
         }
     }
@@ -1013,7 +1010,7 @@ public partial class MainView : UserControl
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Log.WriteLine(e);
             }
         }
 
@@ -1023,7 +1020,7 @@ public partial class MainView : UserControl
         // choose device
         if (wlanDevices.Count == 0) return;
         wlanDevice = wlanDevices[0];
-        Console.WriteLine("wlanDevice: " + wlanDevice);
+        Log.WriteLine("wlanDevice: " + wlanDevice);
         
         // get SSID
         var ssids = new List<string>();
@@ -1042,7 +1039,7 @@ public partial class MainView : UserControl
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Log.WriteLine(e);
             }
         }
 
@@ -1062,7 +1059,7 @@ public partial class MainView : UserControl
         ProcessUtil.KillHard("iwctl", true, out _);// make sure any failed processes are not open
         ProcessUtil.Run("iwctl", $"--passphrase {networkPasswordText.Text} station {wlanDevice} connect {ssid}", useBash:false);
         string result = ProcessUtil.Run("iwctl", $"station {wlanDevice} show", useBash:false);
-        Console.WriteLine(result);
+        Log.WriteLine(result);
     }
 
     private void NetworkDisconnectButton_OnClick(object sender, RoutedEventArgs e)
@@ -1209,7 +1206,7 @@ public partial class MainView : UserControl
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e);
+                        Log.WriteLine(e);
                     }
                 }
             }
@@ -1238,7 +1235,7 @@ public partial class MainView : UserControl
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    Log.WriteLine(e);
                 }
             }
             else if (line.StartsWith("Number "))

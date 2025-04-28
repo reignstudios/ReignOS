@@ -14,10 +14,4 @@ public partial class MainWindow : Window
         InitializeComponent();
         Title = $"{Title} ({VersionInfo.version})";
     }
-
-    protected override void OnLoaded(RoutedEventArgs e)
-    {
-        base.OnLoaded(e);
-        mainView.WindowLoaded();
-    }
 }

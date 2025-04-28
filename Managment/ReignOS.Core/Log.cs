@@ -5,15 +5,57 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 public static class Log
 {
     public static object lockObj = new object();
-    public static string prefix = "ReignOS: ";
+    private static string prefix = "ReignOS: ";
+    
+    private static FileStream stream;
+    private static StreamWriter writer;
+
+    public static void Init(string prefix)
+    {
+        try
+        {
+            const string path = "/home/gamer/ReignOS_Ext";
+            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+            string filename = Path.Combine(path, prefix + ".log");
+            stream = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.Read);
+            writer =  new StreamWriter(stream);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        
+        Log.prefix = prefix + ": ";
+    }
+
+    public static void Close()
+    {
+        if (writer != null)
+        {
+            writer.Dispose();
+            writer = null;
+        }
+        
+        if (stream != null)
+        {
+            stream.Dispose();
+            stream = null;
+        }
+    }
 
     public static void Write(string message)
     {
-        lock (lockObj) Console.Write(prefix + message);
+        lock (lockObj)
+        {
+            writer.Write(prefix + message);
+            writer.Flush();
+            stream.Flush();
+        }
     }
 
     public static void Write(object o)
@@ -23,7 +65,12 @@ public static class Log
     
     public static void WriteLine(string message)
     {
-        lock (lockObj) Console.WriteLine(prefix + message);
+        lock (lockObj)
+        {
+            writer.WriteLine(prefix + message);
+            writer.Flush();
+            stream.Flush();
+        }
     }
 
     public static void WriteLine(object o)
@@ -35,7 +82,7 @@ public static class Log
     {
         lock (lockObj)
         {
-            Console.Write(prefix + header);
+            writer.Write(prefix + header);
             int i = 0;
             char c = (char)nativeText[0];
             while (c != '\0')
@@ -44,7 +91,9 @@ public static class Log
                 i++;
                 c = (char)nativeText[i];
             }
-            Console.WriteLine();
+            writer.WriteLine();
+            writer.Flush();
+            stream.Flush();
         }
     }
 }

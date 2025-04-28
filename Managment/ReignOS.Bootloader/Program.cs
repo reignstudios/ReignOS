@@ -44,7 +44,7 @@ internal class Program
     {
         int exitCode = 0;
 
-        Log.prefix = "ReignOS.Bootloader: ";
+        Log.Init("ReignOS.Bootloader");
         Log.WriteLine("Bootloader started: " + VersionInfo.version);
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         LibraryResolver.Init(Assembly.GetExecutingAssembly());
@@ -108,7 +108,6 @@ internal class Program
                         string cmd = value.Replace("ReignOS.Service.COMMAND: ", "");
                         ProcessUtil.Run("bash", $"-c \"{cmd}\"", useBash:false);
                     }
-                    lock (Log.lockObj) Console.WriteLine(value);
                 }
             };
             serviceProcess.ErrorDataReceived += (sender, args) =>
@@ -116,7 +115,7 @@ internal class Program
                 if (args != null && args.Data != null)
                 {
                     string value = args.Data;
-                    lock (Log.lockObj) Console.WriteLine(value);
+                    Log.WriteLine(value);
                 }
             };
             serviceProcess.Start();
@@ -241,7 +240,6 @@ internal class Program
                     result = ProcessUtil.Run("startx", "", useBash:false);// start ControlCenter
                 }
 
-                Console.WriteLine(result);
                 var resultValues = result.Split('\n');
                 var exitCodeValue = resultValues.FirstOrDefault(x => x.Contains("EXIT_CODE: "));// get ControlCenter exit code (Weston doesn't pass this back like Cage)
                 if (exitCodeValue != null)
@@ -308,6 +306,7 @@ internal class Program
         }
 
         Environment.ExitCode = exitCode;
+        Log.Close();
     }
 
     private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -412,7 +411,7 @@ internal class Program
 
     public static bool IsOnline()
     {
-        string result = ProcessUtil.Run("ping", "-c 1 google.com", consoleLogOut:false, useBash:false);
+        string result = ProcessUtil.Run("ping", "-c 1 google.com", log:false, useBash:false);
         return result.Contains("1 received");
     }
 

@@ -23,6 +23,7 @@ class Program
     [STAThread]
     public static void Main(string[] args)
     {
+        Log.Init("ReignOS.Installer");
         Log.WriteLine("Installer started: " + VersionInfo.version);
 
         if (args != null)
@@ -36,6 +37,7 @@ class Program
         options.RenderingMode = new List<X11RenderingMode>() { X11RenderingMode.Software };
         BuildAvaloniaApp().With(options).StartWithClassicDesktopLifetime(args);
         //BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+        Log.Close();
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.

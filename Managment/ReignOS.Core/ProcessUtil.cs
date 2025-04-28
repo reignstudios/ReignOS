@@ -17,12 +17,12 @@ public static class ProcessUtil
     public delegate void ProcessInputDelegate(StreamWriter writer);
     public static event ProcessOutputDelegate ProcessOutput;
     
-    public static string Run(string name, string args, Dictionary<string, string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, bool useBash = true, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, string workingDir = null, bool consoleLogOut = true, bool disableStdRead = false, int killAfterSec = -1)
+    public static string Run(string name, string args, Dictionary<string, string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, bool useBash = true, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, string workingDir = null, bool log = true, bool verboseLog = false, bool disableStdRead = false, int killAfterSec = -1)
     {
-        return Run(name, args, out _, enviromentVars, wait, asAdmin, enterAdminPass, useBash, standardOut, getStandardInput, workingDir, consoleLogOut, disableStdRead, killAfterSec);
+        return Run(name, args, out _, enviromentVars, wait, asAdmin, enterAdminPass, useBash, standardOut, getStandardInput, workingDir, log, verboseLog, disableStdRead, killAfterSec);
     }
 
-    public static string Run(string name, string args, out int exitCode, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, bool useBash = true, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, string workingDir = null, bool consoleLogOut = true, bool disableStdRead = false, int killAfterSec = -1)
+    public static string Run(string name, string args, out int exitCode, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, bool useBash = true, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, string workingDir = null, bool log = true, bool verboseLog = false, bool disableStdRead = false, int killAfterSec = -1)
     {
         try
         {
@@ -54,10 +54,10 @@ public static class ProcessUtil
                     foreach (var v in enviromentVars) process.StartInfo.EnvironmentVariables[v.Key] = v.Value;
                 }
 
-                if (consoleLogOut)
+                if (log)
                 {
                     string l = $"ProcessUtil.Run: {process.StartInfo.FileName} {process.StartInfo.Arguments}";
-                    Console.WriteLine(l);
+                    Log.WriteLine(l);
                     ProcessOutput?.Invoke(l);
                 }
                 process.StartInfo.UseShellExecute = false;
@@ -89,16 +89,16 @@ public static class ProcessUtil
                                 try
                                 {
                                     string value = args.Data;
-                                    if (consoleLogOut)
+                                    if (log)
                                     {
-                                        Console.WriteLine(value);
+                                        if (verboseLog) Log.WriteLine(value);
                                         ProcessOutput?.Invoke(value);
                                     }
                                     standardOut(args.Data);
                                 }
                                 catch (Exception e)
                                 {
-                                    Console.WriteLine(e);
+                                    Log.WriteLine(e);
                                     ProcessOutput?.Invoke(e.ToString());
                                 }
                             }
@@ -152,13 +152,13 @@ public static class ProcessUtil
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine(e);
+                            Log.WriteLine(e);
                         }
 
                         resultOutput = builder.ToString();
-                        if (consoleLogOut)
+                        if (log)
                         {
-                            Console.WriteLine(resultOutput);
+                            if (verboseLog) Log.WriteLine(resultOutput);
                             ProcessOutput?.Invoke(resultOutput);
                         }
                     }
@@ -238,7 +238,7 @@ public static class ProcessUtil
     {
         if (asAdmin)
         {
-            Run("pkill", $"\"{name}\"", out exitCode, wait:true, asAdmin:true);
+            Run("pkill", $"'{name}'", out exitCode, wait:true, asAdmin:true);
         }
         else
         {
