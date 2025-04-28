@@ -1348,4 +1348,36 @@ public partial class MainView : UserControl
 	{
         ProcessUtil.Run("nvidia-settings", "", wait:true);
 	}
+    
+    private void DisplayManagerButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        mainGrid.IsVisible = false;
+        displayManagerGrid.IsVisible = true;
+        RefreshDisplaysPage();
+    }
+    
+    private void DisplayManagerBackButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        mainGrid.IsVisible = true;
+        displayManagerGrid.IsVisible = false;
+    }
+    
+    private void RefreshDisplaysButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        RefreshDisplaysPage();
+    }
+
+    private void RefreshDisplaysPage()
+    {
+        
+    }
+
+    private void DisplayManagerApplyButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        var screens = MainWindow.singleton.Screens.All;
+        
+        SaveSettings();
+        App.exitCode = 7;// open KDE
+        MainWindow.singleton.Close();
+    }
 }

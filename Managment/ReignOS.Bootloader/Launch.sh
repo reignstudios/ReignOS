@@ -111,7 +111,7 @@ fi
 if [ $exit_code -eq 21 ]; then
   echo ""
   echo "ReignOS (Re-Launching no update check)..."
-  ./Launch.sh $@ --disable-update &
+  ./Launch.sh $@ --disable-update --force-controlcenter &
   exit 0
 fi
 

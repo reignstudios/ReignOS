@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using ReignOS.Core;
 
 namespace ReignOS.ControlCenter.Views;

@@ -140,6 +140,7 @@ internal class Program
         bool disableSteamGPU = false;
         int gpu = 0;
         var screenRotation = ScreenRotation.Default;
+        bool forceControlCenter = false;
         foreach (string arg in args)
         {
             if (arg == "--use-controlcenter") useControlCenter = true;
@@ -171,7 +172,11 @@ internal class Program
             else if (arg == "--rotation-left") screenRotation = ScreenRotation.Left;
             else if (arg == "--rotation-right") screenRotation = ScreenRotation.Right;
             else if (arg == "--rotation-flip") screenRotation = ScreenRotation.Flip;
+            
+            else if (arg == "--force-controlcenter") forceControlCenter = true;
         }
+        
+        if (forceControlCenter) compositor = Compositor.None;
 
         // manage interfaces
         while (true)
