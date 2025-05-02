@@ -89,6 +89,7 @@ static class InstallUtil
         ProcessUtil.KillHard("arch-chroot", true, out _);
         try
         {
+            RefreshingInstallerIntegrity();
             InstallBaseArch();
             InstallArchPackages();
             InstallReignOSRepo();
@@ -107,6 +108,18 @@ static class InstallUtil
         Run("umount", "-R /root/.nuget");
         Run("umount", "-R /mnt/boot");
         Run("umount", "-R /mnt");
+    }
+
+    private static void RefreshingInstallerIntegrity()
+    {
+        progressTask = "Refreshing Integrity (will take time, please wait)...";
+        UpdateProgress(0);
+
+        Run("pacman", "-Sy archlinux-keyring");
+        Run("pacman-key", "--populate");
+        Run("pacman-key", "--refresh-keys");
+
+        Run("timedatectl", "set-ntp true");
     }
 
     private static void InstallBaseArch()
