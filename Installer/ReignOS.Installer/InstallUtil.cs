@@ -115,9 +115,9 @@ static class InstallUtil
         progressTask = "Refreshing Integrity (will take time, please wait)...";
         UpdateProgress(0);
 
-        Run("pacman", "-Sy archlinux-keyring");
-        Run("pacman-key", "--populate");
-        Run("pacman-key", "--refresh-keys");
+        Run("pacman", "-Sy archlinux-keyring --noconfirm");
+        Run("pacman-key", "--populate --noconfirm");
+        Run("pacman-key", "--refresh-keys --noconfirm");
 
         Run("timedatectl", "set-ntp true");
     }
