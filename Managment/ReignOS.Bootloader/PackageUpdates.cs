@@ -148,7 +148,9 @@ static class PackageUpdates
                 settings.Contains("nouveau.perflvl=N") ||
                 settings.Contains("nouveau.perflvl_wr=7777") ||
                 settings.Contains("nouveau.config=NvGspRm=1") ||
-                settings.Contains("nvidia-drm.modeset=1")
+                settings.Contains("nvidia-drm.modeset=1") ||
+                settings.Contains("nvidia_drm.fbdev=0") ||
+                settings.Contains("nvidia.NVreg_PreserveVideoMemoryAllocations=0")
             )
             {
                 // remove bad args
@@ -163,6 +165,8 @@ static class PackageUpdates
                 settings = settings.Replace("nouveau.perflvl_wr=7777", "");
                 settings = settings.Replace("nouveau.config=NvGspRm=1", "");
                 settings = settings.Replace("nvidia-drm.modeset=1", "");
+                settings = settings.Replace("nvidia_drm.fbdev=0", "");
+                settings = settings.Replace("nvidia.NVreg_PreserveVideoMemoryAllocations=0", "");
 
                 // add good args
                 settings = settings.Replace(" rw", " rw pci=realloc");
