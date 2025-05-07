@@ -1369,7 +1369,7 @@ public partial class MainView : UserControl
 
     private void RefreshDisplaysPage()
     {
-        
+        // sudo systemctl enable nvidia-suspend.service nvidia-hibernate.service nvidia-resume.service # validate is enabled
     }
 
     private void DisplayManagerApplyButton_OnClick(object sender, RoutedEventArgs e)
