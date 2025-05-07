@@ -232,7 +232,7 @@
 			<Button Content="Back" Width="128" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="GPUUtilsBackButton_OnClick"/>
 		</Grid>
 		
-		<Grid Name="displayManagerGrid" Margin="4" IsVisible="True">
+		<Grid Name="displayManagerGrid" Margin="4" IsVisible="False">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="0.25*"/>
 				<ColumnDefinition Width="0.75*"/>
