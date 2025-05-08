@@ -4,6 +4,7 @@ using Avalonia.Interactivity;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Timers;
@@ -12,6 +13,7 @@ using Avalonia.Threading;
 using ReignOS.Core;
 using ReignOS.ControlCenter.Desktop;
 using System.Text;
+using Avalonia.Platform;
 
 namespace ReignOS.ControlCenter.Views;
 
@@ -65,6 +67,13 @@ enum MessageBoxOption
     Option2
 }
 
+class DisplaySetting
+{
+    public string name;
+    public int widthOverride, heightOverride;
+    public bool enabled, primary;
+}
+
 public partial class MainView : UserControl
 {
     private const string settingsFile = "/home/gamer/ReignOS_Ext/Settings.txt";
@@ -77,6 +86,8 @@ public partial class MainView : UserControl
     private List<Drive> drives;
     private List<GPU> gpus;
     private List<string> muxes;
+    
+    private List<DisplaySetting> displaySettings = new List<DisplaySetting>();
     
     public MainView()
     {
@@ -288,6 +299,30 @@ public partial class MainView : UserControl
                     {
                         disableSteamGPUCheckbox.IsChecked = parts[1] == "On";
                     }
+                    else if (parts[0].StartsWith("Display_"))
+                    {
+                        var displayParts = parts[1].Split(' ');
+                        if (displayParts.Length != 0)
+                        {
+                            var setting = new DisplaySetting();
+                            foreach (var displayPart in displayParts)
+                            {
+                                var elementParts = displayPart.Split(':');
+                                if (elementParts.Length == 2)
+                                {
+                                    switch (elementParts[0])
+                                    {
+                                        case "Name": setting.name = elementParts[1]; break;
+                                        case "WidthOverride": int.TryParse(elementParts[1], out setting.widthOverride); break;
+                                        case "HeightOverride": int.TryParse(elementParts[1], out setting.heightOverride); break;
+                                        case "Enabled": setting.enabled = elementParts[1] == "True"; break;
+                                        case "Primary": setting.primary = elementParts[1] == "True"; break;
+                                    }
+                                }
+                            }
+                            displaySettings.Add(setting);
+                        }
+                    }
                 } while (!reader.EndOfStream);
             }
         }
@@ -359,6 +394,13 @@ public partial class MainView : UserControl
 
                 if (disableSteamGPUCheckbox.IsChecked == true) writer.WriteLine("DisableSteamGPU=On");
                 else writer.WriteLine("DisableSteamGPU=Off");
+
+                int d = 0;
+                foreach (var setting in displaySettings)
+                {
+                    writer.WriteLine($"Display_{d}=Name:{setting.name} WidthOverride:{setting.widthOverride} HeightOverride:{setting.heightOverride} Enabled:{setting.enabled} Primary:{setting.primary}");
+                    d++;
+                }
             }
         }
         catch (Exception e)
@@ -1363,15 +1405,48 @@ public partial class MainView : UserControl
 
     private void RefreshDisplaysPage()
     {
-        
+        var screens = MainWindow.singleton.Screens.All;
+        foreach (var screen in screens)
+        {
+            var setting = displaySettings.FirstOrDefault(x => x.name == screen.DisplayName);
+            if (setting == null) setting = new DisplaySetting();
+            setting.name = screen.DisplayName;
+            setting.primary = screen.IsPrimary;
+            
+            var item = new ListBoxItem();
+            item.Tag = setting;
+            var bounds = screen.Bounds;
+            string primary = screen.IsPrimary ? "*" : "";
+            item.Content = $"Name:{screen.DisplayName} Rez:{bounds.Width}x{bounds.Height} Rot:{screen.CurrentOrientation} {primary}";
+            displayListBox.Items.Add(item);
+        }
     }
 
     private void DisplayManagerApplyButton_OnClick(object sender, RoutedEventArgs e)
     {
-        var screens = MainWindow.singleton.Screens.All;
+        displaySettings = new List<DisplaySetting>();
+        foreach (ListBoxItem item in displayListBox.Items)
+        {
+            var setting = (DisplaySetting)item.Tag;
+            displaySettings.Add(setting);
+        }
         
         SaveSettings();
-        App.exitCode = 7;// open KDE
+        App.exitCode = 0;
         MainWindow.singleton.Close();
+    }
+
+    private void DisplayListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (displayListBox.SelectedIndex < 0) return;
+
+        var item = (ListBoxItem)displayListBox.Items[displayListBox.SelectedIndex];
+        var setting = (DisplaySetting)item.Tag;
+        
+        displayEnabledCheckbox.IsChecked = setting.enabled;
+        displayPrimaryCheckbox.IsChecked = setting.primary;
+
+        displayWidthText.Text = setting.widthOverride.ToString();
+        displayHeightText.Text = setting.heightOverride.ToString();
     }
 }
