@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo pacman -Syu
+sudo pacman -Syu --noconfirm
 
 echo "Uninstalling Nvidia Nouveau drivers"
 sudo pacman -R --noconfirm vulkan-nouveau lib32-vulkan-nouveau

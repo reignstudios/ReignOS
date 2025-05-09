@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo pacman -Syu
+sudo pacman -Syu --noconfirm
 
 echo "Uninstalling Nvidia Proprietary drivers"
 sudo systemctl disable nvidia-suspend.service nvidia-hibernate.service nvidia-resume.service
