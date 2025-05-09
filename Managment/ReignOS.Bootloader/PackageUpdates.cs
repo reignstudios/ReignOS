@@ -5,6 +5,8 @@ using System.Text;
 
 namespace ReignOS.Bootloader;
 
+// intel_idle.max_cstate=1 # intel
+// amd_pstate=disable processor.max_cstate=1 # amd
 static class PackageUpdates
 {
     private static bool PackageExits(string package)
@@ -22,7 +24,7 @@ static class PackageUpdates
         bool badConfig = false;
         if (CheckBadHostname()) badConfig = true;
         //if (CheckBadKernelSettings()) badConfig = true;
-        if (CheckBadDriverSettings()) badConfig = true;
+        //if (CheckBadDriverSettings()) badConfig = true;
         if (badConfig) return true;
 
         // check old packages
@@ -186,7 +188,7 @@ static class PackageUpdates
         return false;
     }*/
 
-    private static bool CheckBadDriverSettings()
+    /*private static bool CheckBadDriverSettings()
     {
         try
         {
@@ -214,5 +216,5 @@ static class PackageUpdates
         }
 
         return false;
-    }
+    }*/
 }
