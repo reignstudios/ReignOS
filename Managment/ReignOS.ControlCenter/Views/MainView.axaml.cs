@@ -76,6 +76,7 @@ class DisplaySetting
 
 public partial class MainView : UserControl
 {
+    private const string launchFile = "/home/gamer/ReignOS_Launch.sh";
     private const string settingsFile = "/home/gamer/ReignOS_Ext/Settings.txt";
     
     private System.Timers.Timer connectedTimer;
@@ -454,14 +455,13 @@ public partial class MainView : UserControl
 
         void WriteBootloaderArgSetting(string rotation)
         {
-            const string profileFile = "/home/gamer/.bash_profile";
-            string text = File.ReadAllText(profileFile);
+            string text = File.ReadAllText(launchFile);
             text = text.Replace(" --rotation-default", "");
             text = text.Replace(" --rotation-left", "");
             text = text.Replace(" --rotation-right", "");
             text = text.Replace(" --rotation-flip", "");
             text = text.Replace("--use-controlcenter", $"--use-controlcenter --rotation-{rotation}");
-            File.WriteAllText(profileFile, text);
+            File.WriteAllText(launchFile, text);
         }
         
         static List<string> GetWaylandDisplays()
@@ -828,15 +828,14 @@ public partial class MainView : UserControl
 
     private void BootApplyButton_OnClick(object sender, RoutedEventArgs e)
     {
-        const string profileFile = "/home/gamer/.bash_profile";
-        string text = File.ReadAllText(profileFile);
+        string text = File.ReadAllText(launchFile);
         text = text.Replace(" --gamescope", "");
         text = text.Replace(" --weston", "");
         text = text.Replace(" --cage", "");
         if (boot_Gamescope.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --gamescope");
         else if (boot_Weston.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --weston");
         else if (boot_Cage.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --cage");
-        File.WriteAllText(profileFile, text);
+        File.WriteAllText(launchFile, text);
         SaveSettings();
     }
     
@@ -858,8 +857,7 @@ public partial class MainView : UserControl
 
     private void PrimeGPUApplyButton_Click(object sender, RoutedEventArgs e)
     {
-        const string profileFile = "/home/gamer/.bash_profile";
-        string text = File.ReadAllText(profileFile);
+        string text = File.ReadAllText(launchFile);
         foreach (string line in text.Split('\n'))
         {
             if (line.Contains("--use-controlcenter"))
@@ -886,7 +884,7 @@ public partial class MainView : UserControl
                 break;
             }
         }
-        File.WriteAllText(profileFile, text);
+        File.WriteAllText(launchFile, text);
         SaveSettings();
 
         App.exitCode = 0;// reopen with full logout so env vars reset
@@ -919,8 +917,7 @@ public partial class MainView : UserControl
 
     private void OtherSettingsApplyButton_Click(object sender, RoutedEventArgs e)
     {
-        const string profileFile = "/home/gamer/.bash_profile";
-        string text = File.ReadAllText(profileFile);
+        string text = File.ReadAllText(launchFile);
         foreach (string line in text.Split('\n'))
         {
             if (line.Contains("--use-controlcenter"))
@@ -944,10 +941,10 @@ public partial class MainView : UserControl
                 break;
             }
         }
-        File.WriteAllText(profileFile, text);
+        File.WriteAllText(launchFile, text);
         SaveSettings();
 
-        App.exitCode = 0;// reopen with full logout so bash_profile reloads args
+        App.exitCode = 0;// reopen with full logout so reloads env
         MainWindow.singleton.Close();
     }
 
