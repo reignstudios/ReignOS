@@ -113,7 +113,7 @@
 						<RadioButton Name="gpuButton2" Content="GPU 2" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						<RadioButton Name="gpuButton3" Content="GPU 3" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						<RadioButton Name="gpuButton4" Content="GPU 4" Margin="800,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-						<RadioButton Name="gpuButtonNvidiaPrime" Content="Nvidia Prime" Margin="950,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						<CheckBox Name="gpuButtonNvidiaPrime" Content="Nvidia Prime" Margin="950,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 					</Grid>
 				</Grid>
 

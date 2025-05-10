@@ -251,15 +251,18 @@ public partial class MainView : UserControl
                             if (gpus.Count >= 4) gpuButton4.IsChecked = true;
                             else needsReset = true;
                         }
-                        else if (parts[1] == "100")
-                        {
-                            if (nvidia_Proprietary.IsChecked == true) gpuButtonNvidiaPrime.IsChecked = true;
-                            else needsReset = true;
-                        }
                         else
                         {
                             gpuButton0.IsChecked = true;
                             if (parts[1] != "0") needsReset = true;
+                        }
+                    }
+                    else if (parts[0] == "GPU_NVIDIA_PRIME")
+                    {
+                        if (parts[1] == "100")
+                        {
+                            if (nvidia_Proprietary.IsChecked == true) gpuButtonNvidiaPrime.IsChecked = true;
+                            else needsReset = true;
                         }
                     }
                     else if (parts[0] == "MUX_ENABLED")
@@ -370,8 +373,9 @@ public partial class MainView : UserControl
                 else if (gpuButton2.IsChecked == true) writer.WriteLine("GPU=2");
                 else if (gpuButton3.IsChecked == true) writer.WriteLine("GPU=3");
                 else if (gpuButton4.IsChecked == true) writer.WriteLine("GPU=4");
-                else if (gpuButtonNvidiaPrime.IsChecked == true) writer.WriteLine("GPU=100");
                 else writer.WriteLine("GPU=0");
+                
+                if (gpuButtonNvidiaPrime.IsChecked == true) writer.WriteLine("GPU_NVIDIA_PRIME=100");
 
                 if (muxButton0.IsChecked == true)
                 {
