@@ -19,6 +19,7 @@ static class PackageUpdates
     {
         // non-restart changes
         AddLaunchScript();
+        FixOSName();
         
         // check bad configs
         bool badConfig = false;
@@ -96,6 +97,55 @@ static class PackageUpdates
                 {
                     Log.WriteLine("Failed to find ReignOS Launcher line in bash profile");
                 }
+            }
+        }
+        catch (Exception e)
+        {
+            Log.WriteLine(e);
+        }
+    }
+
+    private static void FixOSName()
+    {
+        try
+        {
+            const string path = "/etc/lsb-release";
+            string text = File.ReadAllText(path);
+            if (text.Contains("DISTRIB_ID=\"Arch\""))
+            {
+                text = text.Replace("DISTRIB_ID=\"Arch\"", "DISTRIB_ID=\"ReignOS\"");
+                text = text.Replace("DISTRIB_DESCRIPTION=\"Arch Linux\"", "DISTRIB_DESCRIPTION=\"ReignOS\"");
+                void getStandardInput(StreamWriter writer)
+                {
+                    writer.WriteLine(text);
+                    writer.Flush();
+                    writer.Close();
+                }
+                ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput);
+            }
+        }
+        catch (Exception e)
+        {
+            Log.WriteLine(e);
+        }
+        
+        try
+        {
+            const string path = "/etc/os-release";
+            string text = File.ReadAllText(path);
+            if (text.Contains("NAME=\"Arch Linux\""))
+            {
+                text = text.Replace("NAME=\"Arch Linux\"", "NAME=\"ReignOS\"");
+                text = text.Replace("PRETTY_NAME=\"Arch Linux\"", "PRETTY_NAME=\"ReignOS\"");
+                text = text.Replace("ID=arch", "ID=reignos");
+                text = text.Replace("HOME_URL=\"https://archlinux.org/\"", "HOME_URL=\"http://reign-os.com/\"");
+                void getStandardInput(StreamWriter writer)
+                {
+                    writer.WriteLine(text);
+                    writer.Flush();
+                    writer.Close();
+                }
+                ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput);
             }
         }
         catch (Exception e)
