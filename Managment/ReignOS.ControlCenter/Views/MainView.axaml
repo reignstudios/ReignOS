@@ -150,11 +150,11 @@
 			
 			<StackPanel Margin="245,0,4,4" Height="42" VerticalAlignment="Bottom" Background="#000040" Orientation="Horizontal" FlowDirection="RightToLeft">
 				<Button Content="Check Updates" Background="OrangeRed" Margin="4,0,0,0" Click="CheckUpdatesButton_Click"/>
-				<Button Content="GPU Utils" Margin="4,0,0,0" Click="GPUUtilsButton_OnClick"/>
-				<Button Content="Boot Manager" Margin="4,0,0,0" Click="BootManagerButton_OnClick"/>
-				<Button Content="Disk Manager" Margin="4,0,0,0" Click="DriveManagerButton_OnClick"/>
-				<Button Content="Network Manager" Margin="4,0,0,0" Click="NetworkManagerButton_OnClick"/>
-				<Button Content="Display Manager" Margin="4,0,0,0" Click="DisplayManagerButton_OnClick"/>
+				<Button Content="GPU" Margin="4,0,0,0" Click="GPUUtilsButton_OnClick"/>
+				<Button Content="Boot" Margin="4,0,0,0" Click="BootManagerButton_OnClick"/>
+				<Button Content="Disk" Margin="4,0,0,0" Click="DriveManagerButton_OnClick"/>
+				<Button Content="Network" Margin="4,0,0,0" Click="NetworkManagerButton_OnClick"/>
+				<Button Content="Display" Margin="4,0,0,0" Click="DisplayManagerButton_OnClick"/>
 			</StackPanel>
 		</Grid>
 		
