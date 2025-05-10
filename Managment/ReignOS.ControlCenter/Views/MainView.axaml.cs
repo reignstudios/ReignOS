@@ -1495,8 +1495,8 @@ public partial class MainView : UserControl
     {
         //var screens = MainWindow.singleton.Screens.All;
         var screensText = ProcessUtil.Run("ls", "/sys/class/drm/", useBash:false);
-        var screens = new List<string>(screensText.Split('\n'));
-        screens.Sort();
+        var screens = screensText.Split('\n');
+        displayListBox.Items.Clear();
         foreach (var screen in screens)
         {
             //string connectedText = ProcessUtil.Run("cat", $"/sys/class/drm/{screen}/status", useBash:false);
