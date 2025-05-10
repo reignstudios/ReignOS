@@ -554,6 +554,13 @@ public partial class MainView : UserControl
             text = text.Replace(" --rotation-left", "");
             text = text.Replace(" --rotation-right", "");
             text = text.Replace(" --rotation-flip", "");
+            for (int i = 0; i != 10; i++) text = text.Replace($" --display-index={i}", "");
+            while (true)
+            {
+                var match = Regex.Match(text, @"( --resolution=\d*x\d*)");
+                if (!match.Success) break;
+                text = text.Replace(match.Groups[1].Value, "");
+            }
             text = text.Replace("--use-controlcenter", $"--use-controlcenter --rotation-{rotation}{displayArg}");
             File.WriteAllText(launchFile, text);
         }
