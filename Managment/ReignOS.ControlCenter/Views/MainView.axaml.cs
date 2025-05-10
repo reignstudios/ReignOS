@@ -70,7 +70,6 @@ enum MessageBoxOption
 class DisplaySetting
 {
     public string name;
-    public int width, height;
     public int widthOverride, heightOverride;
     public bool enabled;
 }
@@ -318,8 +317,6 @@ public partial class MainView : UserControl
                                     switch (elementParts[0])
                                     {
                                         case "Name": setting.name = elementParts[1]; break;
-                                        case "Width": int.TryParse(elementParts[1], out setting.width); break;
-                                        case "Height": int.TryParse(elementParts[1], out setting.height); break;
                                         case "WidthOverride": int.TryParse(elementParts[1], out setting.widthOverride); break;
                                         case "HeightOverride": int.TryParse(elementParts[1], out setting.heightOverride); break;
                                         case "Enabled": setting.enabled = elementParts[1] == "True"; break;
@@ -405,7 +402,7 @@ public partial class MainView : UserControl
                 int d = 0;
                 foreach (var setting in displaySettings)
                 {
-                    writer.WriteLine($"Display_{d}=Name:{setting.name} Width:{setting.width} Height:{setting.height} WidthOverride:{setting.widthOverride} HeightOverride:{setting.heightOverride} Enabled:{setting.enabled}");
+                    writer.WriteLine($"Display_{d}=Name:{setting.name} WidthOverride:{setting.widthOverride} HeightOverride:{setting.heightOverride} Enabled:{setting.enabled}");
                     d++;
                 }
             }
@@ -439,7 +436,6 @@ public partial class MainView : UserControl
 
                     string mode = "";
                     if (setting.widthOverride > 0 && setting.heightOverride > 0) mode = $" --mode {setting.widthOverride}x{setting.heightOverride}";
-                    else if (setting.width > 0 && setting.height > 0) mode = $" --mode {setting.width}x{setting.height}";
                     writer.WriteLine($"xrandr --output {setting.name} --rotate {rotation}{mode}");
                 }
             }
@@ -465,7 +461,6 @@ public partial class MainView : UserControl
                     
                     string mode = "";
                     if (setting.widthOverride > 0 && setting.heightOverride > 0) mode = $" --mode {setting.widthOverride}x{setting.heightOverride}";
-                    else if (setting.width > 0 && setting.height > 0) mode = $" --mode {setting.width}x{setting.height}";
                     writer.WriteLine($"wlr-randr --output {setting.name} --transform {rotation}{vrrArg}{mode}");
                 }
             }
@@ -518,10 +513,6 @@ public partial class MainView : UserControl
                     {
                         writer.WriteLine($"mode={setting.widthOverride}x{setting.heightOverride}");
                     }
-                    else if (setting.width > 0 && setting.height > 0)
-                    {
-                        writer.WriteLine($"mode={setting.width}x{setting.height}");
-                    }
 
                     if (vrrCheckbox.IsChecked == true)
                     {
@@ -546,7 +537,6 @@ public partial class MainView : UserControl
             {
                 displayArg = $" --display-index={displaySettings.IndexOf(displaySetting)}";
                 if (displaySetting.widthOverride > 0 && displaySetting.heightOverride > 0) displayArg += $" --resolution={displaySetting.widthOverride}x{displaySetting.heightOverride}";
-                else if (displaySetting.width > 0 && displaySetting.height > 0) displayArg += $" --resolution={displaySetting.width}x{displaySetting.height}";
             }
 
             string text = File.ReadAllText(launchFile);
@@ -1533,7 +1523,7 @@ public partial class MainView : UserControl
                 setting.name = name;
             }
             
-            var resolutionParts = resolution.Split('x');
+            /*var resolutionParts = resolution.Split('x');
             if (resolutionParts.Length == 2)
             {
                 if (!int.TryParse(resolutionParts[0], out setting.width)) setting.width = 0;
@@ -1543,7 +1533,7 @@ public partial class MainView : UserControl
             {
                 setting.width = 0;
                 setting.height = 0;
-            }
+            }*/
             
             var item = new ListBoxItem();
             item.Tag = setting;
