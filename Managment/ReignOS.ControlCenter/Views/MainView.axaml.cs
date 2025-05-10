@@ -1592,4 +1592,15 @@ public partial class MainView : UserControl
 
         displayEnabledCheckbox.IsEnabled = false;
     }
+
+    private void DisplayText_OnTextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (displayListBox.SelectedIndex < 0) return;
+        
+        // change active value
+        var item = (ListBoxItem)displayListBox.Items[displayListBox.SelectedIndex];
+        var setting = (DisplaySetting)item.Tag;
+        if (!int.TryParse(displayWidthText.Text, out setting.widthOverride)) setting.widthOverride = 0;
+        if (!int.TryParse(displayHeightText.Text, out setting.heightOverride)) setting.heightOverride = 0;
+    }
 }

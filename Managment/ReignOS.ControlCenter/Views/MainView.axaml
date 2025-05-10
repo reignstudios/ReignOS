@@ -252,9 +252,9 @@
 				<TextBlock Text="NOTE: Will restart user" FontSize="24" Foreground="#803000" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,50,0,0"/>
 				<CheckBox Name="displayEnabledCheckbox" Content="Enabled" Margin="4,100,0,0" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top" IsCheckedChanged="DisplayEnabledCheckbox_OnIsCheckedChanged"/>
 				<TextBlock Text="Width Override:" Margin="4,150,0,0" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-				<TextBox Name="displayWidthText" Margin="114,145,0,0" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+				<TextBox Name="displayWidthText" Margin="114,145,0,0" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top" TextChanged="DisplayText_OnTextChanged"/>
 				<TextBlock Text="Height Override:" Margin="260,150,0,0" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-				<TextBox Name="displayHeightText" Margin="374,145,0,0" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+				<TextBox Name="displayHeightText" Margin="374,145,0,0" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top" TextChanged="DisplayText_OnTextChanged"/>
 			</Grid>
 		</Grid>
 
