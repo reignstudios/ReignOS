@@ -70,7 +70,6 @@ enum MessageBoxOption
 class DisplaySetting
 {
     public string name;
-    public int width, height;
     public int widthOverride, heightOverride;
     public bool enabled;
 }
@@ -414,20 +413,54 @@ public partial class MainView : UserControl
 
     private void SaveSystemSettings()
     {
-        static void WriteX11Settings(StreamWriter writer, string rotation)
+        void WriteX11Settings(StreamWriter writer, string rotation)
         {
-            writer.WriteLine("display=$(xrandr --query | awk '/ connected/ {print $1; exit}')");
-            writer.WriteLine($"xrandr --output $display --rotate {rotation}");// --mode 1920x1080
+            if (displaySettings.Count == 0)
+            {
+                writer.WriteLine("display=$(xrandr --query | awk '/ connected/ {print $1; exit}')");
+                writer.WriteLine($"xrandr --output $display --rotate {rotation}");
+            }
+            else
+            {
+                foreach (var setting in displaySettings)
+                {
+                    if (!setting.enabled)
+                    {
+                        writer.WriteLine($"xrandr --output {setting.name} --off");
+                        continue;
+                    }
+                    
+                    string mode = setting.widthOverride > 0 && setting.heightOverride > 0 ? $" --mode {setting.widthOverride}x{setting.heightOverride}" : "";
+                    writer.WriteLine($"xrandr --output {setting.name} --rotate {rotation}{mode}");
+                }
+            }
         }
         
         void WriteWaylandSettings(StreamWriter writer, string rotation)
         {
-            string vrrArg = vrrCheckbox.IsChecked == true ? " --adaptive-sync enabled" : "";//--vrr on
-            writer.WriteLine("display=$(wlr-randr | awk '/^[^ ]+/{print $1; exit}')");
-            writer.WriteLine($"wlr-randr --output $display --transform {rotation}{vrrArg}");
+            string vrrArg = vrrCheckbox.IsChecked == true ? " --adaptive-sync enabled" : ""; //--vrr on
+            if (displaySettings.Count == 0)
+            {
+                writer.WriteLine("display=$(wlr-randr | awk '/^[^ ]+/{print $1; exit}')");
+                writer.WriteLine($"wlr-randr --output $display --transform {rotation}{vrrArg}");
+            }
+            else
+            {
+                foreach (var setting in displaySettings)
+                {
+                    if (!setting.enabled)
+                    {
+                        writer.WriteLine($"wlr-randr --output {setting.name} --off");
+                        continue;
+                    }
+                    
+                    string mode = setting.widthOverride > 0 && setting.heightOverride > 0 ? $" --mode {setting.widthOverride}x{setting.heightOverride}" : "";
+                    writer.WriteLine($"wlr-randr --output {setting.name} --transform {rotation}{vrrArg}{mode}");
+                }
+            }
         }
         
-        void WriteWestonSettings(StreamWriter writer, string rotation)//, string display)
+        void WriteWestonSettings(StreamWriter writer, string rotation, string display)
         {
             if (hdrCheckbox.IsChecked == true)
             {
@@ -435,26 +468,12 @@ public partial class MainView : UserControl
                 writer.WriteLine("color-management=true");// HDR color managment
                 writer.WriteLine();
             }
-            
-            foreach (var setting in displaySettings)
-            {
-                if (!setting.enabled)
-                {
-                    writer.WriteLine("[output]");
-                    writer.WriteLine($"name={setting.name}");
-                    writer.WriteLine("mode=off");
-                    writer.WriteLine();
-                    continue;
-                }
 
+            if (displaySettings.Count == 0)
+            {
                 writer.WriteLine("[output]");
-                //writer.WriteLine($"name={display}");
-                writer.WriteLine($"name={setting.name}");
+                writer.WriteLine($"name={display}");
                 writer.WriteLine($"transform={rotation}");
-                if (setting.widthOverride > 0 && setting.heightOverride > 0)
-                {
-                    writer.WriteLine($"mode={setting.widthOverride}x{setting.heightOverride}");
-                }
 
                 if (vrrCheckbox.IsChecked == true)
                 {
@@ -464,8 +483,43 @@ public partial class MainView : UserControl
 
                 if (hdrCheckbox.IsChecked == true)
                 {
-                    writer.WriteLine("eotf-mode=st2084");// HDR PQ curve
-                    writer.WriteLine("colorimetry-mode=bt2020rgb");// HDR wide‑gamut space
+                    writer.WriteLine("eotf-mode=st2084"); // HDR PQ curve
+                    writer.WriteLine("colorimetry-mode=bt2020rgb"); // HDR wide‑gamut space
+                }
+            }
+            else
+            {
+                foreach (var setting in displaySettings)
+                {
+                    if (!setting.enabled)
+                    {
+                        writer.WriteLine("[output]");
+                        writer.WriteLine($"name={setting.name}");
+                        writer.WriteLine("mode=off");
+                        writer.WriteLine();
+                        continue;
+                    }
+
+                    writer.WriteLine("[output]");
+                    //writer.WriteLine($"name={display}");
+                    writer.WriteLine($"name={setting.name}");
+                    writer.WriteLine($"transform={rotation}");
+                    if (setting.widthOverride > 0 && setting.heightOverride > 0)
+                    {
+                        writer.WriteLine($"mode={setting.widthOverride}x{setting.heightOverride}");
+                    }
+
+                    if (vrrCheckbox.IsChecked == true)
+                    {
+                        writer.WriteLine("enable_vrr=true");
+                        writer.WriteLine("vrr-mode=game");
+                    }
+
+                    if (hdrCheckbox.IsChecked == true)
+                    {
+                        writer.WriteLine("eotf-mode=st2084"); // HDR PQ curve
+                        writer.WriteLine("colorimetry-mode=bt2020rgb"); // HDR wide‑gamut space
+                    }
                 }
             }
         }
@@ -481,7 +535,7 @@ public partial class MainView : UserControl
             File.WriteAllText(launchFile, text);
         }
         
-        /*static List<string> GetWaylandDisplays()
+        static List<string> GetWaylandDisplays()
         {
             var results = new List<string>();
             try
@@ -586,7 +640,7 @@ public partial class MainView : UserControl
             var results = GetX11Displays();
             if (results.Count >= 1) return results[0];
             return "ERROR";
-        }*/
+        }
         
         const string folder = "/home/gamer/ReignOS_Ext";
         if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
@@ -600,7 +654,7 @@ public partial class MainView : UserControl
             {
                 using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "normal");
                 using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "normal");
-                using (var writer = new StreamWriter(westonConfigFile))  WriteWestonSettings(writer, "normal");//, GetWestonDisplay());
+                using (var writer = new StreamWriter(westonConfigFile))  WriteWestonSettings(writer, "normal", GetWestonDisplay());
                 WriteBootloaderArgSetting("default");
                 //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform normal", useBash:false);
             }
@@ -608,7 +662,7 @@ public partial class MainView : UserControl
             {
                 using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "left");
                 using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "90");
-                using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-90");//, GetWestonDisplay());
+                using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-90", GetWestonDisplay());
                 WriteBootloaderArgSetting("left");
                 //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 90", useBash:false);// 90, flipped-90 (options)
             }
@@ -616,7 +670,7 @@ public partial class MainView : UserControl
             {
                 using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "right");
                 using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "270");
-                using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-270");//, GetWestonDisplay());
+                using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-270", GetWestonDisplay());
                 WriteBootloaderArgSetting("right");
                 //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 270", useBash:false);// 270, flipped-270 (options)
             }
@@ -624,7 +678,7 @@ public partial class MainView : UserControl
             {
                 using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "inverted");
                 using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "180");
-                using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-180");//, GetWestonDisplay());
+                using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-180", GetWestonDisplay());
                 WriteBootloaderArgSetting("flip");
                 //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 180", useBash:false);// 180, flipped, flipped-180 (options)
             }
