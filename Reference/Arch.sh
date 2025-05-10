@@ -394,10 +394,12 @@ pacman -S virtualbox-guest-utils linux-headers base-devel
 modprobe vboxguest
 modprobe vboxsf
 modprobe vboxvideo
+systemctl enable vboxservice.service
 reboot
 
 Create mount point: mkdir -p /mnt/share
 Mount host folder: mount -t vboxsf share /mnt/share
+OR just access via: /media/sf_VirtualBox
 
 # mount ISO to inspect files
 mount -o loop out/<file-name>.iso /mnt

@@ -304,6 +304,10 @@ public partial class MainView : UserControl
                     {
                         disableSteamGPUCheckbox.IsChecked = parts[1] == "On";
                     }
+                    else if (parts[0] == "DisableSteamDeck")
+                    {
+                        disableSteamDeckCheckbox.IsChecked = parts[1] == "On";
+                    }
                     else if (parts[0].StartsWith("Display_"))
                     {
                         var displayParts = parts[1].Split(' ');
@@ -407,6 +411,9 @@ public partial class MainView : UserControl
 
                 if (disableSteamGPUCheckbox.IsChecked == true) writer.WriteLine("DisableSteamGPU=On");
                 else writer.WriteLine("DisableSteamGPU=Off");
+
+                if (disableSteamDeckCheckbox.IsChecked == true) writer.WriteLine("DisableSteamDeck=On");
+                else writer.WriteLine("DisableSteamDeck=Off");
 
                 int d = 0;
                 foreach (var setting in displaySettings)
@@ -1064,6 +1071,7 @@ public partial class MainView : UserControl
                 text = text.Replace(" --vrr", "");
                 text = text.Replace(" --hdr", "");
                 text = text.Replace(" --disable-steam-gpu", "");
+                text = text.Replace(" --disable-steam-deck", "");
 
                 // gather new options
                 string args = "";
@@ -1071,6 +1079,7 @@ public partial class MainView : UserControl
                 if (vrrCheckbox.IsChecked == true) args += " --vrr";
                 if (hdrCheckbox.IsChecked == true) args += " --hdr";
                 if (disableSteamGPUCheckbox.IsChecked == true) args += " --disable-steam-gpu";
+                if (disableSteamDeckCheckbox.IsChecked == true) args += " --disable-steam-deck";
 
                 // apply options
                 text = text.Replace(line, line + args);

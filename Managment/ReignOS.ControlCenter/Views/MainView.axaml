@@ -138,6 +138,7 @@
 						<CheckBox Name="vrrCheckbox" Content="VRR" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						<CheckBox Name="hdrCheckbox" Content="HDR" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						<CheckBox Name="disableSteamGPUCheckbox" Content="Disable Steam GPU" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="170"/>
+						<CheckBox Name="disableSteamDeckCheckbox" Content="Disable SteamDeck Mode" Margin="850,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="200"/>
 					</Grid>
 				</Grid>
 			</StackPanel>

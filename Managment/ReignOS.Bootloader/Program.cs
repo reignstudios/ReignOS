@@ -130,6 +130,7 @@ internal class Program
         bool vrr = false;
         bool hdr = false;
         bool disableSteamGPU = false;
+        bool disableSteamDeck = false;
         int gpu = 0;
         var screenRotation = ScreenRotation.Unset;
         bool forceControlCenter = false;
@@ -161,6 +162,7 @@ internal class Program
             else if (arg == "--vrr") vrr = true;
             else if (arg == "--hdr") hdr = true;
             else if (arg == "--disable-steam-gpu") disableSteamGPU = true;
+            else if (arg == "--disable-steam-deck") disableSteamDeck = true;
 
             else if (arg == "--rotation-default") screenRotation = ScreenRotation.Default;
             else if (arg == "--rotation-left") screenRotation = ScreenRotation.Left;
@@ -205,12 +207,12 @@ internal class Program
                         compositorRan = false;
                         break;
 
-                    case Compositor.Gamescope: StartCompositor_Gamescope(useMangoHub, vrr, hdr, disableSteamGPU, gpu, displayWidth, displayHeight, screenRotation); break;
-                    case Compositor.Weston: StartCompositor_Weston(useMangoHub, false, disableSteamGPU, gpu); break;
-                    case Compositor.WestonWindowed: StartCompositor_Weston(useMangoHub, true, disableSteamGPU, gpu); break;
-                    case Compositor.Cage: StartCompositor_Cage(useMangoHub, disableSteamGPU, gpu); break;
+                    case Compositor.Gamescope: StartCompositor_Gamescope(useMangoHub, vrr, hdr, disableSteamGPU, disableSteamDeck, gpu, displayWidth, displayHeight, screenRotation); break;
+                    case Compositor.Weston: StartCompositor_Weston(useMangoHub, false, disableSteamGPU, disableSteamDeck, gpu); break;
+                    case Compositor.WestonWindowed: StartCompositor_Weston(useMangoHub, true, disableSteamGPU, disableSteamDeck, gpu); break;
+                    case Compositor.Cage: StartCompositor_Cage(useMangoHub, disableSteamGPU, disableSteamDeck, gpu); break;
                     case Compositor.Labwc: StartCompositor_Labwc(disableSteamGPU, gpu); break;
-                    case Compositor.X11: StartCompositor_X11(useMangoHub, disableSteamGPU, gpu); break;
+                    case Compositor.X11: StartCompositor_X11(useMangoHub, disableSteamGPU, disableSteamDeck, gpu); break;
                     case Compositor.KDE: StartCompositor_KDE(gpu, false, serviceProcess); break;
                     case Compositor.KDE_X11: StartCompositor_KDE(gpu, true, serviceProcess); break;
                 }
@@ -341,13 +343,14 @@ internal class Program
         return "";
     }
 
-    private static void StartCompositor_Gamescope(bool useMangoHub, bool vrr, bool hdr, bool disableSteamGPU, int gpu, int displayWidth, int displayHeight, ScreenRotation screenRotation)
+    private static void StartCompositor_Gamescope(bool useMangoHub, bool vrr, bool hdr, bool disableSteamGPU, bool disableSteamDeck, int gpu, int displayWidth, int displayHeight, ScreenRotation screenRotation)
     {
         Log.WriteLine("Starting Gamescope with Steam...");
         string useMangoHubArg = useMangoHub ? " --mangoapp" : "";
         string vrrArg = vrr ? " --adaptive-sync" : "";
         string hdrArg = hdr ? " --hdr-enabled" : "";
         string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
+        string steamDeckArg = disableSteamDeck ? " --disable-steam-deck" : "";
         string gpuArg = GetGPUArg(gpu);
         string rotArg = "";
         switch (screenRotation)
@@ -359,30 +362,31 @@ internal class Program
         }
 
         string displayRezArg = (displayWidth > 0 && displayHeight > 0) ? $" -W {displayWidth} -H {displayHeight}" : "";
-        string result = ProcessUtil.Run($"{gpuArg}gamescope", $"-e -f{useMangoHubArg}{vrrArg}{hdrArg}{rotArg}{displayRezArg} -- ./Start_Gamescope.sh{steamGPUArg}", useBash:true);// --framerate-limit
+        string result = ProcessUtil.Run($"{gpuArg}gamescope", $"-e -f{useMangoHubArg}{vrrArg}{hdrArg}{rotArg}{displayRezArg} -- ./Start_Gamescope.sh{steamGPUArg}{steamDeckArg}", useBash:true);// --framerate-limit
         Log.WriteLine(result);
     }
 
-    private static void StartCompositor_Weston(bool useMangoHub, bool windowedMode, bool disableSteamGPU, int gpu)
+    private static void StartCompositor_Weston(bool useMangoHub, bool windowedMode, bool disableSteamGPU, bool disableSteamDeck, int gpu)
     {
         Log.WriteLine("Starting Weston with Steam...");
         string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
         string windowedModeArg = !windowedMode ? "--shell=kiosk-shell.so " : "";
         string windowedModeArg2 = windowedMode ? " --windowed-mode" : "";
         string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
+        string steamDeckArg = disableSteamDeck ? " --disable-steam-deck" : "";
         string gpuArg = GetGPUArg(gpu);
-        string gpuArg2 = "";//gpu >= 1 ? $"--drm-device=card{gpu} " : "";// probably not needed
-        string result = ProcessUtil.Run($"{gpuArg}weston", $"{gpuArg2}{windowedModeArg}--xwayland -- ./Start_Weston.sh{useMangoHubArg}{windowedModeArg2}{steamGPUArg}", useBash:true);
+        string result = ProcessUtil.Run($"{gpuArg}weston", $"{windowedModeArg}--xwayland -- ./Start_Weston.sh{useMangoHubArg}{windowedModeArg2}{steamGPUArg}{steamDeckArg}", useBash:true);
         Log.WriteLine(result);
     }
     
-    private static void StartCompositor_Cage(bool useMangoHub, bool disableSteamGPU, int gpu)
+    private static void StartCompositor_Cage(bool useMangoHub, bool disableSteamGPU, bool disableSteamDeck, int gpu)
     {
         Log.WriteLine("Starting Cage with Steam...");
         string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
         string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
+        string steamDeckArg = disableSteamDeck ? " --disable-steam-deck" : "";
         string gpuArg = GetGPUArg(gpu);
-        string result = ProcessUtil.Run($"{gpuArg}cage", $"-d -s -- ./Start_Cage.sh{useMangoHubArg}{steamGPUArg}", useBash:true);
+        string result = ProcessUtil.Run($"{gpuArg}cage", $"-d -s -- ./Start_Cage.sh{useMangoHubArg}{steamGPUArg}{steamDeckArg}", useBash:true);
         Log.WriteLine(result);
     }
 
@@ -395,14 +399,15 @@ internal class Program
         Log.WriteLine(result);
     }
 
-    private static void StartCompositor_X11(bool useMangoHub, bool disableSteamGPU, int gpu)
+    private static void StartCompositor_X11(bool useMangoHub, bool disableSteamGPU, bool disableSteamDeck, int gpu)
     {
         Log.WriteLine("Starting X11 with Steam...");
 
         string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
         string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
+        string steamDeckArg = disableSteamDeck ? " --disable-steam-deck" : "";
         string gpuArg = GetGPUArg(gpu);
-        ConfigureX11($"{gpuArg}/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_X11.sh{useMangoHubArg}{steamGPUArg}");
+        ConfigureX11($"{gpuArg}/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_X11.sh{useMangoHubArg}{steamGPUArg}{steamDeckArg}");
         string result = ProcessUtil.Run("startx", "", useBash:false);
         Log.WriteLine(result);
     }
