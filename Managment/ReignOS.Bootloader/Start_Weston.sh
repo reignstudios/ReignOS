@@ -30,12 +30,12 @@ if [ "$WINDOWED_MODE" = "true" ]; then
     fi
 else
     if [ "$USE_MANGOHUB" = "true" ]; then
-        mangohud steam -bigpicture -steamdeck -no-cef-sandbox
+        mangohud steam -bigpicture -no-cef-sandbox
     else
         if [ "$DISABLE_STEAM_GPU" = "true" ]; then
-            env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -steamdeck -no-cef-sandbox
+            env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -no-cef-sandbox
         else
-            steam -bigpicture -steamdeck -no-cef-sandbox
+            steam -bigpicture -no-cef-sandbox
         fi
     fi
 fi
