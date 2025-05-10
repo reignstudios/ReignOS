@@ -495,6 +495,17 @@ static class InstallUtil
         Run("NUGET_PACKAGES=/mnt/root/.nuget dotnet", "publish -r linux-x64 -c Release", workingDir:"/mnt/home/gamer/ReignOS/Managment");
         UpdateProgress(90);
 
+        // configure reignos names
+        string path = "/etc/lsb-release";
+        string text =
+@"";
+        ProcessUtil.WriteAllTextAdmin(path, text);
+
+        path = "/etc/os-release";
+        text =
+@"";
+        ProcessUtil.WriteAllTextAdmin(path, text);
+
         // copy wifi settings
         Run("mkdir", "-p /mnt/var/lib/iwd/");
         Run("cp", "-r /var/lib/iwd/* /mnt/var/lib/iwd/");
