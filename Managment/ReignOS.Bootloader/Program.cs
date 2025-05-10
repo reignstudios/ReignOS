@@ -30,14 +30,6 @@ enum Compositor
     KDE_X11
 }
 
-enum ScreenRotation
-{
-    Default,
-    Left,
-    Right,
-    Flip
-}
-
 internal class Program
 {
     static void Main(string[] args)

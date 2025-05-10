@@ -255,6 +255,14 @@
 				<TextBox Name="displayWidthText" Margin="114,145,0,0" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top" TextChanged="DisplayText_OnTextChanged"/>
 				<TextBlock Text="Height Override:" Margin="260,150,0,0" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 				<TextBox Name="displayHeightText" Margin="374,145,0,0" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top" TextChanged="DisplayText_OnTextChanged"/>
+				
+				<Grid Height="40" Margin="4,200,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+					<TextBlock Text="Screen Rotation:" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+					<RadioButton Name="displayRot_Default" Content="Default" IsChecked="True" Margin="150,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="RotButton_OnClick"/>
+					<RadioButton Name="displayRot_Left" Content="Left 90" Margin="300,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="RotButton_OnClick"/>
+					<RadioButton Name="displayRot_Right" Content="Right 90" Margin="450,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="RotButton_OnClick"/>
+					<RadioButton Name="displayRot_Flip" Content="Flip 180" Margin="600,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="RotButton_OnClick"/>
+				</Grid>
 			</Grid>
 		</Grid>
 

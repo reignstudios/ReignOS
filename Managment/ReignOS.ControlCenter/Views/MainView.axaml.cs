@@ -70,6 +70,7 @@ enum MessageBoxOption
 class DisplaySetting
 {
     public string name;
+    public ScreenRotation rotation;
     public int widthOverride, heightOverride;
     public bool enabled;
 }
@@ -317,6 +318,14 @@ public partial class MainView : UserControl
                                     switch (elementParts[0])
                                     {
                                         case "Name": setting.name = elementParts[1]; break;
+                                        
+                                        case "Rotation":
+                                            if (elementParts[1] == "Default") setting.rotation = ScreenRotation.Default;
+                                            else if (elementParts[1] == "Left") setting.rotation = ScreenRotation.Left;
+                                            else if (elementParts[1] == "Right") setting.rotation = ScreenRotation.Right;
+                                            else if (elementParts[1] == "Flip") setting.rotation = ScreenRotation.Flip;
+                                            break;
+                                        
                                         case "WidthOverride": int.TryParse(elementParts[1], out setting.widthOverride); break;
                                         case "HeightOverride": int.TryParse(elementParts[1], out setting.heightOverride); break;
                                         case "Enabled": setting.enabled = elementParts[1] == "True"; break;
@@ -402,7 +411,7 @@ public partial class MainView : UserControl
                 int d = 0;
                 foreach (var setting in displaySettings)
                 {
-                    writer.WriteLine($"Display_{d}=Name:{setting.name} WidthOverride:{setting.widthOverride} HeightOverride:{setting.heightOverride} Enabled:{setting.enabled}");
+                    writer.WriteLine($"Display_{d}=Name:{setting.name} Rotation:{setting.rotation} WidthOverride:{setting.widthOverride} HeightOverride:{setting.heightOverride} Enabled:{setting.enabled}");
                     d++;
                 }
             }
@@ -434,6 +443,14 @@ public partial class MainView : UserControl
                         continue;
                     }
 
+                    switch (setting.rotation)
+                    {
+                        case ScreenRotation.Default: rotation = "normal"; break;
+                        case ScreenRotation.Left: rotation = "left"; break;
+                        case ScreenRotation.Right: rotation = "right"; break;
+                        case ScreenRotation.Flip: rotation = "inverted"; break;
+                    }
+
                     string mode = "";
                     if (setting.widthOverride > 0 && setting.heightOverride > 0) mode = $" --mode {setting.widthOverride}x{setting.heightOverride}";
                     writer.WriteLine($"xrandr --output {setting.name} --rotate {rotation}{mode}");
@@ -457,6 +474,14 @@ public partial class MainView : UserControl
                     {
                         writer.WriteLine($"wlr-randr --output {setting.name} --off");
                         continue;
+                    }
+                    
+                    switch (setting.rotation)
+                    {
+                        case ScreenRotation.Default: rotation = "normal"; break;
+                        case ScreenRotation.Left: rotation = "90"; break;
+                        case ScreenRotation.Right: rotation = "270"; break;
+                        case ScreenRotation.Flip: rotation = "180"; break;
                     }
                     
                     string mode = "";
@@ -497,6 +522,14 @@ public partial class MainView : UserControl
             {
                 foreach (var setting in displaySettings)
                 {
+                    switch (setting.rotation)
+                    {
+                        case ScreenRotation.Default: rotation = "normal"; break;
+                        case ScreenRotation.Left: rotation = "rotate-90"; break;
+                        case ScreenRotation.Right: rotation = "rotate-270"; break;
+                        case ScreenRotation.Flip: rotation = "rotate-180"; break;
+                    }
+                    
                     if (!setting.enabled)
                     {
                         writer.WriteLine("[output]");
@@ -1602,5 +1635,18 @@ public partial class MainView : UserControl
         var setting = (DisplaySetting)item.Tag;
         if (!int.TryParse(displayWidthText.Text, out setting.widthOverride)) setting.widthOverride = 0;
         if (!int.TryParse(displayHeightText.Text, out setting.heightOverride)) setting.heightOverride = 0;
+    }
+
+    private void RotButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (displayListBox.SelectedIndex < 0) return;
+        
+        // change active value
+        var item = (ListBoxItem)displayListBox.Items[displayListBox.SelectedIndex];
+        var setting = (DisplaySetting)item.Tag;
+        if (displayRot_Default.IsChecked == true) setting.rotation = ScreenRotation.Default;
+        else if (displayRot_Left.IsChecked == true) setting.rotation = ScreenRotation.Left;
+        else if (displayRot_Right.IsChecked == true) setting.rotation = ScreenRotation.Right;
+        else if (displayRot_Flip.IsChecked == true) setting.rotation = ScreenRotation.Flip;
     }
 }
