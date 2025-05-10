@@ -70,8 +70,9 @@ enum MessageBoxOption
 class DisplaySetting
 {
     public string name;
+    public int width, height;
     public int widthOverride, heightOverride;
-    public bool enabled, primary;
+    public bool enabled;
 }
 
 public partial class MainView : UserControl
@@ -317,7 +318,6 @@ public partial class MainView : UserControl
                                         case "WidthOverride": int.TryParse(elementParts[1], out setting.widthOverride); break;
                                         case "HeightOverride": int.TryParse(elementParts[1], out setting.heightOverride); break;
                                         case "Enabled": setting.enabled = elementParts[1] == "True"; break;
-                                        case "Primary": setting.primary = elementParts[1] == "True"; break;
                                     }
                                 }
                             }
@@ -399,7 +399,7 @@ public partial class MainView : UserControl
                 int d = 0;
                 foreach (var setting in displaySettings)
                 {
-                    writer.WriteLine($"Display_{d}=Name:{setting.name} WidthOverride:{setting.widthOverride} HeightOverride:{setting.heightOverride} Enabled:{setting.enabled} Primary:{setting.primary}");
+                    writer.WriteLine($"Display_{d}=Name:{setting.name} WidthOverride:{setting.widthOverride} HeightOverride:{setting.heightOverride} Enabled:{setting.enabled}");
                     d++;
                 }
             }
@@ -427,7 +427,7 @@ public partial class MainView : UserControl
             writer.WriteLine($"wlr-randr --output $display --transform {rotation}{vrrArg}");
         }
         
-        void WriteWestonSettings(StreamWriter writer, string rotation, string display)
+        void WriteWestonSettings(StreamWriter writer, string rotation)//, string display)
         {
             if (hdrCheckbox.IsChecked == true)
             {
@@ -436,20 +436,37 @@ public partial class MainView : UserControl
                 writer.WriteLine();
             }
             
-            writer.WriteLine("[output]");
-            writer.WriteLine($"name={display}");
-            writer.WriteLine($"transform={rotation}");
+            foreach (var setting in displaySettings)
+            {
+                if (!setting.enabled)
+                {
+                    writer.WriteLine("[output]");
+                    writer.WriteLine($"name={setting.name}");
+                    writer.WriteLine("mode=off");
+                    writer.WriteLine();
+                    continue;
+                }
 
-            if (vrrCheckbox.IsChecked == true)
-            {
-                writer.WriteLine("enable_vrr=true");
-                writer.WriteLine("vrr-mode=game");
-            }
-            
-            if (hdrCheckbox.IsChecked == true)
-            {
-                writer.WriteLine("eotf-mode=st2084");// HDR PQ curve
-                writer.WriteLine("colorimetry-mode=bt2020rgb");// HDR wide‑gamut space
+                writer.WriteLine("[output]");
+                //writer.WriteLine($"name={display}");
+                writer.WriteLine($"name={setting.name}");
+                writer.WriteLine($"transform={rotation}");
+                if (setting.widthOverride != 0 && setting.heightOverride != 0)
+                {
+                    writer.WriteLine($"mode={setting.widthOverride}x{setting.heightOverride}");
+                }
+
+                if (vrrCheckbox.IsChecked == true)
+                {
+                    writer.WriteLine("enable_vrr=true");
+                    writer.WriteLine("vrr-mode=game");
+                }
+
+                if (hdrCheckbox.IsChecked == true)
+                {
+                    writer.WriteLine("eotf-mode=st2084");// HDR PQ curve
+                    writer.WriteLine("colorimetry-mode=bt2020rgb");// HDR wide‑gamut space
+                }
             }
         }
 
@@ -464,7 +481,7 @@ public partial class MainView : UserControl
             File.WriteAllText(launchFile, text);
         }
         
-        static List<string> GetWaylandDisplays()
+        /*static List<string> GetWaylandDisplays()
         {
             var results = new List<string>();
             try
@@ -569,7 +586,7 @@ public partial class MainView : UserControl
             var results = GetX11Displays();
             if (results.Count >= 1) return results[0];
             return "ERROR";
-        }
+        }*/
         
         const string folder = "/home/gamer/ReignOS_Ext";
         if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
@@ -583,7 +600,7 @@ public partial class MainView : UserControl
             {
                 using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "normal");
                 using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "normal");
-                using (var writer = new StreamWriter(westonConfigFile))  WriteWestonSettings(writer, "normal", GetWestonDisplay());
+                using (var writer = new StreamWriter(westonConfigFile))  WriteWestonSettings(writer, "normal");//, GetWestonDisplay());
                 WriteBootloaderArgSetting("default");
                 //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform normal", useBash:false);
             }
@@ -591,7 +608,7 @@ public partial class MainView : UserControl
             {
                 using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "left");
                 using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "90");
-                using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-90", GetWestonDisplay());
+                using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-90");//, GetWestonDisplay());
                 WriteBootloaderArgSetting("left");
                 //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 90", useBash:false);// 90, flipped-90 (options)
             }
@@ -599,7 +616,7 @@ public partial class MainView : UserControl
             {
                 using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "right");
                 using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "270");
-                using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-270", GetWestonDisplay());
+                using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-270");//, GetWestonDisplay());
                 WriteBootloaderArgSetting("right");
                 //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 270", useBash:false);// 270, flipped-270 (options)
             }
@@ -607,7 +624,7 @@ public partial class MainView : UserControl
             {
                 using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "inverted");
                 using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "180");
-                using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-180", GetWestonDisplay());
+                using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-180");//, GetWestonDisplay());
                 WriteBootloaderArgSetting("flip");
                 //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 180", useBash:false);// 180, flipped, flipped-180 (options)
             }
@@ -1402,19 +1419,38 @@ public partial class MainView : UserControl
 
     private void RefreshDisplaysPage()
     {
-        var screens = MainWindow.singleton.Screens.All;
+        //var screens = MainWindow.singleton.Screens.All;
+        var screensText = ProcessUtil.Run("ls", "/sys/class/drm/", useBash:false);
+        var screens = screensText.Split('\n');
         foreach (var screen in screens)
         {
-            var setting = displaySettings.FirstOrDefault(x => x.name == screen.DisplayName);
-            if (setting == null) setting = new DisplaySetting();
-            setting.name = screen.DisplayName;
-            setting.primary = screen.IsPrimary;
+            //string connectedText = ProcessUtil.Run("cat", $"/sys/class/drm/{screen}/status", useBash:false);
+            //bool connected = connectedText.Trim() == "connected";
+            //if (!connected) continue;
+
+            // get name
+            string name = null;
+            var match = Regex.Match(screen, @"card\d-(.*)");
+            if (match.Success) name = match.Groups[1].Value;
+            if (name == null) continue;
+            
+            // get resolutions
+            string resolutionsText = ProcessUtil.Run("cat", $"/sys/class/drm/{screen}/modes", useBash:false);
+            var resolutions = resolutionsText.Split('\n');
+            string resolution = resolutions.FirstOrDefault();
+            if (string.IsNullOrEmpty(resolution)) continue;
+            
+            // add setting
+            var setting = displaySettings.FirstOrDefault(x => x.name == name);
+            if (setting == null)
+            {
+                setting = new DisplaySetting();
+                setting.name = name;
+            }
             
             var item = new ListBoxItem();
             item.Tag = setting;
-            var bounds = screen.Bounds;
-            string primary = screen.IsPrimary ? "*" : "";
-            item.Content = $"Name:{screen.DisplayName} Rez:{bounds.Width}x{bounds.Height} Rot:{screen.CurrentOrientation} {primary}";
+            item.Content = $"Name:{name} Rez:{resolution}";
             displayListBox.Items.Add(item);
         }
     }
@@ -1441,9 +1477,17 @@ public partial class MainView : UserControl
         var setting = (DisplaySetting)item.Tag;
         
         displayEnabledCheckbox.IsChecked = setting.enabled;
-        displayPrimaryCheckbox.IsChecked = setting.primary;
-
         displayWidthText.Text = setting.widthOverride.ToString();
         displayHeightText.Text = setting.heightOverride.ToString();
+    }
+
+    private void DisplayEnabledCheckbox_OnIsCheckedChanged(object sender, RoutedEventArgs e)
+    {
+        if (displayListBox.SelectedIndex < 0) return;
+        
+        var item = (ListBoxItem)displayListBox.Items[displayListBox.SelectedIndex];
+        var setting = (DisplaySetting)item.Tag;
+
+        setting.enabled = displayEnabledCheckbox.IsChecked == true;
     }
 }
