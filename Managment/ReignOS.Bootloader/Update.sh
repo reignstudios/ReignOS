@@ -27,7 +27,7 @@ if [ "$HAS_UPDATES" = "true" ]; then
   yay_exit_code=$?
 
   # flatpaks
-  flatpak update --noconfirm
+  flatpak update --noninteractive
 
   # firmware
   sudo fwupdmgr refresh --noconfirm

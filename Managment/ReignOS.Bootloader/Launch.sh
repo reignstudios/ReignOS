@@ -42,7 +42,7 @@ if [ $exit_code -eq 10 ]; then
   echo ""
   echo "Installing KDE Minimal..."
   sudo pacman -Syu --noconfirm
-  sudo pacman -S --noconfirm plasma konsole flatpak
+  sudo pacman -S --noconfirm plasma konsole dolphin kate flatpak
   sudo reboot -f
   exit 0
 fi
