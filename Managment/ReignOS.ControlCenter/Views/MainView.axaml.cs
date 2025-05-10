@@ -451,7 +451,7 @@ public partial class MainView : UserControl
                 //writer.WriteLine($"name={display}");
                 writer.WriteLine($"name={setting.name}");
                 writer.WriteLine($"transform={rotation}");
-                if (setting.widthOverride != 0 && setting.heightOverride != 0)
+                if (setting.widthOverride > 0 && setting.heightOverride > 0)
                 {
                     writer.WriteLine($"mode={setting.widthOverride}x{setting.heightOverride}");
                 }
@@ -1477,6 +1477,7 @@ public partial class MainView : UserControl
         var setting = (DisplaySetting)item.Tag;
         
         displayEnabledCheckbox.IsChecked = setting.enabled;
+        displayEnabledCheckbox.IsEnabled = !setting.enabled;
         displayWidthText.Text = setting.widthOverride.ToString();
         displayHeightText.Text = setting.heightOverride.ToString();
     }
@@ -1485,9 +1486,23 @@ public partial class MainView : UserControl
     {
         if (displayListBox.SelectedIndex < 0) return;
         
+        // change active value
         var item = (ListBoxItem)displayListBox.Items[displayListBox.SelectedIndex];
         var setting = (DisplaySetting)item.Tag;
-
         setting.enabled = displayEnabledCheckbox.IsChecked == true;
+        
+        // disable others
+        if (setting.enabled)
+        {
+            foreach (ListBoxItem i in displayListBox.Items)
+            {
+                if (i == item) continue;
+
+                var s = (DisplaySetting)i.Tag;
+                s.enabled = false;
+            }
+        }
+
+        displayEnabledCheckbox.IsEnabled = false;
     }
 }
