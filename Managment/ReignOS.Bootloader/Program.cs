@@ -131,7 +131,7 @@ internal class Program
         bool hdr = false;
         bool disableSteamGPU = false;
         int gpu = 0;
-        var screenRotation = ScreenRotation.Default;
+        var screenRotation = ScreenRotation.Unset;
         bool forceControlCenter = false;
         int displayIndex = 0;
         int displayWidth = 0, displayHeight = 0;

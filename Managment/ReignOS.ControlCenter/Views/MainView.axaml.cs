@@ -369,7 +369,7 @@ public partial class MainView : UserControl
                 else if (rot_Left.IsChecked == true) writer.WriteLine("ScreenRotation=Left");
                 else if (rot_Right.IsChecked == true) writer.WriteLine("ScreenRotation=Right");
                 else if (rot_Flip.IsChecked == true) writer.WriteLine("ScreenRotation=Flip");
-                else writer.WriteLine("ScreenRotation=Default");
+                else writer.WriteLine("ScreenRotation=Unset");
             
                 if (nvidia_Nouveau.IsChecked == true) writer.WriteLine("NvidiaDrivers=Nouveau");
                 else if (nvidia_Proprietary.IsChecked == true) writer.WriteLine("NvidiaDrivers=Proprietary");
@@ -431,7 +431,8 @@ public partial class MainView : UserControl
             if (displaySettings.Count == 0)
             {
                 writer.WriteLine("display=$(xrandr --query | awk '/ connected/ {print $1; exit}')");
-                writer.WriteLine($"xrandr --output $display --rotate {rotation}");
+                if (!string.IsNullOrEmpty(rotation)) rotation = $" --rotate {rotation}";
+                writer.WriteLine($"xrandr --output $display{rotation}");
             }
             else
             {
@@ -445,6 +446,7 @@ public partial class MainView : UserControl
 
                     switch (setting.rotation)
                     {
+                        case ScreenRotation.Unset: rotation = ""; break;
                         case ScreenRotation.Default: rotation = "normal"; break;
                         case ScreenRotation.Left: rotation = "left"; break;
                         case ScreenRotation.Right: rotation = "right"; break;
@@ -453,7 +455,8 @@ public partial class MainView : UserControl
 
                     string mode = "";
                     if (setting.widthOverride > 0 && setting.heightOverride > 0) mode = $" --mode {setting.widthOverride}x{setting.heightOverride}";
-                    writer.WriteLine($"xrandr --output {setting.name} --rotate {rotation}{mode}");
+                    if (!string.IsNullOrEmpty(rotation)) rotation = $" --rotate {rotation}";
+                    writer.WriteLine($"xrandr --output {setting.name}{rotation}{mode}");
                 }
             }
         }
@@ -464,7 +467,8 @@ public partial class MainView : UserControl
             if (displaySettings.Count == 0)
             {
                 writer.WriteLine("display=$(wlr-randr | awk '/^[^ ]+/{print $1; exit}')");
-                writer.WriteLine($"wlr-randr --output $display --transform {rotation}{vrrArg}");
+                if (!string.IsNullOrEmpty(rotation)) rotation = $" --transform {rotation}";
+                writer.WriteLine($"wlr-randr --output $display{rotation}{vrrArg}");
             }
             else
             {
@@ -478,6 +482,7 @@ public partial class MainView : UserControl
                     
                     switch (setting.rotation)
                     {
+                        case ScreenRotation.Unset: rotation = ""; break;
                         case ScreenRotation.Default: rotation = "normal"; break;
                         case ScreenRotation.Left: rotation = "90"; break;
                         case ScreenRotation.Right: rotation = "270"; break;
@@ -486,7 +491,8 @@ public partial class MainView : UserControl
                     
                     string mode = "";
                     if (setting.widthOverride > 0 && setting.heightOverride > 0) mode = $" --mode {setting.widthOverride}x{setting.heightOverride}";
-                    writer.WriteLine($"wlr-randr --output {setting.name} --transform {rotation}{vrrArg}{mode}");
+                    if (!string.IsNullOrEmpty(rotation)) rotation = $" --transform {rotation}";
+                    writer.WriteLine($"wlr-randr --output {setting.name}{rotation}{vrrArg}{mode}");
                 }
             }
         }
@@ -504,7 +510,7 @@ public partial class MainView : UserControl
             {
                 writer.WriteLine("[output]");
                 writer.WriteLine($"name={display}");
-                writer.WriteLine($"transform={rotation}");
+                if (!string.IsNullOrEmpty(rotation)) writer.WriteLine($"transform={rotation}");
 
                 if (vrrCheckbox.IsChecked == true)
                 {
@@ -524,6 +530,7 @@ public partial class MainView : UserControl
                 {
                     switch (setting.rotation)
                     {
+                        case ScreenRotation.Unset: rotation = ""; break;
                         case ScreenRotation.Default: rotation = "normal"; break;
                         case ScreenRotation.Left: rotation = "rotate-90"; break;
                         case ScreenRotation.Right: rotation = "rotate-270"; break;
@@ -541,7 +548,7 @@ public partial class MainView : UserControl
 
                     writer.WriteLine("[output]");
                     writer.WriteLine($"name={setting.name}");
-                    writer.WriteLine($"transform={rotation}");
+                    if (!string.IsNullOrEmpty(rotation)) writer.WriteLine($"transform={rotation}");
                     if (setting.widthOverride > 0 && setting.heightOverride > 0)
                     {
                         writer.WriteLine($"mode={setting.widthOverride}x{setting.heightOverride}");
@@ -584,7 +591,9 @@ public partial class MainView : UserControl
                 if (!match.Success) break;
                 text = text.Replace(match.Groups[1].Value, "");
             }
-            text = text.Replace("--use-controlcenter", $"--use-controlcenter --rotation-{rotation}{displayArg}");
+
+            if (!string.IsNullOrEmpty(rotation)) rotation = $" --rotation-{rotation}";
+            text = text.Replace("--use-controlcenter", $"--use-controlcenter{rotation}{displayArg}");
             File.WriteAllText(launchFile, text);
         }
         
@@ -703,13 +712,20 @@ public partial class MainView : UserControl
         const string westonConfigFile = "/home/gamer/.config/weston.ini";
         try
         {
-            if (rot_Default.IsChecked == true)
+            //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform normal", useBash:false);// KEEP: used to set wlroots rot at runtime
+            if (rot_Unset.IsChecked == true)
+            {
+                using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "");
+                using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "");
+                using (var writer = new StreamWriter(westonConfigFile))  WriteWestonSettings(writer, "", GetWestonDisplay());
+                WriteBootloaderArgSetting("");
+            }
+            else if (rot_Default.IsChecked == true)
             {
                 using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "normal");
                 using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "normal");
                 using (var writer = new StreamWriter(westonConfigFile))  WriteWestonSettings(writer, "normal", GetWestonDisplay());
                 WriteBootloaderArgSetting("default");
-                //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform normal", useBash:false);
             }
             else if (rot_Left.IsChecked == true)
             {
@@ -717,7 +733,6 @@ public partial class MainView : UserControl
                 using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "90");
                 using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-90", GetWestonDisplay());
                 WriteBootloaderArgSetting("left");
-                //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 90", useBash:false);// 90, flipped-90 (options)
             }
             else if (rot_Right.IsChecked == true)
             {
@@ -725,7 +740,6 @@ public partial class MainView : UserControl
                 using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "270");
                 using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-270", GetWestonDisplay());
                 WriteBootloaderArgSetting("right");
-                //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 270", useBash:false);// 270, flipped-270 (options)
             }
             else if (rot_Flip.IsChecked == true)
             {
@@ -733,7 +747,6 @@ public partial class MainView : UserControl
                 using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "180");
                 using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-180", GetWestonDisplay());
                 WriteBootloaderArgSetting("flip");
-                //ProcessUtil.Run("wlr-randr", $"--output {GetWaylandDisplay()} --transform 180", useBash:false);// 180, flipped, flipped-180 (options)
             }
         }
         catch (Exception ex)
@@ -1600,6 +1613,12 @@ public partial class MainView : UserControl
         displayEnabledCheckbox.IsEnabled = !setting.enabled;
         displayWidthText.Text = setting.widthOverride.ToString();
         displayHeightText.Text = setting.heightOverride.ToString();
+        
+        if (setting.rotation == ScreenRotation.Unset) displayRot_Unset.IsChecked = true;
+        else if (setting.rotation == ScreenRotation.Default) displayRot_Default.IsChecked = true;
+        else if (setting.rotation == ScreenRotation.Left) displayRot_Left.IsChecked = true;
+        else if (setting.rotation == ScreenRotation.Right) displayRot_Right.IsChecked = true;
+        else if (setting.rotation == ScreenRotation.Flip) displayRot_Flip.IsChecked = true;
     }
 
     private void DisplayEnabledCheckbox_OnIsCheckedChanged(object sender, RoutedEventArgs e)
@@ -1644,7 +1663,8 @@ public partial class MainView : UserControl
         // change active value
         var item = (ListBoxItem)displayListBox.Items[displayListBox.SelectedIndex];
         var setting = (DisplaySetting)item.Tag;
-        if (displayRot_Default.IsChecked == true) setting.rotation = ScreenRotation.Default;
+        if (displayRot_Unset.IsChecked == true) setting.rotation = ScreenRotation.Unset;
+        else if (displayRot_Default.IsChecked == true) setting.rotation = ScreenRotation.Default;
         else if (displayRot_Left.IsChecked == true) setting.rotation = ScreenRotation.Left;
         else if (displayRot_Right.IsChecked == true) setting.rotation = ScreenRotation.Right;
         else if (displayRot_Flip.IsChecked == true) setting.rotation = ScreenRotation.Flip;
