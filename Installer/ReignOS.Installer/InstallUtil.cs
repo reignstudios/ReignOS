@@ -326,6 +326,10 @@ static class InstallUtil
         fileBuilder.AppendLine("echo \"Installing steamcmd...\"");
         fileBuilder.AppendLine("yay -S steamcmd --noconfirm");
 
+        fileBuilder.AppendLine();// install ProtonGE
+        fileBuilder.AppendLine("echo \"Installing ProtonGE...\"");
+        fileBuilder.AppendLine("yay -S proton-ge-custom --noconfirm");
+
         fileBuilder.AppendLine();// disable FirstRun
         fileBuilder.AppendLine("echo \"rebooting...\"");
         fileBuilder.AppendLine("echo -n > /home/gamer/FirstRun.sh");

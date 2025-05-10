@@ -540,12 +540,21 @@ public partial class MainView : UserControl
 
         void WriteBootloaderArgSetting(string rotation)
         {
+            string displayArg = "";
+            var displaySetting = displaySettings.FirstOrDefault(x => x.enabled);
+            if (displaySetting != null)
+            {
+                displayArg = $" --display-index={displaySettings.IndexOf(displaySetting)}";
+                if (displaySetting.widthOverride > 0 && displaySetting.heightOverride > 0) displayArg += $" --resolution={displaySetting.widthOverride}x{displaySetting.heightOverride}";
+                else if (displaySetting.width > 0 && displaySetting.height > 0) displayArg += $" --resolution={displaySetting.width}x{displaySetting.height}";
+            }
+
             string text = File.ReadAllText(launchFile);
             text = text.Replace(" --rotation-default", "");
             text = text.Replace(" --rotation-left", "");
             text = text.Replace(" --rotation-right", "");
             text = text.Replace(" --rotation-flip", "");
-            text = text.Replace("--use-controlcenter", $"--use-controlcenter --rotation-{rotation}");
+            text = text.Replace("--use-controlcenter", $"--use-controlcenter --rotation-{rotation}{displayArg}");
             File.WriteAllText(launchFile, text);
         }
         
@@ -1489,7 +1498,8 @@ public partial class MainView : UserControl
     {
         //var screens = MainWindow.singleton.Screens.All;
         var screensText = ProcessUtil.Run("ls", "/sys/class/drm/", useBash:false);
-        var screens = screensText.Split('\n');
+        var screens = new List<string>(screensText.Split('\n'));
+        screens.Sort();
         foreach (var screen in screens)
         {
             //string connectedText = ProcessUtil.Run("cat", $"/sys/class/drm/{screen}/status", useBash:false);
