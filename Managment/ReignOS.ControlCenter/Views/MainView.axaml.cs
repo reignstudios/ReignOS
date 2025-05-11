@@ -1107,7 +1107,7 @@ public partial class MainView : UserControl
         // apply input plumber
         if (inputPlumberInputCheckbox.IsChecked == true)
         {
-            ProcessUtil.Run("pacman", "-S inputplumber", asAdmin:true, useBash:false);
+            ProcessUtil.Run("pacman", "-S --noconfirm inputplumber", asAdmin:true, useBash:false);
             ProcessUtil.Run("systemctl", "enable inputplumber inputplumber-suspend", asAdmin:true, useBash:false);
             ProcessUtil.Run("systemctl", "start inputplumber inputplumber-suspend", asAdmin:true, useBash:false);
         }
@@ -1115,7 +1115,7 @@ public partial class MainView : UserControl
         {
             ProcessUtil.Run("systemctl", "stop inputplumber inputplumber-suspend", asAdmin:true, useBash:false);
             ProcessUtil.Run("systemctl", "disable inputplumber inputplumber-suspend", asAdmin:true, useBash:false);
-            ProcessUtil.Run("pacman", "-R inputplumber", asAdmin:true, useBash:false);
+            ProcessUtil.Run("pacman", "-R --noconfirm inputplumber", asAdmin:true, useBash:false);
         }
 
         // apply settings
