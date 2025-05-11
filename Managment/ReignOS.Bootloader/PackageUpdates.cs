@@ -45,6 +45,7 @@ static class PackageUpdates
         if (!PackageExits("wayland-utils")) return true;
         if (!PackageExits("weston")) return true;
         if (!PackageExits("openbox")) return true;
+        if (PackageExits("xdg-desktop-portal-gtk")) return true;
         if (!PackageExits("xdg-desktop-portal")) return true;
         if (!PackageExits("xdg-desktop-portal-wlr")) return true;
 
