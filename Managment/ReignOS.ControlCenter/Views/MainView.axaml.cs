@@ -1142,7 +1142,7 @@ public partial class MainView : UserControl
         File.WriteAllText(launchFile, text);
         SaveSettings();
 
-        App.exitCode = 0;
+        App.exitCode = 15;// reboot
         MainWindow.singleton.Close();
     }
 

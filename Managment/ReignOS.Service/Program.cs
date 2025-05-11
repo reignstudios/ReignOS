@@ -152,7 +152,7 @@ internal class Program
             if (MSI_Claw.isEnabled) MSI_Claw.Update(ref time, resumeFromSleep, key, keyPressed);
 
             // update volume
-            if (keyPressed)
+            if (keyPressed && !useInputPlumber)
             {
                 // send signal to bootloader
                 if (key == input.KEY_VOLUMEDOWN) Console.WriteLine("SET_VOLUME_DOWN");
