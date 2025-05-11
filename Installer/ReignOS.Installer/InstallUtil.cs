@@ -496,7 +496,7 @@ static class InstallUtil
         UpdateProgress(90);
 
         // configure reignos names
-        string path = "/mnt/etc/lsb-release";
+        /*string path = "/mnt/etc/lsb-release";
         string text =
 @"DISTRIB_ID=""ReignOS""
 DISTRIB_RELEASE=""rolling""
@@ -517,7 +517,7 @@ BUG_REPORT_URL=""https://gitlab.archlinux.org/groups/archlinux/-/issues""
 PRIVACY_POLICY_URL=""https://terms.archlinux.org/docs/privacy-policy/""
 LOGO=archlinux-logo";
         ProcessUtil.WriteAllTextAdmin(path, text);
-        UpdateProgress(95);
+        UpdateProgress(95);*/
 
         // copy wifi settings
         Run("mkdir", "-p /mnt/var/lib/iwd/");

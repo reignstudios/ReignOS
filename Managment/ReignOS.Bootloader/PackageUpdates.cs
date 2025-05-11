@@ -116,6 +116,8 @@ static class PackageUpdates
 
     private static void FixOSName()
     {
+        return;
+
         try
         {
             const string path = "/etc/lsb-release";
