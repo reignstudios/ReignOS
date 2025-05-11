@@ -24,7 +24,7 @@ static class PackageUpdates
     }
 
     public static bool CheckUpdates()
-    {return false;
+    {
         // non-restart changes
         AddLaunchScript();
         FixOSName();
@@ -45,9 +45,10 @@ static class PackageUpdates
         if (!PackageExits("wayland-utils")) return true;
         if (!PackageExits("weston")) return true;
         if (!PackageExits("openbox")) return true;
-        if (PackageExits("xdg-desktop-portal-gtk")) return true;
         if (!PackageExits("xdg-desktop-portal")) return true;
         if (!PackageExits("xdg-desktop-portal-wlr")) return true;
+        if (!PackageExits("xdg-desktop-portal-kde")) return true;
+        if (!PackageExits("xdg-desktop-portal-gtk")) return true;
 
         if (!PackageExits("vulkan-tools")) return true;
         if (!PackageExits("vulkan-mesa-layers")) return true;
@@ -116,7 +117,6 @@ static class PackageUpdates
 
     private static void FixOSName()
     {
-        return;
         try
         {
             const string path = "/etc/lsb-release";
@@ -143,12 +143,12 @@ static class PackageUpdates
         {
             const string path = "/etc/os-release";
             string text = File.ReadAllText(path);
-            if (text.Contains("NAME=\"Arch Linux\"") || text.Contains("ID=arch"))
+            if (text.Contains("NAME=\"Arch Linux\""))
             {
                 text = text.Replace("NAME=\"Arch Linux\"", "NAME=\"ReignOS\"");
                 text = text.Replace("PRETTY_NAME=\"Arch Linux\"", "PRETTY_NAME=\"ReignOS\"");
                 text = text.Replace("HOME_URL=\"https://archlinux.org/\"", "HOME_URL=\"http://reign-os.com/\"");
-                text = text.Replace("ID=reignos", "ID=arch");
+                text = text.Replace("ID=arch", "ID=reignos");
                 void getStandardInput(StreamWriter writer)
                 {
                     writer.WriteLine(text);
