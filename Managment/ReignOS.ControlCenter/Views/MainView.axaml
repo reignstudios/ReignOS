@@ -144,7 +144,7 @@
 
 				<Grid Margin="8,8,8,4" Background="#444444" Height="40">
 					<Grid>
-						<TextBlock Text="Menu Input" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+						<TextBlock Text="Input Control" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 						<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="MenuInputApplyButton_Click"/>
 						<RadioButton Name="reignOSInputCheckbox" Content="ReignOS" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						<RadioButton Name="inputPlumberInputCheckbox" Content="InputPlumber" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
