@@ -5,8 +5,16 @@ using System.Text;
 
 namespace ReignOS.Bootloader;
 
+// mem_sleep_default=deep or s2idle
 // intel_idle.max_cstate=1 # intel
 // amd_pstate=disable processor.max_cstate=1 # amd
+// nouveau.pstate=1 nouveau.runpm=0 # nvidia
+
+// /etc/modprobe.d/nvidia.conf
+//options nvidia NVreg_EnableS0ixPowerManagement=1
+//options nvidia NVreg_PreserveVideoMemoryAllocations=1
+//options nvidia NVreg_DynamicPowerManagement=0x02
+
 static class PackageUpdates
 {
     private static bool PackageExits(string package)
@@ -129,7 +137,7 @@ static class PackageUpdates
             Log.WriteLine(e);
         }
         
-        try
+        /*try
         {
             const string path = "/etc/os-release";
             string text = File.ReadAllText(path);
@@ -139,6 +147,30 @@ static class PackageUpdates
                 text = text.Replace("PRETTY_NAME=\"Arch Linux\"", "PRETTY_NAME=\"ReignOS\"");
                 text = text.Replace("ID=arch", "ID=reignos");
                 text = text.Replace("HOME_URL=\"https://archlinux.org/\"", "HOME_URL=\"http://reign-os.com/\"");
+                void getStandardInput(StreamWriter writer)
+                {
+                    writer.WriteLine(text);
+                    writer.Flush();
+                    writer.Close();
+                }
+                ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput);
+            }
+        }
+        catch (Exception e)
+        {
+            Log.WriteLine(e);
+        }*/
+
+        try
+        {
+            const string path = "/etc/os-release";
+            string text = File.ReadAllText(path);
+            if (text.Contains("NAME=\"ReignOS\""))
+            {
+                text = text.Replace("NAME=\"ReignOS\"", "NAME=\"Arch Linux\"");
+                text = text.Replace("PRETTY_NAME=\"ReignOS\"", "PRETTY_NAME=\"Arch Linux\"");
+                text = text.Replace("ID=reignos", "ID=arch");
+                text = text.Replace("HOME_URL=\"http://reign-os.com/\"", "HOME_URL=\"https://archlinux.org/\"");
                 void getStandardInput(StreamWriter writer)
                 {
                     writer.WriteLine(text);
