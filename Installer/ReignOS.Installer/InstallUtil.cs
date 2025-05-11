@@ -445,10 +445,10 @@ static class InstallUtil
         UpdateProgress(65);
 
         // install steam
-        Run("pacman", "-S --noconfirm libxcomposite lib32-libxcomposite libxrandr lib32-libxrandr libgcrypt lib32-libgcrypt lib32-pipewire libpulse lib32-libpulse gtk2 lib32-gtk2 gtk3 lib32-gtk3 nss lib32-nss glib2 lib32-glib2");
+        Run("pacman", "-S --noconfirm libxcomposite lib32-libxcomposite libxrandr lib32-libxrandr libgcrypt lib32-libgcrypt lib32-pipewire libpulse lib32-libpulse nss lib32-nss glib2 lib32-glib2");
+        Run("pacman", "-S --noconfirm gtk2 lib32-gtk2 gtk3 lib32-gtk3 gtk4");
         Run("pacman", "-S --noconfirm libxss lib32-libxss libva lib32-libva libvdpau lib32-libvdpau");
         Run("pacman", "-S --noconfirm gnutls lib32-gnutls openal lib32-openal sqlite lib32-sqlite libcurl-compat lib32-libcurl-compat");
-        Run("pacman", "-S --noconfirm xdg-desktop-portal xdg-desktop-portal-gtk");
         Run("pacman", "-S --noconfirm mangohud lib32-mangohud gamemode lib32-gamemode");
         Run("pacman", "-S --noconfirm glibc lib32-glibc");// needed by cef
         Run("pacman", "-S --noconfirm fontconfig lib32-fontconfig");// needed for fonts
@@ -507,7 +507,7 @@ DISTRIB_DESCRIPTION=""ReignOS""";
         text =
 @"NAME=""ReignOS""
 PRETTY_NAME=""ReignOS""
-ID=reignos
+ID=arch
 BUILD_ID=rolling
 ANSI_COLOR=""38;2;23;147;209""
 HOME_URL=""http://reign-os.com/""

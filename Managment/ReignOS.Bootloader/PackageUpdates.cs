@@ -115,7 +115,7 @@ static class PackageUpdates
 
     private static void FixOSName()
     {
-        /*try
+        try
         {
             const string path = "/etc/lsb-release";
             string text = File.ReadAllText(path);
@@ -135,31 +135,9 @@ static class PackageUpdates
         catch (Exception e)
         {
             Log.WriteLine(e);
-        }*/
-
-        try
-        {
-            const string path = "/etc/lsb-release";
-            string text = File.ReadAllText(path);
-            if (text.Contains("DISTRIB_ID=\"ReignOS\""))
-            {
-                text = text.Replace("DISTRIB_ID=\"ReignOS\"", "DISTRIB_ID=\"Arch\"");
-                text = text.Replace("DISTRIB_DESCRIPTION=\"ReignOS\"", "DISTRIB_DESCRIPTION=\"Arch Linux\"");
-                void getStandardInput(StreamWriter writer)
-                {
-                    writer.WriteLine(text);
-                    writer.Flush();
-                    writer.Close();
-                }
-                ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput);
-            }
-        }
-        catch (Exception e)
-        {
-            Log.WriteLine(e);
         }
         
-        /*try
+        try
         {
             const string path = "/etc/os-release";
             string text = File.ReadAllText(path);
@@ -167,32 +145,7 @@ static class PackageUpdates
             {
                 text = text.Replace("NAME=\"Arch Linux\"", "NAME=\"ReignOS\"");
                 text = text.Replace("PRETTY_NAME=\"Arch Linux\"", "PRETTY_NAME=\"ReignOS\"");
-                //text = text.Replace("ID=arch", "ID=reignos");
-                //text = text.Replace("HOME_URL=\"https://archlinux.org/\"", "HOME_URL=\"http://reign-os.com/\"");
-                void getStandardInput(StreamWriter writer)
-                {
-                    writer.WriteLine(text);
-                    writer.Flush();
-                    writer.Close();
-                }
-                ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput);
-            }
-        }
-        catch (Exception e)
-        {
-            Log.WriteLine(e);
-        }*/
-
-        try
-        {
-            const string path = "/etc/os-release";
-            string text = File.ReadAllText(path);
-            if (text.Contains("NAME=\"ReignOS\""))
-            {
-                text = text.Replace("NAME=\"ReignOS\"", "NAME=\"Arch Linux\"");
-                text = text.Replace("PRETTY_NAME=\"ReignOS\"", "PRETTY_NAME=\"Arch Linux\"");
-                text = text.Replace("ID=reignos", "ID=arch");
-                text = text.Replace("HOME_URL=\"http://reign-os.com/\"", "HOME_URL=\"https://archlinux.org/\"");
+                text = text.Replace("HOME_URL=\"https://archlinux.org/\"", "HOME_URL=\"http://reign-os.com/\"");
                 void getStandardInput(StreamWriter writer)
                 {
                     writer.WriteLine(text);
