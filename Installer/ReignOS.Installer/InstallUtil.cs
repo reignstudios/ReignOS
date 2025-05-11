@@ -408,7 +408,7 @@ static class InstallUtil
         UpdateProgress(57);
 
         // install desktop portal
-        Run("pacman", "-S --noconfirm xdg-desktop-portal xdg-desktop-portal-wlr");
+        Run("pacman", "-S --noconfirm xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-kde xdg-desktop-portal-gtk");
         UpdateProgress(58);
 
         // install audio
