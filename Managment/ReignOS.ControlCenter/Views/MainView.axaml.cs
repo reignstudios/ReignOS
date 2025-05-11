@@ -1104,7 +1104,7 @@ public partial class MainView : UserControl
 
     private void MenuInputApplyButton_Click(object sender, RoutedEventArgs e)
     {
-        // apply input plumber
+        // manage input plumber
         if (inputPlumberInputCheckbox.IsChecked == true)
         {
             ProcessUtil.Run("pacman", "-S --noconfirm inputplumber", asAdmin:true, useBash:false);
@@ -1142,7 +1142,7 @@ public partial class MainView : UserControl
         File.WriteAllText(launchFile, text);
         SaveSettings();
 
-        App.exitCode = 21;
+        App.exitCode = 0;
         MainWindow.singleton.Close();
     }
 
