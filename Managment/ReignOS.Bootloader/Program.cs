@@ -150,7 +150,7 @@ internal class Program
             serviceProcess.StartInfo.UseShellExecute = false;
             serviceProcess.StartInfo.FileName = "sudo";
             string inputArg = useInputPlumber ? " --input-inputplumber" : " --input-reignos";
-            serviceProcess.StartInfo.Arguments = $"-- ./ReignOS.Service{useInputPlumber}";
+            serviceProcess.StartInfo.Arguments = $"-- ./ReignOS.Service{inputArg}";
             serviceProcess.StartInfo.RedirectStandardOutput = true;
             serviceProcess.StartInfo.RedirectStandardError = true;
             serviceProcess.StartInfo.RedirectStandardInput = true;
