@@ -137,7 +137,7 @@ static class PackageUpdates
             Log.WriteLine(e);
         }
         
-        /*try
+        try
         {
             const string path = "/etc/os-release";
             string text = File.ReadAllText(path);
@@ -145,8 +145,8 @@ static class PackageUpdates
             {
                 text = text.Replace("NAME=\"Arch Linux\"", "NAME=\"ReignOS\"");
                 text = text.Replace("PRETTY_NAME=\"Arch Linux\"", "PRETTY_NAME=\"ReignOS\"");
-                text = text.Replace("ID=arch", "ID=reignos");
-                text = text.Replace("HOME_URL=\"https://archlinux.org/\"", "HOME_URL=\"http://reign-os.com/\"");
+                //text = text.Replace("ID=arch", "ID=reignos");
+                //text = text.Replace("HOME_URL=\"https://archlinux.org/\"", "HOME_URL=\"http://reign-os.com/\"");
                 void getStandardInput(StreamWriter writer)
                 {
                     writer.WriteLine(text);
@@ -159,9 +159,9 @@ static class PackageUpdates
         catch (Exception e)
         {
             Log.WriteLine(e);
-        }*/
+        }
 
-        try
+        /*try
         {
             const string path = "/etc/os-release";
             string text = File.ReadAllText(path);
@@ -183,7 +183,7 @@ static class PackageUpdates
         catch (Exception e)
         {
             Log.WriteLine(e);
-        }
+        }*/
     }
 
     private static bool CheckBadHostname()
