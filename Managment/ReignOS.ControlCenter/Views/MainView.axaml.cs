@@ -308,6 +308,11 @@ public partial class MainView : UserControl
                     {
                         disableSteamDeckCheckbox.IsChecked = parts[1] == "On";
                     }
+                    else if (parts[0] == "Input")
+                    {
+                        if (parts[1] == "ReignOS") reignOSInputCheckbox.IsChecked = true;
+                        else if (parts[1] == "InputPlumber") inputPlumberInputCheckbox.IsChecked = true;
+                    }
                     else if (parts[0].StartsWith("Display_"))
                     {
                         var displayParts = parts[1].Split(' ');
@@ -414,6 +419,9 @@ public partial class MainView : UserControl
 
                 if (disableSteamDeckCheckbox.IsChecked == true) writer.WriteLine("DisableSteamDeck=On");
                 else writer.WriteLine("DisableSteamDeck=Off");
+
+                if (inputPlumberInputCheckbox.IsChecked == true) writer.WriteLine("Input=InputPlumber");
+                else writer.WriteLine("Input=ReignOS");
 
                 int d = 0;
                 foreach (var setting in displaySettings)
@@ -1091,6 +1099,50 @@ public partial class MainView : UserControl
         SaveSettings();
 
         App.exitCode = 0;// reopen with full logout so reloads env
+        MainWindow.singleton.Close();
+    }
+
+    private void MenuInputApplyButton_Click(object sender, RoutedEventArgs e)
+    {
+        // apply input plumber
+        if (inputPlumberInputCheckbox.IsChecked == true)
+        {
+            ProcessUtil.Run("pacman", "-S inputplumber", asAdmin:true, useBash:false);
+            ProcessUtil.Run("systemctl", "enable inputplumber inputplumber-suspend", asAdmin:true, useBash:false);
+            ProcessUtil.Run("systemctl", "start inputplumber inputplumber-suspend", asAdmin:true, useBash:false);
+        }
+        else
+        {
+            ProcessUtil.Run("systemctl", "stop inputplumber inputplumber-suspend", asAdmin:true, useBash:false);
+            ProcessUtil.Run("systemctl", "disable inputplumber inputplumber-suspend", asAdmin:true, useBash:false);
+            ProcessUtil.Run("pacman", "-R inputplumber", asAdmin:true, useBash:false);
+        }
+
+        // apply settings
+        string text = File.ReadAllText(launchFile);
+        foreach (string line in text.Split('\n'))
+        {
+            if (line.Contains("--use-controlcenter"))
+            {
+                // remove existing options
+                text = text.Replace(" --input-reignos", "");
+                text = text.Replace(" --input-inputplumber", "");
+
+                // gather new options
+                string args = "";
+                if (reignOSInputCheckbox.IsChecked == true) args += " --input-reignos";
+                else if (inputPlumberInputCheckbox.IsChecked == true) args += " --input-inputplumber";
+
+                // apply options
+                text = text.Replace(line, line + args);
+
+                break;
+            }
+        }
+        File.WriteAllText(launchFile, text);
+        SaveSettings();
+
+        App.exitCode = 21;
         MainWindow.singleton.Close();
     }
 

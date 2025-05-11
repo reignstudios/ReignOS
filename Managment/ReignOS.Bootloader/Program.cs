@@ -41,6 +41,77 @@ internal class Program
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         LibraryResolver.Init(Assembly.GetExecutingAssembly());
 
+        // process args
+        var controlCenterCompositor = ControlCenterCompositor.Weston;
+        var compositor = Compositor.None;
+        bool useControlCenter = false;
+        bool useMangoHub = false;
+        bool vrr = false;
+        bool hdr = false;
+        bool disableSteamGPU = false;
+        bool disableSteamDeck = false;
+        int gpu = 0;
+        var screenRotation = ScreenRotation.Unset;
+        bool forceControlCenter = false;
+        bool useInputPlumber = false;
+        int displayIndex = 0;
+        int displayWidth = 0, displayHeight = 0;
+        foreach (string arg in args)
+        {
+            if (arg == "--use-controlcenter") useControlCenter = true;
+            else if (arg == "--controlcenter-weston") controlCenterCompositor = ControlCenterCompositor.Weston;
+            else if (arg == "--controlcenter-cage") controlCenterCompositor = ControlCenterCompositor.Cage;
+            else if (arg == "--controlcenter-x11") controlCenterCompositor = ControlCenterCompositor.X11;
+
+            else if (arg == "--gamescope") compositor = Compositor.Gamescope;
+            else if (arg == "--weston") compositor = Compositor.Weston;
+            else if (arg == "--weston-windowed") compositor = Compositor.WestonWindowed;
+            else if (arg == "--cage") compositor = Compositor.Cage;
+            else if (arg == "--labwc") compositor = Compositor.Labwc;
+            else if (arg == "--x11") compositor = Compositor.X11;
+            else if (arg == "--kde") compositor = Compositor.KDE;
+            else if (arg == "--kde-x11") compositor = Compositor.KDE_X11;
+
+            else if (arg.StartsWith("--gpu-"))
+            {
+                string value = arg.Substring("--gpu-".Length);
+                if (!int.TryParse(value, out gpu)) gpu = 0;
+            }
+
+            else if (arg == "--use-mangohub") useMangoHub = true;
+            else if (arg == "--vrr") vrr = true;
+            else if (arg == "--hdr") hdr = true;
+            else if (arg == "--disable-steam-gpu") disableSteamGPU = true;
+            else if (arg == "--disable-steam-deck") disableSteamDeck = true;
+
+            else if (arg == "--rotation-default") screenRotation = ScreenRotation.Default;
+            else if (arg == "--rotation-left") screenRotation = ScreenRotation.Left;
+            else if (arg == "--rotation-right") screenRotation = ScreenRotation.Right;
+            else if (arg == "--rotation-flip") screenRotation = ScreenRotation.Flip;
+
+            else if (arg == "--input-inputplumber") useInputPlumber = true;
+            
+            else if (arg.StartsWith("--display-index="))
+            {
+                var parts = arg.Split('=');
+                if (parts.Length == 2 && !int.TryParse(parts[1], out displayIndex)) displayIndex = 0;
+            }
+            else if (arg.StartsWith("--resolution"))
+            {
+                var parts = arg.Split('=');
+                if (parts.Length == 2)
+                {
+                    parts = parts[1].Split('x');
+                    if (!int.TryParse(parts[0], out displayWidth)) displayWidth = 0;
+                    if (!int.TryParse(parts[1], out displayHeight)) displayHeight = 0;
+                }
+            }
+            
+            else if (arg == "--force-controlcenter") forceControlCenter = true;
+        }
+        
+        if (forceControlCenter) compositor = Compositor.None;
+
         // ensure permissions
         ProcessUtil.Run("chmod", "+x ./Launch.sh", useBash:false);
         ProcessUtil.Run("chmod", "+x ./Update.sh", useBash:false);
@@ -78,7 +149,8 @@ internal class Program
         {
             serviceProcess.StartInfo.UseShellExecute = false;
             serviceProcess.StartInfo.FileName = "sudo";
-            serviceProcess.StartInfo.Arguments = "./ReignOS.Service";
+            string inputArg = useInputPlumber ? " --input-inputplumber" : " --input-reignos";
+            serviceProcess.StartInfo.Arguments = $"-- ./ReignOS.Service{useInputPlumber}";
             serviceProcess.StartInfo.RedirectStandardOutput = true;
             serviceProcess.StartInfo.RedirectStandardError = true;
             serviceProcess.StartInfo.RedirectStandardInput = true;
@@ -121,74 +193,6 @@ internal class Program
             goto SHUTDOWN;
         }
         Thread.Sleep(1000);// give service a sec to config anything needed before launching compositor
-
-        // process args
-        var controlCenterCompositor = ControlCenterCompositor.Weston;
-        var compositor = Compositor.None;
-        bool useControlCenter = false;
-        bool useMangoHub = false;
-        bool vrr = false;
-        bool hdr = false;
-        bool disableSteamGPU = false;
-        bool disableSteamDeck = false;
-        int gpu = 0;
-        var screenRotation = ScreenRotation.Unset;
-        bool forceControlCenter = false;
-        int displayIndex = 0;
-        int displayWidth = 0, displayHeight = 0;
-        foreach (string arg in args)
-        {
-            if (arg == "--use-controlcenter") useControlCenter = true;
-            else if (arg == "--controlcenter-weston") controlCenterCompositor = ControlCenterCompositor.Weston;
-            else if (arg == "--controlcenter-cage") controlCenterCompositor = ControlCenterCompositor.Cage;
-            else if (arg == "--controlcenter-x11") controlCenterCompositor = ControlCenterCompositor.X11;
-
-            else if (arg == "--gamescope") compositor = Compositor.Gamescope;
-            else if (arg == "--weston") compositor = Compositor.Weston;
-            else if (arg == "--weston-windowed") compositor = Compositor.WestonWindowed;
-            else if (arg == "--cage") compositor = Compositor.Cage;
-            else if (arg == "--labwc") compositor = Compositor.Labwc;
-            else if (arg == "--x11") compositor = Compositor.X11;
-            else if (arg == "--kde") compositor = Compositor.KDE;
-            else if (arg == "--kde-x11") compositor = Compositor.KDE_X11;
-
-            else if (arg.StartsWith("--gpu-"))
-            {
-                string value = arg.Substring("--gpu-".Length);
-                if (!int.TryParse(value, out gpu)) gpu = 0;
-            }
-
-            else if (arg == "--use-mangohub") useMangoHub = true;
-            else if (arg == "--vrr") vrr = true;
-            else if (arg == "--hdr") hdr = true;
-            else if (arg == "--disable-steam-gpu") disableSteamGPU = true;
-            else if (arg == "--disable-steam-deck") disableSteamDeck = true;
-
-            else if (arg == "--rotation-default") screenRotation = ScreenRotation.Default;
-            else if (arg == "--rotation-left") screenRotation = ScreenRotation.Left;
-            else if (arg == "--rotation-right") screenRotation = ScreenRotation.Right;
-            else if (arg == "--rotation-flip") screenRotation = ScreenRotation.Flip;
-            
-            else if (arg.StartsWith("--display-index="))
-            {
-                var parts = arg.Split('=');
-                if (parts.Length == 2 && !int.TryParse(parts[1], out displayIndex)) displayIndex = 0;
-            }
-            else if (arg.StartsWith("--resolution"))
-            {
-                var parts = arg.Split('=');
-                if (parts.Length == 2)
-                {
-                    parts = parts[1].Split('x');
-                    if (!int.TryParse(parts[0], out displayWidth)) displayWidth = 0;
-                    if (!int.TryParse(parts[1], out displayHeight)) displayHeight = 0;
-                }
-            }
-            
-            else if (arg == "--force-controlcenter") forceControlCenter = true;
-        }
-        
-        if (forceControlCenter) compositor = Compositor.None;
 
         // manage interfaces
         while (true)

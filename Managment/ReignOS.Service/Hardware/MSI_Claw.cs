@@ -20,9 +20,12 @@ public static class MSI_Claw
 
     public static bool isEnabled { get; private set; }
     private static HidDevice device;
+    private static bool useInputPlumber;
 
-    public static void Configure()
+    public static void Configure(bool useInputPlumber)
     {
+        MSI_Claw.useInputPlumber = useInputPlumber;
+
         // configure after sleep fixes
         AudioPatches.Fix1(true);
         WiFiPatches.Fix1(true);
@@ -89,7 +92,7 @@ public static class MSI_Claw
                 time = DateTime.Now;// reset time
             }
         }
-        else if (!keyPressed)
+        else if (!keyPressed && !useInputPlumber)
         {
             // relay OEM buttons to virtual gamepad input
             if (key == input.KEY_F15)

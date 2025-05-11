@@ -47,6 +47,13 @@ internal class Program
         LibraryResolver.Init(Assembly.GetExecutingAssembly());
         BindSignalEvents();
 
+        // process args
+        bool useInputPlumber = false;
+        foreach (string arg in args)
+        {
+            if (arg == "--input-inputplumber") useInputPlumber = true;
+        }
+
         // detect system hardware
         try
         {
@@ -96,12 +103,12 @@ internal class Program
         }
 
         // init virtual gamepad
-        VirtualGamepad.Init();
+        if (!useInputPlumber) VirtualGamepad.Init();
 
         // detect device & configure hardware
         try
         {
-            MSI_Claw.Configure();
+            MSI_Claw.Configure(useInputPlumber);
         }
         catch (Exception e)
         {
@@ -145,7 +152,7 @@ internal class Program
             if (MSI_Claw.isEnabled) MSI_Claw.Update(ref time, resumeFromSleep, key, keyPressed);
 
             // update volume
-            if (keyPressed)
+            if (keyPressed && !useInputPlumber)
             {
                 // send signal to bootloader
                 if (key == input.KEY_VOLUMEDOWN) Console.WriteLine("SET_VOLUME_DOWN");
@@ -163,7 +170,7 @@ internal class Program
         Log.WriteLine("Shutting down...");
         DbusMonitor.Shutdown();
         MSI_Claw.Dispose();
-        VirtualGamepad.Dispose();
+        if (!useInputPlumber) VirtualGamepad.Dispose();
         keyboardInput.Dispose();
         Environment.ExitCode = DbusMonitor.isRebootMode == null ? 0 : (DbusMonitor.isRebootMode == true ? 15 : 16);
     }

@@ -141,6 +141,15 @@
 						<CheckBox Name="disableSteamDeckCheckbox" Content="Disable SteamDeck Mode" Margin="850,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="200"/>
 					</Grid>
 				</Grid>
+
+				<Grid Margin="8,8,8,4" Background="#444444" Height="40">
+					<Grid>
+						<TextBlock Text="Menu Input" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+						<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="MenuInputApplyButton_Click"/>
+						<RadioButton Name="reignOSInputCheckbox" Content="ReignOS" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						<RadioButton Name="inputPlumberInputCheckbox" Content="InputPlumber" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+					</Grid>
+				</Grid>
 			</StackPanel>
 
 			<StackPanel Margin="4" Width="235" Height="42" HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="#000040" Orientation="Horizontal">
