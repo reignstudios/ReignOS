@@ -115,7 +115,7 @@ static class PackageUpdates
 
     private static void FixOSName()
     {
-        try
+        /*try
         {
             const string path = "/etc/lsb-release";
             string text = File.ReadAllText(path);
@@ -135,9 +135,31 @@ static class PackageUpdates
         catch (Exception e)
         {
             Log.WriteLine(e);
+        }*/
+
+        try
+        {
+            const string path = "/etc/lsb-release";
+            string text = File.ReadAllText(path);
+            if (text.Contains("DISTRIB_ID=\"ReignOS\""))
+            {
+                text = text.Replace("DISTRIB_ID=\"ReignOS\"", "DISTRIB_ID=\"Arch\"");
+                text = text.Replace("DISTRIB_DESCRIPTION=\"ReignOS\"", "DISTRIB_DESCRIPTION=\"Arch Linux\"");
+                void getStandardInput(StreamWriter writer)
+                {
+                    writer.WriteLine(text);
+                    writer.Flush();
+                    writer.Close();
+                }
+                ProcessUtil.Run("tee", path, asAdmin:true, getStandardInput:getStandardInput);
+            }
+        }
+        catch (Exception e)
+        {
+            Log.WriteLine(e);
         }
         
-        try
+        /*try
         {
             const string path = "/etc/os-release";
             string text = File.ReadAllText(path);
@@ -159,9 +181,9 @@ static class PackageUpdates
         catch (Exception e)
         {
             Log.WriteLine(e);
-        }
+        }*/
 
-        /*try
+        try
         {
             const string path = "/etc/os-release";
             string text = File.ReadAllText(path);
@@ -183,7 +205,7 @@ static class PackageUpdates
         catch (Exception e)
         {
             Log.WriteLine(e);
-        }*/
+        }
     }
 
     private static bool CheckBadHostname()
