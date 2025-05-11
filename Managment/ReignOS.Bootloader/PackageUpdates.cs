@@ -24,7 +24,7 @@ static class PackageUpdates
     }
 
     public static bool CheckUpdates()
-    {
+    {return false;
         // non-restart changes
         AddLaunchScript();
         FixOSName();
@@ -117,7 +117,6 @@ static class PackageUpdates
     private static void FixOSName()
     {
         return;
-
         try
         {
             const string path = "/etc/lsb-release";
@@ -144,11 +143,12 @@ static class PackageUpdates
         {
             const string path = "/etc/os-release";
             string text = File.ReadAllText(path);
-            if (text.Contains("NAME=\"Arch Linux\""))
+            if (text.Contains("NAME=\"Arch Linux\"") || text.Contains("ID=arch"))
             {
                 text = text.Replace("NAME=\"Arch Linux\"", "NAME=\"ReignOS\"");
                 text = text.Replace("PRETTY_NAME=\"Arch Linux\"", "PRETTY_NAME=\"ReignOS\"");
                 text = text.Replace("HOME_URL=\"https://archlinux.org/\"", "HOME_URL=\"http://reign-os.com/\"");
+                text = text.Replace("ID=reignos", "ID=arch");
                 void getStandardInput(StreamWriter writer)
                 {
                     writer.WriteLine(text);

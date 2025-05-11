@@ -112,7 +112,7 @@ static class InstallUtil
 
     private static void RefreshingInstallerIntegrity()
     {
-        progressTask = "Refreshing Integrity (will take time, please wait)...";
+        progressTask = "Refreshing Integrity (can take time, please wait)...";
         UpdateProgress(0);
 
         Run("pacman", "-Sy archlinux-keyring --noconfirm");
