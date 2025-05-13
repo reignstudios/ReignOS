@@ -146,7 +146,9 @@ internal class Program
             if (timeSpan.TotalSeconds >= 3) resumeFromSleep = true;
 
             // update keyboard
-            keyboardInput.ReadNextKey(out ushort key, out bool keyPressed);
+            keyboardInput.ReadNextKeys(out var keys, out bool keyPressed);
+            ushort key = 0;
+            if (keys != null && keys.Count == 1) key = keys[0];
 
             // update devices
             if (MSI_Claw.isEnabled) MSI_Claw.Update(ref time, resumeFromSleep, key, keyPressed);

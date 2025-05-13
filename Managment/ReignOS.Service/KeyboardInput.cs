@@ -142,4 +142,29 @@ public unsafe class KeyboardInput : IDisposable
         
         return success;
     }
+
+    public bool ReadNextKeys(out List<ushort> keys, out bool pressed)
+    {
+        keys = null;
+        pressed = false;
+        if (handles == null || handles.Count == 0) return false;
+        
+        bool success = false;
+        keys = new List<ushort>();
+        foreach (var handle in handles)
+        {
+            var e = new input.input_event();
+            while (c.read(handle, &e, (UIntPtr)Marshal.SizeOf<input.input_event>()) >= 0)
+            {
+                if (e.type == input.EV_KEY)
+                {
+                    keys.Add(e.code);
+                    pressed = e.value == 1;
+                    success = true;
+                }
+            }
+        }
+        
+        return success;
+    }
 }
