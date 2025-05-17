@@ -159,7 +159,7 @@ public unsafe class KeyboardInput : IDisposable
                 if (e.type == input.EV_KEY)
                 {
                     keys.Add(e.code);
-                    pressed = e.value == 1;
+                    if (e.value == 1) pressed = true;
                     success = true;
                 }
             }
