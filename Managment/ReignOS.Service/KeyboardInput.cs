@@ -7,6 +7,12 @@ using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
+public struct KeyEvent
+{
+    public ushort key;
+    public bool pressed;
+}
+
 public unsafe class KeyboardInput : IDisposable
 {
     private List<int> handles;
@@ -125,7 +131,7 @@ public unsafe class KeyboardInput : IDisposable
         pressed = false;
         if (handles == null || handles.Count == 0) return false;
         
-        bool success = false;
+        bool hasEvent = false;
         foreach (var handle in handles)
         {
             var e = new input.input_event();
@@ -135,22 +141,21 @@ public unsafe class KeyboardInput : IDisposable
                 {
                     key = e.code;
                     pressed = e.value == 1;
-                    success = true;
+                    hasEvent = true;
                 }
             }
         }
         
-        return success;
+        return hasEvent;
     }
 
-    public bool ReadNextKeys(out List<ushort> keys, out bool pressed)
+    public bool ReadNextKeys(out List<KeyEvent> keys)
     {
         keys = null;
-        pressed = false;
         if (handles == null || handles.Count == 0) return false;
         
-        bool success = false;
-        keys = new List<ushort>();
+        bool hasEvent = false;
+        keys = new List<KeyEvent>();
         foreach (var handle in handles)
         {
             var e = new input.input_event();
@@ -158,13 +163,17 @@ public unsafe class KeyboardInput : IDisposable
             {
                 if (e.type == input.EV_KEY)
                 {
-                    keys.Add(e.code);
-                    if (e.value == 1) pressed = true;
-                    success = true;
+                    var keyEvent = new KeyEvent()
+                    {
+                        key = e.code,
+                        pressed = e.value == 1
+                    };
+                    keys.Add(keyEvent);
+                    hasEvent = true;
                 }
             }
         }
         
-        return success;
+        return hasEvent;
     }
 }
