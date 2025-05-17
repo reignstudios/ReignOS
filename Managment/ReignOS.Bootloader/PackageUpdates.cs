@@ -205,7 +205,7 @@ static class PackageUpdates
                 settings.Contains("i915.enable_psr=1") ||
                 settings.Contains("amdgpu.dpm=1") ||
                 settings.Contains("amdgpu.ppfeaturemask=0xffffffff") ||
-                settings.Contains("amdgpu.dc=1 nouveau.pstate=1") ||
+                settings.Contains("amdgpu.dc=1") ||
                 settings.Contains("nouveau.pstate=1") ||
                 settings.Contains("nouveau.perflvl=N") ||
                 settings.Contains("nouveau.perflvl_wr=7777") ||
@@ -221,7 +221,7 @@ static class PackageUpdates
                 settings = settings.Replace("i915.enable_psr=1", "");
                 settings = settings.Replace("amdgpu.dpm=1", "");
                 settings = settings.Replace("amdgpu.ppfeaturemask=0xffffffff", "");
-                settings = settings.Replace("amdgpu.dc=1 nouveau.pstate=1", "");
+                settings = settings.Replace("amdgpu.dc=1", "");
                 settings = settings.Replace("nouveau.pstate=1", "");
                 settings = settings.Replace("nouveau.perflvl=N", "");
                 settings = settings.Replace("nouveau.perflvl_wr=7777", "");

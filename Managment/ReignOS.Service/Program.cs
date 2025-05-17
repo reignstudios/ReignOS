@@ -13,8 +13,13 @@ using System.Threading;
 enum HardwareType
 {
     Unknown,
+
+    // MSI
     MSI_Claw_A1M,
-    MSI_Claw
+    MSI_Claw,
+
+    // OneXPlayer
+    //OneXPlayer_F1
 }
 
 internal class Program

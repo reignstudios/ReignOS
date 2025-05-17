@@ -1014,13 +1014,15 @@ public partial class MainView : UserControl
         {
             if (line.Contains("--use-controlcenter"))
             {
+                string newLine = line;
+
                 // remove existing options
-                text = text.Replace(" --gpu-100", "");// remove this before remove of 0
-                text = text.Replace(" --gpu-0", "");
-                text = text.Replace(" --gpu-1", "");
-                text = text.Replace(" --gpu-2", "");
-                text = text.Replace(" --gpu-3", "");
-                text = text.Replace(" --gpu-4", "");
+                newLine = newLine.Replace(" --gpu-100", "");// remove this before remove of 0
+                newLine = newLine.Replace(" --gpu-0", "");
+                newLine = newLine.Replace(" --gpu-1", "");
+                newLine = newLine.Replace(" --gpu-2", "");
+                newLine = newLine.Replace(" --gpu-3", "");
+                newLine = newLine.Replace(" --gpu-4", "");
 
                 // gather new options
                 int gpu = 0;
@@ -1031,7 +1033,7 @@ public partial class MainView : UserControl
                 else if (gpuButtonNvidiaPrime.IsChecked == true) gpu = 100;
 
                 // apply options
-                if (gpu >= 1) text = text.Replace(line, line + $" --gpu-{gpu}");
+                if (gpu >= 1) text = text.Replace(line, newLine + $" --gpu-{gpu}");
 
                 break;
             }
@@ -1074,12 +1076,14 @@ public partial class MainView : UserControl
         {
             if (line.Contains("--use-controlcenter"))
             {
+                string newLine = line;
+
                 // remove existing options
-                text = text.Replace(" --use-mangohub", "");
-                text = text.Replace(" --vrr", "");
-                text = text.Replace(" --hdr", "");
-                text = text.Replace(" --disable-steam-gpu", "");
-                text = text.Replace(" --disable-steam-deck", "");
+                newLine = newLine.Replace(" --use-mangohub", "");
+                newLine = newLine.Replace(" --vrr", "");
+                newLine = newLine.Replace(" --hdr", "");
+                newLine = newLine.Replace(" --disable-steam-gpu", "");
+                newLine = newLine.Replace(" --disable-steam-deck", "");
 
                 // gather new options
                 string args = "";
@@ -1090,7 +1094,7 @@ public partial class MainView : UserControl
                 if (disableSteamDeckCheckbox.IsChecked == true) args += " --disable-steam-deck";
 
                 // apply options
-                text = text.Replace(line, line + args);
+                text = text.Replace(line, newLine + args);
 
                 break;
             }
@@ -1124,9 +1128,11 @@ public partial class MainView : UserControl
         {
             if (line.Contains("--use-controlcenter"))
             {
+                string newLine = line;
+
                 // remove existing options
-                text = text.Replace(" --input-reignos", "");
-                text = text.Replace(" --input-inputplumber", "");
+                newLine = newLine.Replace(" --input-reignos", "");
+                newLine = newLine.Replace(" --input-inputplumber", "");
 
                 // gather new options
                 string args = "";
@@ -1134,7 +1140,7 @@ public partial class MainView : UserControl
                 else if (inputPlumberInputCheckbox.IsChecked == true) args += " --input-inputplumber";
 
                 // apply options
-                text = text.Replace(line, line + args);
+                text = text.Replace(line, newLine + args);
 
                 break;
             }
