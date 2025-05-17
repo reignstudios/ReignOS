@@ -120,6 +120,8 @@ internal class Program
         
         ProcessUtil.Run("chmod", "+x ./Nvidia_Install_Nouveau.sh", useBash:false);
         ProcessUtil.Run("chmod", "+x ./Nvidia_Install_Proprietary.sh", useBash:false);
+        ProcessUtil.Run("chmod", "+x ./AMD_Install_Mesa.sh", useBash: false);
+        ProcessUtil.Run("chmod", "+x ./AMD_Install_Proprietary.sh", useBash: false);
 
         ProcessUtil.Run("chmod", "+x ./Start_ControlCenter.sh", useBash:false);
         ProcessUtil.Run("chmod", "+x ./Start_Gamescope.sh", useBash:false);

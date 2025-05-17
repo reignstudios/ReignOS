@@ -217,6 +217,11 @@ public partial class MainView : UserControl
                         else if (parts[1] == "Right") rot_Right.IsChecked = true;
                         else if (parts[1] == "Flip") rot_Flip.IsChecked = true;
                     }
+                    else if (parts[0] == "AMDDrivers")
+                    {
+                        if (parts[1] == "Mesa") amd_Mesa.IsChecked = true;
+                        else if (parts[1] == "Proprietary") amd_Proprietary.IsChecked = true;
+                    }
                     else if (parts[0] == "NvidiaDrivers")
                     {
                         if (parts[1] == "Nouveau")
@@ -380,6 +385,10 @@ public partial class MainView : UserControl
                 else if (rot_Flip.IsChecked == true) writer.WriteLine("ScreenRotation=Flip");
                 else writer.WriteLine("ScreenRotation=Unset");
             
+                if (amd_Mesa.IsChecked == true) writer.WriteLine("AMDDrivers=Mesa");
+                else if (amd_Proprietary.IsChecked == true) writer.WriteLine("AMDDrivers=Proprietary");
+                else writer.WriteLine("AMDDrivers=Mesa");
+
                 if (nvidia_Nouveau.IsChecked == true) writer.WriteLine("NvidiaDrivers=Nouveau");
                 else if (nvidia_Proprietary.IsChecked == true) writer.WriteLine("NvidiaDrivers=Proprietary");
                 else writer.WriteLine("NvidiaDrivers=Nouveau");
@@ -804,7 +813,9 @@ public partial class MainView : UserControl
                 builder.AppendLine($"export VK_DEVICE_SELECT={gpu}");
             }
 
-            builder.AppendLine("export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/amd_icd64.json:/usr/share/vulkan/icd.d/amd_icd32.json");
+            //string result = ProcessUtil.Run("pacman", $"-Q amdvlk");
+            //if (result != null && !result.StartsWith("error:")) builder.AppendLine("export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/amd_icd64.json:/usr/share/vulkan/icd.d/amd_icd32.json");
+
             File.WriteAllText(gpuSettings, builder.ToString());
         }
         catch (Exception ex)
@@ -999,6 +1010,15 @@ public partial class MainView : UserControl
         MainWindow.singleton.Close();
     }
     
+    private void AMDApplyButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        // invoke AMD driver install script
+        SaveSettings();
+        if (amd_Mesa.IsChecked == true) App.exitCode = 32;
+        else if (amd_Proprietary.IsChecked == true) App.exitCode = 33;
+        MainWindow.singleton.Close();
+    }
+
     private void NvidiaApplyButton_OnClick(object sender, RoutedEventArgs e)
     {
         // invoke Nvidia driver install script
