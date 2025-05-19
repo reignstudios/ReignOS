@@ -1,13 +1,35 @@
 #!/bin/bash
 
-# check if Arch updates exist
+# check if pacman updates exist
 echo ""
-echo "ReignOS Checking Arch for updates..."
+echo "ReignOS Checking 'pacman' for updates..."
 sudo pacman -Sy
 HAS_UPDATES=false
 if pacman -Qu &> /dev/null; then
-    echo "Updates are available"
+    echo "Updates are available under pacman"
     HAS_UPDATES=true
+fi
+
+# check if yay updates exist
+if [ "$HAS_UPDATES" = "false" ]; then
+  echo ""
+  echo "ReignOS Checking 'yay' for updates..."
+  sudo yay -Sy
+  HAS_UPDATES=false
+  if yay -Qu &> /dev/null; then
+      echo "Updates are available under yay"
+      HAS_UPDATES=true
+  fi
+fi
+
+# 
+if [ "$HAS_UPDATES" = "false" ]; then
+  echo ""
+  echo "ReignOS Checking 'flatpak' for updates..."
+  if [ -n "$(flatpak remote-ls --updates)" ]; then
+      echo "Updates are available under flatpak"
+      HAS_UPDATES=true
+  fi
 fi
 
 # update Arch
@@ -30,10 +52,15 @@ if [ "$HAS_UPDATES" = "true" ]; then
   flatpak update --noninteractive
 
   # firmware
-  sudo fwupdmgr refresh --noconfirm
-  sudo fwupdmgr update --noconfirm
+  sudo fwupdmgr refresh -y
+  sudo fwupdmgr update -y
 
   if [ $arch_exit_code -eq 0 ]; then
+    reboot
+    exit 0
+  fi
+  
+  if [ $yay_exit_code -eq 0 ]; then
     reboot
     exit 0
   fi
