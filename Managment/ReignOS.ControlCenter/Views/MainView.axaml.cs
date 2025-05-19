@@ -1055,6 +1055,7 @@ public partial class MainView : UserControl
 
                 // apply options
                 if (gpu >= 1) text = text.Replace(line, newLine + $" --gpu-{gpu}");
+                else text = text.Replace(line, newLine);
 
                 break;
             }
