@@ -217,6 +217,11 @@ public partial class MainView : UserControl
                         else if (parts[1] == "Right") rot_Right.IsChecked = true;
                         else if (parts[1] == "Flip") rot_Flip.IsChecked = true;
                     }
+                    else if (parts[0] == "AMDDrivers")
+                    {
+                        if (parts[1] == "Mesa") amd_Mesa.IsChecked = true;
+                        else if (parts[1] == "Proprietary") amd_Proprietary.IsChecked = true;
+                    }
                     else if (parts[0] == "NvidiaDrivers")
                     {
                         if (parts[1] == "Nouveau")
@@ -308,6 +313,11 @@ public partial class MainView : UserControl
                     {
                         disableSteamDeckCheckbox.IsChecked = parts[1] == "On";
                     }
+                    else if (parts[0] == "Input")
+                    {
+                        if (parts[1] == "ReignOS") reignOSInputCheckbox.IsChecked = true;
+                        else if (parts[1] == "InputPlumber") inputPlumberInputCheckbox.IsChecked = true;
+                    }
                     else if (parts[0].StartsWith("Display_"))
                     {
                         var displayParts = parts[1].Split(' ');
@@ -375,6 +385,10 @@ public partial class MainView : UserControl
                 else if (rot_Flip.IsChecked == true) writer.WriteLine("ScreenRotation=Flip");
                 else writer.WriteLine("ScreenRotation=Unset");
             
+                if (amd_Mesa.IsChecked == true) writer.WriteLine("AMDDrivers=Mesa");
+                else if (amd_Proprietary.IsChecked == true) writer.WriteLine("AMDDrivers=Proprietary");
+                else writer.WriteLine("AMDDrivers=Mesa");
+
                 if (nvidia_Nouveau.IsChecked == true) writer.WriteLine("NvidiaDrivers=Nouveau");
                 else if (nvidia_Proprietary.IsChecked == true) writer.WriteLine("NvidiaDrivers=Proprietary");
                 else writer.WriteLine("NvidiaDrivers=Nouveau");
@@ -414,6 +428,9 @@ public partial class MainView : UserControl
 
                 if (disableSteamDeckCheckbox.IsChecked == true) writer.WriteLine("DisableSteamDeck=On");
                 else writer.WriteLine("DisableSteamDeck=Off");
+
+                if (inputPlumberInputCheckbox.IsChecked == true) writer.WriteLine("Input=InputPlumber");
+                else writer.WriteLine("Input=ReignOS");
 
                 int d = 0;
                 foreach (var setting in displaySettings)
@@ -796,6 +813,9 @@ public partial class MainView : UserControl
                 builder.AppendLine($"export VK_DEVICE_SELECT={gpu}");
             }
 
+            string result = ProcessUtil.Run("pacman", $"-Q amdvlk");
+            if (result != null && !result.StartsWith("error:")) builder.AppendLine("export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/amd_icd64.json:/usr/share/vulkan/icd.d/amd_icd32.json");
+
             File.WriteAllText(gpuSettings, builder.ToString());
         }
         catch (Exception ex)
@@ -990,6 +1010,15 @@ public partial class MainView : UserControl
         MainWindow.singleton.Close();
     }
     
+    private void AMDApplyButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        // invoke AMD driver install script
+        SaveSettings();
+        if (amd_Mesa.IsChecked == true) App.exitCode = 32;
+        else if (amd_Proprietary.IsChecked == true) App.exitCode = 33;
+        MainWindow.singleton.Close();
+    }
+
     private void NvidiaApplyButton_OnClick(object sender, RoutedEventArgs e)
     {
         // invoke Nvidia driver install script
@@ -1006,13 +1035,15 @@ public partial class MainView : UserControl
         {
             if (line.Contains("--use-controlcenter"))
             {
+                string newLine = line;
+
                 // remove existing options
-                text = text.Replace(" --gpu-100", "");// remove this before remove of 0
-                text = text.Replace(" --gpu-0", "");
-                text = text.Replace(" --gpu-1", "");
-                text = text.Replace(" --gpu-2", "");
-                text = text.Replace(" --gpu-3", "");
-                text = text.Replace(" --gpu-4", "");
+                newLine = newLine.Replace(" --gpu-100", "");// remove this before remove of 0
+                newLine = newLine.Replace(" --gpu-0", "");
+                newLine = newLine.Replace(" --gpu-1", "");
+                newLine = newLine.Replace(" --gpu-2", "");
+                newLine = newLine.Replace(" --gpu-3", "");
+                newLine = newLine.Replace(" --gpu-4", "");
 
                 // gather new options
                 int gpu = 0;
@@ -1023,7 +1054,7 @@ public partial class MainView : UserControl
                 else if (gpuButtonNvidiaPrime.IsChecked == true) gpu = 100;
 
                 // apply options
-                if (gpu >= 1) text = text.Replace(line, line + $" --gpu-{gpu}");
+                if (gpu >= 1) text = text.Replace(line, newLine + $" --gpu-{gpu}");
 
                 break;
             }
@@ -1066,12 +1097,14 @@ public partial class MainView : UserControl
         {
             if (line.Contains("--use-controlcenter"))
             {
+                string newLine = line;
+
                 // remove existing options
-                text = text.Replace(" --use-mangohub", "");
-                text = text.Replace(" --vrr", "");
-                text = text.Replace(" --hdr", "");
-                text = text.Replace(" --disable-steam-gpu", "");
-                text = text.Replace(" --disable-steam-deck", "");
+                newLine = newLine.Replace(" --use-mangohub", "");
+                newLine = newLine.Replace(" --vrr", "");
+                newLine = newLine.Replace(" --hdr", "");
+                newLine = newLine.Replace(" --disable-steam-gpu", "");
+                newLine = newLine.Replace(" --disable-steam-deck", "");
 
                 // gather new options
                 string args = "";
@@ -1082,7 +1115,7 @@ public partial class MainView : UserControl
                 if (disableSteamDeckCheckbox.IsChecked == true) args += " --disable-steam-deck";
 
                 // apply options
-                text = text.Replace(line, line + args);
+                text = text.Replace(line, newLine + args);
 
                 break;
             }
@@ -1091,6 +1124,52 @@ public partial class MainView : UserControl
         SaveSettings();
 
         App.exitCode = 0;// reopen with full logout so reloads env
+        MainWindow.singleton.Close();
+    }
+
+    private void MenuInputApplyButton_Click(object sender, RoutedEventArgs e)
+    {
+        // manage input plumber
+        if (inputPlumberInputCheckbox.IsChecked == true)
+        {
+            ProcessUtil.Run("pacman", "-S --noconfirm inputplumber", asAdmin:true, useBash:false);
+            ProcessUtil.Run("systemctl", "enable inputplumber inputplumber-suspend", asAdmin:true, useBash:false);
+            ProcessUtil.Run("systemctl", "start inputplumber inputplumber-suspend", asAdmin:true, useBash:false);
+        }
+        else
+        {
+            ProcessUtil.Run("systemctl", "stop inputplumber inputplumber-suspend", asAdmin:true, useBash:false);
+            ProcessUtil.Run("systemctl", "disable inputplumber inputplumber-suspend", asAdmin:true, useBash:false);
+            ProcessUtil.Run("pacman", "-R --noconfirm inputplumber", asAdmin:true, useBash:false);
+        }
+
+        // apply settings
+        string text = File.ReadAllText(launchFile);
+        foreach (string line in text.Split('\n'))
+        {
+            if (line.Contains("--use-controlcenter"))
+            {
+                string newLine = line;
+
+                // remove existing options
+                newLine = newLine.Replace(" --input-reignos", "");
+                newLine = newLine.Replace(" --input-inputplumber", "");
+
+                // gather new options
+                string args = "";
+                if (reignOSInputCheckbox.IsChecked == true) args += " --input-reignos";
+                else if (inputPlumberInputCheckbox.IsChecked == true) args += " --input-inputplumber";
+
+                // apply options
+                text = text.Replace(line, newLine + args);
+
+                break;
+            }
+        }
+        File.WriteAllText(launchFile, text);
+        SaveSettings();
+
+        App.exitCode = 15;// reboot
         MainWindow.singleton.Close();
     }
 

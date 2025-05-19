@@ -13,8 +13,13 @@ using System.Threading;
 enum HardwareType
 {
     Unknown,
+
+    // MSI
     MSI_Claw_A1M,
-    MSI_Claw
+    MSI_Claw,
+
+    // OneXPlayer
+    //OneXPlayer_F1
 }
 
 internal class Program
@@ -46,6 +51,13 @@ internal class Program
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         LibraryResolver.Init(Assembly.GetExecutingAssembly());
         BindSignalEvents();
+
+        // process args
+        bool useInputPlumber = false;
+        foreach (string arg in args)
+        {
+            if (arg == "--input-inputplumber") useInputPlumber = true;
+        }
 
         // detect system hardware
         try
@@ -96,12 +108,12 @@ internal class Program
         }
 
         // init virtual gamepad
-        VirtualGamepad.Init();
+        if (!useInputPlumber) VirtualGamepad.Init();
 
         // detect device & configure hardware
         try
         {
-            MSI_Claw.Configure();
+            MSI_Claw.Configure(useInputPlumber);
         }
         catch (Exception e)
         {
@@ -139,17 +151,20 @@ internal class Program
             if (timeSpan.TotalSeconds >= 3) resumeFromSleep = true;
 
             // update keyboard
-            keyboardInput.ReadNextKey(out ushort key, out bool keyPressed);
+            keyboardInput.ReadNextKeys(out var keys);
+            KeyEvent keyEvent;
+            if (keys != null && keys.Count == 1) keyEvent = keys[0];
+            else keyEvent = new KeyEvent();
 
             // update devices
-            if (MSI_Claw.isEnabled) MSI_Claw.Update(ref time, resumeFromSleep, key, keyPressed);
+            if (MSI_Claw.isEnabled) MSI_Claw.Update(ref time, resumeFromSleep, keyEvent.key, keyEvent.pressed);
 
             // update volume
-            if (keyPressed)
+            if (keyEvent.pressed)
             {
                 // send signal to bootloader
-                if (key == input.KEY_VOLUMEDOWN) Console.WriteLine("SET_VOLUME_DOWN");
-                else if (key == input.KEY_VOLUMEUP) Console.WriteLine("SET_VOLUME_UP");
+                if (keyEvent.key == input.KEY_VOLUMEDOWN) Console.WriteLine("SET_VOLUME_DOWN");
+                else if (keyEvent.key == input.KEY_VOLUMEUP) Console.WriteLine("SET_VOLUME_UP");
             }
 
             // handle special close steam events
@@ -163,7 +178,7 @@ internal class Program
         Log.WriteLine("Shutting down...");
         DbusMonitor.Shutdown();
         MSI_Claw.Dispose();
-        VirtualGamepad.Dispose();
+        if (!useInputPlumber) VirtualGamepad.Dispose();
         keyboardInput.Dispose();
         Environment.ExitCode = DbusMonitor.isRebootMode == null ? 0 : (DbusMonitor.isRebootMode == true ? 15 : 16);
     }

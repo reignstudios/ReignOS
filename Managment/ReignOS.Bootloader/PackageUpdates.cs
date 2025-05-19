@@ -5,8 +5,16 @@ using System.Text;
 
 namespace ReignOS.Bootloader;
 
+// mem_sleep_default=deep or s2idle
 // intel_idle.max_cstate=1 # intel
 // amd_pstate=disable processor.max_cstate=1 # amd
+// nouveau.pstate=1 nouveau.runpm=0 # nvidia
+
+// /etc/modprobe.d/nvidia.conf
+//options nvidia NVreg_EnableS0ixPowerManagement=1
+//options nvidia NVreg_PreserveVideoMemoryAllocations=1
+//options nvidia NVreg_DynamicPowerManagement=0x02
+
 static class PackageUpdates
 {
     private static bool PackageExits(string package)
@@ -39,6 +47,8 @@ static class PackageUpdates
         if (!PackageExits("openbox")) return true;
         if (!PackageExits("xdg-desktop-portal")) return true;
         if (!PackageExits("xdg-desktop-portal-wlr")) return true;
+        if (!PackageExits("xdg-desktop-portal-kde")) return true;
+        if (!PackageExits("xdg-desktop-portal-gtk")) return true;
 
         if (!PackageExits("vulkan-tools")) return true;
         if (!PackageExits("vulkan-mesa-layers")) return true;
@@ -137,8 +147,8 @@ static class PackageUpdates
             {
                 text = text.Replace("NAME=\"Arch Linux\"", "NAME=\"ReignOS\"");
                 text = text.Replace("PRETTY_NAME=\"Arch Linux\"", "PRETTY_NAME=\"ReignOS\"");
-                text = text.Replace("ID=arch", "ID=reignos");
                 text = text.Replace("HOME_URL=\"https://archlinux.org/\"", "HOME_URL=\"http://reign-os.com/\"");
+                text = text.Replace("ID=arch", "ID=reignos");
                 void getStandardInput(StreamWriter writer)
                 {
                     writer.WriteLine(text);
@@ -195,7 +205,7 @@ static class PackageUpdates
                 settings.Contains("i915.enable_psr=1") ||
                 settings.Contains("amdgpu.dpm=1") ||
                 settings.Contains("amdgpu.ppfeaturemask=0xffffffff") ||
-                settings.Contains("amdgpu.dc=1 nouveau.pstate=1") ||
+                settings.Contains("amdgpu.dc=1") ||
                 settings.Contains("nouveau.pstate=1") ||
                 settings.Contains("nouveau.perflvl=N") ||
                 settings.Contains("nouveau.perflvl_wr=7777") ||
@@ -211,7 +221,7 @@ static class PackageUpdates
                 settings = settings.Replace("i915.enable_psr=1", "");
                 settings = settings.Replace("amdgpu.dpm=1", "");
                 settings = settings.Replace("amdgpu.ppfeaturemask=0xffffffff", "");
-                settings = settings.Replace("amdgpu.dc=1 nouveau.pstate=1", "");
+                settings = settings.Replace("amdgpu.dc=1", "");
                 settings = settings.Replace("nouveau.pstate=1", "");
                 settings = settings.Replace("nouveau.perflvl=N", "");
                 settings = settings.Replace("nouveau.perflvl_wr=7777", "");

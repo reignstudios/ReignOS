@@ -79,7 +79,7 @@
 
         <div class="description">
             ReignOS is a SteamOS like Arch distro but with its own unique take focused on general portability.
-            It supports Gamescope, Weston and Cage compositors for better compatibility with some hardware.
+            It supports Gamescope, Weston, Cage and X11 compositors for better compatibility with some hardware.
         </div>
 
         <ul style="color: #ddd; border: none;">
@@ -93,6 +93,7 @@
         <div>
             <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">Known working hardware</h2>
             <ul style="color: #888;">
+                <li>Desktops, MiniPCs, Laptops etc</li>
                 <li>
                     MSI-Claw AM1<br>
                     * Some games have issues with Gamescope, use Weston
@@ -101,6 +102,16 @@
                     MSI-Claw 7/8 AI+ A2VM<br>
                     * Gamescope does not work, use Weston
                 </li>
+                <li>Asus ROG Ally (Z1, Z1 Extreme and X)</li>
+                <li>Legion Go</li>
+                <li>Legion Go S</li>
+                <li>Ayaneo devices</li>
+                <li>OneXPlayer devices (both AMD and Intel)</li>
+                <li>Antec devices</li>
+                <li>Ayn devices</li>
+                <li>Anbernic devices (Win600)</li>
+                <li>Zotac Zone</li>
+                <li>TJD 10.1" Handheld</li>
             </ul>
         </div>
 
@@ -127,7 +138,8 @@
                 <li>Boot Manager: This allows you to boot to Windows or any other OS</li>
                 <li>Network Manager: Allows you to manage WiFi connection</li>
                 <li>Disk Manager: Allows you to format extra game drives, like MicroSD cards etc</li>
-                <li>NOTE: Use Labwc compositor to sign into Steam if you have issues with others. Then try another.</li>
+                <li>Display Manager: Allows you to configure default display etc</li>
+                <li>NOTE: Use KDE to sign into Steam if you have issues with others. Then try another.</li>
             </ul>
         </div>
 
@@ -135,11 +147,11 @@
             <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">Compositors</h2>
             <ul style="color: #888;">
                 <li>Gamescope: Same as SteamOS (Not all hardware supports this)</li>
-                <li>Weston: fullscreen compositor (Fallback option)</li>
+                <li>Weston: fullscreen compositor</li>
                 <li>Weston-W: Same as Weston but Windowed mode</li>
-                <li>Cage: wlroots fullscreen compositor (Fallback option)</li>
+                <li>Cage: wlroots fullscreen compositor</li>
                 <li>Labwc: wlroots compositor (Windowed option [Right-Click background to exit])</li>
-                <li>X11: Only exists to launch Steam once in this mode which solves a Proton bug in some games</li>
+                <li>X11: Useful for some games or hardware</li>
             </ul>
         </div>
 
@@ -150,12 +162,13 @@
                 <li>If Steam Login is having issues on Gamescope, use the Weston, Cage etc compositor instead</li>
                 <li>Some games don't fully quit until you press the Guide/Xbox button.</li>
                 <li>
-                    If you can't naviage out of something and need to for the system off:<br>
+                    If you can't naviage out of something and need to turn the system off:<br>
                     * Press: Ctrl+Alt+F3<br>
                     * Enter User: root<br>
                     * Enter Pass: gamer<br>
                     * Type: 'poweroff -f' or 'reboot -f'
                 </li>
+                <li>If Audio doesn't work, try installing KDE which can fix the issue</li>
         </div>
 
         <div>
@@ -174,7 +187,7 @@
                     Change Nvidia drivers without Control-Center:<br>
                     * Exit to terminal<br>
                     * Type: cd ~/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish<br>
-                    * Type: './Nvidia_Install_Nouveau.sh' or './Nvidia_Install_Proprietary.sh' <br>
+                    * Type: './Nvidia_Install_Nouveau.sh' or './Nvidia_Install_Proprietary.sh'<br>
                 </li>
                 <li>Disable Steam GPU acceleration in Control-Center can work around some Nvidia issues</li>
                 <li>If you install Proprietary Nvidia drivers, make sure you see a driver listed in 'GPU Utils'</li>
@@ -191,10 +204,27 @@
         </div>
 
         <div>
+            <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">Steam Troubleshooting</h2>
+            <ul style="color: #888;">
+                <li>
+                    If Steam is getting stuck on updates<br>
+                    * Launch KDE<br>
+                    * Launch terminal<br>
+                    * Type 'steam' and hit enter<br>
+                    * Each time it stops writing to terminal use KDE to close the update Window in the task bar<br>
+                    * Do this for each Window<br>
+                    * Eventually it should continue to login-screen etc
+                </li>
+            </ul>
+        </div>
+
+        <div>
             <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">Misc Notes</h2>
             <ul style="color: #888;">
                 <li>Linux User: 'gamer' (changing this can break operation)</li>
                 <li>Linux Pass: 'gamer' (changing this can break operation)</li>
+                <li>Linux root User: 'root' (changing this can break operation)</li>
+                <li>Linux root Pass: 'gamer' (changing this can break operation)</li>
             </ul>
         </div>
 

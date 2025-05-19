@@ -7,6 +7,12 @@ using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
+public struct KeyEvent
+{
+    public ushort key;
+    public bool pressed;
+}
+
 public unsafe class KeyboardInput : IDisposable
 {
     private List<int> handles;
@@ -125,7 +131,7 @@ public unsafe class KeyboardInput : IDisposable
         pressed = false;
         if (handles == null || handles.Count == 0) return false;
         
-        bool success = false;
+        bool hasEvent = false;
         foreach (var handle in handles)
         {
             var e = new input.input_event();
@@ -135,11 +141,39 @@ public unsafe class KeyboardInput : IDisposable
                 {
                     key = e.code;
                     pressed = e.value == 1;
-                    success = true;
+                    hasEvent = true;
                 }
             }
         }
         
-        return success;
+        return hasEvent;
+    }
+
+    public bool ReadNextKeys(out List<KeyEvent> keys)
+    {
+        keys = null;
+        if (handles == null || handles.Count == 0) return false;
+        
+        bool hasEvent = false;
+        keys = new List<KeyEvent>();
+        foreach (var handle in handles)
+        {
+            var e = new input.input_event();
+            while (c.read(handle, &e, (UIntPtr)Marshal.SizeOf<input.input_event>()) >= 0)
+            {
+                if (e.type == input.EV_KEY)
+                {
+                    var keyEvent = new KeyEvent()
+                    {
+                        key = e.code,
+                        pressed = e.value == 1
+                    };
+                    keys.Add(keyEvent);
+                    hasEvent = true;
+                }
+            }
+        }
+        
+        return hasEvent;
     }
 }

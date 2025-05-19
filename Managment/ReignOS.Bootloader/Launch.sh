@@ -98,6 +98,23 @@ if [ $exit_code -eq 31 ]; then
   exit 0
 fi
 
+# install AMD drivers
+if [ $exit_code -eq 32 ]; then
+  echo ""
+  echo "ReignOS (Install AMD MESA)..."
+  chmod +x ./AMD_Install_Mesa.sh
+  ./AMD_Install_Mesa.sh
+  exit 0
+fi
+
+if [ $exit_code -eq 33 ]; then
+  echo ""
+  echo "ReignOS (Install AMD Proprietary)..."
+  chmod +x ./AMD_Install_Proprietary.sh
+  ./AMD_Install_Proprietary.sh
+  exit 0
+fi
+
 # install missing packages
 if [ $exit_code -eq 100 ]; then
   echo ""
