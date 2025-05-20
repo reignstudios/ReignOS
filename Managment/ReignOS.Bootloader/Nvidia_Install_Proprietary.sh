@@ -3,8 +3,8 @@
 sudo pacman -Syu --noconfirm
 
 echo "Uninstalling Nvidia Nouveau drivers"
-sudo pacman -R --noconfirm vulkan-nouveau lib32-vulkan-nouveau
-sudo pacman -R --noconfirm xf86-video-nouveau
+sudo pacman -Rns --noconfirm vulkan-nouveau lib32-vulkan-nouveau
+sudo pacman -Rns --noconfirm xf86-video-nouveau
 
 echo "Installing Nvidia Proprietary drivers"
 sudo pacman -S --noconfirm nvidia nvidia-utils lib32-nvidia-utils nvidia-settings nvidia-prime egl-wayland
