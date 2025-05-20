@@ -13,6 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="AMD_Install_AMDNVK.sh">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="AMD_Install_Mesa.sh">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

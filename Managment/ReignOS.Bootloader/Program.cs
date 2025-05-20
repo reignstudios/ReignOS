@@ -352,6 +352,7 @@ internal class Program
     private static void StartCompositor_Gamescope(bool useMangoHub, bool vrr, bool hdr, bool disableSteamGPU, bool disableSteamDeck, int gpu, int displayWidth, int displayHeight, ScreenRotation screenRotation)
     {
         Log.WriteLine("Starting Gamescope with Steam...");
+        DisableX11();
         string useMangoHubArg = useMangoHub ? " --mangoapp" : "";
         string vrrArg = vrr ? " --adaptive-sync" : "";
         string hdrArg = hdr ? " --hdr-enabled" : "";
@@ -375,6 +376,7 @@ internal class Program
     private static void StartCompositor_Weston(bool useMangoHub, bool windowedMode, bool disableSteamGPU, bool disableSteamDeck, int gpu)
     {
         Log.WriteLine("Starting Weston with Steam...");
+        DisableX11();
         string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
         string windowedModeArg = !windowedMode ? "--shell=kiosk-shell.so " : "";
         string windowedModeArg2 = windowedMode ? " --windowed-mode" : "";
@@ -388,6 +390,7 @@ internal class Program
     private static void StartCompositor_Cage(bool useMangoHub, bool disableSteamGPU, bool disableSteamDeck, int gpu)
     {
         Log.WriteLine("Starting Cage with Steam...");
+        DisableX11();
         string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
         string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
         string steamDeckArg = disableSteamDeck ? " --disable-steam-deck" : "";
@@ -399,6 +402,7 @@ internal class Program
     private static void StartCompositor_Labwc(bool disableSteamGPU, int gpu)
     {
         Log.WriteLine("Starting Labwc with Steam...");
+        DisableX11();
         string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
         string gpuArg = GetGPUArg(gpu);
         string result = ProcessUtil.Run($"{gpuArg}labwc", $"--startup ./Start_Labwc.sh{steamGPUArg}", useBash:true);
@@ -431,6 +435,7 @@ internal class Program
         }
         else
         {
+            DisableX11();
             result = ProcessUtil.Run($"{gpuArg}startplasma-wayland", "", useBash:true);
         }
         Log.WriteLine(result);
@@ -453,5 +458,15 @@ internal class Program
             writer.WriteLine(launch);
         }
         ProcessUtil.Run("chmod", "+x " + x11ConfigFile, useBash:false);
+    }
+
+    private static void DisableX11()
+    {
+        const string x11ConfigFile = "/home/gamer/.xinitrc";
+        using (var writer = new StreamWriter(x11ConfigFile))
+        {
+            writer.WriteLine("");
+        }
+        ProcessUtil.Run("chmod", "+x " + x11ConfigFile, useBash: false);
     }
 }

@@ -109,6 +109,14 @@ fi
 
 if [ $exit_code -eq 33 ]; then
   echo ""
+  echo "ReignOS (Install AMD AMDNVK)..."
+  chmod +x ./AMD_Install_AMDNVK.sh
+  ./AMD_Install_AMDNVK.sh
+  exit 0
+fi
+
+if [ $exit_code -eq 34 ]; then
+  echo ""
   echo "ReignOS (Install AMD Proprietary)..."
   chmod +x ./AMD_Install_Proprietary.sh
   ./AMD_Install_Proprietary.sh
