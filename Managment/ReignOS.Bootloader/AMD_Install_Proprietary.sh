@@ -2,7 +2,7 @@
 
 sudo pacman -Syu --noconfirm
 
-echo "Uninstalling AMD NVK drivers"
+echo "Uninstalling AMD VLK drivers"
 sudo pacman -R --noconfirm amdvlk lib32-amdvlk
 
 echo "Uninstalling AMD MESA drivers"

@@ -109,9 +109,9 @@ fi
 
 if [ $exit_code -eq 33 ]; then
   echo ""
-  echo "ReignOS (Install AMD AMDNVK)..."
-  chmod +x ./AMD_Install_AMDNVK.sh
-  ./AMD_Install_AMDNVK.sh
+  echo "ReignOS (Install AMD AMDVLK)..."
+  chmod +x ./AMD_Install_AMDVLK.sh
+  ./AMD_Install_AMDVLK.sh
   exit 0
 fi
 

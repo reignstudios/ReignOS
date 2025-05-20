@@ -101,7 +101,7 @@
 						<TextBlock Text="AMD Drivers" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 						<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="AMDApplyButton_OnClick"/>
 						<RadioButton Name="amd_Mesa" Content="Open Source" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-						<RadioButton Name="amd_AMDNVK" Content="AMDNVK" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						<RadioButton Name="amd_VLK" Content="AMDVLK" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						<RadioButton Name="amd_Proprietary" Content="Proprietary" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 					</Grid>
 				</Grid>

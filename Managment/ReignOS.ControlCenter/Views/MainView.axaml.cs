@@ -220,7 +220,7 @@ public partial class MainView : UserControl
                     else if (parts[0] == "AMDDrivers")
                     {
                         if (parts[1] == "Mesa") amd_Mesa.IsChecked = true;
-                        else if (parts[1] == "AMDNVK") amd_AMDNVK.IsChecked = true;
+                        else if (parts[1] == "AMDVLK") amd_VLK.IsChecked = true;
                         else if (parts[1] == "Proprietary") amd_Proprietary.IsChecked = true;
                     }
                     else if (parts[0] == "NvidiaDrivers")
@@ -387,7 +387,7 @@ public partial class MainView : UserControl
                 else writer.WriteLine("ScreenRotation=Unset");
             
                 if (amd_Mesa.IsChecked == true) writer.WriteLine("AMDDrivers=Mesa");
-                else if (amd_AMDNVK.IsChecked == true) writer.WriteLine("AMDDrivers=AMDNVK");
+                else if (amd_VLK.IsChecked == true) writer.WriteLine("AMDDrivers=AMDVLK");
                 else if (amd_Proprietary.IsChecked == true) writer.WriteLine("AMDDrivers=Proprietary");
                 else writer.WriteLine("AMDDrivers=Mesa");
 
@@ -1017,7 +1017,7 @@ public partial class MainView : UserControl
         // invoke AMD driver install script
         SaveSettings();
         if (amd_Mesa.IsChecked == true) App.exitCode = 32;
-        else if (amd_AMDNVK.IsChecked == true) App.exitCode = 33;
+        else if (amd_VLK.IsChecked == true) App.exitCode = 33;
         else if (amd_Proprietary.IsChecked == true) App.exitCode = 34;
         MainWindow.singleton.Close();
     }

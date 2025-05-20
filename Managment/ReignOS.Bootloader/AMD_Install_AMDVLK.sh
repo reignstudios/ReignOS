@@ -8,7 +8,7 @@ yay -R --noconfirm amf-amdgpu-pro amdgpu-pro-oglp lib32-amdgpu-pro-oglp vulkan-a
 echo "Uninstalling AMD MESA drivers"
 sudo pacman -R --noconfirm vulkan-radeon lib32-vulkan-radeon
 
-echo "Installing AMD NVK drivers"
+echo "Installing AMD VLK drivers"
 sudo pacman -S --noconfirm amdvlk lib32-amdvlk
 
 sudo reboot -f
