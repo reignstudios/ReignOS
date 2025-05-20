@@ -815,8 +815,13 @@ public partial class MainView : UserControl
                 builder.AppendLine($"export VK_DEVICE_SELECT={gpu}");
             }
 
-            string result = ProcessUtil.Run("pacman", $"-Q amdvlk");
+            // force AMDVLK
+            string result = ProcessUtil.Run("pacman", $"-Q amdvlk", useBash: false);
             if (result != null && !result.StartsWith("error:")) builder.AppendLine("export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/amd_icd64.json:/usr/share/vulkan/icd.d/amd_icd32.json");
+
+            // force AMDGPU-Pro
+            result = ProcessUtil.Run("pacman", $"-Q vulkan-amdgpu-pro", useBash:false);
+            if (result != null && !result.StartsWith("error:")) builder.AppendLine("export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/amd_pro_icd64.json:/usr/share/vulkan/icd.d/amd_pro_icd32.json");
 
             File.WriteAllText(gpuSettings, builder.ToString());
         }

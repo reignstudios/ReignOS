@@ -19,7 +19,7 @@ static class PackageUpdates
 {
     private static bool PackageExits(string package)
     {
-        string result = ProcessUtil.Run("pacman", $"-Q {package}");
+        string result = ProcessUtil.Run("pacman", $"-Q {package}", useBash:false);
         return result != null && !result.StartsWith("error:");
     }
 
