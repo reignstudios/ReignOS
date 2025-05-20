@@ -41,17 +41,21 @@ if [ "$HAS_UPDATES" = "true" ]; then
   sleep 2
 
   # pacman
+  echo "ReignOS Updating pacman pacages..."
   sudo pacman -Syu --noconfirm
   arch_exit_code=$?
 
   # yay
+  echo "ReignOS Updating yay pacages..."
   yay -Syu --noconfirm
   yay_exit_code=$?
 
   # flatpaks
+  echo "ReignOS Updating flatpak pacages..."
   flatpak update --noninteractive
 
   # firmware
+  echo "ReignOS Updating fwupdmgr firmware..."
   sudo fwupdmgr refresh -y
   sudo fwupdmgr update -y
 
