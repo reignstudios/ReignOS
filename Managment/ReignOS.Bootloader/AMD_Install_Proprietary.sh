@@ -3,10 +3,10 @@
 sudo pacman -Syu --noconfirm
 
 echo "Uninstalling AMD VLK drivers"
-sudo pacman -Rns --noconfirm amdvlk lib32-amdvlk
+sudo pacman -R --noconfirm amdvlk lib32-amdvlk
 
 echo "Uninstalling AMD MESA drivers"
-sudo pacman -Rns --noconfirm vulkan-radeon lib32-vulkan-radeon
+sudo pacman -R --noconfirm vulkan-radeon lib32-vulkan-radeon
 
 echo "Installing AMD Proprietary drivers"
 yay -S --noconfirm amf-amdgpu-pro amdgpu-pro-oglp lib32-amdgpu-pro-oglp vulkan-amdgpu-pro lib32-vulkan-amdgpu-pro
