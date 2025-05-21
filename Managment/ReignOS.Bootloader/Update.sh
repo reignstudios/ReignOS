@@ -14,7 +14,7 @@ fi
 if [ "$HAS_UPDATES" = "false" ]; then
   echo ""
   echo "ReignOS Checking 'yay' for updates..."
-  sudo yay -Sy
+  yay -Sy
   HAS_UPDATES=false
   if yay -Qu &> /dev/null; then
       echo "Updates are available under yay"
