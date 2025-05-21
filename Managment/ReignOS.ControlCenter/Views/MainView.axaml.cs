@@ -816,12 +816,10 @@ public partial class MainView : UserControl
             }
 
             // force AMDVLK
-            string result = ProcessUtil.Run("pacman", $"-Q amdvlk", useBash: false);
-            if (result != null && !result.StartsWith("error:")) builder.AppendLine("export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/amd_icd64.json:/usr/share/vulkan/icd.d/amd_icd32.json");
+            if (amd_VLK.IsChecked == true) builder.AppendLine("export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/amd_icd64.json:/usr/share/vulkan/icd.d/amd_icd32.json");
 
             // force AMDGPU-Pro
-            result = ProcessUtil.Run("pacman", $"-Q vulkan-amdgpu-pro", useBash:false);
-            if (result != null && !result.StartsWith("error:")) builder.AppendLine("export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/amd_pro_icd64.json:/usr/share/vulkan/icd.d/amd_pro_icd32.json");
+            if (amd_Proprietary.IsChecked == true) builder.AppendLine("export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/amd_pro_icd64.json:/usr/share/vulkan/icd.d/amd_pro_icd32.json");
 
             File.WriteAllText(gpuSettings, builder.ToString());
         }
