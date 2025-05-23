@@ -1662,6 +1662,9 @@ public partial class MainView : UserControl
 
     private void RefreshAudioPage()
     {
+        audioDefaultCheckbox.IsChecked = false;
+        audioDefaultCheckbox.IsEnabled = true;
+
         // default
         var devicesInfoText = ProcessUtil.Run("pactl", "info", useBash:false);
         var deviceInfos = devicesInfoText.Split('\n');
@@ -1726,6 +1729,7 @@ public partial class MainView : UserControl
         var item = (ListBoxItem)audioListBox.Items[audioListBox.SelectedIndex];
         var setting = (AudioSetting)item.Tag;
         audioDefaultCheckbox.IsChecked = setting.defaultSink;
+        audioDefaultCheckbox.IsEnabled = !setting.defaultSink;
     }
     
     private void AudioDefaultCheckbox_OnIsCheckedChanged(object sender, RoutedEventArgs e)
@@ -1736,7 +1740,8 @@ public partial class MainView : UserControl
         var item = (ListBoxItem)audioListBox.Items[audioListBox.SelectedIndex];
         var setting = (AudioSetting)item.Tag;
         setting.defaultSink = audioDefaultCheckbox.IsChecked == true;
-        
+        if (setting.defaultSink) defaultAudioSetting = setting;
+
         // disable others
         if (setting.defaultSink)
         {
@@ -1747,6 +1752,8 @@ public partial class MainView : UserControl
                 s.defaultSink = false;
             }
         }
+
+        audioDefaultCheckbox.IsEnabled = false;
     }
     
     private void AudioManagerApplyButton_OnClick(object sender, RoutedEventArgs e)
