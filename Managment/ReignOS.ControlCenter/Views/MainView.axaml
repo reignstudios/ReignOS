@@ -290,7 +290,7 @@
 			</Grid>
 		</Grid>
 		
-		<Grid Name="audioManagerGrid" Margin="4" IsVisible="False">
+		<Grid Name="audioManagerGrid" Margin="4" IsVisible="True">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="0.25*"/>
 				<ColumnDefinition Width="0.75*"/>
@@ -308,6 +308,7 @@
 			<Grid Grid.Column="1">
 				<Button Content="Back" Width="128" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="AudioManagerBackButton_OnClick"/>
 				<Button Content="Apply" Background="#803000" Click="AudioManagerApplyButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,50,0,0"/>
+				<Button Content="Test" Click="AudioManagerTestButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,150,0,0"/>
 				<CheckBox Name="audioDefaultCheckbox" Content="Default" Margin="4,100,0,0" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top" IsCheckedChanged="AudioDefaultCheckbox_OnIsCheckedChanged"/>
 			</Grid>
 		</Grid>

@@ -1772,7 +1772,13 @@ public partial class MainView : UserControl
         Thread.Sleep(1000);
         RefreshAudioPage();
     }
-    
+
+    private void AudioManagerTestButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        ProcessUtil.Run("speaker-test", "-c 2 -t 5", useBash: false);
+    }
+
+
     private void DisplayManagerButton_OnClick(object sender, RoutedEventArgs e)
     {
         mainGrid.IsVisible = false;
