@@ -67,6 +67,12 @@ enum MessageBoxOption
     Option2
 }
 
+class AudioSetting
+{
+    public string name;
+    public bool defaultSink;
+}
+
 class DisplaySetting
 {
     public string name;
@@ -89,7 +95,10 @@ public partial class MainView : UserControl
     private List<GPU> gpus;
     private List<string> muxes;
     
-    private List<DisplaySetting> displaySettings = new List<DisplaySetting>();
+    private List<AudioSetting> audioSettings = new();
+    private AudioSetting defaultAudioSetting;
+    
+    private List<DisplaySetting> displaySettings = new();
     
     public MainView()
     {
@@ -319,6 +328,16 @@ public partial class MainView : UserControl
                         if (parts[1] == "ReignOS") reignOSInputCheckbox.IsChecked = true;
                         else if (parts[1] == "InputPlumber") inputPlumberInputCheckbox.IsChecked = true;
                     }
+                    else if (parts[0].StartsWith("AudioDefault:"))
+                    {
+                        var audioParts = parts[1].Split(':');
+                        if (audioParts.Length != 0)
+                        {
+                            defaultAudioSetting = new AudioSetting();
+                            defaultAudioSetting.name = audioParts[1];
+                            defaultAudioSetting.defaultSink = true;
+                        }
+                    }
                     else if (parts[0].StartsWith("Display_"))
                     {
                         var displayParts = parts[1].Split(' ');
@@ -434,6 +453,15 @@ public partial class MainView : UserControl
                 if (inputPlumberInputCheckbox.IsChecked == true) writer.WriteLine("Input=InputPlumber");
                 else writer.WriteLine("Input=ReignOS");
 
+                foreach (var setting in audioSettings)
+                {
+                    if (setting.defaultSink)
+                    {
+                        writer.WriteLine($"AudioDefault:{setting.name}");
+                        break;
+                    }
+                }
+                
                 int d = 0;
                 foreach (var setting in displaySettings)
                 {
@@ -1210,10 +1238,10 @@ public partial class MainView : UserControl
                     if (match.Success)
                     {
                         string name = match.Groups[3].Value;
-                        const int maxLength = 20;
+                        /*const int maxLength = 20;
                         if (name.StartsWith("Windows Boot Manager")) name = "Windows Boot Manager";
                         else if (name.StartsWith("Linux Boot Manager")) name = "Linux Boot Manager";
-                        else if (name.Length > maxLength) name = name.Substring(0, maxLength) + "...";
+                        else if (name.Length > maxLength) name = name.Substring(0, maxLength) + "...";*/
                         var item = new ListBoxItem();
                         item.Content = $"({match.Groups[1].Value}{match.Groups[2].Value}): {name}";
                         item.Tag = match.Groups[1].Value;
@@ -1614,6 +1642,128 @@ public partial class MainView : UserControl
         ProcessUtil.Run("nvidia-settings", "", wait:true);
 	}
     
+    private void AudioManagerButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        mainGrid.IsVisible = false;
+        audioManagerGrid.IsVisible = true;
+        RefreshAudioPage();
+    }
+    
+    private void AudioManagerBackButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        mainGrid.IsVisible = true;
+        audioManagerGrid.IsVisible = false;
+    }
+    
+    private void RefreshAudioButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        RefreshAudioPage();
+    }
+
+    private void RefreshAudioPage()
+    {
+        // default
+        var devicesInfoText = ProcessUtil.Run("pactl", "info", useBash:false);
+        var deviceInfos = devicesInfoText.Split('\n');
+        foreach (var info in deviceInfos)
+        {
+            if (info.StartsWith("Default Sink:"))
+            {
+                var parts = info.Split(':');
+                if (defaultAudioSetting == null) defaultAudioSetting = new AudioSetting();
+                defaultAudioSetting.name = parts[1].Trim();
+                defaultAudioSetting.defaultSink = true;
+                break;
+            }
+        }
+        
+        // all
+        var devicesText = ProcessUtil.Run("pactl", "list sinks short", useBash:false);
+        var devices = devicesText.Split('\n');
+        audioListBox.Items.Clear();
+        foreach (var device in devices)
+        {
+            // get name
+            string name = null;
+            string driver = null;
+            string channels = null;
+            string freq = null;
+            var match = Regex.Match(device, @"(\d+)\s+(.*)\s+(.*)\s+(.*)\s+(.*)?\s+(.*)\s");
+            if (match.Success)
+            {
+                name = match.Groups[2].Value;
+                driver = match.Groups[3].Value;
+                channels = match.Groups[5].Value;
+                freq = match.Groups[6].Value;
+            }
+            if (name == null) continue;
+            
+            // add setting
+            var setting = audioSettings.FirstOrDefault(x => x.name == name);
+            if (defaultAudioSetting != null && name == defaultAudioSetting.name)
+            {
+                setting = defaultAudioSetting;
+            }
+            else if (setting == null)
+            {
+                setting = new AudioSetting();
+                setting.name = name;
+            }
+            
+            // add
+            var item = new ListBoxItem();
+            item.Tag = setting;
+            string enabled = setting.defaultSink ? "* " : "";
+            item.Content = $"{enabled}{name}\n{channels} {freq}\n{driver}";
+            audioListBox.Items.Add(item);
+        }
+    }
+    
+    private void AudioListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (audioListBox.SelectedIndex < 0) return;
+
+        var item = (ListBoxItem)audioListBox.Items[audioListBox.SelectedIndex];
+        var setting = (AudioSetting)item.Tag;
+        audioDefaultCheckbox.IsChecked = setting.defaultSink;
+    }
+    
+    private void AudioEnabledCheckbox_OnIsCheckedChanged(object sender, RoutedEventArgs e)
+    {
+        if (audioListBox.SelectedIndex < 0) return;
+        
+        // change active value
+        var item = (ListBoxItem)audioListBox.Items[audioListBox.SelectedIndex];
+        var setting = (AudioSetting)item.Tag;
+        setting.defaultSink = audioDefaultCheckbox.IsChecked == true;
+        
+        // disable others
+        if (setting.defaultSink)
+        {
+            foreach (ListBoxItem i in audioListBox.Items)
+            {
+                if (i == item) continue;
+                var s = (AudioSetting)i.Tag;
+                s.defaultSink = false;
+            }
+        }
+    }
+    
+    private void AudioManagerApplyButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        audioSettings = new List<AudioSetting>();
+        AudioSetting audioSetting = null;
+        foreach (ListBoxItem item in audioListBox.Items)
+        {
+            var setting = (AudioSetting)item.Tag;
+            audioSettings.Add(setting);
+            if (setting.defaultSink) audioSetting = setting;
+        }
+        
+        SaveSettings();
+        if (audioSetting != null) ProcessUtil.Run("pactl", $"set-default-sink {audioSetting.name}", useBash:false);
+    }
+    
     private void DisplayManagerButton_OnClick(object sender, RoutedEventArgs e)
     {
         mainGrid.IsVisible = false;
@@ -1678,7 +1828,8 @@ public partial class MainView : UserControl
             
             var item = new ListBoxItem();
             item.Tag = setting;
-            item.Content = $"Name:{name} Rez:{resolution}";
+            string enabled = setting.enabled ? " *" : "";
+            item.Content = $"Name:{name} Rez:{resolution}{enabled}";
             displayListBox.Items.Add(item);
         }
     }
@@ -1705,7 +1856,6 @@ public partial class MainView : UserControl
         var setting = (DisplaySetting)item.Tag;
         
         displayEnabledCheckbox.IsChecked = setting.enabled;
-        displayEnabledCheckbox.IsEnabled = !setting.enabled;
         displayWidthText.Text = setting.widthOverride.ToString();
         displayHeightText.Text = setting.heightOverride.ToString();
         
@@ -1731,13 +1881,10 @@ public partial class MainView : UserControl
             foreach (ListBoxItem i in displayListBox.Items)
             {
                 if (i == item) continue;
-
                 var s = (DisplaySetting)i.Tag;
                 s.enabled = false;
             }
         }
-
-        displayEnabledCheckbox.IsEnabled = false;
     }
 
     private void DisplayText_OnTextChanged(object sender, TextChangedEventArgs e)
