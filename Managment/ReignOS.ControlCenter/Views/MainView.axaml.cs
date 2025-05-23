@@ -1752,16 +1752,15 @@ public partial class MainView : UserControl
     private void AudioManagerApplyButton_OnClick(object sender, RoutedEventArgs e)
     {
         audioSettings = new List<AudioSetting>();
-        AudioSetting audioSetting = null;
         foreach (ListBoxItem item in audioListBox.Items)
         {
             var setting = (AudioSetting)item.Tag;
             audioSettings.Add(setting);
-            if (setting.defaultSink) audioSetting = setting;
+            if (setting.defaultSink) defaultAudioSetting = setting;
         }
         
         SaveSettings();
-        if (audioSetting != null) ProcessUtil.Run("pactl", $"set-default-sink {audioSetting.name}", useBash:false);
+        if (defaultAudioSetting != null) ProcessUtil.Run("pactl", $"set-default-sink {defaultAudioSetting.name}", useBash:false);
 
         Thread.Sleep(1000);
         RefreshAudioPage();
