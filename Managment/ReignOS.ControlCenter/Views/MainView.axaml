@@ -290,7 +290,7 @@
 			</Grid>
 		</Grid>
 		
-		<Grid Name="audioManagerGrid" Margin="4" IsVisible="True">
+		<Grid Name="audioManagerGrid" Margin="4" IsVisible="False">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="0.25*"/>
 				<ColumnDefinition Width="0.75*"/>
