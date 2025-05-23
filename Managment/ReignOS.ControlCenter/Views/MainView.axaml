@@ -308,7 +308,7 @@
 			<Grid Grid.Column="1">
 				<Button Content="Back" Width="128" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="AudioManagerBackButton_OnClick"/>
 				<Button Content="Apply" Background="#803000" Click="AudioManagerApplyButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,50,0,0"/>
-				<CheckBox Name="audioDefaultCheckbox" Content="Default" Margin="4,100,0,0" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top" IsCheckedChanged="AudioEnabledCheckbox_OnIsCheckedChanged"/>
+				<CheckBox Name="audioDefaultCheckbox" Content="Default" Margin="4,100,0,0" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top" IsCheckedChanged="AudioDefaultCheckbox_OnIsCheckedChanged"/>
 			</Grid>
 		</Grid>
 

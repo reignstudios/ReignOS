@@ -1728,7 +1728,7 @@ public partial class MainView : UserControl
         audioDefaultCheckbox.IsChecked = setting.defaultSink;
     }
     
-    private void AudioEnabledCheckbox_OnIsCheckedChanged(object sender, RoutedEventArgs e)
+    private void AudioDefaultCheckbox_OnIsCheckedChanged(object sender, RoutedEventArgs e)
     {
         if (audioListBox.SelectedIndex < 0) return;
         
@@ -1762,6 +1762,9 @@ public partial class MainView : UserControl
         
         SaveSettings();
         if (audioSetting != null) ProcessUtil.Run("pactl", $"set-default-sink {audioSetting.name}", useBash:false);
+
+        Thread.Sleep(1000);
+        RefreshAudioPage();
     }
     
     private void DisplayManagerButton_OnClick(object sender, RoutedEventArgs e)
