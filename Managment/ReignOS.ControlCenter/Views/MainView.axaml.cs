@@ -1775,7 +1775,7 @@ public partial class MainView : UserControl
 
     private void AudioManagerTestButton_OnClick(object sender, RoutedEventArgs e)
     {
-        ProcessUtil.Run("speaker-test", "-c 2 -t 5", useBash: false);
+        ProcessUtil.Run("speaker-test", "-c 2 -l 1", useBash:false, wait:true);
     }
 
 
