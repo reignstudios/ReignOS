@@ -482,7 +482,7 @@ public partial class MainView : UserControl
     {
         void WriteX11Settings(StreamWriter writer, string rotation)
         {
-            if (displaySettings.Count == 0)
+            if (displaySettings.Count == 0 || !displaySettings.Exists(x => x.enabled))
             {
                 writer.WriteLine("display=$(xrandr --query | awk '/ connected/ {print $1; exit}')");
                 if (!string.IsNullOrEmpty(rotation)) rotation = $" --rotate {rotation}";
@@ -518,7 +518,7 @@ public partial class MainView : UserControl
         void WriteWaylandSettings(StreamWriter writer, string rotation)
         {
             string vrrArg = vrrCheckbox.IsChecked == true ? " --adaptive-sync enabled" : ""; //--vrr on
-            if (displaySettings.Count == 0)
+            if (displaySettings.Count == 0 || !displaySettings.Exists(x => x.enabled))
             {
                 writer.WriteLine("display=$(wlr-randr | awk '/^[^ ]+/{print $1; exit}')");
                 if (!string.IsNullOrEmpty(rotation)) rotation = $" --transform {rotation}";
@@ -560,7 +560,7 @@ public partial class MainView : UserControl
                 writer.WriteLine();
             }
 
-            if (displaySettings.Count == 0)
+            if (displaySettings.Count == 0 || !displaySettings.Exists(x => x.enabled))
             {
                 writer.WriteLine("[output]");
                 writer.WriteLine($"name={display}");
