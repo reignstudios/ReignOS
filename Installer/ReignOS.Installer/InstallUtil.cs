@@ -127,9 +127,11 @@ static class InstallUtil
         Run("pacman", "-Sy --noconfirm");
         Run("timedatectl", "set-ntp true");
         Run("hwclock", "--systohc");
+        Run("timedatectl", "");// log time
         Run("pacman", "-Sy archlinux-keyring --noconfirm");
         Run("pacman-key", "--populate");
         Run("pacman-key", "--refresh-keys");
+        Run("pacman", "-Sy --noconfirm");
     }
 
     private static void InstallBaseArch()

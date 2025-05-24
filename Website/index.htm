@@ -127,6 +127,7 @@
                 <li>NOTE: If you want to boot from MicroSD card and its not supported in BIOS, you still can if you put ReignOS_EFI partition on main drive</li>
                 <li>Boot USB using a Dock if installing on Handheld device</li>
                 <li>Follow on screen instructions</li>
+                <li>NOTE: After reboot there will be an extra install step (let it fully finish as it can take some time)</li>
             </ul>
         </div>
 
@@ -226,6 +227,23 @@
             <ul style="color: #888;">
                 <li>Xbox Controllers may need their firmware updated from an Xbox or Windows device before they work correctly</li>
             </ul>
+        </div>
+
+        <div>
+            <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">Update Troubleshooting</h2>
+            <ul style="color: #888;">
+                <li>
+                    If system is having 'pacman' update issues:<br>
+                    * Go to terminal and type these lines...<br>
+                    * sudo pacman -Sy<br>
+                    * sudo timedatectl set-ntp true<br>
+                    * sudo hwclock --systohc<br>
+                    * sudo pacman -Sy archlinux-keyring<br>
+                    * sudo pacman-key --populate<br>
+                    * sudo pacman-key --refresh-keys<br>
+                    * sudo pacman -Sy<br>
+                    * reboot<br>
+                </li>
         </div>
 
         <div>
