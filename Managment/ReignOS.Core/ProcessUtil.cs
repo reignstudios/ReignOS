@@ -105,9 +105,8 @@ public static class ProcessUtil
                         }
 
                         process.OutputDataReceived += ReadLine;
-                        process.BeginOutputReadLine();
-
                         process.ErrorDataReceived += ReadLine;
+                        process.BeginOutputReadLine();
                         process.BeginErrorReadLine();
                     }
                     

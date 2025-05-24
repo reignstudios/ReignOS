@@ -59,23 +59,17 @@ static class InstallUtil
         InstallProgress?.Invoke(progressTask, progress);
     }
 
-    private static void Run(string name, string args, ProcessUtil.ProcessOutputDelegate standardOut = null, ProcessUtil.ProcessInputDelegate getStandardInput = null, string workingDir = null)
+    private static void Run(string name, string args, ProcessUtil.ProcessOutputDelegate standardOut = null, ProcessUtil.ProcessInputDelegate getStandardInput = null, string workingDir = null, bool useBash = true)
     {
         if (cancel) throw new Exception("Install Cancelled");
         
         if (!archRootMode)
         {
-            string l = $"Run: {name} {args}";
-            Log.WriteLine(l);
-            Views.MainView.ProcessOutput(l);
-            ProcessUtil.Run(name, args, asAdmin:true, enterAdminPass:false, standardOut:standardOut, getStandardInput:getStandardInput, workingDir:workingDir);
+            ProcessUtil.Run(name, args, asAdmin:true, enterAdminPass:false, standardOut:standardOut, getStandardInput:getStandardInput, workingDir:workingDir, verboseLog:true, useBash:useBash);
         }
         else
         {
-            string l = $"Arch-Chroot.Run: {name} {args}";
-            Log.WriteLine(l);
-            Views.MainView.ProcessOutput(l);
-            ProcessUtil.Run("arch-chroot", $"/mnt bash -c \\\"{name} {args}\\\"", asAdmin:true, enterAdminPass:false, standardOut:standardOut, getStandardInput:getStandardInput, workingDir:workingDir);
+            ProcessUtil.Run("arch-chroot", $"/mnt bash -c \\\"{name} {args}\\\"", asAdmin:true, enterAdminPass:false, standardOut:standardOut, getStandardInput:getStandardInput, workingDir:workingDir, verboseLog:true);
         }
     }
     
@@ -120,18 +114,16 @@ static class InstallUtil
 
     private static void RefreshingInstallerIntegrity()
     {
-        progressTask = "Refreshing Integrity (can take time, please wait)...";
+        progressTask = "Refreshing Integrity (will take time, please wait)...";
         UpdateProgress(0);
-        archRootMode = false;
 
-        Run("pacman", "-Sy --noconfirm");
-        Run("timedatectl", "set-ntp true");
-        Run("hwclock", "--systohc");
-        Run("timedatectl", "");// log time
-        Run("pacman", "-Sy archlinux-keyring --noconfirm");
-        Run("pacman-key", "--populate");
-        Run("pacman-key", "--refresh-keys");
-        Run("pacman", "-Sy --noconfirm");
+        Run("pacman", "-Sy --noconfirm", useBash:false);
+        Run("timedatectl", "set-ntp true", useBash:false);
+        Run("hwclock", "--systohc", useBash:false);
+        Run("timedatectl", "", useBash:false);// log time
+        Run("pacman", "-Sy archlinux-keyring --noconfirm", useBash:false);
+        Run("pacman-key", "--populate", useBash:false);
+        Run("pacman-key", "--refresh-keys", useBash:false);
     }
 
     private static void InstallBaseArch()
@@ -147,7 +139,7 @@ static class InstallUtil
         UpdateProgress(1);
 
         // sync pacman db
-        Run("pacman", "-Sy");
+        Run("pacman", "-Sy --noconfirm");
         UpdateProgress(2);
 
         // make sure we re-format drives before installing

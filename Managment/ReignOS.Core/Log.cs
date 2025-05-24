@@ -87,7 +87,7 @@ public static class Log
             char c = (char)nativeText[0];
             while (c != '\0')
             {
-                Console.Write(c);
+                writer.Write(c);
                 i++;
                 c = (char)nativeText[i];
             }

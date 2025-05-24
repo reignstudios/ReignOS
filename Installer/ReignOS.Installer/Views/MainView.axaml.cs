@@ -127,7 +127,7 @@ public partial class MainView : UserControl
 
     private void InstallProgress(string task, float progress)
     {
-        Dispatcher.UIThread.Invoke(() =>
+        Dispatcher.UIThread.InvokeAsync(() =>
         {
             installText.Text = task;
             installProgressBar.Value = progress;
@@ -138,13 +138,17 @@ public partial class MainView : UserControl
                 exitButton.IsEnabled = true;
                 stage = InstallerStage.DoneInstalling;
             }
+            else if (task == "Failed")
+            {
+                exitButton.IsEnabled = true;
+            }
         });
     }
 
     private static StringBuilder installOutputBuilder = new StringBuilder();
     public static void ProcessOutput(string line)
     {
-        Dispatcher.UIThread.Invoke(() =>
+        Dispatcher.UIThread.InvokeAsync(() =>
         {
             installOutputBuilder.AppendLine(line);
             const int maxLength = 2048;
@@ -153,7 +157,11 @@ public partial class MainView : UserControl
             singleton.installTerminalScroll.ScrollToEnd();
         });
 
-        if (line.StartsWith("error:")) InstallUtil.cancel = true;
+        if (line.StartsWith("error:"))
+        {
+            singleton.exitButton.IsEnabled = true;
+            InstallUtil.cancel = true;
+        }
     }
 
     private void RotationToggleButton_OnIsCheckedChanged(object sender, RoutedEventArgs e)
