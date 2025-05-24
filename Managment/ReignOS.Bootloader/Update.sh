@@ -57,7 +57,7 @@ if [ "$HAS_UPDATES" = "true" ]; then
   # firmware
   echo "ReignOS Updating fwupdmgr firmware..."
   sudo fwupdmgr refresh -y
-  sudo fwupdmgr update -y
+  sudo fwupdmgr update -y --no-reboot-check
 
   if [ $arch_exit_code -eq 0 ]; then
     reboot
