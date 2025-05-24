@@ -152,6 +152,8 @@ public partial class MainView : UserControl
             singleton.installTerminalText.Text = installOutputBuilder.ToString();
             singleton.installTerminalScroll.ScrollToEnd();
         });
+
+        if (line.StartsWith("error:")) InstallUtil.cancel = true;
     }
 
     private void RotationToggleButton_OnIsCheckedChanged(object sender, RoutedEventArgs e)

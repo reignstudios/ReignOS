@@ -51,6 +51,7 @@ static class InstallUtil
     private static Thread installThread;
     private static float progress;
     private static string progressTask;
+    public static bool cancel;
 
     private static void UpdateProgress(int progress)
     {
@@ -60,14 +61,19 @@ static class InstallUtil
 
     private static void Run(string name, string args, ProcessUtil.ProcessOutputDelegate standardOut = null, ProcessUtil.ProcessInputDelegate getStandardInput = null, string workingDir = null)
     {
+        if (cancel) throw new Exception("Install Cancelled");
+        
         if (!archRootMode)
         {
+            string l = $"Run: {name} {args}";
+            Log.WriteLine(l);
+            Views.MainView.ProcessOutput(l);
             ProcessUtil.Run(name, args, asAdmin:true, enterAdminPass:false, standardOut:standardOut, getStandardInput:getStandardInput, workingDir:workingDir);
         }
         else
         {
             string l = $"Arch-Chroot.Run: {name} {args}";
-            Console.WriteLine(l);
+            Log.WriteLine(l);
             Views.MainView.ProcessOutput(l);
             ProcessUtil.Run("arch-chroot", $"/mnt bash -c \\\"{name} {args}\\\"", asAdmin:true, enterAdminPass:false, standardOut:standardOut, getStandardInput:getStandardInput, workingDir:workingDir);
         }
@@ -83,6 +89,7 @@ static class InstallUtil
 
     private static void InstallThread()
     {
+        cancel = false;
         ProcessUtil.ProcessOutput += Views.MainView.ProcessOutput;
         progress = 0;
         archRootMode = false;
@@ -98,7 +105,8 @@ static class InstallUtil
         catch (Exception e)
         {
             InstallProgress?.Invoke("Failed", progress);
-            Console.WriteLine(e);
+            Log.WriteLine(e);
+            Views.MainView.ProcessOutput(e.ToString());
         }
 
         archRootMode = false;
@@ -114,12 +122,14 @@ static class InstallUtil
     {
         progressTask = "Refreshing Integrity (can take time, please wait)...";
         UpdateProgress(0);
+        archRootMode = false;
 
-        Run("pacman", "-Sy archlinux-keyring --noconfirm");
-        Run("pacman-key", "--populate --noconfirm");
-        Run("pacman-key", "--refresh-keys --noconfirm");
-
+        Run("pacman", "-Sy --noconfirm");
         Run("timedatectl", "set-ntp true");
+        Run("hwclock", "--systohc");
+        Run("pacman", "-Sy archlinux-keyring --noconfirm");
+        Run("pacman-key", "--populate");
+        Run("pacman-key", "--refresh-keys");
     }
 
     private static void InstallBaseArch()
@@ -473,9 +483,13 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm unclutter");
         UpdateProgress(83);
 
-        // install wayland mouse util
+        // install flatpak
         Run("pacman", "-S --noconfirm flatpak");
         UpdateProgress(84);
+        
+        // install kde
+        Run("pacman", "-S --noconfirm plasma konsole dolphin kate");
+        UpdateProgress(85);
     }
     
     private static void InstallReignOSRepo()
@@ -485,6 +499,10 @@ static class InstallUtil
 
         // enable timezone
         Run("systemctl", "enable systemd-timesyncd");
+        
+        // enable time sync
+        Run("timedatectl", "set-ntp true");
+        Run("hwclock", "--systohc");
 
         // clear package cache
         Run("rm", "-rf /var/cache/pacman/pkg/*");
