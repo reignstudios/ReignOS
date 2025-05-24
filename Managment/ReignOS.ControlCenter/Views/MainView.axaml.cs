@@ -106,6 +106,9 @@ public partial class MainView : UserControl
         versionText.Text = "Version: " + VersionInfo.version;
         if (Design.IsDesignMode) return;
         compositorText.Text = "Control-Center Compositor: " + Program.compositorMode.ToString();
+
+        string gitResult = ProcessUtil.Run("git", "branch --show-current");
+        gitText.Text = "Branch: " + gitResult.Trim();
         
         RefreshGPUs();
         RefreshMUX();
