@@ -107,7 +107,7 @@ public partial class MainView : UserControl
         if (Design.IsDesignMode) return;
         compositorText.Text = "Control-Center Compositor: " + Program.compositorMode.ToString();
 
-        string gitResult = ProcessUtil.Run("git", "branch --show-current");
+        string gitResult = ProcessUtil.Run("git", "branch --show-current", useBash:false);
         gitText.Text = "Branch: " + gitResult.Trim();
         
         RefreshGPUs();
