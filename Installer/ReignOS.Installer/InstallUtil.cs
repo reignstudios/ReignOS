@@ -59,13 +59,13 @@ static class InstallUtil
         InstallProgress?.Invoke(progressTask, progress);
     }
 
-    private static void Run(string name, string args, ProcessUtil.ProcessOutputDelegate standardOut = null, ProcessUtil.ProcessInputDelegate getStandardInput = null, string workingDir = null, bool useBash = true)
+    private static void Run(string name, string args, ProcessUtil.ProcessOutputDelegate standardOut = null, ProcessUtil.ProcessInputDelegate getStandardInput = null, string workingDir = null)
     {
         if (cancel) throw new Exception("Install Cancelled");
         
         if (!archRootMode)
         {
-            ProcessUtil.Run(name, args, asAdmin:true, enterAdminPass:false, standardOut:standardOut, getStandardInput:getStandardInput, workingDir:workingDir, verboseLog:true, useBash:useBash);
+            ProcessUtil.Run(name, args, asAdmin:true, enterAdminPass:false, standardOut:standardOut, getStandardInput:getStandardInput, workingDir:workingDir, verboseLog:true);
         }
         else
         {
@@ -117,13 +117,13 @@ static class InstallUtil
         progressTask = "Refreshing Integrity (will take time, please wait)...";
         UpdateProgress(0);
 
-        Run("pacman", "-Sy --noconfirm", useBash:false);
-        Run("timedatectl", "set-ntp true", useBash:false);
-        Run("hwclock", "--systohc", useBash:false);
-        Run("timedatectl", "", useBash:false);// log time
-        Run("pacman", "-Sy archlinux-keyring --noconfirm", useBash:false);
-        Run("pacman-key", "--populate", useBash:false);
-        Run("pacman-key", "--refresh-keys", useBash:false);
+        Run("pacman", "-Sy --noconfirm");
+        Run("timedatectl", "set-ntp true");
+        Run("hwclock", "--systohc");
+        Run("timedatectl", "");// log time
+        Run("pacman", "-Sy archlinux-keyring --noconfirm");
+        Run("pacman-key", "--populate");
+        Run("pacman-key", "--refresh-keys");
     }
 
     private static void InstallBaseArch()

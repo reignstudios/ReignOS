@@ -157,7 +157,7 @@ public partial class MainView : UserControl
             singleton.installTerminalScroll.ScrollToEnd();
         });
 
-        if (line.StartsWith("error:"))
+        if (line.ToLower().Contains("error:"))
         {
             singleton.exitButton.IsEnabled = true;
             InstallUtil.cancel = true;
