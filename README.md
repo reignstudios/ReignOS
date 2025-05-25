@@ -6,5 +6,5 @@ ReignOS is a SteamOS like Arch distro but with its own unique take focused on ge
 * Dual-Boot with Windows
 
 [Website](http://reign-studios.com/ReignOS/)<br>
-[Discord](https://disboard.org/server/1344845464175902750)
+[Discord](https://disboard.org/server/1344845464175902750)<br>
 [ISO Builder](https://github.com/reignstudios/ReignOS.ISO)
