@@ -3,6 +3,7 @@ ReignOS is a SteamOS like Arch distro but with its own unique take focused on ge
 
 * AMD, Intel and Nvidia GPUs supported
 * Most General PC hardware should just work
+* Most handhelds should work
 * Dual-Boot with Windows
 
 [Website](http://reign-studios.com/ReignOS/)<br>
