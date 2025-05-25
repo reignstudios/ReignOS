@@ -123,12 +123,35 @@ if [ $exit_code -eq 34 ]; then
   exit 0
 fi
 
+# manage InputPlumber
+if [ $exit_code -eq 50 ]; then
+  echo ""
+  echo "Changing Input-Control to ReignOS..."
+  sudo systemctl stop inputplumber inputplumber-suspend
+  sudo systemctl disable inputplumber inputplumber-suspend
+  sudo pacman -R --noconfirm inputplumber
+  sleep 2
+  sudo reboot -f
+  exit 0
+fi
+
+if [ $exit_code -eq 51 ]; then
+  echo ""
+  echo "Changing Input-Control to InputPlumber..."
+  sudo pacman -S --noconfirm inputplumber
+  sudo systemctl enable inputplumber inputplumber-suspend
+  sudo systemctl start inputplumber inputplumber-suspend
+  sleep 2
+  sudo reboot -f
+  exit 0
+fi
+
 # install missing packages
 if [ $exit_code -eq 100 ]; then
   echo ""
   echo "ReignOS (Installing missing packages)..."
   ./InstallingMissingPackages.sh
-  reboot
+  sudo reboot -f
   exit 0
 fi
 

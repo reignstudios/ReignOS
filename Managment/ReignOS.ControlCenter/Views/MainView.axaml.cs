@@ -1167,20 +1167,6 @@ public partial class MainView : UserControl
 
     private void MenuInputApplyButton_Click(object sender, RoutedEventArgs e)
     {
-        // manage input plumber
-        if (inputPlumberInputCheckbox.IsChecked == true)
-        {
-            ProcessUtil.Run("pacman", "-S --noconfirm inputplumber", asAdmin:true, useBash:false);
-            ProcessUtil.Run("systemctl", "enable inputplumber inputplumber-suspend", asAdmin:true, useBash:false);
-            ProcessUtil.Run("systemctl", "start inputplumber inputplumber-suspend", asAdmin:true, useBash:false);
-        }
-        else
-        {
-            ProcessUtil.Run("systemctl", "stop inputplumber inputplumber-suspend", asAdmin:true, useBash:false);
-            ProcessUtil.Run("systemctl", "disable inputplumber inputplumber-suspend", asAdmin:true, useBash:false);
-            ProcessUtil.Run("pacman", "-R --noconfirm inputplumber", asAdmin:true, useBash:false);
-        }
-
         // apply settings
         string text = File.ReadAllText(launchFile);
         foreach (string line in text.Split('\n'))
@@ -1207,7 +1193,7 @@ public partial class MainView : UserControl
         File.WriteAllText(launchFile, text);
         SaveSettings();
 
-        App.exitCode = 15;// reboot
+        App.exitCode = (inputPlumberInputCheckbox.IsChecked == true) ? 51 : 50;
         MainWindow.singleton.Close();
     }
 
