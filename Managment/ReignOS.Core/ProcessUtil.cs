@@ -94,7 +94,7 @@ public static class ProcessUtil
                                         if (verboseLog) Log.WriteLine(value);
                                         ProcessOutput?.Invoke(value);
                                     }
-                                    standardOut(args.Data);
+                                    standardOut(value);
                                 }
                                 catch (Exception e)
                                 {

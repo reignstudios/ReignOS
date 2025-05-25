@@ -117,13 +117,18 @@ static class InstallUtil
         progressTask = "Refreshing Integrity (will take time, please wait)...";
         UpdateProgress(0);
 
+        static void standardOut(string line)
+        {
+            // do nothing: just used to keep output read
+        }
+
         Run("pacman", "-Sy --noconfirm");
         Run("timedatectl", "set-ntp true");
         Run("hwclock", "--systohc");
         Run("timedatectl", "");// log time
         Run("pacman", "-Sy archlinux-keyring --noconfirm");
-        Run("pacman-key", "--populate");
-        Run("pacman-key", "--refresh-keys");
+        Run("pacman-key", "--populate", standardOut:standardOut);
+        Run("pacman-key", "--refresh-keys", standardOut: standardOut);
     }
 
     private static void InstallBaseArch()
