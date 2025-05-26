@@ -487,7 +487,7 @@ static class InstallUtil
         UpdateProgress(84);
         
         // install kde
-        Run("pacman", "-S --noconfirm plasma konsole dolphin kate");
+        Run("pacman", "-S --noconfirm plasma konsole dolphin kate ark exfatprogs dosfstools partitionmanager");
         UpdateProgress(85);
     }
     

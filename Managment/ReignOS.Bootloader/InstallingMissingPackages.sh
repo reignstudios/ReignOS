@@ -19,7 +19,10 @@ sudo systemctl enable bluetooth
 sudo pacman -S --noconfirm bolt
 sudo systemctl enable bolt.service
 
-sudo pacman -S flatpak --noconfirm
+sudo pacman -S --noconfirm plasma konsole dolphin kate ark exfatprogs dosfstools partitionmanager
+
+sudo pacman -S --noconfirm gparted
+sudo pacman -S --noconfirm flatpak
 
 # add yay packages
 if [ ! -d "/home/gamer/yay" ]; then

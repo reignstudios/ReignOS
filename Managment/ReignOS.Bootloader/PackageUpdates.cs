@@ -57,6 +57,16 @@ static class PackageUpdates
         if (!PackageExits("bluez")) return true;
         if (!PackageExits("bluez-utils")) return true;
 
+        if (!PackageExits("plasma")) return true;
+        if (!PackageExits("konsole")) return true;
+        if (!PackageExits("dolphin")) return true;
+        if (!PackageExits("kate")) return true;
+        if (!PackageExits("ark")) return true;
+        if (!PackageExits("exfatprogs")) return true;
+        if (!PackageExits("dosfstools")) return true;
+        if (!PackageExits("partitionmanager")) return true;
+
+        if (!PackageExits("gparted")) return true;
         if (!PackageExits("flatpak")) return true;
 
         if (!PackageExits("yay")) return true;
