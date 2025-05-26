@@ -43,12 +43,12 @@ if [ "$DISABLE_STEAM_DECK" = "true" ]; then
     fi
 else
     if [ "$USE_MANGOHUB" = "true" ]; then
-        mangohud steam -bigpicture -steamdeck -no-cef-sandbox
+        mangohud steam -gamepadui -steamdeck -no-cef-sandbox
     else
         if [ "$DISABLE_STEAM_GPU" = "true" ]; then
-            env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -steamdeck -no-cef-sandbox
+            env MESA_GL_VERSION_OVERRIDE=1.3 steam -gamepadui -steamdeck -no-cef-sandbox
         else
-            steam -bigpicture -steamdeck -no-cef-sandbox
+            steam -gamepadui -steamdeck -no-cef-sandbox
         fi
     fi
 fi

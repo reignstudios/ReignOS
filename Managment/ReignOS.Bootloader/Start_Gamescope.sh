@@ -42,9 +42,9 @@ done
 # start steam
 if [ "$DISABLE_STEAM_DECK" = "true" ]; then
     if [ "$DISABLE_STEAM_GPU" = "true" ]; then
-        env MESA_GL_VERSION_OVERRIDE=1.3 steam -gamepadui -steamos3 -no-cef-sandbox
+        env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -steamos3 -no-cef-sandbox
     else
-        steam -gamepadui -steamos3 -no-cef-sandbox
+        steam -bigpicture -steamos3 -no-cef-sandbox
     fi
 else
     if [ "$DISABLE_STEAM_GPU" = "true" ]; then
