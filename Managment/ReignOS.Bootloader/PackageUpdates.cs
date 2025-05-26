@@ -57,7 +57,7 @@ static class PackageUpdates
         if (!PackageExits("bluez")) return true;
         if (!PackageExits("bluez-utils")) return true;
 
-        if (!PackageExits("plasma")) return true;
+        if (!PackageExits("plasma-desktop")) return true;
         if (!PackageExits("konsole")) return true;
         if (!PackageExits("dolphin")) return true;
         if (!PackageExits("kate")) return true;
