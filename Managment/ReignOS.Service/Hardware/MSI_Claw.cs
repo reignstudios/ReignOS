@@ -33,11 +33,14 @@ public static class MSI_Claw
 
         // configure gamepad
         device = new HidDevice();
-        if (!device.Init(0x0DB0, 0x1901, true) || device.handles.Count == 0)
+        if (!device.Init(0x0DB0, 0x1901, true) || device.handles.Count == 0)// revision 1
         {
-            device.Dispose();
-            device = null;
-            return;
+            if (!device.Init(0x0DB0, 0x1902, true) || device.handles.Count == 0)// revision 2
+            {
+                device.Dispose();
+                device = null;
+                return;
+            } 
         }
         
         Log.WriteLine("MSI-Claw gamepad found");
