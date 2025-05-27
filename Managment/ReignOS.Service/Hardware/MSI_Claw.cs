@@ -72,7 +72,7 @@ public static class MSI_Claw
         buffer[i++] = 0;
         buffer[i++] = 60;
         buffer[i++] = 36;// we want to switch mode
-        buffer[i++] = 0;//(byte)mode;// mode
+        buffer[i++] = (byte)mode;// mode
         buffer[i++] = 0;
         buffer[i++] = 0;
         if (!device.WriteData(buffer, 0, buffer.Length))
