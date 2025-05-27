@@ -221,6 +221,8 @@ public partial class MainView : UserControl
                         else if (parts[1] == "Gamescope") boot_Gamescope.IsChecked = true;
                         else if (parts[1] == "Weston") boot_Weston.IsChecked = true;
                         else if (parts[1] == "Cage") boot_Cage.IsChecked = true;
+                        else if (parts[1] == "X11") boot_X11.IsChecked = true;
+                        else if (parts[1] == "KDE-G") boot_KDEG.IsChecked = true;
                     }
                     else if (parts[0] == "ScreenRotation")
                     {
@@ -400,6 +402,8 @@ public partial class MainView : UserControl
                 else if (boot_Gamescope.IsChecked == true) writer.WriteLine("Boot=Gamescope");
                 else if (boot_Weston.IsChecked == true) writer.WriteLine("Boot=Weston");
                 else if (boot_Cage.IsChecked == true) writer.WriteLine("Boot=Cage");
+                else if (boot_X11.IsChecked == true) writer.WriteLine("Boot=X11");
+                else if (boot_KDEG.IsChecked == true) writer.WriteLine("Boot=KDE-G");
                 else writer.WriteLine("Boot=ControlCenter");
             
                 if (rot_Default.IsChecked == true) writer.WriteLine("ScreenRotation=Default");
@@ -987,11 +991,18 @@ public partial class MainView : UserControl
     private void KDEX11Button_OnClick(object sender, RoutedEventArgs e)
     {
         if (!ValidateKDE()) return;
-        App.exitCode = 8;// open KDE
+        App.exitCode = 8;// open KDE-X11
         MainWindow.singleton.Close();
     }
 
-	private static bool PackageExits(string package)
+    private void KDEGButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (!ValidateKDE()) return;
+        App.exitCode = 9;// open KDE-G
+        MainWindow.singleton.Close();
+    }
+
+    private static bool PackageExits(string package)
     {
         string result = ProcessUtil.Run("pacman", $"-Q {package}");
         return result != null && !result.StartsWith("error:");
@@ -1029,12 +1040,18 @@ public partial class MainView : UserControl
     private void BootApplyButton_OnClick(object sender, RoutedEventArgs e)
     {
         string text = File.ReadAllText(launchFile);
+
         text = text.Replace(" --gamescope", "");
         text = text.Replace(" --weston", "");
         text = text.Replace(" --cage", "");
+        text = text.Replace(" --x11", "");
+        text = text.Replace(" --kdeg", "");
+
         if (boot_Gamescope.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --gamescope");
         else if (boot_Weston.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --weston");
         else if (boot_Cage.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --cage");
+        else if (boot_X11.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --x11");
+        else if (boot_KDEG.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --kde-g");
         File.WriteAllText(launchFile, text);
         SaveSettings();
     }

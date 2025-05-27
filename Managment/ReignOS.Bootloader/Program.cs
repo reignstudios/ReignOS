@@ -14,7 +14,8 @@ enum ControlCenterCompositor
 {
     Weston,
     Cage,
-    X11
+    X11,
+    KDE_G
 }
 
 enum Compositor
@@ -27,7 +28,8 @@ enum Compositor
     Labwc,
     X11,
     KDE,
-    KDE_X11
+    KDE_X11,
+    KDE_G
 }
 
 internal class Program
@@ -62,6 +64,7 @@ internal class Program
             else if (arg == "--controlcenter-weston") controlCenterCompositor = ControlCenterCompositor.Weston;
             else if (arg == "--controlcenter-cage") controlCenterCompositor = ControlCenterCompositor.Cage;
             else if (arg == "--controlcenter-x11") controlCenterCompositor = ControlCenterCompositor.X11;
+            else if (arg == "--controlcenter-kde-g") controlCenterCompositor = ControlCenterCompositor.KDE_G;
 
             else if (arg == "--gamescope") compositor = Compositor.Gamescope;
             else if (arg == "--weston") compositor = Compositor.Weston;
@@ -71,6 +74,7 @@ internal class Program
             else if (arg == "--x11") compositor = Compositor.X11;
             else if (arg == "--kde") compositor = Compositor.KDE;
             else if (arg == "--kde-x11") compositor = Compositor.KDE_X11;
+            else if (arg == "--kde-g") compositor = Compositor.KDE_G;
 
             else if (arg.StartsWith("--gpu-"))
             {
@@ -130,7 +134,8 @@ internal class Program
         ProcessUtil.Run("chmod", "+x ./Start_Cage.sh", useBash:false);
         ProcessUtil.Run("chmod", "+x ./Start_Labwc.sh", useBash:false);
         ProcessUtil.Run("chmod", "+x ./Start_X11.sh", useBash:false);
-        
+        ProcessUtil.Run("chmod", "+x ./Start_KDE-G.sh", useBash: false);
+
         // detect if system needs package updates
         if (PackageUpdates.CheckUpdates() && IsOnline())
         {
@@ -220,8 +225,9 @@ internal class Program
                     case Compositor.Cage: StartCompositor_Cage(useMangoHub, disableSteamGPU, disableSteamDeck, gpu); break;
                     case Compositor.Labwc: StartCompositor_Labwc(disableSteamGPU, gpu); break;
                     case Compositor.X11: StartCompositor_X11(useMangoHub, disableSteamGPU, disableSteamDeck, gpu); break;
-                    case Compositor.KDE: StartCompositor_KDE(gpu, false, serviceProcess); break;
-                    case Compositor.KDE_X11: StartCompositor_KDE(gpu, true, serviceProcess); break;
+                    case Compositor.KDE: StartCompositor_KDE(useMangoHub, disableSteamGPU, disableSteamDeck, gpu, false, false, serviceProcess); break;
+                    case Compositor.KDE_X11: StartCompositor_KDE(useMangoHub, disableSteamGPU, disableSteamDeck, gpu, true, false, serviceProcess); break;
+                    case Compositor.KDE_G: StartCompositor_KDE(useMangoHub, disableSteamGPU, disableSteamDeck, gpu, false, true, serviceProcess); break;
                 }
             }
             catch (Exception e)
@@ -281,6 +287,7 @@ internal class Program
                 else if (exitCode == 6) compositor = Compositor.X11;
                 else if (exitCode == 7) compositor = Compositor.KDE;
                 else if (exitCode == 8) compositor = Compositor.KDE_X11;
+                else if (exitCode == 9) compositor = Compositor.KDE_G;
                 else exitLoop = true;// exit with control-center exit-code
 
                 // wait for soft shutdown
@@ -423,13 +430,22 @@ internal class Program
         Log.WriteLine(result);
     }
 
-    private static void StartCompositor_KDE(int gpu, bool useX11, Process serviceProcess)
+    private static void StartCompositor_KDE(bool useMangoHub, bool disableSteamGPU, bool disableSteamDeck, int gpu, bool useX11, bool useGMode, Process serviceProcess)
     {
         Log.WriteLine("Starting KDE...");
         serviceProcess.StandardInput.WriteLine("stop-inhibit");
+
         string gpuArg = GetGPUArg(gpu);
         string result;
-        if (useX11)
+        if (useGMode)
+        {
+            DisableX11();
+            string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
+            string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
+            string steamDeckArg = disableSteamDeck ? " --disable-steam-deck" : "";
+            result = ProcessUtil.Run($"{gpuArg}./Start_KDE-G.sh{useMangoHubArg}{steamGPUArg}{steamDeckArg}", "", useBash: true);
+        }
+        else if (useX11)
         {
             ConfigureX11($"{gpuArg}startplasma-x11");
             result = ProcessUtil.Run("startx", "", useBash:false);
@@ -439,6 +455,7 @@ internal class Program
             DisableX11();
             result = ProcessUtil.Run($"{gpuArg}startplasma-wayland", "", useBash:true);
         }
+
         Log.WriteLine(result);
         serviceProcess.StandardInput.WriteLine("start-inhibit");
     }

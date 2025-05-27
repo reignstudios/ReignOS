@@ -40,6 +40,9 @@
     <None Update="Start_Gamescope.sh">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Start_KDE-G.sh">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Start_Labwc.sh">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

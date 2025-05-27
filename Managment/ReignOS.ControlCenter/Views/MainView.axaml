@@ -14,64 +14,73 @@
 			<TextBlock Name="gitText" Text="Branch: ..." Foreground="Gray" Margin="0,72,8,0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
 			<TextBlock Text="Control Center" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="32" FontWeight="Bold" Margin="4,25,4,4"/>
 			<Separator HorizontalAlignment="Center" VerticalAlignment="Top" Margin="150,70,150,0"/>
+
+			<ScrollViewer Height="145" VerticalAlignment="Top" Margin="4,95,0,0" Background="#202020" HorizontalScrollBarVisibility="Auto">
+				<StackPanel Orientation="Horizontal">
+					<Button Click="GamescopeButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#006000">
+						<Grid Margin="0">
+							<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
+							<TextBlock Text="Gamescope" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
+						</Grid>
+					</Button>
+				
+					<Button Click="WestonButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#006000">
+						<Grid Margin="0">
+							<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
+							<TextBlock Text="Weston" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
+						</Grid>
+					</Button>
+
+					<Button Click="WestonWindowedButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#603000">
+						<Grid Margin="0">
+							<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
+							<TextBlock Text="Weston-W" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
+						</Grid>
+					</Button>
+
+					<Button Click="CageButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#006000">
+						<Grid Margin="0">
+							<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
+							<TextBlock Text="Cage" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
+						</Grid>
+					</Button>
+
+					<Button Click="LabwcButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#603000">
+						<Grid Margin="0">
+							<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
+							<TextBlock Text="Labwc" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
+						</Grid>
+					</Button>
+				
+					<Button Click="X11Button_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#600000">
+						<Grid Margin="0">
+							<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
+							<TextBlock Text="X11" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
+						</Grid>
+					</Button>
+
+					<Button Click="KDEGButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#006060">
+						<Grid Margin="0">
+							<Image Source="avares://ReignOS.ControlCenter/Assets/kde.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,20"/>
+							<TextBlock Text="KDE-G" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
+						</Grid>
+					</Button>
 			
-			<StackPanel Height="145" VerticalAlignment="Top" Margin="4,95,0,0" Background="#202020" Orientation="Horizontal">
-				<Button Click="GamescopeButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#006000">
-					<Grid Margin="0">
-						<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
-						<TextBlock Text="Gamescope" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
-					</Grid>
-				</Button>
+					<Button Click="KDEButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#000060">
+						<Grid Margin="0">
+							<Image Source="avares://ReignOS.ControlCenter/Assets/kde.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,20"/>
+							<TextBlock Text="KDE" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
+						</Grid>
+					</Button>
 				
-				<Button Click="WestonButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#006000">
-					<Grid Margin="0">
-						<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
-						<TextBlock Text="Weston" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
-					</Grid>
-				</Button>
-
-				<Button Click="WestonWindowedButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#603000">
-					<Grid Margin="0">
-						<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
-						<TextBlock Text="Weston-W" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
-					</Grid>
-				</Button>
-
-				<Button Click="CageButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#006000">
-					<Grid Margin="0">
-						<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
-						<TextBlock Text="Cage" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
-					</Grid>
-				</Button>
-
-				<Button Click="LabwcButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#603000">
-					<Grid Margin="0">
-						<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
-						<TextBlock Text="Labwc" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
-					</Grid>
-				</Button>
-				
-				<Button Click="X11Button_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#600000">
-					<Grid Margin="0">
-						<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
-						<TextBlock Text="X11" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
-					</Grid>
-				</Button>
-			
-				<Button Click="KDEButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#000060">
-					<Grid Margin="0">
-						<Image Source="avares://ReignOS.ControlCenter/Assets/kde.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,20"/>
-						<TextBlock Text="KDE" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
-					</Grid>
-				</Button>
-				
-				<Button Click="KDEX11Button_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#000030">
-					<Grid Margin="0">
-						<Image Source="avares://ReignOS.ControlCenter/Assets/kde.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,20"/>
-						<TextBlock Text="KDE X11" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
-					</Grid>
-				</Button>
-			</StackPanel>
+					<Button Click="KDEX11Button_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#000030">
+						<Grid Margin="0">
+							<Image Source="avares://ReignOS.ControlCenter/Assets/kde.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,20"/>
+							<TextBlock Text="KDE X11" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
+						</Grid>
+					</Button>
+				</StackPanel>
+			</ScrollViewer>
 			
 			<StackPanel Margin="4,250,4,50" Background="#202020" Orientation="Vertical">
 				<Grid Margin="8,8,8,4" Background="#444444" Height="40">
@@ -82,6 +91,8 @@
 						<RadioButton Name="boot_Gamescope" Content="Gamescope" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						<RadioButton Name="boot_Weston" Content="Weston" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						<RadioButton Name="boot_Cage" Content="Cage" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						<RadioButton Name="boot_X11" Content="X11" Margin="800,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						<RadioButton Name="boot_KDEG" Content="KDE-G" Margin="950,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 					</Grid>
 				</Grid>
 				
