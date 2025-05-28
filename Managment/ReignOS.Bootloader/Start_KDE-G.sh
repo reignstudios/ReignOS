@@ -18,9 +18,6 @@ for arg in "$@"; do
     fi
 done
 
-# hide mouse after 3 seconds
-unclutter -idle 3 &
-
 # start steam
 STEAM_LAUNCH=""
 if [ "$DISABLE_STEAM_DECK" = "true" ]; then
@@ -61,9 +58,6 @@ done
 
 # tell KDE to exit
 kill -15 $KWIN_PID 2>/dev/null || true
-
-# close unclutter
-sudo pkill "unclutter"
 
 # run post kill
 ./PostKill.sh &
