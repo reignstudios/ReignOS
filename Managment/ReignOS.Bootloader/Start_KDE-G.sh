@@ -50,12 +50,12 @@ kwin_wayland --lock --xwayland -- bash -c "$STEAM_LAUNCH" &
 KWIN_PID=$!
 
 # wait for steam to start
-while ! pgrep -u $USER -x steam > /dev/null; do
+while ! pgrep -u gamer -x steam > /dev/null; do
     sleep 1
 done
 
 # wait for steam to exit
-while pgrep -u $USER steam > /dev/null; do
+while pgrep -u gamer steam > /dev/null; do
     sleep 1
 done
 
