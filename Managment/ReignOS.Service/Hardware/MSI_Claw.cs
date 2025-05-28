@@ -80,6 +80,11 @@ public static class MSI_Claw
             Log.WriteLine("FAILED: To set MSI-Claw gamepad mode");
             return false;
         }
+
+        if (!device.ReadData(buffer, 0, buffer.Length))
+        {
+            Log.WriteLine("ERROR: MSI-Claw gamepad failed to read response");
+        }
         
         Log.WriteLine("MSI-Claw gamepad mode set");
         isEnabled = true;
