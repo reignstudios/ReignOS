@@ -37,7 +37,7 @@ public static class MSI_Claw
         {
             if (!device.Init(0x0DB0, 0x1902, true) || device.handles.Count == 0)// mode 2
             {
-                if (!device.Init(0x0DB0, 0x1903, true) || device.handles.Count == 0)// mode 2
+                if (!device.Init(0x0DB0, 0x1903, true) || device.handles.Count == 0)// mode 3
                 {
                     device.Dispose();
                     device = null;

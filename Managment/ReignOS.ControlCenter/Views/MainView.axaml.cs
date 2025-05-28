@@ -1045,7 +1045,7 @@ public partial class MainView : UserControl
         text = text.Replace(" --weston", "");
         text = text.Replace(" --cage", "");
         text = text.Replace(" --x11", "");
-        text = text.Replace(" --kdeg", "");
+        text = text.Replace(" --kde-g", "");
 
         if (boot_Gamescope.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --gamescope");
         else if (boot_Weston.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --weston");
