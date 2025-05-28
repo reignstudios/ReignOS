@@ -88,7 +88,7 @@ public static class MSI_Claw
         buffer = new byte[256];
         if (device.ReadData(buffer, 0, buffer.Length, out nint sizeRead))
         {
-            string hex = BitConverter.ToString(buffer, 0, (int)sizeRead).Replace("-", "");
+            string hex = BitConverter.ToString(buffer, 0, (int)sizeRead);
             Log.WriteLine($"MSI-Claw gamepad read response: Size={sizeRead} Data:{hex}");
         }
         else
