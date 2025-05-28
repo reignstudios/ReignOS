@@ -49,9 +49,11 @@ fi
 kwin_wayland --lock --xwayland -- bash -c "$STEAM_LAUNCH" &
 
 # wait for steam to start
-while ! pgrep -u $USER -x steam > /dev/null; do
-    sleep 1
-done
+#while ! pgrep -u $USER -x steam > /dev/null; do
+#    sleep 1
+#done
+sleep 10
+
 
 # wait for steam to exit
 while pgrep -u $USER steam > /dev/null; do
