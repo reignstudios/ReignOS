@@ -81,11 +81,10 @@ public static class MSI_Claw
             return false;
         }
 
-        if (!device.ReadData(buffer, 0, buffer.Length))
-        {
-            Log.WriteLine("ERROR: MSI-Claw gamepad failed to read response");
-        }
-        
+        buffer = new byte[256];
+        if (device.ReadData(buffer, 0, buffer.Length, out nint sizeRead)) Log.WriteLine("MSI-Claw gamepad read response: " + sizeRead);
+        else Log.WriteLine("ERROR: MSI-Claw gamepad failed to read response");
+
         Log.WriteLine("MSI-Claw gamepad mode set");
         isEnabled = true;
         return true;

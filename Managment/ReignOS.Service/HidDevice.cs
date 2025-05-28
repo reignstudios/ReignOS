@@ -107,19 +107,21 @@ public unsafe class HidDevice
         return success;
     }
     
-    public bool ReadData(byte[] data, int offset, int size)
+    public bool ReadData(byte[] data, int offset, int size, out nint sizeRead)
     {
         foreach (int handle in handles)
         {
             fixed (byte* dataPtr = data)
             {
-                if (c.read(handle, dataPtr + offset, (UIntPtr)size) >= 0)
+                sizeRead = c.read(handle, dataPtr + offset, (UIntPtr)size);
+                if (sizeRead >= 0)
                 {
                     return true;// success on first read
                 }
             }
         }
-        
+
+        sizeRead = -1;
         return false;
     }
 }
