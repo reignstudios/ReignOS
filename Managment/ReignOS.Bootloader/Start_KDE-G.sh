@@ -46,7 +46,7 @@ else
 fi
 
 # start KDE with steam
-kwin_wayland --lock --xwayland -- bash -c $STEAM_LAUNCH &
+kwin_wayland --lock --xwayland -- bash -c "$STEAM_LAUNCH" &
 
 # wait for steam to start
 while ! pgrep -u $USER -x steam > /dev/null; do
