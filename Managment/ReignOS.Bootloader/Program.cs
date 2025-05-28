@@ -433,8 +433,6 @@ internal class Program
     private static void StartCompositor_KDE(bool useMangoHub, bool disableSteamGPU, bool disableSteamDeck, int gpu, bool useX11, bool useGMode, Process serviceProcess)
     {
         Log.WriteLine("Starting KDE...");
-        serviceProcess.StandardInput.WriteLine("stop-inhibit");
-
         string gpuArg = GetGPUArg(gpu);
         string result;
         if (useGMode)
@@ -447,17 +445,20 @@ internal class Program
         }
         else if (useX11)
         {
+            serviceProcess.StandardInput.WriteLine("stop-inhibit");
             ConfigureX11($"{gpuArg}startplasma-x11");
             result = ProcessUtil.Run("startx", "", useBash:false);
+            serviceProcess.StandardInput.WriteLine("start-inhibit");
         }
         else
         {
+            serviceProcess.StandardInput.WriteLine("stop-inhibit");
             DisableX11();
             result = ProcessUtil.Run($"{gpuArg}startplasma-wayland", "", useBash:true);
+            serviceProcess.StandardInput.WriteLine("start-inhibit");
         }
 
         Log.WriteLine(result);
-        serviceProcess.StandardInput.WriteLine("start-inhibit");
     }
 
     public static bool IsOnline()
