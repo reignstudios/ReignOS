@@ -35,8 +35,12 @@ public static class MSI_Claw
         device = new HidDevice();
         if (!device.Init(0x0DB0, 0x1901, true) || device.handles.Count == 0)// mode 1
         {
+            device.Dispose();
+            device = new HidDevice();
             if (!device.Init(0x0DB0, 0x1902, true) || device.handles.Count == 0)// mode 2
             {
+                device.Dispose();
+                device = new HidDevice();
                 if (!device.Init(0x0DB0, 0x1903, true) || device.handles.Count == 0)// mode 3
                 {
                     device.Dispose();
