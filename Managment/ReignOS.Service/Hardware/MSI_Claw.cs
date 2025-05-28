@@ -43,7 +43,7 @@ public static class MSI_Claw
             } 
         }
         
-        Log.WriteLine("MSI-Claw gamepad found");
+        Log.WriteLine($"MSI-Claw gamepad found: Handles={device.handles.Count}");
         if (EnableMode(Mode.XInput))
         {
             if (!useInputPlumber)
