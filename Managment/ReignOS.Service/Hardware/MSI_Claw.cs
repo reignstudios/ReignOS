@@ -32,28 +32,28 @@ public static class MSI_Claw
         WiFiPatches.Fix2(false);
 
         // configure gamepad
-        device = new HidDevice();
-        if (!device.Init(0x0DB0, 0x1901, true) || device.handles.Count == 0)// mode 1
+        if (!useInputPlumber)
         {
-            device.Dispose();
             device = new HidDevice();
-            if (!device.Init(0x0DB0, 0x1902, true) || device.handles.Count == 0)// mode 2
+            if (!device.Init(0x0DB0, 0x1901, true) || device.handles.Count == 0)// mode 1
             {
                 device.Dispose();
                 device = new HidDevice();
-                if (!device.Init(0x0DB0, 0x1903, true) || device.handles.Count == 0)// mode 3
+                if (!device.Init(0x0DB0, 0x1902, true) || device.handles.Count == 0)// mode 2
                 {
                     device.Dispose();
-                    device = null;
-                    return;
-                }
-            } 
-        }
+                    device = new HidDevice();
+                    if (!device.Init(0x0DB0, 0x1903, true) || device.handles.Count == 0)// mode 3
+                    {
+                        device.Dispose();
+                        device = null;
+                        return;
+                    }
+                } 
+            }
         
-        Log.WriteLine($"MSI-Claw gamepad found: Handles={device.handles.Count}");
-        if (EnableMode(Mode.XInput))
-        {
-            if (!useInputPlumber)
+            Log.WriteLine($"MSI-Claw gamepad found: Handles={device.handles.Count}");
+            if (EnableMode(Mode.XInput))
             {
                 Program.keyboardInput = new KeyboardInput();
                 Program.keyboardInput.Init("AT Translated Set 2 keyboard", true, 0, 0);
@@ -107,6 +107,8 @@ public static class MSI_Claw
 
     public static void Update(ref DateTime time, bool resumeFromSleep, ushort key, bool keyPressed)
     {
+        if (useInputPlumber) return;
+
         if (resumeFromSleep)
         {
             if (device != null)
@@ -117,7 +119,7 @@ public static class MSI_Claw
                 time = DateTime.Now;// reset time
             }
         }
-        else if (!keyPressed && !useInputPlumber)
+        else if (!keyPressed)
         {
             // relay OEM buttons to virtual gamepad input
             if (key == input.KEY_F15)
