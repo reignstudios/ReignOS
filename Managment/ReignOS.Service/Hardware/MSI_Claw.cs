@@ -35,20 +35,25 @@ public static class MSI_Claw
         if (!useInputPlumber)
         {
             device = new HidDevice();
-            if (!device.Init(0x0DB0, 0x1901, true) || device.handles.Count == 0)// mode 1
+            if (!device.Init(0x0DB0, 0x1901, true) || device.handles.Count == 0)// mode 1 (normal operating mode)
             {
                 device.Dispose();
                 device = new HidDevice();
-                if (!device.Init(0x0DB0, 0x1902, true) || device.handles.Count == 0)// mode 2
+                if (!device.Init(0x0DB0, 0x1902, true) || device.handles.Count == 0)// mode 2 (DInput mode)
                 {
                     device.Dispose();
                     device = new HidDevice();
-                    if (!device.Init(0x0DB0, 0x1903, true) || device.handles.Count == 0)// mode 3
+                    if (!device.Init(0x0DB0, 0x1903, true) || device.handles.Count == 0)// mode 3 (testing mode)
                     {
                         device.Dispose();
                         device = null;
-                        return;
                     }
+                    else
+                    {
+                        DisableTestingMode();
+                    }
+
+                    return;
                 } 
             }
         
@@ -102,6 +107,48 @@ public static class MSI_Claw
 
         Log.WriteLine("MSI-Claw gamepad mode set");
         isEnabled = true;
+        return true;
+    }
+
+    private static bool DisableTestingMode()
+    {
+        Log.WriteLine("Disabling MSI-Claw testing mode...");
+
+        int i = 0;
+        var buffer = new byte[256];
+        buffer[i++] = 0x0f;
+        buffer[i++] = 0x00;
+        buffer[i++] = 0x00;
+        buffer[i++] = 0x3c;
+        buffer[i++] = 0x21;
+        buffer[i++] = 0x01;
+        buffer[i++] = 0x01;
+        buffer[i++] = 0x1f;
+        buffer[i++] = 0x05;
+        buffer[i++] = 0x01;
+        buffer[i++] = 0x00;
+        buffer[i++] = 0x00;
+        buffer[i++] = 0x12;
+        buffer[i++] = 0x00;
+        if (!device.WriteData(buffer, 0, 64))// write 64 bytes to match wanted packet size
+        {
+            Log.WriteLine("FAILED: To disable MSI-Claw testing mode");
+            return false;
+        }
+
+        Thread.Sleep(1000);
+        Array.Clear(buffer);
+        if (device.ReadData(buffer, 0, buffer.Length, out nint sizeRead))
+        {
+            string hex = BitConverter.ToString(buffer, 0, (int)sizeRead);
+            Log.WriteLine($"MSI-Claw gamepad read response: Size={sizeRead} Data:{hex}");
+        }
+        else
+        {
+            Log.WriteLine("ERROR: MSI-Claw gamepad failed to read response");
+        }
+
+        Log.WriteLine("MSI-Claw testing mode disable finished (need reboot)");
         return true;
     }
 
