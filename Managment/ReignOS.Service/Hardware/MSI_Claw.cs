@@ -120,7 +120,7 @@ public static class MSI_Claw
         buffer[i++] = 0x00;
         buffer[i++] = 0x00;
         buffer[i++] = 0x3c;
-        buffer[i++] = 0x21;
+        buffer[i++] = 0x21;// MSI_CLAW_COMMAND_TYPE_WRITE_RGB_STATUS
         buffer[i++] = 0x01;
         buffer[i++] = 0x01;
         buffer[i++] = 0x1f;
