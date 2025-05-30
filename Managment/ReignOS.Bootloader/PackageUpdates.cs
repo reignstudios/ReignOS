@@ -5,6 +5,8 @@ using System.Text;
 
 namespace ReignOS.Bootloader;
 
+// sudo cpupower idle-info
+
 // mem_sleep_default=deep or s2idle
 // intel_idle.max_cstate=1 # intel
 // amd_pstate=disable processor.max_cstate=1 # amd
@@ -41,6 +43,7 @@ static class PackageUpdates
 
         // check for missing packages
         if (!PackageExits("linux-headers")) return true;
+        if (!PackageExits("linux-tools")) return true;
 
         if (!PackageExits("wayland-utils")) return true;
         if (!PackageExits("weston")) return true;

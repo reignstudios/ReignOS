@@ -148,6 +148,8 @@ public partial class MainView : UserControl
     private static StringBuilder installOutputBuilder = new StringBuilder();
     public static void ProcessOutput(string line)
     {
+        Log.WriteLine(line);
+
         Dispatcher.UIThread.InvokeAsync(() =>
         {
             installOutputBuilder.AppendLine(line);

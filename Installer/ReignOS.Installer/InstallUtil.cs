@@ -104,12 +104,12 @@ static class InstallUtil
         }
 
         archRootMode = false;
-        ProcessUtil.ProcessOutput -= Views.MainView.ProcessOutput;
         ProcessUtil.KillHard("arch-chroot", true, out _);
         Run("umount", "-R /var/cache/pacman/pkg");
         Run("umount", "-R /root/.nuget");
         Run("umount", "-R /mnt/boot");
         Run("umount", "-R /mnt");
+        ProcessUtil.ProcessOutput -= Views.MainView.ProcessOutput;
     }
 
     private static void RefreshingInstallerIntegrity()
@@ -489,6 +489,14 @@ static class InstallUtil
         // install kde
         Run("pacman", "-S --noconfirm plasma konsole dolphin kate ark exfatprogs dosfstools partitionmanager");
         UpdateProgress(85);
+
+        // install gparted
+        Run("pacman", "-S --noconfirm gparted");
+        UpdateProgress(86);
+
+        // install linux-tools
+        Run("pacman", "-S --noconfirm linux-tools");
+        UpdateProgress(87);
     }
     
     private static void InstallReignOSRepo()

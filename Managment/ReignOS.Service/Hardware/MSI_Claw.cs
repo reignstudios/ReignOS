@@ -73,7 +73,7 @@ public static class MSI_Claw
     private static bool EnableMode(Mode mode)
     {
         int i = 0;
-        var buffer = new byte[8];
+        var buffer = new byte[256];
         buffer[i++] = 15;// report id
         buffer[i++] = 0;
         buffer[i++] = 0;
@@ -82,14 +82,14 @@ public static class MSI_Claw
         buffer[i++] = (byte)mode;// mode
         buffer[i++] = 0;
         buffer[i++] = 0;
-        if (!device.WriteData(buffer, 0, buffer.Length))
+        if (!device.WriteData(buffer, 0, 64))// write 64 bytes to match wanted packet size
         {
             Log.WriteLine("FAILED: To set MSI-Claw gamepad mode");
             return false;
         }
 
         Thread.Sleep(1000);
-        buffer = new byte[256];
+        Array.Clear(buffer);
         if (device.ReadData(buffer, 0, buffer.Length, out nint sizeRead))
         {
             string hex = BitConverter.ToString(buffer, 0, (int)sizeRead);
