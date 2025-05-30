@@ -43,7 +43,7 @@ static class PackageUpdates
 
         // check for missing packages
         if (!PackageExits("linux-headers")) return true;
-        if (!PackageExits("linux-tools")) return true;
+        if (!PackageExits("cpupower")) return true;
 
         if (!PackageExits("wayland-utils")) return true;
         if (!PackageExits("weston")) return true;
