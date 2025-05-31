@@ -363,7 +363,7 @@ internal class Program
         DisableX11();
         string useMangoHubArg = useMangoHub ? " --mangoapp" : "";
         string vrrArg = vrr ? " --adaptive-sync" : "";
-        string hdrArg = "";//hdr ? " --hdr-enabled" : "";
+        string hdrArg = hdr ? " --hdr-enabled" : "";
         string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
         string steamDeckArg = disableSteamDeck ? " --disable-steam-deck" : "";
         string gpuArg = GetGPUArg(gpu);
@@ -377,7 +377,7 @@ internal class Program
         }
 
         string displayRezArg = (displayWidth > 0 && displayHeight > 0) ? $" -W {displayWidth} -H {displayHeight}" : "";
-        string result = ProcessUtil.Run($"{gpuArg}env ENABLE_GAMESCOPE_HDR=0 STEAM_GAMESCOPE_FORCE_HDR_DEFAULT=0 DXVK_HDR=0 ENABLE_GAMESCOPE_WSI=0 STEAM_GAMESCOPE_HDR_SUPPORTED=0 gamescope", $"-e -f{useMangoHubArg}{vrrArg}{hdrArg}{rotArg}{displayRezArg} -- ./Start_Gamescope.sh{steamGPUArg}{steamDeckArg}", useBash:true);// --framerate-limit
+        string result = ProcessUtil.Run($"{gpuArg}gamescope", $"-e -f{useMangoHubArg}{vrrArg}{hdrArg}{rotArg}{displayRezArg} -- ./Start_Gamescope.sh{steamGPUArg}{steamDeckArg}", useBash:true);// --framerate-limit
         Log.WriteLine(result);
     }
 
