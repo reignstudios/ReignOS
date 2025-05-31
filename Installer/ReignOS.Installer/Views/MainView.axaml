@@ -79,6 +79,7 @@
 				<ScrollViewer Name="installTerminalScroll" IsVisible="False" Height="100" Margin="0,120,0,0" VerticalAlignment="Bottom" VerticalScrollBarVisibility="Visible">
 					<TextBlock Name="installTerminalText" Text=">" Background="Black"/>
 				</ScrollViewer>
+				<CheckBox Name="refreshIntegrityCheckbox" Content="Refresh Integrity" IsChecked="True" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="8"/>
 			</Grid>
 		</Grid>
 

@@ -52,6 +52,7 @@ static class InstallUtil
     private static float progress;
     private static string progressTask;
     public static bool cancel;
+    private static bool refreshIntegrity;
 
     private static void UpdateProgress(int progress)
     {
@@ -73,10 +74,11 @@ static class InstallUtil
         }
     }
     
-    public static void Install(Partition efiPartition, Partition ext4Partition)
+    public static void Install(Partition efiPartition, Partition ext4Partition, bool refreshIntegrity)
     {
         InstallUtil.efiPartition = efiPartition;
         InstallUtil.ext4Partition = ext4Partition;
+        InstallUtil.refreshIntegrity = refreshIntegrity;
         installThread = new Thread(InstallThread);
         installThread.Start();
     }
@@ -90,7 +92,7 @@ static class InstallUtil
         ProcessUtil.KillHard("arch-chroot", true, out _);
         try
         {
-            RefreshingInstallerIntegrity();
+            if (refreshIntegrity) RefreshingInstallerIntegrity();
             InstallBaseArch();
             InstallArchPackages();
             InstallReignOSRepo();
@@ -125,6 +127,7 @@ static class InstallUtil
         Run("pacman", "-Sy --noconfirm");
         Run("timedatectl", "set-ntp true");
         Run("hwclock", "--systohc");
+        Thread.Sleep(1000);
         Run("timedatectl", "");// log time
         Run("pacman", "-Sy archlinux-keyring --noconfirm");
         Run("pacman-key", "--populate", standardOut:standardOut);
@@ -135,7 +138,14 @@ static class InstallUtil
     {
         progressTask = "Installing base...";
         UpdateProgress(0);
-        
+
+        // basic pacman & time refresh
+        Run("pacman", "-Sy --noconfirm");
+        Run("timedatectl", "set-ntp true");
+        Run("hwclock", "--systohc");
+        Thread.Sleep(1000);
+        Run("timedatectl", "");// log time
+
         // unmount conflicting mounts
         Run("umount", "-R /var/cache/pacman/pkg");
         Run("umount", "-R /root/.nuget");
