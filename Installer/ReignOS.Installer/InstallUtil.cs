@@ -116,7 +116,7 @@ static class InstallUtil
 
     private static void RefreshingInstallerIntegrity()
     {
-        progressTask = "Refreshing Integrity (will take time, please wait)...";
+        progressTask = "Refreshing Integrity (can take 10-15 min, please wait)...";
         UpdateProgress(0);
 
         static void standardOut(string line)
