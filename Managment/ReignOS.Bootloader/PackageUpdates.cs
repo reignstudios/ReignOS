@@ -17,6 +17,9 @@ namespace ReignOS.Bootloader;
 //options nvidia NVreg_PreserveVideoMemoryAllocations=1
 //options nvidia NVreg_DynamicPowerManagement=0x02
 
+// to decode edid
+// cat /sys/class/drm/card0-HDMI-A-1/edid | edid-decode
+
 static class PackageUpdates
 {
     private static bool PackageExits(string package)

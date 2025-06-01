@@ -97,6 +97,7 @@ internal class Program
         srcPath = Path.Combine(processPath, "Gamescope");
         dstPath = "/usr/share/gamescope/scripts/00-gamescope/displays/";
         FileUtils.SafeCopy(Path.Combine(srcPath, "YHB-YHB02P25.lua"), Path.Combine(dstPath, "YHB-YHB02P25.lua"));
+        FileUtils.SafeCopy(Path.Combine(srcPath, "ZDZ.lua"), Path.Combine(dstPath, "ZDZ.lua"));
 
         // configure pwr button for sleep
         dstPath = "/etc/systemd/logind.conf.d/";

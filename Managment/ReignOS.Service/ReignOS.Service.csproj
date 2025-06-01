@@ -15,6 +15,9 @@
       <None Update="Gamescope\YHB-YHB02P25.lua">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Gamescope\ZDZ.lua">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
       <None Update="SteamOS3\jupiter-biosupdate">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
