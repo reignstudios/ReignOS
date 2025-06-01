@@ -15,7 +15,7 @@
       <None Update="Gamescope\YHB-YHB02P25.lua">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="Gamescope\ZDZ.lua">
+      <None Update="Gamescope\ZDZ-ZDZ0501.lua">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="SteamOS3\jupiter-biosupdate">
@@ -45,10 +45,6 @@
       <None Update="SteamOS3\steamos-update">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Gamescope\" />
     </ItemGroup>
 
     <Target Name="BuildNativeLibrary" AfterTargets="Publish">

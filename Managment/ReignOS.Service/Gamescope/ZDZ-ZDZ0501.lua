@@ -4,7 +4,7 @@ local panel_id = "zdz_oled"
 local panel_name = "ZDZ OLED Panel"
 
 local panel_models = {
-  { vendor = "ZDZ", model = "1281" },
+  { vendor = "ZDZ", model = "ZDZ0501" },
 }
 
 local panel_refresh_rates = { 120, 144 }

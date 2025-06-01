@@ -18,7 +18,10 @@ enum HardwareType
     MSI_Claw,
 
     // OneXPlayer
-    OneXPlayer
+    OneXPlayer,
+
+    // Zotac
+    ZotacZone
 }
 
 internal class Program
@@ -64,7 +67,8 @@ internal class Program
             string productName = ProcessUtil.Run("dmidecode", "-s system-product-name", out _);
             Log.WriteLine("Product: " + productName.TrimEnd());
             if (productName.StartsWith("Claw ")) hardwareType = HardwareType.MSI_Claw;
-            else if (productName.StartsWith("ONEXPLAYER ")) hardwareType = HardwareType.OneXPlayer;
+            else if (productName.StartsWith("ONEXPLAYER")) hardwareType = HardwareType.OneXPlayer;
+            else if (productName.StartsWith("ZOTAC GAMING ZONE")) hardwareType = HardwareType.ZotacZone;
         }
         catch (Exception e)
         {
@@ -97,7 +101,7 @@ internal class Program
         srcPath = Path.Combine(processPath, "Gamescope");
         dstPath = "/usr/share/gamescope/scripts/00-gamescope/displays/";
         FileUtils.SafeCopy(Path.Combine(srcPath, "YHB-YHB02P25.lua"), Path.Combine(dstPath, "YHB-YHB02P25.lua"));
-        FileUtils.SafeCopy(Path.Combine(srcPath, "ZDZ.lua"), Path.Combine(dstPath, "ZDZ.lua"));
+        FileUtils.SafeCopy(Path.Combine(srcPath, "ZDZ-ZDZ0501.lua"), Path.Combine(dstPath, "ZDZ-ZDZ0501.lua"));
 
         // configure pwr button for sleep
         dstPath = "/etc/systemd/logind.conf.d/";
@@ -120,6 +124,7 @@ internal class Program
         {
             MSI_Claw.Configure();
             OneXPlayer.Configure();
+            ZotacZone.Configure();
         }
         catch (Exception e)
         {
@@ -162,6 +167,7 @@ internal class Program
             // update devices
             if (MSI_Claw.isEnabled) MSI_Claw.Update(ref time, resumeFromSleep, keys);
             if (OneXPlayer.isEnabled) OneXPlayer.Update(keys);
+            if (ZotacZone.isEnabled) ZotacZone.Update(keys);
 
             // update volume
             if (KeyEvent.Pressed(keys))
