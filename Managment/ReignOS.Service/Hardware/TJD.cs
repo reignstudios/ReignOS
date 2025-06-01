@@ -25,7 +25,7 @@ namespace ReignOS.Service.Hardware
             {
                 VirtualGamepad.Write_TriggerLeftSteamMenu();
             }
-            else if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTCTRL, true), new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_0, true)))
+            else if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTCTRL, true), new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_O, true)))
             {
                 VirtualGamepad.Write_TriggerRightSteamMenu();
             }

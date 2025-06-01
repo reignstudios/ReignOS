@@ -34,6 +34,7 @@ public unsafe static class input
     public const int KEY_A = 30;
     public const int KEY_D = 32;
     public const int KEY_T = 20;
+    public const int KEY_O = 24;
     public const int KEY_Z = 44;
     public const int KEY_VOLUMEDOWN = 114;
     public const int KEY_VOLUMEUP = 115;

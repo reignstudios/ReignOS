@@ -70,13 +70,13 @@ internal class Program
         // detect system hardware
         try
         {
-            string productName = ProcessUtil.Run("dmidecode", "-s system-product-name", out _);
-            Log.WriteLine("Product: " + productName.TrimEnd());
+            string productName = ProcessUtil.Run("dmidecode", "-s system-product-name", out _).Trim();
+            Log.WriteLine("Product: " + productName);
             if (productName.StartsWith("Claw ")) hardwareType = HardwareType.MSI_Claw;
             else if (productName.StartsWith("ONEXPLAYER")) hardwareType = HardwareType.OneXPlayer;
             else if (productName.StartsWith("ZOTAC GAMING ZONE")) hardwareType = HardwareType.ZotacZone;
             else if (productName.StartsWith("Loki Zero")) hardwareType = HardwareType.LokiZero;
-            else if (productName.StartsWith("G1")) hardwareType = HardwareType.TJD;
+            else if (productName == "G1") hardwareType = HardwareType.TJD;
         }
         catch (Exception e)
         {
