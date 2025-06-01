@@ -21,7 +21,8 @@ namespace ReignOS.Service.Hardware
             // relay OEM buttons to virtual gamepad input
             if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTCTRL, true), new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_F17, true)))
             {
-                VirtualGamepad.Write_TriggerLeftSteamMenu();
+                // VirtualGamepad.Write_TriggerLeftSteamMenu();
+                VirtualGamepad.Write_TriggerRightSteamMenu();
             }
             else if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTCTRL, true), new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_F18, true)))
             {
