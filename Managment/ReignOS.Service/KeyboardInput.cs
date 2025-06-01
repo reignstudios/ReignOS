@@ -38,17 +38,18 @@ public struct KeyEvent
 
     public static bool Pressed(List<KeyEvent> keyEvents, params KeyEvent[] keys)
     {
-        if (keyEvents.Count >= keys.Length)
+        if (keyEvents.Count != 0 && keyEvents.Count >= keys.Length)
         {
             for (int i = 0; i != keys.Length; i++)
             {
                 var k1 = keyEvents[i];
                 var k2 = keys[i];
-                if (k1.key == k2.key && k1.pressed == k2.pressed)
+                if (k1.key != k2.key || k1.pressed != k2.pressed)
                 {
-                    return true;
+                    return false;
                 }
             }
+            return true;
         }
         return false;
     }
@@ -166,10 +167,9 @@ public unsafe class KeyboardInput : IDisposable
         }
     }
     
-    public bool ReadNextKey(out ushort key, out bool pressed)
+    public bool ReadNextKey(out KeyEvent key)
     {
-        key = 0;
-        pressed = false;
+        key = new KeyEvent();
         if (handles == null || handles.Count == 0) return false;
         
         bool hasEvent = false;
@@ -180,8 +180,8 @@ public unsafe class KeyboardInput : IDisposable
             {
                 if (e.type == input.EV_KEY)
                 {
-                    key = e.code;
-                    pressed = e.value == 1;
+                    key.key = e.code;
+                    key.pressed = e.value == 1;
                     hasEvent = true;
                 }
             }
@@ -204,8 +204,7 @@ public unsafe class KeyboardInput : IDisposable
             {
                 if (e.type == input.EV_KEY)
                 {
-                    var keyEvent = new KeyEvent(e.code, e.value == 1);
-                    keys.Add(keyEvent);
+                    keys.Add(new KeyEvent(e.code, e.value == 1));
                     hasEvent = true;
                 }
             }
