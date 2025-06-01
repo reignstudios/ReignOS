@@ -377,7 +377,7 @@ internal class Program
         }
 
         string displayRezArg = (displayWidth > 0 && displayHeight > 0) ? $" -W {displayWidth} -H {displayHeight}" : "";
-        string result = ProcessUtil.Run($"{gpuArg}env GAMESCOPE_DISPLAY_HDR_ENABLED=0 gamescope", $"-e -f{useMangoHubArg}{vrrArg}{hdrArg}{rotArg}{displayRezArg} -- ./Start_Gamescope.sh{steamGPUArg}{steamDeckArg}", useBash:true);// --framerate-limit
+        string result = ProcessUtil.Run($"{gpuArg}gamescope", $"-e -f{useMangoHubArg}{vrrArg}{hdrArg}{rotArg}{displayRezArg} -- ./Start_Gamescope.sh{steamGPUArg}{steamDeckArg}", useBash:true);// --framerate-limit
         Log.WriteLine(result);
     }
 

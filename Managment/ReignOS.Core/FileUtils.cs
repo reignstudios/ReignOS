@@ -4,7 +4,7 @@ using System.IO;
 
 public static class FileUtils
 {
-    public static void InstallService(string srcPath, string dstPath)
+    public static bool InstallService(string srcPath, string dstPath)
     {
         Log.WriteLine("Installing service: " + dstPath);
         try
@@ -15,11 +15,13 @@ public static class FileUtils
         }
         catch (Exception e)
         {
-            Log.WriteLine(e.Message);
+            Log.WriteLine(e);
+            return false;
         }
+        return true;
     }
 
-    public static void InstallScript(string srcPath, string dstPath)
+    public static bool InstallScript(string srcPath, string dstPath)
     {
         Log.WriteLine("Installing script: " + dstPath);
         try
@@ -30,9 +32,25 @@ public static class FileUtils
         }
         catch (Exception e)
         {
-            Log.WriteLine(e.Message);
+            Log.WriteLine(e);
+            return false;
         }
 
         ProcessUtil.Run("chmod", $"+x {dstPath}", out _, wait:true);
+        return true;
+    }
+
+    public static bool SafeCopy(string srcPath, string dstPath)
+    {
+        try
+        {
+            File.Copy(srcPath, dstPath, true);
+        }
+        catch (Exception e)
+        {
+            Log.WriteLine(e);
+            return false;
+        }
+        return true;
     }
 }

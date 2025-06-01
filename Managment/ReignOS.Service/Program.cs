@@ -94,6 +94,11 @@ internal class Program
         dstPath = "/usr/share/polkit-1/actions";
         FileUtils.InstallScript(Path.Combine(srcPath, "org.reignos.update.policy"), Path.Combine(dstPath, "org.reignos.update.policy"));
 
+        // install extra gamescope display configs
+        srcPath = Path.Combine(processPath, "Gamescope");
+        dstPath = "/usr/share/gamescope/scripts/00-gamescope/displays/";
+        FileUtils.SafeCopy(Path.Combine(srcPath, "YHB-YHB02P25.lua"), Path.Combine(dstPath, "YHB-YHB02P25.lua"));
+
         // configure pwr button for sleep
         dstPath = "/etc/systemd/logind.conf.d/";
         if (!Directory.Exists(dstPath)) Directory.CreateDirectory(dstPath);
