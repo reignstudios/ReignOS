@@ -30,13 +30,17 @@ public unsafe static class input
     public const int EV_KEY = 0x1;
     
     public const int KEY_MAX = 0x2ff;
+    public const int KEY_0 = 11;
     public const int KEY_A = 30;
+    public const int KEY_D = 32;
     public const int KEY_Z = 44;
     public const int KEY_VOLUMEDOWN = 114;
     public const int KEY_VOLUMEUP = 115;
     public const int KEY_F15 = 185;
     public const int KEY_F16 = 186;
-    
+    public const int KEY_RIGHTCTRL = 97;
+    public const int KEY_LEFTMETA = 125;
+
     public const int BTN_MODE = 0x13c;
     public const int BTN_A = 0x130;
     public const int BTN_B = 0x131;

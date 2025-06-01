@@ -15,11 +15,10 @@ enum HardwareType
     Unknown,
 
     // MSI
-    MSI_Claw_A1M,
     MSI_Claw,
 
     // OneXPlayer
-    //OneXPlayer_F1
+    OneXPlayer
 }
 
 internal class Program
@@ -35,6 +34,7 @@ internal class Program
     public static HardwareType hardwareType { get; private set; }
 
     public static KeyboardInput keyboardInput;
+    public static bool useInputPlumber;
 
     private static void BindSignalEvents()
     {
@@ -53,7 +53,6 @@ internal class Program
         BindSignalEvents();
 
         // process args
-        bool useInputPlumber = false;
         foreach (string arg in args)
         {
             if (arg == "--input-inputplumber") useInputPlumber = true;
@@ -64,8 +63,8 @@ internal class Program
         {
             string productName = ProcessUtil.Run("dmidecode", "-s system-product-name", out _);
             Log.WriteLine("Product: " + productName.TrimEnd());
-            if (productName == "Claw A1M") hardwareType = HardwareType.MSI_Claw_A1M;
-            else if (productName.StartsWith("Claw ")) hardwareType = HardwareType.MSI_Claw;
+            if (productName.StartsWith("Claw ")) hardwareType = HardwareType.MSI_Claw;
+            else if (productName.StartsWith("ONEXPLAYER ")) hardwareType = HardwareType.OneXPlayer;
         }
         catch (Exception e)
         {
@@ -118,7 +117,8 @@ internal class Program
         // detect device & configure hardware
         try
         {
-            MSI_Claw.Configure(useInputPlumber);
+            MSI_Claw.Configure();
+            OneXPlayer.Configure();
         }
         catch (Exception e)
         {
@@ -156,14 +156,11 @@ internal class Program
             if (timeSpan.TotalSeconds >= 3) resumeFromSleep = true;
 
             // update keyboard
-            //keyboardInput.ReadNextKey(out var key, out bool pressed);
             keyboardInput.ReadNextKeys(out var keys);
-            /*KeyEvent keyEvent;
-            if (keys != null && keys.Count == 1) keyEvent = keys[0];
-            else keyEvent = new KeyEvent();*/
 
             // update devices
             if (MSI_Claw.isEnabled) MSI_Claw.Update(ref time, resumeFromSleep, keys);
+            if (OneXPlayer.isEnabled) OneXPlayer.Update(keys);
 
             // update volume
             if (KeyEvent.Pressed(keys))

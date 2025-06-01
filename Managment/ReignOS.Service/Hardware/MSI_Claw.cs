@@ -21,19 +21,16 @@ public static class MSI_Claw
 
     public static bool isEnabled { get; private set; }
     private static HidDevice device;
-    private static bool useInputPlumber;
 
-    public static void Configure(bool useInputPlumber)
+    public static void Configure()
     {
-        MSI_Claw.useInputPlumber = useInputPlumber;
-
         // configure after sleep fixes
         AudioPatches.Fix1(true);
         WiFiPatches.Fix1(true);
         WiFiPatches.Fix2(false);
 
         // configure gamepad
-        if (!useInputPlumber)
+        if (!Program.useInputPlumber)
         {
             device = new HidDevice();
             if (!device.Init(0x0DB0, 0x1901, true) || device.handles.Count == 0)// mode 1 (normal operating mode)
@@ -59,11 +56,7 @@ public static class MSI_Claw
             }
         
             Log.WriteLine($"MSI-Claw gamepad found: Handles={device.handles.Count}");
-            if (EnableMode(Mode.XInput))
-            {
-                Program.keyboardInput = new KeyboardInput();
-                Program.keyboardInput.Init("AT Translated Set 2 keyboard", true, 0, 0);
-            }
+            EnableMode(Mode.XInput);
         }
     }
     
@@ -155,7 +148,7 @@ public static class MSI_Claw
 
     public static void Update(ref DateTime time, bool resumeFromSleep, List<KeyEvent> keys)
     {
-        if (useInputPlumber) return;
+        if (Program.useInputPlumber) return;
 
         if (resumeFromSleep)
         {
@@ -167,7 +160,7 @@ public static class MSI_Claw
                 time = DateTime.Now;// reset time
             }
         }
-        else// if (!KeyEvent.Pressed(keys))
+        else
         {
             // relay OEM buttons to virtual gamepad input
             if (KeyEvent.Pressed(keys, input.KEY_F15))
