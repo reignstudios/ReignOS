@@ -13,7 +13,7 @@ namespace ReignOS.Service.Hardware
 
         public static void Configure()
         {
-            isEnabled = Program.hardwareType == HardwareType.OneXPlayer;
+            isEnabled = Program.hardwareType == HardwareType.OneXPlayer_Gen1 || Program.hardwareType == HardwareType.OneXPlayer_Gen2;
         }
 
         public static void Update(List<KeyEvent> keys)
@@ -21,13 +21,27 @@ namespace ReignOS.Service.Hardware
             if (Program.useInputPlumber) return;
 
             // relay OEM buttons to virtual gamepad input
-            if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_D, true)))
+            if (Program.hardwareType == HardwareType.OneXPlayer_Gen1)
             {
-                VirtualGamepad.Write_TriggerLeftSteamMenu();
+                if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_D, true)))
+                {
+                    VirtualGamepad.Write_TriggerLeftSteamMenu();
+                }
+                else if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_RIGHTCTRL, true), new KeyEvent(input.KEY_O, true)))
+                {
+                    VirtualGamepad.Write_TriggerRightSteamMenu();
+                }
             }
-            else if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_RIGHTCTRL, true), new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_0, true)))
+            else
             {
-                VirtualGamepad.Write_TriggerRightSteamMenu();
+                if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_D, true)))
+                {
+                    VirtualGamepad.Write_TriggerLeftSteamMenu();
+                }
+                else if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_RIGHTCTRL, true), new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_0, true)))
+                {
+                    VirtualGamepad.Write_TriggerRightSteamMenu();
+                }
             }
         }
     }
