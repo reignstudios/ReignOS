@@ -43,7 +43,7 @@ public struct KeyEvent
             for (int i = 0; i != keys.Length; i++)
             {
                 var k1 = keyEvents[i];
-                var k2 = keyEvents[i];
+                var k2 = keys[i];
                 if (k1.key == k2.key && k1.pressed == k2.pressed)
                 {
                     return true;
