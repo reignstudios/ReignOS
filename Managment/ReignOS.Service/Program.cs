@@ -26,6 +26,9 @@ enum HardwareType
     // Zotac
     ZotacZone,
 
+    // AOKZOE
+    AOKZOE,
+
     // AYN
     LokiZero,
 
@@ -79,6 +82,7 @@ internal class Program
             else if (productName.StartsWith("AIR Pro")) hardwareType = HardwareType.Ayaneo;
             else if (productName.StartsWith("ONEXPLAYER")) hardwareType = HardwareType.OneXPlayer;
             else if (productName.StartsWith("ZOTAC GAMING ZONE")) hardwareType = HardwareType.ZotacZone;
+            else if (productName.StartsWith("AOKZOE ")) hardwareType = HardwareType.AOKZOE;
             else if (productName.StartsWith("Loki Zero")) hardwareType = HardwareType.LokiZero;
             else if (productName == "G1") hardwareType = HardwareType.TJD;
         }
@@ -135,11 +139,12 @@ internal class Program
         try
         {
             MSI_Claw.Configure();
+            Ayaneo.Configure();
             OneXPlayer.Configure();
             ZotacZone.Configure();
+            AOKZOE.Configure();
             LokiZero.Configure();
             TJD.Configure();
-            Ayaneo.Configure();
         }
         catch (Exception e)
         {
@@ -184,6 +189,7 @@ internal class Program
             if (Ayaneo.isEnabled) Ayaneo.Update(keys);
             if (OneXPlayer.isEnabled) OneXPlayer.Update(keys);
             if (ZotacZone.isEnabled) ZotacZone.Update(keys);
+            if (AOKZOE.isEnabled) AOKZOE.Update(keys);
             if (LokiZero.isEnabled) LokiZero.Update(keys);
             if (TJD.isEnabled) TJD.Update(keys);
 
