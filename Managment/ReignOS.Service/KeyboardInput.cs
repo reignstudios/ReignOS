@@ -11,6 +11,24 @@ public struct KeyEvent
 {
     public ushort key;
     public bool pressed;
+
+    public static bool Pressed(List<KeyEvent> keyEvents)
+    {
+        foreach (var e in keyEvents)
+        {
+            if (e.pressed) return true;
+        }
+        return false;
+    }
+
+    public static bool Pressed(List<KeyEvent> keyEvents, ushort key)
+    {
+        foreach (var e in keyEvents)
+        {
+            if (e.pressed && e.key == key) return true;
+        }
+        return false;
+    }
 }
 
 public unsafe class KeyboardInput : IDisposable

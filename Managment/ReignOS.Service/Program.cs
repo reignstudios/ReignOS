@@ -156,21 +156,21 @@ internal class Program
             if (timeSpan.TotalSeconds >= 3) resumeFromSleep = true;
 
             // update keyboard
-            keyboardInput.ReadNextKey(out var key, out bool pressed);
-            /*keyboardInput.ReadNextKeys(out var keys);
-            KeyEvent keyEvent;
+            //keyboardInput.ReadNextKey(out var key, out bool pressed);
+            keyboardInput.ReadNextKeys(out var keys);
+            /*KeyEvent keyEvent;
             if (keys != null && keys.Count == 1) keyEvent = keys[0];
             else keyEvent = new KeyEvent();*/
 
             // update devices
-            if (MSI_Claw.isEnabled) MSI_Claw.Update(ref time, resumeFromSleep, key, pressed);
+            if (MSI_Claw.isEnabled) MSI_Claw.Update(ref time, resumeFromSleep, keys);
 
             // update volume
-            if (pressed)
+            if (KeyEvent.Pressed(keys))
             {
                 // send signal to bootloader
-                if (key == input.KEY_VOLUMEDOWN) Console.WriteLine("SET_VOLUME_DOWN");
-                else if (key == input.KEY_VOLUMEUP) Console.WriteLine("SET_VOLUME_UP");
+                if (KeyEvent.Pressed(keys, input.KEY_VOLUMEDOWN)) Console.WriteLine("SET_VOLUME_DOWN");
+                else if (KeyEvent.Pressed(keys, input.KEY_VOLUMEUP)) Console.WriteLine("SET_VOLUME_UP");
             }
 
             // handle special close steam events

@@ -3,6 +3,7 @@ using ReignOS.Core;
 using ReignOS.Service.HardwarePatches;
 using ReignOS.Service.OS;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 
 public static class MSI_Claw
@@ -152,7 +153,7 @@ public static class MSI_Claw
         return true;
     }
 
-    public static void Update(ref DateTime time, bool resumeFromSleep, ushort key, bool keyPressed)
+    public static void Update(ref DateTime time, bool resumeFromSleep, List<KeyEvent> keys)
     {
         if (useInputPlumber) return;
 
@@ -166,14 +167,14 @@ public static class MSI_Claw
                 time = DateTime.Now;// reset time
             }
         }
-        else if (!keyPressed)
+        else// if (!KeyEvent.Pressed(keys))
         {
             // relay OEM buttons to virtual gamepad input
-            if (key == input.KEY_F15)
+            if (KeyEvent.Pressed(keys, input.KEY_F15))
             {
                 VirtualGamepad.Write_TriggerLeftSteamMenu();
             }
-            else if (key == input.KEY_F16)
+            else if (KeyEvent.Pressed(keys, input.KEY_F16))
             {
                 VirtualGamepad.Write_TriggerRightSteamMenu();
             }

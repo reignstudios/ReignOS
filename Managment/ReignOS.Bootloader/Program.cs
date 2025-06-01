@@ -169,11 +169,13 @@ internal class Program
                     string value = args.Data;
                     if (value.Contains("SET_VOLUME_DOWN"))
                     {
-                        ProcessUtil.Run("amixer", "set Master 5%-");
+                        //ProcessUtil.Run("amixer", "set Master 5%-");
+                        ProcessUtil.Run("pactl", "set-sink-volume @DEFAULT_SINK@ -5%");
                     }
                     else if (value.Contains("SET_VOLUME_UP"))
                     {
-                        ProcessUtil.Run("amixer", "set Master 5%+");
+                        //ProcessUtil.Run("amixer", "set Master 5%+");
+                        ProcessUtil.Run("pactl", "set-sink-volume @DEFAULT_SINK@ +5%");
                     }
                     else if (value.StartsWith("ReignOS.Service.COMMAND: "))// service wants to run user-space command
                     {
