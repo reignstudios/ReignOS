@@ -32,6 +32,9 @@ enum HardwareType
     // AYN
     LokiZero,
 
+    // Anbernic
+    Win600,
+
     // TJD
     TJD
 }
@@ -76,14 +79,16 @@ internal class Program
         // detect system hardware
         try
         {
+            //string vendorName = ProcessUtil.Run("dmidecode", "-s system-manufacturer", out _).Trim();
             string productName = ProcessUtil.Run("dmidecode", "-s system-product-name", out _).Trim();
             Log.WriteLine("Product: " + productName);
             if (productName.StartsWith("Claw ")) hardwareType = HardwareType.MSI_Claw;
-            else if (productName.StartsWith("AIR Pro")) hardwareType = HardwareType.Ayaneo;
+            else if (productName.StartsWith("AIR ")) hardwareType = HardwareType.Ayaneo;
             else if (productName.StartsWith("ONEXPLAYER")) hardwareType = HardwareType.OneXPlayer;
             else if (productName.StartsWith("ZOTAC GAMING ZONE")) hardwareType = HardwareType.ZotacZone;
             else if (productName.StartsWith("AOKZOE ")) hardwareType = HardwareType.AOKZOE;
             else if (productName.StartsWith("Loki Zero")) hardwareType = HardwareType.LokiZero;
+            else if (productName.StartsWith("Win600")) hardwareType = HardwareType.Win600;
             else if (productName == "G1") hardwareType = HardwareType.TJD;
         }
         catch (Exception e)
@@ -144,6 +149,7 @@ internal class Program
             ZotacZone.Configure();
             AOKZOE.Configure();
             LokiZero.Configure();
+            Win600.Configure();
             TJD.Configure();
         }
         catch (Exception e)
@@ -191,6 +197,7 @@ internal class Program
             if (ZotacZone.isEnabled) ZotacZone.Update(keys);
             if (AOKZOE.isEnabled) AOKZOE.Update(keys);
             if (LokiZero.isEnabled) LokiZero.Update(keys);
+            if (Win600.isEnabled) Win600.Update(keys);
             if (TJD.isEnabled) TJD.Update(keys);
 
             // update volume
