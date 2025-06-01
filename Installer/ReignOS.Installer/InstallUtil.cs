@@ -349,6 +349,10 @@ static class InstallUtil
         fileBuilder.AppendLine("echo \"Installing ProtonGE...\"");
         fileBuilder.AppendLine("yay -S proton-ge-custom --noconfirm");
 
+        fileBuilder.AppendLine();// set volume to 100%
+        fileBuilder.AppendLine("echo \"Setting volume to 100%...\"");
+        fileBuilder.AppendLine("pactl set-sink-volume @DEFAULT_SINK@ 100%");
+
         fileBuilder.AppendLine();// disable FirstRun
         fileBuilder.AppendLine("echo \"rebooting...\"");
         fileBuilder.AppendLine("echo -n > /home/gamer/FirstRun.sh");
