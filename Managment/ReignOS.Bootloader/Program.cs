@@ -309,8 +309,15 @@ internal class Program
                 }
 
                 // reset things for new compositor
-                if (exitLoop) break;
-                else exitCode = 0;
+                if (exitLoop)
+                {
+                    break;
+                }
+                else
+                {
+                    exitCode = 0;
+                    Thread.Sleep(2000);// wait a little before loading a new compositor
+                }
             }
         }
 
