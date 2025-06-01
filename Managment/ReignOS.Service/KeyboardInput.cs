@@ -38,7 +38,7 @@ public struct KeyEvent
 
     public static bool Pressed(List<KeyEvent> keyEvents, params KeyEvent[] keys)
     {
-        if (keyEvents.Count == keys.Length)
+        if (keyEvents.Count >= keys.Length)
         {
             for (int i = 0; i != keys.Length; i++)
             {
