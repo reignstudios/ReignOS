@@ -38,6 +38,7 @@ public unsafe static class input
     public const int KEY_Z = 44;
     public const int KEY_VOLUMEDOWN = 114;
     public const int KEY_VOLUMEUP = 115;
+    public const int KEY_F12 = 88;
     public const int KEY_F15 = 185;
     public const int KEY_F16 = 186;
     public const int KEY_F17 = 187;
