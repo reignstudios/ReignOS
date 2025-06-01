@@ -18,6 +18,8 @@ namespace ReignOS.Service.Hardware
 
         public static void Update(List<KeyEvent> keys)
         {
+            if (Program.useInputPlumber) return;
+
             // relay OEM buttons to virtual gamepad input
             if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_D, true)))
             {

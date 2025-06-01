@@ -7,19 +7,25 @@ using System.Threading.Tasks;
 
 namespace ReignOS.Service.Hardware
 {
-    public static class LokiZero
+    public static class ZotacZone
     {
         public static bool isEnabled;
 
         public static void Configure()
         {
-            isEnabled = Program.hardwareType == HardwareType.LokiZero;
+            isEnabled = Program.hardwareType == HardwareType.ZotacZone;
         }
 
         public static void Update(List<KeyEvent> keys)
         {
+            if (Program.useInputPlumber) return;
+
             // relay OEM buttons to virtual gamepad input
-            if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTCTRL, true), new KeyEvent(input.KEY_LEFTALT, true), new KeyEvent(input.KEY_LEFTSHIFT, true), new KeyEvent(input.KEY_T, true)))
+            if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTCTRL, true), new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_F17, true)))
+            {
+                VirtualGamepad.Write_TriggerLeftSteamMenu();
+            }
+            else if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTCTRL, true), new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_F18, true)))
             {
                 VirtualGamepad.Write_TriggerRightSteamMenu();
             }
