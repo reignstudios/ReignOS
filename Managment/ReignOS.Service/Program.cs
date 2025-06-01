@@ -76,7 +76,7 @@ internal class Program
             else if (productName.StartsWith("ONEXPLAYER")) hardwareType = HardwareType.OneXPlayer;
             else if (productName.StartsWith("ZOTAC GAMING ZONE")) hardwareType = HardwareType.ZotacZone;
             else if (productName.StartsWith("Loki Zero")) hardwareType = HardwareType.LokiZero;
-            else if (productName == "G1") hardwareType = HardwareType.TJD;
+            else if (productName.StartsWith("G1")) hardwareType = HardwareType.TJD;
         }
         catch (Exception e)
         {
