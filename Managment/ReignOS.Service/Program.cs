@@ -83,15 +83,14 @@ internal class Program
             string vendorName = ProcessUtil.Run("dmidecode", "-s system-manufacturer", out _).Trim();
             Log.WriteLine("Hardware Vendor: " + vendorName);
             if (vendorName.StartsWith("AYANEO")) hardwareType = HardwareType.Ayaneo;
+            else if (vendorName.StartsWith("AOKZOE")) hardwareType = HardwareType.AOKZOE;
 
             string productName = ProcessUtil.Run("dmidecode", "-s system-product-name", out _).Trim();
             Log.WriteLine("Hardware Product: " + productName);
             if (productName.StartsWith("Claw ")) hardwareType = HardwareType.MSI_Claw;
-            //else if (productName.StartsWith("AIR ")) hardwareType = HardwareType.Ayaneo;
             else if (productName.StartsWith("ONE XPLAYER")) hardwareType = HardwareType.OneXPlayer_Gen1;
             else if (productName.StartsWith("ONEXPLAYER")) hardwareType = HardwareType.OneXPlayer_Gen2;
             else if (productName.StartsWith("ZOTAC GAMING ZONE")) hardwareType = HardwareType.ZotacZone;
-            else if (productName.StartsWith("AOKZOE ")) hardwareType = HardwareType.AOKZOE;
             else if (productName.StartsWith("Loki Zero")) hardwareType = HardwareType.LokiZero;
             else if (productName.StartsWith("Win600")) hardwareType = HardwareType.Win600;
             else if (productName == "G1") hardwareType = HardwareType.TJD;
