@@ -24,7 +24,10 @@ enum HardwareType
     ZotacZone,
 
     // AYN
-    LokiZero
+    LokiZero,
+
+    // TJD
+    TJD
 }
 
 internal class Program
@@ -73,6 +76,7 @@ internal class Program
             else if (productName.StartsWith("ONEXPLAYER")) hardwareType = HardwareType.OneXPlayer;
             else if (productName.StartsWith("ZOTAC GAMING ZONE")) hardwareType = HardwareType.ZotacZone;
             else if (productName.StartsWith("Loki Zero")) hardwareType = HardwareType.LokiZero;
+            else if (productName == "G1") hardwareType = HardwareType.TJD;
         }
         catch (Exception e)
         {
@@ -130,6 +134,7 @@ internal class Program
             OneXPlayer.Configure();
             ZotacZone.Configure();
             LokiZero.Configure();
+            TJD.Configure();
         }
         catch (Exception e)
         {
@@ -174,6 +179,7 @@ internal class Program
             if (OneXPlayer.isEnabled) OneXPlayer.Update(keys);
             if (ZotacZone.isEnabled) ZotacZone.Update(keys);
             if (LokiZero.isEnabled) LokiZero.Update(keys);
+            if (TJD.isEnabled) TJD.Update(keys);
 
             // update volume
             if (KeyEvent.Pressed(keys))
@@ -187,7 +193,7 @@ internal class Program
             // TODO: invoke "steam -shutdown" if you hold Alt+F4 or Guide+B for more than 4 seconds
 
             // sleep thread
-            Thread.Sleep(1000 / 30);
+            Thread.Sleep(1000 / 15);
         }
         
         // shutdown
