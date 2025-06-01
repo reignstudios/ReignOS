@@ -33,6 +33,7 @@ public unsafe static class input
     public const int KEY_0 = 11;
     public const int KEY_A = 30;
     public const int KEY_D = 32;
+    public const int KEY_T = 20;
     public const int KEY_Z = 44;
     public const int KEY_VOLUMEDOWN = 114;
     public const int KEY_VOLUMEUP = 115;
@@ -43,6 +44,8 @@ public unsafe static class input
     public const int KEY_LEFTCTRL = 29;
     public const int KEY_RIGHTCTRL = 97;
     public const int KEY_LEFTMETA = 125;
+    public const int KEY_LEFTALT = 56;
+    public const int KEY_LEFTSHIFT = 42;
 
     public const int BTN_MODE = 0x13c;
     public const int BTN_A = 0x130;

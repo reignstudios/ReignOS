@@ -21,7 +21,10 @@ enum HardwareType
     OneXPlayer,
 
     // Zotac
-    ZotacZone
+    ZotacZone,
+
+    // AYN
+    LokiZero
 }
 
 internal class Program
@@ -69,6 +72,7 @@ internal class Program
             if (productName.StartsWith("Claw ")) hardwareType = HardwareType.MSI_Claw;
             else if (productName.StartsWith("ONEXPLAYER")) hardwareType = HardwareType.OneXPlayer;
             else if (productName.StartsWith("ZOTAC GAMING ZONE")) hardwareType = HardwareType.ZotacZone;
+            else if (productName.StartsWith("Loki Zero")) hardwareType = HardwareType.LokiZero;
         }
         catch (Exception e)
         {
@@ -125,6 +129,7 @@ internal class Program
             MSI_Claw.Configure();
             OneXPlayer.Configure();
             ZotacZone.Configure();
+            LokiZero.Configure();
         }
         catch (Exception e)
         {
@@ -168,6 +173,7 @@ internal class Program
             if (MSI_Claw.isEnabled) MSI_Claw.Update(ref time, resumeFromSleep, keys);
             if (OneXPlayer.isEnabled) OneXPlayer.Update(keys);
             if (ZotacZone.isEnabled) ZotacZone.Update(keys);
+            if (LokiZero.isEnabled) LokiZero.Update(keys);
 
             // update volume
             if (KeyEvent.Pressed(keys))
