@@ -45,24 +45,24 @@ esac";
             string path = "/usr/lib/systemd/system-sleep";
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
             path = Path.Combine(path, "iwlwifi-sleep.sh");
-            if (File.Exists(path))
+            /*if (File.Exists(path))
             {
                 if (apply) return;// already patched
 
                 // remove
                 File.Delete(path);
                 return;
-            }
+            }*/
 
             const string config =
 @"#!/bin/bash
 
 case ""$1"" in
   pre)
-    /usr/sbin/modprobe -r iwlmvm
+    /usr/sbin/modprobe -r iwlmvm mac80211 cfg80211
     ;;
   post)
-    /usr/sbin/modprobe iwlmvm
+    /usr/sbin/modprobe cfg80211 mac80211 iwlmvm
     ;;
 esac";
             File.WriteAllText(path, config);
