@@ -1,4 +1,5 @@
-﻿using ReignOS.Service.OS;
+﻿using ReignOS.Service.HardwarePatches;
+using ReignOS.Service.OS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,11 @@ namespace ReignOS.Service.Hardware
         public static void Configure()
         {
             isEnabled = Program.hardwareType == HardwareType.Ayaneo || Program.hardwareType == HardwareType.AyaneoPro || Program.hardwareType == HardwareType.AyaneoPlus;
+
+            if (Program.hardwareType == HardwareType.AyaneoPro)
+            {
+                WiFiPatches.Fix2(true);
+            }
         }
 
         public static void Update(List<KeyEvent> keys)
