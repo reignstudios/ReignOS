@@ -27,10 +27,6 @@ namespace ReignOS.Service.Hardware
                 {
                     VirtualGamepad.Write_TriggerLeftSteamMenu();
                 }
-                else if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_D, true)))
-                {
-                    VirtualGamepad.Write_TriggerRightSteamMenu();
-                }
             }
 
             if (Program.hardwareType == HardwareType.AyaneoPlus || Program.hardwareType == HardwareType.Ayaneo)
@@ -39,7 +35,11 @@ namespace ReignOS.Service.Hardware
                 {
                     VirtualGamepad.Write_TriggerLeftSteamMenu();
                 }
-                else if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_D, true)))
+            }
+
+            if (Program.hardwareType == HardwareType.AyaneoPro || Program.hardwareType == HardwareType.AyaneoPlus || Program.hardwareType == HardwareType.Ayaneo)
+            {
+                if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_D, true)))
                 {
                     VirtualGamepad.Write_TriggerRightSteamMenu();
                 }
