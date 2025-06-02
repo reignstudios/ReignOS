@@ -17,6 +17,9 @@ enum HardwareType
     // MSI
     MSI_Claw,
 
+    // Asus
+    RogAlly,
+
     // Ayaneo
     Ayaneo,
 
@@ -88,6 +91,7 @@ internal class Program
             string productName = ProcessUtil.Run("dmidecode", "-s system-product-name", out _).Trim();
             Log.WriteLine("Hardware Product: " + productName);
             if (productName.StartsWith("Claw ")) hardwareType = HardwareType.MSI_Claw;
+            else if (productName.StartsWith("ROG Ally")) hardwareType = HardwareType.RogAlly;
             else if (productName.StartsWith("ONE XPLAYER")) hardwareType = HardwareType.OneXPlayer_Gen1;
             else if (productName.StartsWith("ONEXPLAYER")) hardwareType = HardwareType.OneXPlayer_Gen2;
             else if (productName.StartsWith("ZOTAC GAMING ZONE")) hardwareType = HardwareType.ZotacZone;
@@ -148,6 +152,7 @@ internal class Program
         try
         {
             MSI_Claw.Configure();
+            RogAlly.Configure();
             Ayaneo.Configure();
             OneXPlayer.Configure();
             ZotacZone.Configure();
@@ -196,6 +201,7 @@ internal class Program
 
             // update devices
             if (MSI_Claw.isEnabled) MSI_Claw.Update(ref time, resumeFromSleep, keys);
+            if (RogAlly.isEnabled) RogAlly.Update(keys);
             if (Ayaneo.isEnabled) Ayaneo.Update(keys);
             if (OneXPlayer.isEnabled) OneXPlayer.Update(keys);
             if (ZotacZone.isEnabled) ZotacZone.Update(keys);
