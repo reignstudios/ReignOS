@@ -5,6 +5,13 @@ namespace ReignOS.Service.HardwarePatches
 {
 	static class WiFiPatches
 	{
+        public static void RemoveOld()
+        {
+            string path = "/usr/lib/systemd/system-sleep";
+            path = Path.Combine(path, "iwlwifi-sleep.sh");
+            if (File.Exists(path)) File.Delete(path);
+        }
+
         /// <summary>
         /// Fixes wifi after sleep (reboot iwlmvm iwlwifi)
         /// </summary>
@@ -12,7 +19,7 @@ namespace ReignOS.Service.HardwarePatches
 		{
 			string path = "/usr/lib/systemd/system-sleep";
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-            path = Path.Combine(path, "iwlwifi-sleep.sh");
+            path = Path.Combine(path, "wifi-sleep.sh");
             if (File.Exists(path))
             {
                 if (apply) return;// already patched
@@ -44,7 +51,7 @@ esac";
         {
             string path = "/usr/lib/systemd/system-sleep";
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-            path = Path.Combine(path, "iwlwifi-sleep.sh");
+            path = Path.Combine(path, "wifi-sleep.sh");
             /*if (File.Exists(path))
             {
                 if (apply) return;// already patched
@@ -59,10 +66,10 @@ esac";
 
 case ""$1"" in
   pre)
-    /usr/sbin/modprobe -r iwlmvm mac80211 cfg80211
+    /usr/sbin/modprobe -r iwlmvm mt7921e
     ;;
   post)
-    /usr/sbin/modprobe cfg80211 mac80211 iwlmvm
+    /usr/sbin/modprobe mt7921e iwlmvm
     ;;
 esac";
             File.WriteAllText(path, config);
