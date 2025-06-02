@@ -45,7 +45,7 @@ esac";
 		}
 
         /// <summary>
-        /// Fixes wifi after sleep (reboot iwlmvm)
+        /// Fixes wifi after sleep (reboot iwlmvm mt7921e)
         /// </summary>
 		public static void Fix2(bool apply)
         {
@@ -77,9 +77,41 @@ esac";
         }
 
         /// <summary>
-        /// Fixes wifi after sleep (restart NetworkManager)
+        /// Fixes wifi after sleep (reboot iwlmvm iwlwifi mt7921e)
         /// </summary>
 		public static void Fix3(bool apply)
+        {
+            string path = "/usr/lib/systemd/system-sleep";
+            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+            path = Path.Combine(path, "wifi-sleep.sh");
+            /*if (File.Exists(path))
+            {
+                if (apply) return;// already patched
+
+                // remove
+                File.Delete(path);
+                return;
+            }*/
+
+            const string config =
+@"#!/bin/bash
+
+case ""$1"" in
+  pre)
+    /usr/sbin/modprobe -r iwlmvm iwlwifi mt7921e
+    ;;
+  post)
+    /usr/sbin/modprobe mt7921e iwlwifi iwlmvm
+    ;;
+esac";
+            File.WriteAllText(path, config);
+            ProcessUtil.Run("chmod", "+x " + path, useBash: false);
+        }
+
+        /// <summary>
+        /// Fixes wifi after sleep (restart NetworkManager)
+        /// </summary>
+		public static void Fix4(bool apply)
         {
             string path = "/etc/NetworkManager/conf.d";
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
