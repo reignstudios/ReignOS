@@ -426,7 +426,7 @@ static class InstallUtil
         UpdateProgress(56);
 
         // install compositors
-        Run("pacman", "-S --noconfirm wlr-randr wlroots gamescope cage labwc weston");
+        Run("pacman", "-S --noconfirm wlr-randr gamescope cage labwc weston");
         Run("pacman", "-S --noconfirm openbox");
         UpdateProgress(57);
 

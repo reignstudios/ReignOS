@@ -7,7 +7,7 @@
 sudo pacman -S --noconfirm linux-headers linux-tools
 
 sudo pacman -S --noconfirm wayland-utils
-sudo pacman -S --noconfirm weston
+sudo pacman -S --noconfirm wlr-randr gamescope cage labwc weston
 sudo pacman -S --noconfirm openbox
 sudo pacman -S --noconfirm xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-kde xdg-desktop-portal-gtk
 
