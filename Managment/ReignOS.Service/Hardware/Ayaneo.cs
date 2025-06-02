@@ -18,9 +18,7 @@ namespace ReignOS.Service.Hardware
 
             if (Program.hardwareType == HardwareType.AyaneoPro)
             {
-                WiFiPatches.RemoveOld();
                 WiFiPatches.Fix2(true);
-                WiFiPatches.Fix3(false);
             }
         }
 

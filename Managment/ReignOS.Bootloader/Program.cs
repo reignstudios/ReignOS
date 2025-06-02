@@ -359,7 +359,6 @@ internal class Program
     {
         if (gpu == 100)
         {
-            //ProcessUtil.Run("export", "VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.x86_64.json");
             return "prime-run ";
         }
 
@@ -386,8 +385,7 @@ internal class Program
         }
 
         string displayRezArg = (displayWidth > 0 && displayHeight > 0) ? $" -W {displayWidth} -H {displayHeight}" : "";
-        string result = ProcessUtil.Run($"{gpuArg}gamescope", $"-e -f{useMangoHubArg}{vrrArg}{hdrArg}{rotArg}{displayRezArg} -- ./Start_Gamescope.sh{steamGPUArg}{steamDeckArg}", useBash:true);// --framerate-limit
-        Log.WriteLine(result);
+        ProcessUtil.Run($"{gpuArg}gamescope", $"-e -f{useMangoHubArg}{vrrArg}{hdrArg}{rotArg}{displayRezArg} -- ./Start_Gamescope.sh{steamGPUArg}{steamDeckArg}", useBash:true, verboseLog:true);// --framerate-limit
     }
 
     private static void StartCompositor_Weston(bool useMangoHub, bool windowedMode, bool disableSteamGPU, bool disableSteamDeck, int gpu)
@@ -400,8 +398,7 @@ internal class Program
         string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
         string steamDeckArg = disableSteamDeck ? " --disable-steam-deck" : "";
         string gpuArg = GetGPUArg(gpu);
-        string result = ProcessUtil.Run($"{gpuArg}weston", $"{windowedModeArg}--xwayland -- ./Start_Weston.sh{useMangoHubArg}{windowedModeArg2}{steamGPUArg}{steamDeckArg}", useBash:true);
-        Log.WriteLine(result);
+        ProcessUtil.Run($"{gpuArg}weston", $"{windowedModeArg}--xwayland -- ./Start_Weston.sh{useMangoHubArg}{windowedModeArg2}{steamGPUArg}{steamDeckArg}", useBash:true, verboseLog: true);
     }
     
     private static void StartCompositor_Cage(bool useMangoHub, bool disableSteamGPU, bool disableSteamDeck, int gpu)
@@ -412,8 +409,7 @@ internal class Program
         string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
         string steamDeckArg = disableSteamDeck ? " --disable-steam-deck" : "";
         string gpuArg = GetGPUArg(gpu);
-        string result = ProcessUtil.Run($"{gpuArg}cage", $"-d -s -- ./Start_Cage.sh{useMangoHubArg}{steamGPUArg}{steamDeckArg}", useBash:true);
-        Log.WriteLine(result);
+        ProcessUtil.Run($"{gpuArg}cage", $"-d -s -- ./Start_Cage.sh{useMangoHubArg}{steamGPUArg}{steamDeckArg}", useBash:true, verboseLog: true);
     }
 
     private static void StartCompositor_Labwc(bool disableSteamGPU, int gpu)
@@ -422,8 +418,7 @@ internal class Program
         DisableX11();
         string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
         string gpuArg = GetGPUArg(gpu);
-        string result = ProcessUtil.Run($"{gpuArg}labwc", $"--startup ./Start_Labwc.sh{steamGPUArg}", useBash:true);
-        Log.WriteLine(result);
+        ProcessUtil.Run($"{gpuArg}labwc", $"--startup ./Start_Labwc.sh{steamGPUArg}", useBash:true, verboseLog: true);
     }
 
     private static void StartCompositor_X11(bool useMangoHub, bool disableSteamGPU, bool disableSteamDeck, int gpu)
@@ -435,39 +430,35 @@ internal class Program
         string steamDeckArg = disableSteamDeck ? " --disable-steam-deck" : "";
         string gpuArg = GetGPUArg(gpu);
         ConfigureX11($"{gpuArg}/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_X11.sh{useMangoHubArg}{steamGPUArg}{steamDeckArg}");
-        string result = ProcessUtil.Run("startx", "", useBash:false);
-        Log.WriteLine(result);
+        ProcessUtil.Run("startx", "", useBash:false, verboseLog: true);
     }
 
     private static void StartCompositor_KDE(bool useMangoHub, bool disableSteamGPU, bool disableSteamDeck, int gpu, bool useX11, bool useGMode, Process serviceProcess)
     {
         Log.WriteLine("Starting KDE...");
         string gpuArg = GetGPUArg(gpu);
-        string result;
         if (useGMode)
         {
             DisableX11();
             string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
             string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
             string steamDeckArg = disableSteamDeck ? " --disable-steam-deck" : "";
-            result = ProcessUtil.Run($"{gpuArg}./Start_KDE-G.sh{useMangoHubArg}{steamGPUArg}{steamDeckArg}", "", useBash: true);
+            ProcessUtil.Run($"{gpuArg}./Start_KDE-G.sh{useMangoHubArg}{steamGPUArg}{steamDeckArg}", "", useBash:true, verboseLog:true);
         }
         else if (useX11)
         {
             serviceProcess.StandardInput.WriteLine("stop-inhibit");
             ConfigureX11($"{gpuArg}startplasma-x11");
-            result = ProcessUtil.Run("startx", "", useBash:false);
+            ProcessUtil.Run("startx", "", useBash:false, verboseLog:true);
             serviceProcess.StandardInput.WriteLine("start-inhibit");
         }
         else
         {
             serviceProcess.StandardInput.WriteLine("stop-inhibit");
             DisableX11();
-            result = ProcessUtil.Run($"{gpuArg}startplasma-wayland", "", useBash:true);
+            ProcessUtil.Run($"{gpuArg}startplasma-wayland", "", useBash:true, verboseLog:true);
             serviceProcess.StandardInput.WriteLine("start-inhibit");
         }
-
-        Log.WriteLine(result);
     }
 
     public static bool IsOnline()
