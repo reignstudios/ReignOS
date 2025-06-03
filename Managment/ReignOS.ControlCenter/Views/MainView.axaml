@@ -293,12 +293,15 @@
 				
 				<Grid Height="40" Margin="4,200,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
 					<TextBlock Text="Screen Rotation:" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-					<RadioButton Name="displayRot_Unset" Content="Unset" IsChecked="True" Margin="150,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="RotButton_OnClick"/>
-					<RadioButton Name="displayRot_Default" Content="Default" Margin="300,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="RotButton_OnClick"/>
-					<RadioButton Name="displayRot_Left" Content="Left 90" Margin="450,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="RotButton_OnClick"/>
-					<RadioButton Name="displayRot_Right" Content="Right 90" Margin="600,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="RotButton_OnClick"/>
-					<RadioButton Name="displayRot_Flip" Content="Flip 180" Margin="750,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="RotButton_OnClick"/>
+					<RadioButton Name="displayRot_Unset" Content="Unset" IsChecked="True" Margin="150,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="DisplayRotButton_OnClick"/>
+					<RadioButton Name="displayRot_Default" Content="Default" Margin="300,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="DisplayRotButton_OnClick"/>
+					<RadioButton Name="displayRot_Left" Content="Left 90" Margin="450,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="DisplayRotButton_OnClick"/>
+					<RadioButton Name="displayRot_Right" Content="Right 90" Margin="600,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="DisplayRotButton_OnClick"/>
+					<RadioButton Name="displayRot_Flip" Content="Flip 180" Margin="750,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="DisplayRotButton_OnClick"/>
 				</Grid>
+				
+				<Button Content="Apply Global Brightness" Margin="4,0,0,60" HorizontalAlignment="Left" VerticalAlignment="Bottom" Click="DisplayApplyBrightnessButton_OnClick"/>
+				<Slider Name="displayBrightnessSlider" Width="200" Margin="4" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
 			</Grid>
 		</Grid>
 		

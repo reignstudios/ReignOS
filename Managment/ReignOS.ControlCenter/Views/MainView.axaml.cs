@@ -1852,6 +1852,27 @@ public partial class MainView : UserControl
             item.Content = $"Name:{name} Rez:{resolution}{enabled}";
             displayListBox.Items.Add(item);
         }
+
+        // refresh brightness slider
+        try
+        {
+            int brightness = 0, count = 0;
+            foreach (string dir in Directory.GetDirectories("/sys/class/backlight"))
+            {
+                var lines = File.ReadAllLines(Path.Combine(dir, "brightness"));
+                if (lines != null && lines.Length != 0 && int.TryParse(lines[0], out int b))
+                {
+                    brightness += b;
+                    count++;
+                }
+            }
+            if (count > 0) brightness /= count;
+            displayBrightnessSlider.Value = Math.Clamp(brightness, 0, 100);
+        }
+        catch (Exception ex)
+        {
+            Log.WriteLine(ex);
+        }
     }
 
     private void DisplayManagerApplyButton_OnClick(object sender, RoutedEventArgs e)
@@ -1918,7 +1939,7 @@ public partial class MainView : UserControl
         if (!int.TryParse(displayHeightText.Text, out setting.heightOverride)) setting.heightOverride = 0;
     }
 
-    private void RotButton_OnClick(object sender, RoutedEventArgs e)
+    private void DisplayRotButton_OnClick(object sender, RoutedEventArgs e)
     {
         if (displayListBox.SelectedIndex < 0) return;
         
@@ -1930,5 +1951,22 @@ public partial class MainView : UserControl
         else if (displayRot_Left.IsChecked == true) setting.rotation = ScreenRotation.Left;
         else if (displayRot_Right.IsChecked == true) setting.rotation = ScreenRotation.Right;
         else if (displayRot_Flip.IsChecked == true) setting.rotation = ScreenRotation.Flip;
+    }
+
+    private void DisplayApplyBrightnessButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            int brightness = (int)displayBrightnessSlider.Value;
+            string brightnessText = brightness.ToString();
+            foreach (string dir in Directory.GetDirectories("/sys/class/backlight"))
+            {
+                ProcessUtil.WriteAllTextAdmin(Path.Combine(dir, "brightness"), brightnessText);
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.WriteLine(ex);
+        }
     }
 }
