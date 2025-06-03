@@ -243,7 +243,7 @@ internal class Program
             if (compositorRan)
             {
                 Log.WriteLine("Waiting...");
-                Thread.Sleep(2000);
+                Thread.Sleep(5000);
                 if (serviceProcess.HasExited)
                 {
                     Log.WriteLine("Service has exited on its own");
@@ -316,7 +316,7 @@ internal class Program
                 else
                 {
                     exitCode = 0;
-                    Thread.Sleep(2000);// wait a little before loading a new compositor
+                    Thread.Sleep(5000);// wait a little before loading a new compositor
                 }
             }
         }
