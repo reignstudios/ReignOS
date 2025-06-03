@@ -105,6 +105,7 @@
 						<RadioButton Name="rot_Left" Content="Left 90" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						<RadioButton Name="rot_Right" Content="Right 90" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						<RadioButton Name="rot_Flip" Content="Flip 180" Margin="800,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						<CheckBox Name="rot_Touchscreen" Content="Rotate touchscreen" Margin="950,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="160"/>
 					</Grid>
 				</Grid>
 

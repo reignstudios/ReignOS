@@ -231,6 +231,10 @@ public partial class MainView : UserControl
                         else if (parts[1] == "Right") rot_Right.IsChecked = true;
                         else if (parts[1] == "Flip") rot_Flip.IsChecked = true;
                     }
+                    else if (parts[0] == "TouchscreenRotation")
+                    {
+                        if (parts[1] == "Enabled") rot_Touchscreen.IsChecked = true;
+                    }
                     else if (parts[0] == "AMDDrivers")
                     {
                         if (parts[1] == "Mesa") amd_Mesa.IsChecked = true;
@@ -411,7 +415,10 @@ public partial class MainView : UserControl
                 else if (rot_Right.IsChecked == true) writer.WriteLine("ScreenRotation=Right");
                 else if (rot_Flip.IsChecked == true) writer.WriteLine("ScreenRotation=Flip");
                 else writer.WriteLine("ScreenRotation=Unset");
-            
+
+                if (rot_Touchscreen.IsChecked == true) writer.WriteLine("TouchscreenRotation=Enabled");
+                else writer.WriteLine("TouchscreenRotation=Disabled");
+
                 if (amd_Mesa.IsChecked == true) writer.WriteLine("AMDDrivers=Mesa");
                 else if (amd_VLK.IsChecked == true) writer.WriteLine("AMDDrivers=AMDVLK");
                 else if (amd_Proprietary.IsChecked == true) writer.WriteLine("AMDDrivers=Proprietary");
@@ -605,6 +612,7 @@ public partial class MainView : UserControl
             }
 
             // write touchscreen rotation rule
+            if (rot_Touchscreen.IsChecked != true) rule = "";// allow allow rule if wanted
             ProcessUtil.WriteAllTextAdmin("/etc/udev/rules.d/99-touchscreen.rules", rule);
         }
         
