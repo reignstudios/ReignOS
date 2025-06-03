@@ -133,6 +133,7 @@ static class InstallUtil
         Run("pacman-key", "--init", standardOut: standardOut);
         Run("pacman-key", "--populate archlinux", standardOut:standardOut);
         Run("pacman-key", "--refresh-keys", standardOut: standardOut);
+        Run("pacman-key", "--updatedb", standardOut: standardOut);
     }
 
     private static void InstallBaseArch()
