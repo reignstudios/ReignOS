@@ -130,7 +130,8 @@ static class InstallUtil
         Thread.Sleep(1000);
         Run("timedatectl", "");// log time
         Run("pacman", "-Sy archlinux-keyring --noconfirm");
-        Run("pacman-key", "--populate", standardOut:standardOut);
+        Run("pacman-key", "--init", standardOut: standardOut);
+        Run("pacman-key", "--populate archlinux", standardOut:standardOut);
         Run("pacman-key", "--refresh-keys", standardOut: standardOut);
     }
 
