@@ -521,14 +521,60 @@ public partial class MainView : UserControl
                 }
             }
         }
-        
-        void WriteWaylandSettings(StreamWriter writer, string rotation)
+
+        static string WaylandTouchscreenRule(ScreenRotation screenRotation)
         {
+            string devicesText = ProcessUtil.Run("libinput", "list-devices", asAdmin:true, useBash:false);
+            var deviceParts = devicesText.Split('\n');
+            string deviceName = null;
+            bool touchFound = false;
+            foreach (var devicePart in deviceParts)
+            {
+                if (devicePart.StartsWith("Device:"))
+                {
+                    var parts = devicePart.Split(':');
+                    if (parts.Length == 2) deviceName = parts[1].Trim();
+                }
+                else if (deviceName != null && devicePart.StartsWith("Capabilities:"))
+                {
+                    var parts = devicePart.Split(':');
+                    if (parts.Length == 2 && parts[1].Contains("touch"))
+                    {
+                        touchFound = true;
+                        break;
+                    }
+                }
+            }
+
+            if (touchFound)
+            {
+                string display = GetX11Display();
+                string rule = "SUBSYSTEM==\"input\", KERNEL==\"event[0-9]*\", ATTRS{name}==\"" + deviceName + "\", ENV{WL_OUTPUT}=\"" + display + "\"";
+                switch (screenRotation)
+                {
+                    case ScreenRotation.Unset: return "";
+                    case ScreenRotation.Default: return rule + ", ENV{LIBINPUT_CALIBRATION_MATRIX}=\"1 0 0 0 1 0\"";
+                    case ScreenRotation.Left: return rule + ", ENV{LIBINPUT_CALIBRATION_MATRIX}=\"0 -1 1 1 0 0\"";
+                    case ScreenRotation.Right: return rule + ", ENV{LIBINPUT_CALIBRATION_MATRIX}=\"0 1 0 -1 0 1\"";
+                    case ScreenRotation.Flip: return rule + ", ENV{LIBINPUT_CALIBRATION_MATRIX}=\"-1 0 1 0 -1 1\"";
+                }
+            }
+
+            return "";
+        }
+        
+        void WriteWaylandSettings(StreamWriter writer, string rotation, ScreenRotation screenRotation)
+        {
+            string rule = "";
             string vrrArg = vrrCheckbox.IsChecked == true ? " --adaptive-sync enabled" : ""; //--vrr on
             if (displaySettings.Count == 0 || !displaySettings.Exists(x => x.enabled))
             {
                 writer.WriteLine("display=$(wlr-randr | awk '/^[^ ]+/{print $1; exit}')");
-                if (!string.IsNullOrEmpty(rotation)) rotation = $" --transform {rotation}";
+                if (!string.IsNullOrEmpty(rotation))
+                {
+                    rotation = $" --transform {rotation}";
+                    rule = WaylandTouchscreenRule(screenRotation);
+                }
                 writer.WriteLine($"wlr-randr --output $display{rotation}{vrrArg}");
             }
             else
@@ -540,22 +586,26 @@ public partial class MainView : UserControl
                         writer.WriteLine($"wlr-randr --output {setting.name} --off");
                         continue;
                     }
-                    
+
+                    rule = WaylandTouchscreenRule(setting.rotation);
                     switch (setting.rotation)
                     {
                         case ScreenRotation.Unset: rotation = ""; break;
                         case ScreenRotation.Default: rotation = "normal"; break;
-                        case ScreenRotation.Left: rotation = "90"; break;
+                        case ScreenRotation.Left: rotation = "90";  break;
                         case ScreenRotation.Right: rotation = "270"; break;
-                        case ScreenRotation.Flip: rotation = "180"; break;
+                        case ScreenRotation.Flip: rotation = "180";  break;
                     }
-                    
+
                     string mode = "";
                     if (setting.widthOverride > 0 && setting.heightOverride > 0) mode = $" --mode {setting.widthOverride}x{setting.heightOverride}";
                     if (!string.IsNullOrEmpty(rotation)) rotation = $" --transform {rotation}";
                     writer.WriteLine($"wlr-randr --output {setting.name}{rotation}{vrrArg}{mode}");
                 }
             }
+
+            // write touchscreen rotation rule
+            ProcessUtil.WriteAllTextAdmin("/etc/udev/rules.d/99-touchscreen.rules", rule);
         }
         
         void WriteWestonSettings(StreamWriter writer, string rotation, string display)
@@ -777,35 +827,35 @@ public partial class MainView : UserControl
             if (rot_Unset.IsChecked == true)
             {
                 using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "");
-                using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "");
+                using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "", ScreenRotation.Unset);
                 using (var writer = new StreamWriter(westonConfigFile))  WriteWestonSettings(writer, "", GetWestonDisplay());
                 WriteBootloaderArgSetting("");
             }
             else if (rot_Default.IsChecked == true)
             {
                 using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "normal");
-                using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "normal");
+                using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "normal", ScreenRotation.Default);
                 using (var writer = new StreamWriter(westonConfigFile))  WriteWestonSettings(writer, "normal", GetWestonDisplay());
                 WriteBootloaderArgSetting("default");
             }
             else if (rot_Left.IsChecked == true)
             {
                 using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "left");
-                using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "90");
+                using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "90", ScreenRotation.Left);
                 using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-90", GetWestonDisplay());
                 WriteBootloaderArgSetting("left");
             }
             else if (rot_Right.IsChecked == true)
             {
                 using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "right");
-                using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "270");
+                using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "270", ScreenRotation.Right);
                 using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-270", GetWestonDisplay());
                 WriteBootloaderArgSetting("right");
             }
             else if (rot_Flip.IsChecked == true)
             {
                 using (var writer = new StreamWriter(x11SettingsFile)) WriteX11Settings(writer, "inverted");
-                using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "180");
+                using (var writer = new StreamWriter(waylandSettingsFile)) WriteWaylandSettings(writer, "180", ScreenRotation.Flip);
                 using (var writer = new StreamWriter(westonConfigFile)) WriteWestonSettings(writer, "rotate-180", GetWestonDisplay());
                 WriteBootloaderArgSetting("flip");
             }
@@ -1059,7 +1109,9 @@ public partial class MainView : UserControl
     private void RotApplyButton_OnClick(object sender, RoutedEventArgs e)
     {
         SaveSettings();
-        App.exitCode = 0;// user reboot so gamescope rotation works
+        ProcessUtil.Run("udevadm", "control --reload-rules", asAdmin:true, useBash:false);
+        ProcessUtil.Run("udevadm", "trigger", asAdmin: true, useBash: false);
+        App.exitCode = 0;// user reboot so gamescope & weston rotation works
         MainWindow.singleton.Close();
     }
     
