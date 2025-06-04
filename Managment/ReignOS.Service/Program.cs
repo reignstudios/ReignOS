@@ -226,7 +226,7 @@ internal class Program
             // TODO: invoke "steam -shutdown" if you hold Alt+F4 or Guide+B for more than 4 seconds
 
             // sleep thread
-            Thread.Sleep(1000 / 15);
+            Thread.Sleep(1000 / 30);
         }
         
         // shutdown
