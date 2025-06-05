@@ -330,7 +330,7 @@
 			</Grid>
 		</Grid>
 		
-		<Grid Name="powerManagerGrid" Margin="4" IsVisible="True">
+		<Grid Name="powerManagerGrid" Margin="4" IsVisible="False">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="0.25*"/>
 				<ColumnDefinition Width="0.75*"/>
@@ -348,7 +348,11 @@
 			<Grid Grid.Column="1">
 				<Button Content="Back" Width="128" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="PowerManagerBackButton_OnClick"/>
 				<Button Content="Apply All Settings" Background="#803000" Click="PowerManagerApplyButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,50,0,0"/>
-				<CheckBox Name="powerDefaultCheckbox" Content="Default" Margin="4,100,0,0" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+				<CheckBox Name="powerEnabledCheckbox" Content="Enabled" Margin="4,100,0,0" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+				<CheckBox Name="powerAdvancedCheckbox" Content="Nerd Mode" Margin="104,100,0,0" Width="128" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+				<ScrollViewer Margin="4,150,4,70" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+					<ListBox Name="powerCPUListBox"/>
+				</ScrollViewer>
 			</Grid>
 		</Grid>
 

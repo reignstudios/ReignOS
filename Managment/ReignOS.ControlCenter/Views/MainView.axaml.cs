@@ -13,6 +13,7 @@ using Avalonia.Threading;
 using ReignOS.Core;
 using ReignOS.ControlCenter.Desktop;
 using System.Text;
+using Avalonia.Layout;
 using Avalonia.Platform;
 
 namespace ReignOS.ControlCenter.Views;
@@ -80,6 +81,13 @@ class PowerSetting
     public bool active;
 }
 
+class PowerCPUSetting
+{
+    public string name;
+    public int minFreq, maxFreq, freqPercentage;
+    public bool? boost, intelTurboBoost;
+}
+
 class DisplaySetting
 {
     public string name;
@@ -94,7 +102,7 @@ public partial class MainView : UserControl
     private const string settingsFile = "/home/gamer/ReignOS_Ext/Settings.txt";
     
     private System.Timers.Timer connectedTimer;
-    private List<string> wlanDevices = new List<string>();
+    private List<string> wlanDevices = new();
     private string wlanDevice;
     private bool isConnected;
     
@@ -106,6 +114,7 @@ public partial class MainView : UserControl
     private AudioSetting defaultAudioSetting;
     
     private List<PowerSetting> powerSettings = new();
+    private List<PowerCPUSetting> powerCPUSettings = new();
     private List<DisplaySetting> displaySettings = new();
     
     public MainView()
@@ -122,7 +131,9 @@ public partial class MainView : UserControl
         RefreshMUX();
         LoadSettings();
         PostRefreshGPUs();
+        #if !DEBUG
         SaveSystemSettings();// apply any system settings in case things get updated
+        #endif
         
         connectedTimer = new System.Timers.Timer(1000 * 5);
         connectedTimer.Elapsed += ConnectedTimer;
@@ -2061,87 +2072,163 @@ public partial class MainView : UserControl
         if (powerListBox.SelectedIndex < 0) return;
 
         var item = (ListBoxItem)powerListBox.Items[powerListBox.SelectedIndex];
-        //var setting = (AudioSetting)item.Tag;
-        //audioDefaultCheckbox.IsChecked = setting.defaultSink;
-        //audioDefaultCheckbox.IsEnabled = !setting.defaultSink;
+        var setting = (PowerSetting)item.Tag;
+        powerEnabledCheckbox.IsChecked = setting.active;
     }
     
     private void PowerManagerApplyButton_OnClick(object sender, RoutedEventArgs e)
     {
-        /*powerListBox = new List<AudioSetting>();
-        foreach (ListBoxItem item in powerListBox.Items)
-        {
-            var setting = (AudioSetting)item.Tag;
-            audioSettings.Add(setting);
-            if (setting.defaultSink) defaultAudioSetting = setting;
-        }
         
-        SaveSettings();
-        if (defaultAudioSetting != null) ProcessUtil.Run("pactl", $"set-default-sink {defaultAudioSetting.name}", useBash:false);
-
-        Thread.Sleep(1000);
-        RefreshAudioPage();*/
     }
 
     private void RefreshPowerPage()
     {
         // get power profiles
-        var powerProfilesText = ProcessUtil.Run("powerprofilesctl", "list", useBash: false);
-        powerSettings.Clear();
-        PowerSetting setting = null;
-        foreach (string line in powerProfilesText.Split('\n'))
+        try
         {
-            if (setting == null)
+            var powerProfilesText = ProcessUtil.Run("powerprofilesctl", "list", useBash: false);
+            powerSettings.Clear();
+            PowerSetting setting = null;
+            foreach (string line in powerProfilesText.Split('\n'))
             {
-                if (line.StartsWith("* "))
+                if (setting == null)
                 {
-                    var match = Regex.Match(line, @"\* (.*):");
-                    if ((match.Success))
+                    if (line.StartsWith("* "))
                     {
-                        setting = new PowerSetting()
+                        var match = Regex.Match(line, @"\* (.*):");
+                        if ((match.Success))
                         {
-                            name = match.Groups[1].Value,
-                            active = true
-                        };
-                        powerSettings.Add(setting);
+                            setting = new PowerSetting()
+                            {
+                                name = match.Groups[1].Value,
+                                active = true
+                            };
+                            powerSettings.Add(setting);
+                        }
+                    }
+                    else
+                    {
+                        var match = Regex.Match(line, @"  (.*):");
+                        if ((match.Success && !line.StartsWith("    ")))
+                        {
+                            setting = new PowerSetting()
+                            {
+                                name = match.Groups[1].Value
+                            };
+                            powerSettings.Add(setting);
+                        }
+                    }
+                }
+                else if (!string.IsNullOrWhiteSpace(line))
+                {
+                    var match = Regex.Match(line, @"    CpuDriver:\s*(.*)");
+                    if (match.Success)
+                    {
+                        setting.driver = match.Groups[1].Value;
+                        setting = null;
                     }
                 }
                 else
                 {
-                    var match = Regex.Match(line, @"  (.*):");
-                    if ((match.Success && !line.StartsWith("    ")))
-                    {
-                        setting = new PowerSetting()
-                        {
-                            name = match.Groups[1].Value
-                        };
-                        powerSettings.Add(setting);
-                    }
-                }
-            }
-            else if (!string.IsNullOrWhiteSpace(line))
-            {
-                var match = Regex.Match(line, @"    CpuDriver:\s*(.*)");
-                if (match.Success)
-                {
-                    setting.driver = match.Groups[1].Value;
                     setting = null;
                 }
             }
-            else
-            {
-                setting = null;
-            }
+        }
+        catch (Exception e)
+        {
+            Log.WriteLine(e);
         }
         
         // update UI
         powerListBox.Items.Clear();
-        foreach (var s in powerSettings)
+        foreach (var setting in powerSettings)
         {
             var item = new ListBoxItem();
-            item.Content = $"Name: {s.name}\nDriver: {s.driver}";
-            item.Tag = s;
+            string active = setting.active ? " (Active)" : "";
+            item.Content = $"Name: {setting.name}{active}\nDriver: {setting.driver}";
+            item.Tag = setting;
             powerListBox.Items.Add(item);
+        }
+        
+        // get cpu info
+        try
+        {
+            powerCPUSettings.Clear();
+            foreach (var path in Directory.GetDirectories("/sys/devices/system/cpu"))
+            {
+                string cpu = Path.GetFileName(path);
+                var match = Regex.Match(cpu, @"(cpu\d*)");
+                if (match.Success && match.Groups[1].Value == cpu)
+                {
+                    string freqPath = Path.Combine(path, "cpufreq");
+                    string minFreqPath = Path.Combine(freqPath, "cpuinfo_min_freq");
+                    string maxFreqPath = Path.Combine(freqPath, "cpuinfo_max_freq");
+                    var setting = new PowerCPUSetting()
+                    {
+                        name = cpu,
+                        minFreq = int.Parse(File.ReadAllText(minFreqPath).Trim()),
+                        maxFreq = int.Parse(File.ReadAllText(maxFreqPath).Trim()),
+                    };
+                    powerCPUSettings.Add(setting);
+                }
+            }
+            
+            powerCPUSettings.Sort((x, y) =>
+            {
+                string xNumber = x.name.Substring(3);
+                string yNumber = y.name.Substring(3);
+                return int.Parse(xNumber).CompareTo(int.Parse(yNumber));
+            });
+        }
+        catch (Exception e)
+        {
+            Log.WriteLine(e);
+        }
+        
+        // update UI
+        powerCPUListBox.Items.Clear();
+        foreach (var setting in powerCPUSettings)
+        {
+            var content = new StackPanel();
+            content.Orientation = Orientation.Horizontal;
+            
+            var label = new TextBlock();
+            label.VerticalAlignment = VerticalAlignment.Center;
+            label.Text = $"{setting.name} (MinFreq: {setting.minFreq} MaxFreq: {setting.maxFreq})";
+            content.Children.Add(label);
+
+            var minFreqOverride = new TextBox();
+            minFreqOverride.Margin = new Thickness(8, 0, 0, 0);
+            minFreqOverride.Text = setting.minFreq.ToString();
+            content.Children.Add(minFreqOverride);
+            
+            var maxFreqOverride = new TextBox();
+            maxFreqOverride.Margin = new Thickness(8, 0, 0, 0);
+            maxFreqOverride.Text = setting.maxFreq.ToString();
+            content.Children.Add(maxFreqOverride);
+
+            if (setting.boost.HasValue)
+            {
+                var boostCheckBox = new CheckBox();
+                boostCheckBox.Margin = new Thickness(8, 0, 0, 0);
+                boostCheckBox.Content = "Boost";
+                boostCheckBox.IsChecked = setting.boost;
+                content.Children.Add(boostCheckBox);
+            }
+
+            if (setting.intelTurboBoost.HasValue)
+            {
+                var turboBoostCheckBox = new CheckBox();
+                turboBoostCheckBox.Margin = new Thickness(8, 0, 0, 0);
+                turboBoostCheckBox.Content = "TurboBoost";
+                turboBoostCheckBox.IsChecked = setting.intelTurboBoost;
+                content.Children.Add(turboBoostCheckBox);
+            }
+
+            var item = new ListBoxItem();
+            item.Content = content;
+            item.Tag = setting;
+            powerCPUListBox.Items.Add(item);
         }
     }
 }
