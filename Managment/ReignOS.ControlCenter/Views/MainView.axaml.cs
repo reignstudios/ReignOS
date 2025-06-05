@@ -77,6 +77,7 @@ class PowerSetting
 {
     public string name;
     public string driver;
+    public bool active;
 }
 
 class DisplaySetting
@@ -2092,14 +2093,30 @@ public partial class MainView : UserControl
         {
             if (setting == null)
             {
-                var match = Regex.Match(line, @"  (.*):");
-                if (match.Success && (!line.StartsWith("    ") || line.StartsWith("*")))
+                if (line.StartsWith("* "))
                 {
-                    setting = new PowerSetting()
+                    var match = Regex.Match(line, @"\* (.*):");
+                    if ((match.Success))
                     {
-                        name = match.Groups[1].Value,
-                    };
-                    powerSettings.Add(setting);
+                        setting = new PowerSetting()
+                        {
+                            name = match.Groups[1].Value,
+                            active = true
+                        };
+                        powerSettings.Add(setting);
+                    }
+                }
+                else
+                {
+                    var match = Regex.Match(line, @"  (.*):");
+                    if ((match.Success && !line.StartsWith("    ")))
+                    {
+                        setting = new PowerSetting()
+                        {
+                            name = match.Groups[1].Value
+                        };
+                        powerSettings.Add(setting);
+                    }
                 }
             }
             else if (!string.IsNullOrWhiteSpace(line))
