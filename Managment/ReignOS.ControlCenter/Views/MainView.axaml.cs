@@ -73,6 +73,12 @@ class AudioSetting
     public bool defaultSink;
 }
 
+class PowerSetting
+{
+    public string name;
+    public string driver;
+}
+
 class DisplaySetting
 {
     public string name;
@@ -98,6 +104,7 @@ public partial class MainView : UserControl
     private List<AudioSetting> audioSettings = new();
     private AudioSetting defaultAudioSetting;
     
+    private List<PowerSetting> powerSettings = new();
     private List<DisplaySetting> displaySettings = new();
     
     public MainView()
@@ -2027,6 +2034,97 @@ public partial class MainView : UserControl
         catch (Exception ex)
         {
             Log.WriteLine(ex);
+        }
+    }
+    
+    private void PowerManagerButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        mainGrid.IsVisible = false;
+        powerManagerGrid.IsVisible = true;
+        RefreshPowerPage();
+    }
+    
+    private void PowerManagerBackButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        mainGrid.IsVisible = true;
+        powerManagerGrid.IsVisible = false;
+    }
+    
+    private void RefreshPowerButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        RefreshPowerPage();
+    }
+    
+    private void PowerListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (powerListBox.SelectedIndex < 0) return;
+
+        var item = (ListBoxItem)powerListBox.Items[powerListBox.SelectedIndex];
+        //var setting = (AudioSetting)item.Tag;
+        //audioDefaultCheckbox.IsChecked = setting.defaultSink;
+        //audioDefaultCheckbox.IsEnabled = !setting.defaultSink;
+    }
+    
+    private void PowerManagerApplyButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        /*powerListBox = new List<AudioSetting>();
+        foreach (ListBoxItem item in powerListBox.Items)
+        {
+            var setting = (AudioSetting)item.Tag;
+            audioSettings.Add(setting);
+            if (setting.defaultSink) defaultAudioSetting = setting;
+        }
+        
+        SaveSettings();
+        if (defaultAudioSetting != null) ProcessUtil.Run("pactl", $"set-default-sink {defaultAudioSetting.name}", useBash:false);
+
+        Thread.Sleep(1000);
+        RefreshAudioPage();*/
+    }
+
+    private void RefreshPowerPage()
+    {
+        // get power profiles
+        var powerProfilesText = ProcessUtil.Run("powerprofilesctl", "list", useBash: false);
+        powerSettings.Clear();
+        PowerSetting setting = null;
+        foreach (string line in powerProfilesText.Split('\n'))
+        {
+            if (setting == null)
+            {
+                var match = Regex.Match(line, @"  (.*):");
+                if (match.Success && (!line.StartsWith("    ") || line.StartsWith("*")))
+                {
+                    setting = new PowerSetting()
+                    {
+                        name = match.Groups[1].Value,
+                    };
+                    powerSettings.Add(setting);
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(line))
+            {
+                var match = Regex.Match(line, @"    CpuDriver:\s*(.*)");
+                if (match.Success)
+                {
+                    setting.driver = match.Groups[1].Value;
+                    setting = null;
+                }
+            }
+            else
+            {
+                setting = null;
+            }
+        }
+        
+        // update UI
+        powerListBox.Items.Clear();
+        foreach (var s in powerSettings)
+        {
+            var item = new ListBoxItem();
+            item.Content = $"Name: {s.name}\nDriver: {s.driver}";
+            item.Tag = s;
+            powerListBox.Items.Add(item);
         }
     }
 }
