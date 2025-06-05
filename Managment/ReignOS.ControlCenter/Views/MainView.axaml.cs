@@ -13,6 +13,7 @@ using Avalonia.Threading;
 using ReignOS.Core;
 using ReignOS.ControlCenter.Desktop;
 using System.Text;
+using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Platform;
 
@@ -85,7 +86,7 @@ class PowerCPUSetting
 {
     public string name;
     public int minFreq, maxFreq, freqPercentage;
-    public bool? boost, intelTurboBoost;
+    public bool? boost;
 }
 
 class DisplaySetting
@@ -115,6 +116,8 @@ public partial class MainView : UserControl
     
     private List<PowerSetting> powerSettings = new();
     private List<PowerCPUSetting> powerCPUSettings = new();
+    private bool? powerIntelTurboBoost;
+    
     private List<DisplaySetting> displaySettings = new();
     
     public MainView()
@@ -2073,7 +2076,33 @@ public partial class MainView : UserControl
 
         var item = (ListBoxItem)powerListBox.Items[powerListBox.SelectedIndex];
         var setting = (PowerSetting)item.Tag;
-        powerEnabledCheckbox.IsChecked = setting.active;
+        powerActiveCheckbox.IsChecked = setting.active;
+        powerActiveCheckbox.IsEnabled = !setting.active;
+    }
+    
+    private void PowerActiveCheckbox_OnIsCheckedChanged(object sender, RoutedEventArgs e)
+    {
+        if (powerListBox.SelectedIndex < 0) return;
+
+        if (powerActiveCheckbox.IsChecked == true)
+        {
+            powerActiveCheckbox.IsEnabled = false;
+            var item = (ListBoxItem)powerListBox.Items[powerListBox.SelectedIndex];
+            var selectedSetting = (PowerSetting)item.Tag;
+            selectedSetting.active = true;
+            foreach (var setting in powerSettings)
+            {
+                if (setting != selectedSetting)
+                {
+                    setting.active = false;
+                }
+            }
+        }
+    }
+    
+    private void PowerSimpleSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+    {
+        powerSimpleFreq.Text = $"Freq: {(int)powerSimpleSlider.Value}%";
     }
     
     private void PowerManagerApplyButton_OnClick(object sender, RoutedEventArgs e)
@@ -2153,6 +2182,10 @@ public partial class MainView : UserControl
         // get cpu info
         try
         {
+            powerIntelTurboBoost = null;
+            string turboBoostPath = "/sys/devices/system/cpu/intel_pstate/no_turbo";
+            if (File.Exists(turboBoostPath)) powerIntelTurboBoost = File.ReadAllText(turboBoostPath).Trim() != "1";
+            
             powerCPUSettings.Clear();
             foreach (var path in Directory.GetDirectories("/sys/devices/system/cpu"))
             {
@@ -2169,6 +2202,10 @@ public partial class MainView : UserControl
                         minFreq = int.Parse(File.ReadAllText(minFreqPath).Trim()),
                         maxFreq = int.Parse(File.ReadAllText(maxFreqPath).Trim()),
                     };
+                    
+                    string boostPath = Path.Combine(freqPath, "boost");
+                    if (File.Exists(boostPath)) setting.boost = File.ReadAllText(boostPath).Trim() == "1";
+                    
                     powerCPUSettings.Add(setting);
                 }
             }
@@ -2186,6 +2223,17 @@ public partial class MainView : UserControl
         }
         
         // update UI
+        if (powerIntelTurboBoost != null)
+        {
+            powerIntelTurboBoostCheckbox.IsEnabled = true;
+            powerIntelTurboBoostCheckbox.IsChecked = powerIntelTurboBoost;
+        }
+        else
+        {
+            powerIntelTurboBoostCheckbox.IsEnabled = false;
+            powerIntelTurboBoostCheckbox.IsChecked = false;
+        }
+        
         powerCPUListBox.Items.Clear();
         foreach (var setting in powerCPUSettings)
         {
@@ -2216,19 +2264,16 @@ public partial class MainView : UserControl
                 content.Children.Add(boostCheckBox);
             }
 
-            if (setting.intelTurboBoost.HasValue)
-            {
-                var turboBoostCheckBox = new CheckBox();
-                turboBoostCheckBox.Margin = new Thickness(8, 0, 0, 0);
-                turboBoostCheckBox.Content = "TurboBoost";
-                turboBoostCheckBox.IsChecked = setting.intelTurboBoost;
-                content.Children.Add(turboBoostCheckBox);
-            }
-
             var item = new ListBoxItem();
             item.Content = content;
             item.Tag = setting;
             powerCPUListBox.Items.Add(item);
         }
+    }
+
+    private void PowerAdvancedCheckbox_OnIsCheckedChanged(object sender, RoutedEventArgs e)
+    {
+        powerSimpleGrid.IsVisible = powerAdvancedCheckbox.IsChecked != true;
+        powerAdvancedGrid.IsVisible = powerAdvancedCheckbox.IsChecked == true;
     }
 }
