@@ -20,6 +20,7 @@ public struct KeyEvent
 
     public static bool Pressed(KeyList keyEvents)
     {
+        if (!keyEvents.ready) return false;
         for (int i = 0; i < keyEvents.count; ++i)
         {
             if (keyEvents.keys[i].pressed) return true;
@@ -29,6 +30,7 @@ public struct KeyEvent
 
     public static bool Pressed(KeyList keyEvents, ushort key)
     {
+        if (!keyEvents.ready) return false;
         for (int i = 0; i < keyEvents.count; ++i)
         {
             ref var e = ref keyEvents.keys[i];
@@ -39,6 +41,7 @@ public struct KeyEvent
 
     public static bool Pressed(KeyList keyEvents, params KeyEvent[] keys)
     {
+        if (!keyEvents.ready) return false;
         if (keyEvents.count != 0 && keyEvents.count >= keys.Length)
         {
             for (int i = 0; i != keys.Length; i++)
@@ -60,6 +63,7 @@ public class KeyList
 {
     public KeyEvent[] keys;
     public int count;
+    public bool ready;
 
     public KeyList(int maxCount)
     {
@@ -69,6 +73,7 @@ public class KeyList
     public void Clear()
     {
         count = 0;
+        ready = false;
     }
 
     public void Add(KeyEvent key)
@@ -243,7 +248,11 @@ public unsafe class KeyboardInput : IDisposable
         }
 
         keyListWaitCount++;
-        if (keyListWaitCount >= waitCount) return keys.count != 0;
+        if (keyListWaitCount >= waitCount)
+        {
+            keys.ready = true;
+            return keys.count != 0;
+        }
         
         return false;
         //return hasEvent;
