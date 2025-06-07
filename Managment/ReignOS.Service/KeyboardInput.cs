@@ -224,11 +224,11 @@ public unsafe class KeyboardInput : IDisposable
 
     public bool ReadNextKeys(out KeyList keys, int waitCount)
     {
-        keys = null;
+        keys = keyList;
         if (handles == null || handles.Count == 0) return false;
 
         //bool hasEvent = false;
-        if (keyListWaitCount >= waitCount)
+        if (keys.ready)
         {
             keyListWaitCount = 0;
             keys.Clear();
