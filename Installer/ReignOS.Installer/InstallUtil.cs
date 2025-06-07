@@ -444,9 +444,9 @@ static class InstallUtil
         UpdateProgress(60);
 
         // install power
-        Run("pacman", "-S --noconfirm acpi acpid powertop power-profiles-daemon");
+        Run("pacman", "-S --noconfirm acpi powertop power-profiles-daemon");
         Run("pacman", "-S --noconfirm python-gobject");
-        Run("systemctl", "enable acpid power-profiles-daemon");
+        Run("systemctl", "enable power-profiles-daemon");
         UpdateProgress(61);
 
         // install auto-mount drives

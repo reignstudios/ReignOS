@@ -41,3 +41,7 @@ yay -S --noconfirm steamcmd
 yay -S --noconfirm proton-ge-custom
 
 sudo pacman -S --noconfirm fwupd
+
+sudo systemctl stop acpid
+sudo systemctl disable acpid
+sudo pacman -R --noconfirm acpid

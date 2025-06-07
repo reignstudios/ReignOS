@@ -87,6 +87,8 @@ static class PackageUpdates
 
         if (!PackageExits("fwupd")) return true;
 
+        if (PackageExits("acpid")) return true;
+
         return false;
     }
 
