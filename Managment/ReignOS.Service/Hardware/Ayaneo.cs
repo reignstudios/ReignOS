@@ -14,7 +14,11 @@ namespace ReignOS.Service.Hardware
 
         public static void Configure()
         {
-            isEnabled = Program.hardwareType == HardwareType.Ayaneo || Program.hardwareType == HardwareType.AyaneoPro || Program.hardwareType == HardwareType.AyaneoPlus;
+            isEnabled =
+                Program.hardwareType == HardwareType.Ayaneo ||
+                Program.hardwareType == HardwareType.AyaneoPro ||
+                Program.hardwareType == HardwareType.AyaneoPlus ||
+                Program.hardwareType == HardwareType.AyaneoFlipDS;
 
             if (Program.hardwareType == HardwareType.AyaneoPro)
             {
