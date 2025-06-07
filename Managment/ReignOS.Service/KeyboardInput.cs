@@ -18,31 +18,32 @@ public struct KeyEvent
         this.pressed = pressed;
     }
 
-    public static bool Pressed(List<KeyEvent> keyEvents)
+    public static bool Pressed(KeyList keyEvents)
     {
-        foreach (var e in keyEvents)
+        for (int i = 0; i < keyEvents.count; ++i)
         {
-            if (e.pressed) return true;
+            if (keyEvents.keys[i].pressed) return true;
         }
         return false;
     }
 
-    public static bool Pressed(List<KeyEvent> keyEvents, ushort key)
+    public static bool Pressed(KeyList keyEvents, ushort key)
     {
-        foreach (var e in keyEvents)
+        for (int i = 0; i < keyEvents.count; ++i)
         {
+            ref var e = ref keyEvents.keys[i];
             if (e.pressed && e.key == key) return true;
         }
         return false;
     }
 
-    public static bool Pressed(List<KeyEvent> keyEvents, params KeyEvent[] keys)
+    public static bool Pressed(KeyList keyEvents, params KeyEvent[] keys)
     {
-        if (keyEvents.Count != 0 && keyEvents.Count >= keys.Length)
+        if (keyEvents.count != 0 && keyEvents.count >= keys.Length)
         {
             for (int i = 0; i != keys.Length; i++)
             {
-                var k1 = keyEvents[i];
+                var k1 = keyEvents.keys[i];
                 var k2 = keys[i];
                 if (k1.key != k2.key || k1.pressed != k2.pressed)
                 {
@@ -55,10 +56,36 @@ public struct KeyEvent
     }
 }
 
+public class KeyList
+{
+    public KeyEvent[] keys;
+    public int count;
+
+    public KeyList(int maxCount)
+    {
+        keys = new KeyEvent[maxCount];
+    }
+
+    public void Clear()
+    {
+        count = 0;
+    }
+
+    public void Add(KeyEvent key)
+    {
+        if (count >= keys.Length) return;
+        keys[count] = key;
+        count++;
+    }
+}
+
 public unsafe class KeyboardInput : IDisposable
 {
     private List<int> handles;
-    
+
+    private KeyList keyList = new KeyList(32);
+    private int keyListWaitCount;
+
     public void Init(string name, bool useName, ushort vendorID, ushort productID)
     {
         Log.WriteLine("Searching for media keyboard...");
@@ -190,13 +217,18 @@ public unsafe class KeyboardInput : IDisposable
         return hasEvent;
     }
 
-    public bool ReadNextKeys(out List<KeyEvent> keys)
+    public bool ReadNextKeys(out KeyList keys, int waitCount)
     {
         keys = null;
         if (handles == null || handles.Count == 0) return false;
-        
-        bool hasEvent = false;
-        keys = new List<KeyEvent>();
+
+        //bool hasEvent = false;
+        if (keyListWaitCount >= waitCount)
+        {
+            keyListWaitCount = 0;
+            keys.Clear();
+        }
+
         foreach (var handle in handles)
         {
             var e = new input.input_event();
@@ -205,11 +237,15 @@ public unsafe class KeyboardInput : IDisposable
                 if (e.type == input.EV_KEY)
                 {
                     keys.Add(new KeyEvent(e.code, e.value == 1));
-                    hasEvent = true;
+                    //hasEvent = true;
                 }
             }
         }
+
+        keyListWaitCount++;
+        if (keyListWaitCount >= waitCount) return keys.count != 0;
         
-        return hasEvent;
+        return false;
+        //return hasEvent;
     }
 }

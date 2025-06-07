@@ -201,7 +201,7 @@ internal class Program
             if (timeSpan.TotalSeconds >= 3) resumeFromSleep = true;
 
             // update keyboard
-            keyboardInput.ReadNextKeys(out var keys);
+            keyboardInput.ReadNextKeys(out var keys, 15);
 
             // update devices
             if (MSI_Claw.isEnabled) MSI_Claw.Update(ref time, resumeFromSleep, keys);

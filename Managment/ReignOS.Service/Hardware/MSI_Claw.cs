@@ -146,7 +146,7 @@ public static class MSI_Claw
         return true;
     }
 
-    public static void Update(ref DateTime time, bool resumeFromSleep, List<KeyEvent> keys)
+    public static void Update(ref DateTime time, bool resumeFromSleep, KeyList keys)
     {
         if (Program.useInputPlumber) return;
 

@@ -16,7 +16,7 @@ namespace ReignOS.Service.Hardware
             isEnabled = Program.hardwareType == HardwareType.ZotacZone;
         }
 
-        public static void Update(List<KeyEvent> keys)
+        public static void Update(KeyList keys)
         {
             if (Program.useInputPlumber) return;
 

@@ -16,7 +16,7 @@ namespace ReignOS.Service.Hardware
             isEnabled = Program.hardwareType == HardwareType.RogAlly;
         }
 
-        public static void Update(List<KeyEvent> keys)
+        public static void Update(KeyList keys)
         {
             if (Program.useInputPlumber) return;
 
