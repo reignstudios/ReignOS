@@ -51,7 +51,13 @@ namespace ReignOS.Service.Hardware
                 }
             }
 
-            if (Program.hardwareType == HardwareType.AyaneoPro || Program.hardwareType == HardwareType.AyaneoPlus || Program.hardwareType == HardwareType.Ayaneo)
+            if
+            (
+                Program.hardwareType == HardwareType.AyaneoPro ||
+                Program.hardwareType == HardwareType.AyaneoPlus ||
+                Program.hardwareType == HardwareType.AyaneoFlipDS ||
+                Program.hardwareType == HardwareType.Ayaneo
+            )
             {
                 if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_D, true)))
                 {
