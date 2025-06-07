@@ -147,7 +147,7 @@
             <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">Control Center</h2>
             <ul style="color: #888;">
                 <li>Select what compositor to boot with or set boot default</li>
-                <li>Set screen rotation (NOTE: doesn't work with Gamescope atm)</li>
+                <li>Set screen rotation</li>
                 <li>Manage Nvidia drivers</li>
                 <li>Boot Manager: This allows you to boot to Windows or any other OS</li>
                 <li>Network Manager: Allows you to manage WiFi connection</li>
@@ -228,6 +228,7 @@
                     * Exit to terminal<br>
                     * Type: cd ~/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish<br>
                     * Type: './Nvidia_Install_Nouveau.sh' or './Nvidia_Install_Proprietary.sh'<br>
+                    * NOTE: Same for AMD<br>
                 </li>
                 <li>Disable Steam GPU acceleration in Control-Center can work around some Nvidia issues</li>
                 <li>If you install Proprietary Nvidia drivers, make sure you see a driver listed in 'GPU Utils'</li>
@@ -270,9 +271,10 @@
                     * sudo timedatectl set-ntp true<br>
                     * sudo hwclock --systohc<br>
                     * sudo pacman -Sy archlinux-keyring<br>
-                    sudo pacman-key --init
+                    * sudo pacman-key --init<br>
                     * sudo pacman-key --populate archlinux<br>
                     * sudo pacman-key --refresh-keys<br>
+                    * sudo pacman-key --updatedb<br>
                     * sudo pacman -Sy<br>
                     * reboot<br>
                 </li>
