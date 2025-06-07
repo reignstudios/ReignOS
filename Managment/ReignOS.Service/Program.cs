@@ -24,6 +24,7 @@ enum HardwareType
     Ayaneo,
     AyaneoPro,
     AyaneoPlus,
+    AyaneoFlipDS,
 
     // One-Netbook
     OneXPlayer_Gen1,
@@ -96,6 +97,7 @@ internal class Program
             else if (productName.StartsWith("ROG Ally")) hardwareType = HardwareType.RogAlly;
             else if (productName.StartsWith("AIR Pro")) hardwareType = HardwareType.AyaneoPro;
             else if (productName.StartsWith("AIR Plus")) hardwareType = HardwareType.AyaneoPlus;
+            else if (productName.StartsWith("FLIP DS")) hardwareType = HardwareType.AyaneoFlipDS;
             else if (productName.StartsWith("ONE XPLAYER")) hardwareType = HardwareType.OneXPlayer_Gen1;
             else if (productName.StartsWith("ONEXPLAYER")) hardwareType = HardwareType.OneXPlayer_Gen2;
             else if (productName.StartsWith("ZOTAC GAMING ZONE")) hardwareType = HardwareType.ZotacZone;
