@@ -227,7 +227,6 @@ public unsafe class KeyboardInput : IDisposable
         keys = keyList;
         if (handles == null || handles.Count == 0) return false;
 
-        //bool hasEvent = false;
         if (keys.ready)
         {
             keyListWaitCount = 0;
@@ -242,7 +241,6 @@ public unsafe class KeyboardInput : IDisposable
                 if (e.type == input.EV_KEY)
                 {
                     keys.Add(new KeyEvent(e.code, e.value == 1));
-                    //hasEvent = true;
                 }
             }
         }
@@ -255,6 +253,5 @@ public unsafe class KeyboardInput : IDisposable
         }
         
         return false;
-        //return hasEvent;
     }
 }
