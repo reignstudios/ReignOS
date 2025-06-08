@@ -189,7 +189,7 @@
 				<Button Content="Network" Margin="4,0,0,0" Click="NetworkManagerButton_OnClick"/>
 				<Button Content="Display" Margin="4,0,0,0" Click="DisplayManagerButton_OnClick"/>
 				<Button Content="Audio" Margin="4,0,0,0" Click="AudioManagerButton_OnClick"/>
-				<Button Content="Power" Margin="4,0,0,0" Click="PowerManagerButton_OnClick"/>
+				<!--<Button Content="Power" Margin="4,0,0,0" Click="PowerManagerButton_OnClick"/>-->
 			</StackPanel>
 		</Grid>
 		
