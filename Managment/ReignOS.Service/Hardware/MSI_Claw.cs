@@ -56,7 +56,7 @@ public static class MSI_Claw
             }
         
             Log.WriteLine($"MSI-Claw gamepad found: Handles={device.handles.Count}");
-            EnableMode(Mode.Desktop);
+            EnableMode(Mode.XInput);
         }
     }
     
