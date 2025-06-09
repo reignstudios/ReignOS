@@ -504,6 +504,7 @@ static class InstallUtil
         
         // install kde
         Run("pacman", "-S --noconfirm plasma konsole dolphin kate ark exfatprogs dosfstools partitionmanager");
+        Run("pacman", "-S --noconfirm maliit-keyboard");
         UpdateProgress(85);
 
         // install gparted
