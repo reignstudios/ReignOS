@@ -47,7 +47,7 @@ if [ "$HAS_UPDATES" = "true" ]; then
 
   # yay
   echo "ReignOS Updating yay pacages..."
-  yay -Syu --noconfirm
+  yay -Syu --noconfirm --ignore aw87559-firmware
   yay_exit_code=$?
 
   # flatpaks
