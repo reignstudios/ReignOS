@@ -71,12 +71,7 @@ dotnet publish -r linux-x64 -c Release
 sleep 1
 
 # reboot if updates ran
-if [ $arch_exit_code -eq 0 ]; then
-    reboot
-    exit 0
-fi
-  
-if [ $yay_exit_code -eq 0 ]; then
+if [ $arch_exit_code -eq 0 ] && [ $yay_exit_code -eq 0 ]; then
     reboot
     exit 0
 fi
