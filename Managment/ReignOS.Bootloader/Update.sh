@@ -78,7 +78,7 @@ if [ "$HAS_UPDATES" = "true" ]; then
     fi
 
     if [ $yay_exit_code -ne 0 ]; then
-        error "ERROR: ReignOS Updating Yay failed: $yay_exit_code 'hit Ctrl+C to stop boot'"
+        echo "ERROR: ReignOS Updating Yay failed: $yay_exit_code 'hit Ctrl+C to stop boot'"
         sleep 5
     fi
 
