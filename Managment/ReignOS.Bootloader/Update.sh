@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# aw87559-firmware = Ayaneo Flip DS (yay needs to ignore this conflict)
+
 # update ReignOS Git package
 echo ""
 echo "ReignOS Updating Git packages..."
