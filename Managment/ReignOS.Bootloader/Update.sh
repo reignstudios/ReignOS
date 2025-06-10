@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# update ReignOS Git package
+echo ""
+echo "ReignOS Updating Git packages..."
+cd /home/gamer/ReignOS
+git pull
+cd /home/gamer/ReignOS/Managment
+echo "ReignOS Building packages..."
+dotnet publish -r linux-x64 -c Release
+sleep 1
+
 # check if pacman updates exist
 echo ""
 echo "ReignOS Checking 'pacman' for updates..."
@@ -36,55 +46,45 @@ fi
 arch_exit_code=0
 yay_exit_code=0
 if [ "$HAS_UPDATES" = "true" ]; then
-  echo ""
-  echo "ReignOS Updating Arch..."
-  sleep 2
+    echo ""
+    echo "ReignOS Updating Arch..."
+    sleep 2
 
-  # pacman
-  echo "ReignOS Updating pacman pacages..."
-  sudo pacman -Syu --noconfirm
-  arch_exit_code=$?
+    # pacman
+    echo "ReignOS Updating pacman pacages..."
+    sudo pacman -Syu --noconfirm
+    arch_exit_code=$?
 
-  # yay
-  echo "ReignOS Updating yay pacages..."
-  yay -Syu --noconfirm --ignore aw87559-firmware
-  yay_exit_code=$?
+    # yay
+    echo "ReignOS Updating yay pacages..."
+    yay -Syu --noconfirm --ignore aw87559-firmware
+    yay_exit_code=$?
 
-  # flatpaks
-  echo "ReignOS Updating flatpak pacages..."
-  flatpak update --noninteractive
+    # flatpaks
+    echo "ReignOS Updating flatpak pacages..."
+    flatpak update --noninteractive
 
-  # firmware
-  echo "ReignOS Updating fwupdmgr firmware..."
-  sudo fwupdmgr refresh -y
-  sudo fwupdmgr update -y --no-reboot-check
-fi
+    # firmware
+    echo "ReignOS Updating fwupdmgr firmware..."
+    sudo fwupdmgr refresh -y
+    sudo fwupdmgr update -y --no-reboot-check
 
-# update ReignOS Git package
-echo ""
-echo "ReignOS Updating Git packages..."
-cd /home/gamer/ReignOS
-git pull
-cd /home/gamer/ReignOS/Managment
-echo "ReignOS Building packages..."
-dotnet publish -r linux-x64 -c Release
-sleep 1
+    # just stop everything if Arch fails to update (but allow ReignOS git to update before this)
+    if [ $arch_exit_code -ne 0 ]; then
+        echo "ERROR: ReignOS Updating Arch failed: $arch_exit_code 'hit Ctrl+C to stop boot'"
+        sleep 5
+    fi
 
-# reboot if updates ran
-if [ $arch_exit_code -eq 0 ] && [ $yay_exit_code -eq 0 ]; then
-    reboot
-    exit 0
-fi
+    if [ $yay_exit_code -ne 0 ]; then
+        error "ERROR: ReignOS Updating Yay failed: $yay_exit_code 'hit Ctrl+C to stop boot'"
+        sleep 5
+    fi
 
-# just stop everything if Arch fails to update (but allow ReignOS git to update before this)
-if [ $arch_exit_code -ne 0 ]; then
-    echo "ReignOS Updating Arch failed: $arch_exit_code 'hit Ctrl+C to stop boot'"
-    sleep 5
-fi
-
-if [ $yay_exit_code -ne 0 ]; then
-    echo "ReignOS Updating Yay failed: $yay_exit_code 'hit Ctrl+C to stop boot'"
-    sleep 5
+    # reboot if updates ran
+    if [ $arch_exit_code -eq 0 ] || [ $yay_exit_code -eq 0 ]; then
+        reboot
+        exit 0
+    fi
 fi
 
 exit 0
