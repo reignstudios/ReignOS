@@ -24,7 +24,7 @@ fi
 if [ "$HAS_UPDATES" = "false" ]; then
   echo ""
   echo "ReignOS Checking 'yay' for updates..."
-  yay -Sy
+  yay -Sy --ignore aw87559-firmware
   HAS_UPDATES=false
   if yay -Qu &> /dev/null; then
       echo "Updates are available under yay"
