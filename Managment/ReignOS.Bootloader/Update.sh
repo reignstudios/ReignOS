@@ -58,16 +58,6 @@ if [ "$HAS_UPDATES" = "true" ]; then
   echo "ReignOS Updating fwupdmgr firmware..."
   sudo fwupdmgr refresh -y
   sudo fwupdmgr update -y --no-reboot-check
-
-  if [ $arch_exit_code -eq 0 ]; then
-    reboot
-    exit 0
-  fi
-  
-  if [ $yay_exit_code -eq 0 ]; then
-    reboot
-    exit 0
-  fi
 fi
 
 # update ReignOS Git package
@@ -79,6 +69,17 @@ cd /home/gamer/ReignOS/Managment
 echo "ReignOS Building packages..."
 dotnet publish -r linux-x64 -c Release
 sleep 1
+
+# reboot if updates ran
+if [ $arch_exit_code -eq 0 ]; then
+    reboot
+    exit 0
+fi
+  
+if [ $yay_exit_code -eq 0 ]; then
+    reboot
+    exit 0
+fi
 
 # just stop everything if Arch fails to update (but allow ReignOS git to update before this)
 if [ $arch_exit_code -ne 0 ]; then
