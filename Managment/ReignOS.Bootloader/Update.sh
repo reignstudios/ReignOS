@@ -88,3 +88,5 @@ if [ "$HAS_UPDATES" = "true" ]; then
         exit 0
     fi
 fi
+
+exit 0
