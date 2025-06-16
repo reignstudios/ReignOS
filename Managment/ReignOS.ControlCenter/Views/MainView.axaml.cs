@@ -2107,7 +2107,42 @@ public partial class MainView : UserControl
     
     private void PowerManagerApplyButton_OnClick(object sender, RoutedEventArgs e)
     {
+        var builder = new StringBuilder();
         
+        // active profile
+        var profile = powerSettings.FirstOrDefault(x => x.active);
+        if (profile != null) builder.AppendLine("Profile=" + profile.name);
+        else builder.AppendLine("Profile=NONE");
+        
+        // intel turbo boost
+        if (powerIntelTurboBoost.HasValue) builder.AppendLine("IntelTurboBoost=" + (powerIntelTurboBoostCheckbox.IsChecked == true ? "True" : "False"));
+
+        // core settings
+        if (powerAdvancedCheckbox.IsChecked == true)
+        {
+            foreach (ListBoxItem item in powerCPUListBox.Items)
+            {
+                var s = item.Tag as PowerCPUSetting;
+                string boost = "";
+                if (s.boost.HasValue) boost = " Boost=" + (s.boost == true ? "True" : "False");
+                builder.AppendLine($"Name={s.name} MinFreq={s.minFreq} MaxFreq={s.maxFreq}{boost}");
+            }
+        }
+        else
+        {
+            bool enableBoost = powerSimplerBoost.IsChecked == true;
+            double percentage = powerSimpleSlider.Value / 100.0;
+            foreach (var s in powerCPUSettings)
+            {
+                string boost = "";
+                if (s.boost.HasValue) boost = " Boost=" + (enableBoost ? "True" : "False");
+                int maxFreq = (int)(s.maxFreq * percentage);
+                builder.AppendLine($"Name={s.name} MinFreq={s.minFreq} MaxFreq={maxFreq}{boost}");
+            }
+        }
+
+        // finish
+        ProcessUtil.WriteAllTextAdmin("/home/gamer/ReignOS_Ext/PowerProfileSettings.txt", builder);
     }
 
     private void RefreshPowerPage()
@@ -2246,11 +2281,13 @@ public partial class MainView : UserControl
             content.Children.Add(label);
 
             var minFreqOverride = new TextBox();
+            minFreqOverride.Tag = "MinFreq";
             minFreqOverride.Margin = new Thickness(8, 0, 0, 0);
             minFreqOverride.Text = setting.minFreq.ToString();
             content.Children.Add(minFreqOverride);
             
             var maxFreqOverride = new TextBox();
+            maxFreqOverride.Tag = "MaxFreq";
             maxFreqOverride.Margin = new Thickness(8, 0, 0, 0);
             maxFreqOverride.Text = setting.maxFreq.ToString();
             content.Children.Add(maxFreqOverride);
@@ -2258,6 +2295,7 @@ public partial class MainView : UserControl
             if (setting.boost.HasValue)
             {
                 var boostCheckBox = new CheckBox();
+                boostCheckBox.Tag = "Boost";
                 boostCheckBox.Margin = new Thickness(8, 0, 0, 0);
                 boostCheckBox.Content = "Boost";
                 boostCheckBox.IsChecked = setting.boost;
