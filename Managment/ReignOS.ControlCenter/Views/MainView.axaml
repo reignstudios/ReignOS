@@ -51,13 +51,6 @@
 							<TextBlock Text="Labwc" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
 						</Grid>
 					</Button>
-				
-					<Button Click="X11Button_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#600000">
-						<Grid Margin="0">
-							<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
-							<TextBlock Text="X11" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
-						</Grid>
-					</Button>
 			
 					<Button Click="KDEButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#000060">
 						<Grid Margin="0">
@@ -77,6 +70,13 @@
 						<Grid Margin="0">
 							<Image Source="avares://ReignOS.ControlCenter/Assets/kde.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,20"/>
 							<TextBlock Text="KDE-G" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
+						</Grid>
+					</Button>
+					
+					<Button Click="X11Button_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#606000">
+						<Grid Margin="0">
+							<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
+							<TextBlock Text="X11" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
 						</Grid>
 					</Button>
 				</StackPanel>
