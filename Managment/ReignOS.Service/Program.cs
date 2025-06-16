@@ -59,7 +59,7 @@ internal class Program
     public static HardwareType hardwareType { get; private set; }
 
     public static KeyboardInput keyboardInput;
-    public static bool useInputPlumber;
+    public static InputMode inputMode = InputMode.ReignOS;
 
     private static void BindSignalEvents()
     {
@@ -80,7 +80,8 @@ internal class Program
         // process args
         foreach (string arg in args)
         {
-            if (arg == "--input-inputplumber") useInputPlumber = true;
+            if (arg == "--input-inputplumber") inputMode = InputMode.InputPlumber;
+            else if (arg == "--input-disable") inputMode = InputMode.Disabled;
         }
 
         // detect system hardware
@@ -152,7 +153,7 @@ internal class Program
         }
 
         // init virtual gamepad
-        if (!useInputPlumber) VirtualGamepad.Init();
+        if (inputMode == InputMode.ReignOS) VirtualGamepad.Init();
 
         // detect device & configure hardware
         try
@@ -235,7 +236,7 @@ internal class Program
         Log.WriteLine("Shutting down...");
         DbusMonitor.Shutdown();
         MSI_Claw.Dispose();
-        if (!useInputPlumber) VirtualGamepad.Dispose();
+        if (inputMode == InputMode.ReignOS) VirtualGamepad.Dispose();
         keyboardInput.Dispose();
         Environment.ExitCode = DbusMonitor.isRebootMode == null ? 0 : (DbusMonitor.isRebootMode == true ? 15 : 16);
     }

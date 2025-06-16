@@ -358,6 +358,7 @@ public partial class MainView : UserControl
                     {
                         if (parts[1] == "ReignOS") reignOSInputCheckbox.IsChecked = true;
                         else if (parts[1] == "InputPlumber") inputPlumberInputCheckbox.IsChecked = true;
+                        else if (parts[1] == "Disable") disableInputCheckbox.IsChecked = true;
                     }
                     else if (parts[0].StartsWith("AudioDefault:"))
                     {
@@ -486,7 +487,8 @@ public partial class MainView : UserControl
                 if (disableSteamDeckCheckbox.IsChecked == true) writer.WriteLine("DisableSteamDeck=On");
                 else writer.WriteLine("DisableSteamDeck=Off");
 
-                if (inputPlumberInputCheckbox.IsChecked == true) writer.WriteLine("Input=InputPlumber");
+                if (disableInputCheckbox.IsChecked == true) writer.WriteLine("Input=Disable");
+                else if (inputPlumberInputCheckbox.IsChecked == true) writer.WriteLine("Input=InputPlumber");
                 else writer.WriteLine("Input=ReignOS");
 
                 foreach (var setting in audioSettings)
@@ -1277,11 +1279,13 @@ public partial class MainView : UserControl
                 // remove existing options
                 newLine = newLine.Replace(" --input-reignos", "");
                 newLine = newLine.Replace(" --input-inputplumber", "");
+                newLine = newLine.Replace(" --input-disable", "");
 
                 // gather new options
                 string args = "";
                 if (reignOSInputCheckbox.IsChecked == true) args += " --input-reignos";
                 else if (inputPlumberInputCheckbox.IsChecked == true) args += " --input-inputplumber";
+                else if (disableInputCheckbox.IsChecked == true) args += " --input-disable";
 
                 // apply options
                 text = text.Replace(line, newLine + args);

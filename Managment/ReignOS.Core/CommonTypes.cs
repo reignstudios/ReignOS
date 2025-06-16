@@ -8,3 +8,10 @@ public enum ScreenRotation
     Right,
     Flip
 }
+
+public enum InputMode
+{
+    ReignOS,
+    InputPlumber,
+    Disabled
+}
