@@ -34,7 +34,7 @@ enum Compositor
 
 internal class Program
 {
-    static void Main(string[] args)
+    private static void Main(string[] args)
     {
         int exitCode = 0;
 
@@ -52,10 +52,10 @@ internal class Program
         bool hdr = false;
         bool disableSteamGPU = false;
         bool disableSteamDeck = false;
+        var inputMode = InputMode.ReignOS;
         int gpu = 0;
         var screenRotation = ScreenRotation.Unset;
         bool forceControlCenter = false;
-        bool useInputPlumber = false;
         int displayIndex = 0;
         int displayWidth = 0, displayHeight = 0;
         foreach (string arg in args)
@@ -93,7 +93,9 @@ internal class Program
             else if (arg == "--rotation-right") screenRotation = ScreenRotation.Right;
             else if (arg == "--rotation-flip") screenRotation = ScreenRotation.Flip;
 
-            else if (arg == "--input-inputplumber") useInputPlumber = true;
+            else if (arg == "--input-reignos") inputMode = InputMode.ReignOS;
+            else if (arg == "--input-inputplumber") inputMode = InputMode.InputPlumber;
+            else if (arg == "--input-disable") inputMode = InputMode.Disabled;
             
             else if (arg.StartsWith("--display-index="))
             {
@@ -157,7 +159,13 @@ internal class Program
         {
             serviceProcess.StartInfo.UseShellExecute = false;
             serviceProcess.StartInfo.FileName = "sudo";
-            string inputArg = useInputPlumber ? " --input-inputplumber" : " --input-reignos";
+            string inputArg;
+            switch (inputMode)
+            {
+                case InputMode.InputPlumber: inputArg = " --input-inputplumber"; break;
+                case InputMode.Disabled: inputArg = " --input-disable"; break;
+                default: inputArg = " --input-reignos"; break;
+            }
             serviceProcess.StartInfo.Arguments = $"-- ./ReignOS.Service{inputArg}";
             serviceProcess.StartInfo.RedirectStandardOutput = true;
             serviceProcess.StartInfo.RedirectStandardError = true;

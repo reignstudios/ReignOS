@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ReignOS.Core;
 
 namespace ReignOS.Service.Hardware
 {
@@ -28,7 +29,7 @@ namespace ReignOS.Service.Hardware
 
         public static void Update(KeyList keys)
         {
-            if (Program.useInputPlumber) return;
+            if (Program.inputMode != InputMode.ReignOS) return;
 
             // relay OEM buttons to virtual gamepad input
             if (Program.hardwareType == HardwareType.AyaneoPro || Program.hardwareType == HardwareType.Ayaneo)

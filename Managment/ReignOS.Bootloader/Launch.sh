@@ -126,7 +126,7 @@ fi
 # manage InputPlumber
 if [ $exit_code -eq 50 ]; then
   echo ""
-  echo "Changing Input-Control to ReignOS..."
+  echo "Uninstalling InputPlumber..."
   sudo systemctl stop inputplumber inputplumber-suspend
   sudo systemctl disable inputplumber inputplumber-suspend
   sudo pacman -R --noconfirm inputplumber
@@ -137,7 +137,7 @@ fi
 
 if [ $exit_code -eq 51 ]; then
   echo ""
-  echo "Changing Input-Control to InputPlumber..."
+  echo "Installing InputPlumber..."
   sudo pacman -S --noconfirm inputplumber
   sudo systemctl enable inputplumber inputplumber-suspend
   sudo systemctl start inputplumber inputplumber-suspend

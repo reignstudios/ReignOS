@@ -30,7 +30,7 @@ public static class MSI_Claw
         WiFiPatches.Fix1(true);
 
         // configure gamepad
-        if (!Program.useInputPlumber)
+        if (Program.inputMode == InputMode.ReignOS)
         {
             device = new HidDevice();
             if (!device.Init(0x0DB0, 0x1901, true) || device.handles.Count == 0)// mode 1 (normal operating mode)
@@ -148,7 +148,7 @@ public static class MSI_Claw
 
     public static void Update(ref DateTime time, bool resumeFromSleep, KeyList keys)
     {
-        if (Program.useInputPlumber) return;
+        if (Program.inputMode != InputMode.ReignOS) return;
 
         if (resumeFromSleep)
         {
