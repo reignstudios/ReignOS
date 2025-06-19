@@ -13,6 +13,8 @@ sudo pacman -S --noconfirm xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop
 
 sudo pacman -S --noconfirm vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-layers
 
+sudo pacman -S --noconfirm alsa-ucm-conf
+
 sudo pacman -S --noconfirm bluez bluez-utils
 sudo systemctl enable bluetooth
 

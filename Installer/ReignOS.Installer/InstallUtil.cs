@@ -437,7 +437,7 @@ static class InstallUtil
         UpdateProgress(58);
 
         // install audio
-        Run("pacman", "-S --noconfirm alsa-utils alsa-plugins");
+        Run("pacman", "-S --noconfirm alsa-utils alsa-plugins alsa-ucm-conf");
         Run("pacman", "-S --noconfirm sof-firmware");
         Run("pacman", "-S --noconfirm pipewire pipewire-pulse pipewire-alsa pipewire-jack wireplumber");
         Run("systemctl", "--user enable pipewire pipewire-pulse wireplumber");
