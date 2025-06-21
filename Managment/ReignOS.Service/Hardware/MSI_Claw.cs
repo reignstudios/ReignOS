@@ -88,30 +88,20 @@ public static class MSI_Claw
             return false;
         }
 
-        // read 1
-        Thread.Sleep(500);
-        Array.Clear(buffer);
-        if (device.ReadData(buffer, 0, buffer.Length, out nint sizeRead))
+        // read
+        for (i = 0; i != 4; ++i)
         {
-            string hex = BitConverter.ToString(buffer, 0, (int)sizeRead);
-            Log.WriteLine($"MSI-Claw gamepad read response 1: Size={sizeRead} Data:{hex}");
-        }
-        else
-        {
-            Log.WriteLine("ERROR: MSI-Claw gamepad failed to read response");
-        }
-
-        // read 2
-        Thread.Sleep(500);
-        Array.Clear(buffer);
-        if (device.ReadData(buffer, 0, buffer.Length, out sizeRead))
-        {
-            string hex = BitConverter.ToString(buffer, 0, (int)sizeRead);
-            Log.WriteLine($"MSI-Claw gamepad read response 2: Size={sizeRead} Data:{hex}");
-        }
-        else
-        {
-            Log.WriteLine("ERROR: MSI-Claw gamepad failed to read response");
+            Thread.Sleep(250);
+            Array.Clear(buffer);
+            if (device.ReadData(buffer, 0, buffer.Length, out nint sizeRead))
+            {
+                string hex = BitConverter.ToString(buffer, 0, (int)sizeRead);
+                Log.WriteLine($"MSI-Claw gamepad read response {i}: Size={sizeRead} Data:{hex}");
+            }
+            else
+            {
+                Log.WriteLine($"MSI-Claw gamepad failed to read response {i}");
+            }
         }
 
         // finish
