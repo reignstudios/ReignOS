@@ -1322,7 +1322,7 @@ public partial class MainView : UserControl
 
                 // gather new options
                 string args = "";
-                if (autoCheckUpdatesCheckbox.IsChecked == true) args += " --disable-update";
+                if (autoCheckUpdatesCheckbox.IsChecked != true) args += " --disable-update";
 
                 // apply options
                 text = text.Replace(line, newLine + args);
