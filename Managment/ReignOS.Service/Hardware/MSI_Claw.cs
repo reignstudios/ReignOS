@@ -8,6 +8,12 @@ using System.Threading;
 
 public static class MSI_Claw
 {
+    enum CommandType : byte
+    {
+        SetMode = 0x24,
+        SyncToRom = 0x22
+    }
+
     enum Mode : byte
     {
         Offline = 0,
@@ -18,6 +24,8 @@ public static class MSI_Claw
         BIOS = 5,
         Testing = 6
     }
+
+    private const byte reportID = 0x0F;
 
     public static bool isEnabled { get; private set; }
     private static HidDevice device;
@@ -51,14 +59,14 @@ public static class MSI_Claw
                     }
 
                     return;
-                } 
+                }
             }
-        
+
             Log.WriteLine($"MSI-Claw gamepad found: Handles={device.handles.Count}");
             EnableMode(Mode.XInput);
         }
     }
-    
+
     public static void Dispose()
     {
         if (device != null)
@@ -73,11 +81,11 @@ public static class MSI_Claw
         // write
         int i = 0;
         var buffer = new byte[256];
-        buffer[i++] = 15;// report id
+        buffer[i++] = reportID;// report id
         buffer[i++] = 0;
         buffer[i++] = 0;
-        buffer[i++] = 60;
-        buffer[i++] = 36;// we want to switch mode
+        buffer[i++] = 0x3C;
+        buffer[i++] = (byte)CommandType.SetMode;// we want to switch mode
         buffer[i++] = (byte)mode;// mode
         buffer[i++] = 0;
         buffer[i++] = 0;
@@ -107,6 +115,47 @@ public static class MSI_Claw
         // finish
         Log.WriteLine("MSI-Claw gamepad mode set");
         isEnabled = true;
+        return true;
+    }
+
+    private static bool SyncToRom()
+    {
+        // write
+        int i = 0;
+        var buffer = new byte[256];
+        buffer[i++] = reportID;// report id
+        buffer[i++] = 0;
+        buffer[i++] = 0;
+        buffer[i++] = 0x3C;
+        buffer[i++] = (byte)CommandType.SyncToRom;// sync to rom
+        buffer[i++] = 0;
+        buffer[i++] = 0;
+        buffer[i++] = 0;
+        if (!device.WriteData(buffer, 0, 64))// write 64 bytes to match wanted packet size
+        {
+            Log.WriteLine("FAILED: To set MSI-Claw sync-to-rom");
+            return false;
+        }
+
+        // read
+        for (i = 0; i != 8; ++i)
+        {
+            Thread.Sleep(100);
+            Array.Clear(buffer);
+            if (device.ReadData(buffer, 0, buffer.Length, out nint sizeRead))
+            {
+                string hex = BitConverter.ToString(buffer, 0, (int)sizeRead);
+                Log.WriteLine($"MSI-Claw sync-to-rom read response {i}: Size={sizeRead} Data:{hex}");
+            }
+            else
+            {
+                Log.WriteLine($"MSI-Claw sync-to-rom done reading response");
+                break;
+            }
+        }
+
+        // finish
+        Log.WriteLine("MSI-Claw sync-to-rom set");
         return true;
     }
 
