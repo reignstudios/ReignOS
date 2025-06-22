@@ -89,9 +89,9 @@ public static class MSI_Claw
         }
 
         // read
-        for (i = 0; i != 10; ++i)
+        for (i = 0; i != 8; ++i)
         {
-            Thread.Sleep(250);
+            Thread.Sleep(100);
             Array.Clear(buffer);
             if (device.ReadData(buffer, 0, buffer.Length, out nint sizeRead))
             {
@@ -100,7 +100,8 @@ public static class MSI_Claw
             }
             else
             {
-                Log.WriteLine($"MSI-Claw gamepad failed to read response {i}");
+                Log.WriteLine($"MSI-Claw gamepad done reading response");
+                break;
             }
         }
 

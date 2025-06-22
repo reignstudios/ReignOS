@@ -2,6 +2,30 @@
 
 # aw87559-firmware = Ayaneo Flip DS (yay needs to ignore this conflict)
 
+# wait for network
+NetworkUp=false
+for i in $(seq 1 30); do
+    # Try to ping Google's DNS server
+    if ping -c 1 -W 2 google.com &> /dev/null; then
+        echo "Network is up!"
+        NetworkUp=true
+        sleep 1
+        break
+    else
+        echo "Waiting for network... $i"
+        sleep 1
+    fi
+done
+
+# run updates (if network available)
+if [ "$NetworkUp" = "true" ]; then
+    cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
+    chmod +x ./Update.sh
+    ./Update.sh
+else
+    exit 0
+fi
+
 # update ReignOS Git package
 echo ""
 echo "ReignOS Updating Git packages..."
@@ -75,6 +99,12 @@ if [ "$HAS_UPDATES" = "true" ]; then
     if [ $arch_exit_code -ne 0 ]; then
         echo "ERROR: ReignOS Updating Arch failed: $arch_exit_code 'hit Ctrl+C to stop boot'"
         sleep 5
+
+        echo "Re-Installing Linux firmware..."
+        sudo pacman --noconfirm -Rdd linux-firmware
+        sudo pacman --noconfirm -Syu linux-firmware
+        sudo pacman --noconfirm -Syu
+        reboot
     fi
 
     if [ $yay_exit_code -ne 0 ]; then
@@ -85,7 +115,6 @@ if [ "$HAS_UPDATES" = "true" ]; then
     # reboot if updates ran
     if [ $arch_exit_code -eq 0 ] || [ $yay_exit_code -eq 0 ]; then
         reboot
-        exit 0
     fi
 fi
 

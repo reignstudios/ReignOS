@@ -8,27 +8,8 @@ for arg in "$@"; do
     fi
 done
 
-# wait for network
-NetworkUp=false
+# check updates
 if [ "$DISABLE_UPDATE" = "false" ]; then
-    for i in $(seq 1 30); do
-        # Try to ping Google's DNS server
-        if ping -c 1 -W 2 google.com &> /dev/null; then
-            echo "Network is up!"
-            NetworkUp=true
-            sleep 1
-            break
-        else
-            echo "Waiting for network... $i"
-            sleep 1
-        fi
-    done
-fi
-
-# run updates (if network available)
-if [ "$NetworkUp" = "true" ]; then
-    cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
-    chmod +x ./Update.sh
     ./Update.sh
 fi
 
