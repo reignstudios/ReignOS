@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 namespace ReignOS.Core;
 public static class VersionInfo
 {
-    public const string version = "0.10.13 alpha";
+    public const string version = "0.10.14 alpha";
 }
