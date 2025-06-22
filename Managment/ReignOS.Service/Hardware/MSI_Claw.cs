@@ -26,7 +26,6 @@ public static class MSI_Claw
     {
         // configure after sleep fixes
         AudioPatches.Fix1(true);
-        WiFiPatches.RemoveOld();
         WiFiPatches.Fix1(true);
 
         // configure gamepad

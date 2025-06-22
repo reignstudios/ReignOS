@@ -5,15 +5,8 @@ namespace ReignOS.Service.HardwarePatches
 {
 	static class WiFiPatches
 	{
-        public static void RemoveOld()
-        {
-            string path = "/usr/lib/systemd/system-sleep";
-            path = Path.Combine(path, "iwlwifi-sleep.sh");
-            if (File.Exists(path)) File.Delete(path);
-        }
-
         /// <summary>
-        /// Fixes wifi after sleep (reboot iwlmvm iwlwifi)
+        /// Fixes wifi after sleep (reboot iwlmld iwlmvm iwlwifi)
         /// </summary>
         public static void Fix1(bool apply)
 		{
@@ -34,10 +27,10 @@ namespace ReignOS.Service.HardwarePatches
 
 case ""$1"" in
   pre)
-    /usr/sbin/modprobe -r iwlmvm iwlwifi
+    /usr/sbin/modprobe -r iwlmld iwlmvm iwlwifi
     ;;
   post)
-    /usr/sbin/modprobe iwlwifi iwlmvm
+    /usr/sbin/modprobe iwlwifi iwlmvm iwlmld
     ;;
 esac";
             File.WriteAllText(path, config);
