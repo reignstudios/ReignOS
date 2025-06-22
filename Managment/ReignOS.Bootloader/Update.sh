@@ -32,6 +32,13 @@ echo "ReignOS Building packages..."
 dotnet publish -r linux-x64 -c Release
 sleep 1
 
+# make sure no borked pacman lock
+if [ -f "/var/lib/pacman/db.lck" ]; then
+    echo "Removing bad pacman db.lck file"
+    sudo rm /var/lib/pacman/db.lck
+    sleep 1
+fi
+
 # check if pacman updates exist
 echo ""
 echo "ReignOS Checking 'pacman' for updates..."
@@ -54,13 +61,13 @@ if [ "$HAS_UPDATES" = "false" ]; then
   fi
 fi
 
-# 
+# check if flatpak updates exist
 if [ "$HAS_UPDATES" = "false" ]; then
   echo ""
   echo "ReignOS Checking 'flatpak' for updates..."
   if [ -n "$(flatpak remote-ls --updates)" ]; then
       echo "Updates are available under flatpak"
-      HAS_UPDATES=true
+      #HAS_UPDATES=true
   fi
 fi
 
