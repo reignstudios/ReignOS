@@ -67,7 +67,7 @@ if [ "$HAS_UPDATES" = "false" ]; then
   echo "ReignOS Checking 'flatpak' for updates..."
   if [ -n "$(flatpak remote-ls --updates)" ]; then
       echo "Updates are available under flatpak"
-      #HAS_UPDATES=true
+      HAS_UPDATES=true
   fi
 fi
 
