@@ -13,14 +13,6 @@ namespace ReignOS.Service.HardwarePatches
 			string path = "/usr/lib/systemd/system-sleep";
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
             path = Path.Combine(path, "wifi-sleep.sh");
-            /*if (File.Exists(path))
-            {
-                if (apply) return;// already patched
-
-                // remove
-                File.Delete(path);
-                return;
-            }*/
 
             const string config =
 @"#!/bin/bash
@@ -45,14 +37,6 @@ esac";
             string path = "/usr/lib/systemd/system-sleep";
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
             path = Path.Combine(path, "wifi-sleep.sh");
-            if (File.Exists(path))
-            {
-                if (apply) return;// already patched
-
-                // remove
-                File.Delete(path);
-                return;
-            }
 
             const string config =
 @"#!/bin/bash
@@ -77,14 +61,6 @@ esac";
             string path = "/usr/lib/systemd/system-sleep";
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
             path = Path.Combine(path, "wifi-sleep.sh");
-            if (File.Exists(path))
-            {
-                if (apply) return;// already patched
-
-                // remove
-                File.Delete(path);
-                return;
-            }
 
             const string config =
 @"#!/bin/bash
