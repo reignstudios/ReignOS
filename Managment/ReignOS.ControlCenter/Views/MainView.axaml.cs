@@ -360,6 +360,10 @@ public partial class MainView : UserControl
                         else if (parts[1] == "InputPlumber") inputPlumberInputCheckbox.IsChecked = true;
                         else if (parts[1] == "Disable") disableInputCheckbox.IsChecked = true;
                     }
+                    else if (parts[0] == "AutoCheckUpdates")
+                    {
+                        autoCheckUpdatesCheckbox.IsChecked = parts[1] == "On";
+                    }
                     else if (parts[0].StartsWith("AudioDefault:"))
                     {
                         var audioParts = parts[1].Split(':');
@@ -490,6 +494,9 @@ public partial class MainView : UserControl
                 if (disableInputCheckbox.IsChecked == true) writer.WriteLine("Input=Disable");
                 else if (inputPlumberInputCheckbox.IsChecked == true) writer.WriteLine("Input=InputPlumber");
                 else writer.WriteLine("Input=ReignOS");
+
+                if (autoCheckUpdatesCheckbox.IsChecked == true) writer.WriteLine("AutoCheckUpdates=On");
+                else writer.WriteLine("AutoCheckUpdates=Off");
 
                 foreach (var setting in audioSettings)
                 {
@@ -1297,6 +1304,36 @@ public partial class MainView : UserControl
         SaveSettings();
 
         App.exitCode = (inputPlumberInputCheckbox.IsChecked == true) ? 51 : 50;
+        MainWindow.singleton.Close();
+    }
+
+    private void UpdatesApplyButton_Click(object sender, RoutedEventArgs e)
+    {
+        // apply settings
+        string text = File.ReadAllText(launchFile);
+        foreach (string line in text.Split('\n'))
+        {
+            if (line.Contains("--use-controlcenter"))
+            {
+                string newLine = line;
+
+                // remove existing options
+                newLine = newLine.Replace(" --disable-updates", "");
+
+                // gather new options
+                string args = "";
+                if (autoCheckUpdatesCheckbox.IsChecked == true) args += " --disable-update";
+
+                // apply options
+                text = text.Replace(line, newLine + args);
+
+                break;
+            }
+        }
+        File.WriteAllText(launchFile, text);
+        SaveSettings();
+
+        App.exitCode = 0;// restart user
         MainWindow.singleton.Close();
     }
 

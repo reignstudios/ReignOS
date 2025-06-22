@@ -59,7 +59,10 @@ fi
 # check updates
 if [ $exit_code -eq 17 ]; then
   echo ""
-  echo "ReignOS (Re-Launching to check for updates)..."
+  echo "ReignOS (Check for updates)..."
+  if [ "$DISABLE_UPDATE" = "true" ]; then
+    ./Update.sh
+  fi
   loginctl terminate-user gamer
   exit 0
 fi
