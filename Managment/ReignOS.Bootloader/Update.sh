@@ -32,6 +32,10 @@ echo "ReignOS Building packages..."
 dotnet publish -r linux-x64 -c Release
 sleep 1
 
+# update flatpaks (just run this first so they always get ran)
+echo "ReignOS Updating flatpak pacages..."
+flatpak update --noninteractive
+
 # make sure no borked pacman lock
 if [ -f "/var/lib/pacman/db.lck" ]; then
     echo "Removing bad pacman db.lck file"
@@ -61,16 +65,6 @@ if [ "$HAS_UPDATES" = "false" ]; then
   fi
 fi
 
-# check if flatpak updates exist
-if [ "$HAS_UPDATES" = "false" ]; then
-  echo ""
-  echo "ReignOS Checking 'flatpak' for updates..."
-  if [ -n "$(flatpak remote-ls --updates)" ]; then
-      echo "Updates are available under flatpak"
-      HAS_UPDATES=true
-  fi
-fi
-
 # update Arch
 arch_exit_code=0
 yay_exit_code=0
@@ -88,10 +82,6 @@ if [ "$HAS_UPDATES" = "true" ]; then
     echo "ReignOS Updating yay pacages..."
     yay -Syu --noconfirm --ignore aw87559-firmware
     yay_exit_code=$?
-
-    # flatpaks
-    echo "ReignOS Updating flatpak pacages..."
-    flatpak update --noninteractive
 
     # firmware
     echo "ReignOS Updating fwupdmgr firmware..."
