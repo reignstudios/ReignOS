@@ -18,11 +18,7 @@ for i in $(seq 1 30); do
 done
 
 # run updates (if network available)
-if [ "$NetworkUp" = "true" ]; then
-    cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
-    chmod +x ./Update.sh
-    ./Update.sh
-else
+if [ "$NetworkUp" = "false" ]; then
     exit 0
 fi
 
