@@ -1318,7 +1318,7 @@ public partial class MainView : UserControl
                 string newLine = line;
 
                 // remove existing options
-                newLine = newLine.Replace(" --disable-updates", "");
+                newLine = newLine.Replace(" --disable-update", "");
 
                 // gather new options
                 string args = "";
