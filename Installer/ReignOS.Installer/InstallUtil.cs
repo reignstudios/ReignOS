@@ -353,6 +353,7 @@ static class InstallUtil
 
         fileBuilder.AppendLine();// install DeckyLoader
         fileBuilder.AppendLine("echo \"Installing DeckyLoader...\"");
+        fileBuilder.AppendLine("sudo pacman -S --noconfirm jq");
         fileBuilder.AppendLine("curl -L https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/install_release.sh | sh");
 
         fileBuilder.AppendLine();// set volume to 100%
