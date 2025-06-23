@@ -351,6 +351,10 @@ static class InstallUtil
         fileBuilder.AppendLine("echo \"Installing ProtonGE...\"");
         fileBuilder.AppendLine("yay -S proton-ge-custom --noconfirm");
 
+        fileBuilder.AppendLine();// install DeckyLoader
+        fileBuilder.AppendLine("echo \"Installing DeckyLoader...\"");
+        fileBuilder.AppendLine("curl -L https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/install_release.sh | sh");
+
         fileBuilder.AppendLine();// set volume to 100%
         fileBuilder.AppendLine("echo \"Setting volume to 100%...\"");
         fileBuilder.AppendLine("pactl set-sink-volume @DEFAULT_SINK@ 100%");
