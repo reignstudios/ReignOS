@@ -47,6 +47,7 @@ static class PackageUpdates
         // check for missing packages
         if (!PackageExits("linux-headers")) return true;
         if (!PackageExits("cpupower")) return true;
+        if (!PackageExits("jq")) return true;
 
         if (!PackageExits("wayland-utils")) return true;
         if (!PackageExits("weston")) return true;
@@ -91,8 +92,6 @@ static class PackageUpdates
         if (!PackageExits("fwupd")) return true;
 
         if (PackageExits("acpid")) return true;
-
-        if (PackageExits("jq")) return true;
 
         return false;
     }

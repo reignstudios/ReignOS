@@ -5,6 +5,7 @@
 
 # add pacman packages
 sudo pacman -S --noconfirm linux-headers linux-tools
+sudo pacman -S --noconfirm jq
 
 sudo pacman -S --noconfirm wayland-utils
 sudo pacman -S --noconfirm wlr-randr gamescope cage labwc weston
@@ -48,5 +49,3 @@ sudo pacman -S --noconfirm fwupd
 sudo systemctl stop acpid
 sudo systemctl disable acpid
 sudo pacman -R --noconfirm acpid
-
-sudo pacman -S --noconfirm jq
