@@ -92,6 +92,8 @@ static class PackageUpdates
 
         if (PackageExits("acpid")) return true;
 
+        if (PackageExits("jq")) return true;
+
         return false;
     }
 

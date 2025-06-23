@@ -48,3 +48,5 @@ sudo pacman -S --noconfirm fwupd
 sudo systemctl stop acpid
 sudo systemctl disable acpid
 sudo pacman -R --noconfirm acpid
+
+sudo pacman -S --noconfirm jq

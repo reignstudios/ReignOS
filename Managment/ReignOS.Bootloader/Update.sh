@@ -36,6 +36,14 @@ sleep 1
 echo "ReignOS Updating flatpak pacages..."
 flatpak update --noninteractive
 
+# update or install decky-loader
+DECKY_LOADER_RELEASE=$(curl -s 'https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases' | jq -r "first(.[] | select(.prerelease == "false"))")
+DECKY_LOADER_VERSION=$(jq -r '.tag_name' <<< ${DECKY_LOADER_RELEASE} )
+DECKY_LOADER_INSTALLED_VERSION=$(cat /home/gamer/homebrew/services/.loader.version)
+if [ $DECKY_LOADER_INSTALLED_VERSION != $DECKY_LOADER_VERSION ]; then
+    curl -L https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/install_release.sh | sh
+fi
+
 # make sure no borked pacman lock
 if [ -f "/var/lib/pacman/db.lck" ]; then
     echo "Removing bad pacman db.lck file"
