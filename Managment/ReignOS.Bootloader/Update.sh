@@ -45,6 +45,7 @@ DECKY_LOADER_VERSION=$(jq -r '.tag_name' <<< ${DECKY_LOADER_RELEASE} )
 DECKY_LOADER_INSTALLED_VERSION=$(cat /home/gamer/homebrew/services/.loader.version 2>/dev/null || echo "none")
 if [ "$DECKY_LOADER_INSTALLED_VERSION" != "$DECKY_LOADER_VERSION" ]; then
     echo "ReignOS Updating DeckyLoader..."
+    sudo pacman -S --noconfirm jq
     curl -L https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/install_release.sh | sh
 fi
 
