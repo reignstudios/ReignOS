@@ -33,10 +33,12 @@ dotnet publish -r linux-x64 -c Release
 sleep 1
 
 # update flatpaks (just run this first so they always get ran)
+echo ""
 echo "ReignOS Updating flatpak pacages..."
 flatpak update --noninteractive
 
 # update or install decky-loader
+echo ""
 echo "ReignOS Checking DeckyLoader for updates..."
 DECKY_LOADER_RELEASE=$(curl -s 'https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases' | jq -r "first(.[] | select(.prerelease == "false"))")
 DECKY_LOADER_VERSION=$(jq -r '.tag_name' <<< ${DECKY_LOADER_RELEASE} )
