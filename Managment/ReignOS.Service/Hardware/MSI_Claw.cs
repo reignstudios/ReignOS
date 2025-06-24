@@ -48,16 +48,13 @@ public static class MSI_Claw
                 {
                     device.Dispose();
                     device = new HidDevice();
-                    if (!device.Init(0x0DB0, 0x1903, true) || device.handles.Count == 0)// mode 3 (testing mode)
-                    {
-                        device.Dispose();
-                        device = null;
-                    }
-                    else
+                    if (device.Init(0x0DB0, 0x1903, true))// mode 3 (testing mode)
                     {
                         DisableTestingMode();
+                        ProcessUtil.Run("reboot", "-f", useBash:false);
                     }
-
+                    device.Dispose();
+                    device = null;
                     return;
                 }
             }
