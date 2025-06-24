@@ -50,6 +50,7 @@ public static class MSI_Claw
                     device = new HidDevice();
                     if (device.Init(0x0DB0, 0x1903, true))// mode 3 (testing mode)
                     {
+                        // switch from Testing and reboot
                         DisableTestingMode();
                         ProcessUtil.Run("reboot", "-f", useBash:false);
                     }
@@ -57,6 +58,13 @@ public static class MSI_Claw
                     device = null;
                     return;
                 }
+
+                // switch from DInput and reboot
+                EnableMode(Mode.XInput);
+                ProcessUtil.Run("reboot", "-f", useBash:false);
+                device.Dispose();
+                device = null;
+                return;
             }
 
             Log.WriteLine($"MSI-Claw gamepad found: Handles={device.handles.Count}");
