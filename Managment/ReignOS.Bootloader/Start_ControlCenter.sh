@@ -45,6 +45,8 @@ fi
     # tell KDE to exit
     KWIN_PIDS=$(pgrep -x kwin_wayland)
     kill -15 $KWIN_PID 2>/dev/null || true
+    sleep 1
+    kill $KWIN_PID
 
     #mapfile -t pids < <(pgrep -f kwin_wayland)
     #for pid in "${pids[@]}"; do
