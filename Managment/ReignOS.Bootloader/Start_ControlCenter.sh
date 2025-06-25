@@ -41,7 +41,7 @@ if [ "$X11_MODE" = "true" ]; then
     sudo pkill openbox
 fi
 
-#if [ "$KDEG_MODE" = "true" ]; then
+if [ "$KDEG_MODE" = "true" ]; then
     # tell KDE to exit
     sudo pkill kwin_wayland
     #sudo KWIN_PIDS=$(pgrep -x kwin_wayland)
@@ -59,7 +59,7 @@ fi
     #    kill -15 $KWIN_PID 2>/dev/null || true
     #    sleep 1
     #done
-#fi
+fi
 
 # write ControlCenter exit code
 echo "EXIT_CODE: $exit_code"
