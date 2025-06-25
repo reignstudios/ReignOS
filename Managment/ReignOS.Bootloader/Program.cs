@@ -150,7 +150,6 @@ internal class Program
         ProcessUtil.KillHard("udiskie", true, out _);
         ProcessUtil.Run("udiskie", "--no-tray", out _, wait:false, useBash:false);
 
-        Log.WriteLine("test"); return;
         // kill service if its currently running
         ProcessUtil.KillHard("ReignOS.Service", true, out _);
 
