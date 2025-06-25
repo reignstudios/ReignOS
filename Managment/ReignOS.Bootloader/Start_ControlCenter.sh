@@ -35,6 +35,7 @@ fi
 # start ControlCenter
 ./ReignOS.ControlCenter $@
 exit_code=$?
+echo "EXIT_CODE: $exit_code"
 
 if [ "$X11_MODE" = "true" ]; then
     sleep 1
@@ -45,6 +46,3 @@ if [ "$KDEG_MODE" = "true" ]; then
     sleep 1
     sudo pkill kwin_wayland
 fi
-
-# write ControlCenter exit code
-echo "EXIT_CODE: $exit_code"
