@@ -42,7 +42,6 @@ cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64
 ./ReignOS.ControlCenter $@
 exit_code=$?
 echo "EXIT_CODE: $exit_code"
-sleep 5
 
 if [ "$X11_MODE" = "true" ]; then
     sleep 1
@@ -53,3 +52,5 @@ if [ "$KDEG_MODE" = "true" ]; then
     # tell KDE to exit
     kill -15 $KWIN_PID 2>/dev/null || true
 fi
+
+sleep 5
