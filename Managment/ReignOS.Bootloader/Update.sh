@@ -78,18 +78,18 @@ if [ "$HAS_UPDATES" = "false" ]; then
   fi
 fi
 
-# update Arch
-arch_exit_code=0
+# update Pacman
+pacman_exit_code=0
 yay_exit_code=0
 if [ "$HAS_UPDATES" = "true" ]; then
     echo ""
-    echo "ReignOS Updating Arch..."
+    echo "ReignOS Updating Pacman..."
     sleep 2
 
     # pacman
     echo "ReignOS Updating pacman pacages..."
     sudo pacman -Syu --noconfirm
-    arch_exit_code=$?
+    pacman_exit_code=$?
 
     # yay
     echo "ReignOS Updating yay pacages..."
@@ -101,9 +101,9 @@ if [ "$HAS_UPDATES" = "true" ]; then
     sudo fwupdmgr refresh -y
     sudo fwupdmgr update -y --no-reboot-check
 
-    # just stop everything if Arch fails to update (but allow ReignOS git to update before this)
-    if [ $arch_exit_code -ne 0 ]; then
-        echo "ERROR: ReignOS Updating Arch failed: $arch_exit_code 'hit Ctrl+C to stop boot'"
+    # just stop everything if Pacman fails to update (but allow ReignOS git to update before this)
+    if [ $pacman_exit_code -ne 0 ]; then
+        echo "ERROR: ReignOS Updating Pacman failed: $pacman_exit_code 'hit Ctrl+C to stop boot'"
         sleep 5
 
         echo "Re-Installing Linux firmware..."
@@ -119,7 +119,7 @@ if [ "$HAS_UPDATES" = "true" ]; then
     fi
 
     # reboot if updates ran
-    if [ $arch_exit_code -eq 0 ] || [ $yay_exit_code -eq 0 ]; then
+    if [ $pacman_exit_code -eq 0 ] || [ $yay_exit_code -eq 0 ]; then
         reboot
     fi
 fi
