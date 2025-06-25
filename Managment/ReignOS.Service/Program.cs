@@ -72,7 +72,7 @@ internal class Program
     {
         Log.Init("ReignOS.Service");
         Log.WriteLine("Service started: " + VersionInfo.version);
-
+        Log.WriteLine("test"); return;
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         LibraryResolver.Init(Assembly.GetExecutingAssembly());
         BindSignalEvents();

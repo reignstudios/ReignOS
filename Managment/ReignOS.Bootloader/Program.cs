@@ -211,7 +211,7 @@ internal class Program
             goto SHUTDOWN;
         }
         Thread.Sleep(1000);// give service a sec to config anything needed before launching compositor
-        Log.WriteLine("test"); return;
+        
         // manage interfaces
         while (true)
         {
