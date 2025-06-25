@@ -648,12 +648,12 @@ public partial class MainView : UserControl
         
         void WriteWestonSettings(StreamWriter writer, string rotation, string display)
         {
-            if (hdrCheckbox.IsChecked == true)
+            /*if (hdrCheckbox.IsChecked == true)
             {
                 writer.WriteLine("[core]");
                 writer.WriteLine("color-management=true");// HDR color managment
                 writer.WriteLine();
-            }
+            }*/
 
             if (displaySettings.Count == 0 || !displaySettings.Exists(x => x.enabled))
             {
@@ -667,11 +667,11 @@ public partial class MainView : UserControl
                     writer.WriteLine("vrr-mode=game");
                 }
 
-                if (hdrCheckbox.IsChecked == true)
+                /*if (hdrCheckbox.IsChecked == true)
                 {
                     writer.WriteLine("eotf-mode=st2084"); // HDR PQ curve
                     writer.WriteLine("colorimetry-mode=bt2020rgb"); // HDR wide‑gamut space
-                }
+                }*/
             }
             else
             {
@@ -709,11 +709,11 @@ public partial class MainView : UserControl
                         writer.WriteLine("vrr-mode=game");
                     }
 
-                    if (hdrCheckbox.IsChecked == true)
+                    /*if (hdrCheckbox.IsChecked == true)
                     {
                         writer.WriteLine("eotf-mode=st2084"); // HDR PQ curve
                         writer.WriteLine("colorimetry-mode=bt2020rgb"); // HDR wide‑gamut space
-                    }
+                    }*/
                 }
             }
         }
