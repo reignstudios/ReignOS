@@ -279,6 +279,11 @@ internal class Program
                     ConfigureX11("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_ControlCenter.sh -x11");
                     result = ProcessUtil.Run("startx", "", useBash:false);// start ControlCenter
                 }
+                else if (controlCenterCompositor == ControlCenterCompositor.KDE_G)
+                {
+                    Log.WriteLine("Starting KDE-G with ReignOS.ControlCenter...");
+                    result = ProcessUtil.Run("Start_ControlCenter.sh", "-kde-g", out exitCode, useBash: true);// start ControlCenter
+                }
 
                 var resultValues = result.Split('\n');
                 var exitCodeValue = resultValues.FirstOrDefault(x => x.Contains("EXIT_CODE: "));// get ControlCenter exit code (Weston doesn't pass this back like Cage)
