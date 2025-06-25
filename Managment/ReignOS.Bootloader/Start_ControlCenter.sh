@@ -44,5 +44,6 @@ fi
 
 if [ "$KDEG_MODE" = "true" ]; then
     # tell KDE to exit
+    KWIN_PID=$(pgrep -x kwin_wayland)
     kill -15 $KWIN_PID 2>/dev/null || true
 fi
