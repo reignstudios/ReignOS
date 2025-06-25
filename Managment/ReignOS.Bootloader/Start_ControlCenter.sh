@@ -46,3 +46,5 @@ if [ "$KDEG_MODE" = "true" ]; then
     sleep 1
     sudo pkill kwin_wayland
 fi
+
+exit $exit_code
