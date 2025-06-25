@@ -47,16 +47,6 @@ if [ "$X11_MODE" = "true" ]; then
 fi
 
 if [ "$KDEG_MODE" = "true" ]; then
-    # wait for ReignOS.ControlCenter to start
-    while ! pgrep -u gamer -x ReignOS.ControlCenter > /dev/null; do
-        sleep 1
-    done
-
-    # wait for ReignOS.ControlCenter to exit
-    while pgrep -u gamer ReignOS.ControlCenter > /dev/null; do
-        sleep 1
-    done
-
     # tell KDE to exit
     kill -15 $KWIN_PID 2>/dev/null || true
 fi
