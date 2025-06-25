@@ -43,10 +43,11 @@ fi
 
 #if [ "$KDEG_MODE" = "true" ]; then
     # tell KDE to exit
-    sudo KWIN_PIDS=$(pgrep -x kwin_wayland)
-    sudo kill -15 $KWIN_PID 2>/dev/null || true
-    sleep 3
-    sudo kill $KWIN_PID
+    sudo pkill kwin_wayland
+    #sudo KWIN_PIDS=$(pgrep -x kwin_wayland)
+    #sudo kill -15 $KWIN_PID 2>/dev/null || true
+    #sleep 3
+    #sudo kill $KWIN_PID
 
     #mapfile -t pids < <(pgrep -f kwin_wayland)
     #for pid in "${pids[@]}"; do
