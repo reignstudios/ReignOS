@@ -42,7 +42,7 @@ internal class Program
         Log.WriteLine("Bootloader started: " + VersionInfo.version);
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         LibraryResolver.Init(Assembly.GetExecutingAssembly());
-        Log.WriteLine("test"); return;
+        
         // process args
         var controlCenterCompositor = ControlCenterCompositor.Weston;
         var compositor = Compositor.None;
@@ -145,7 +145,7 @@ internal class Program
             Environment.ExitCode = 100;
             return;
         }
-
+        Log.WriteLine("test"); return;
         // start auto mounting service
         ProcessUtil.KillHard("udiskie", true, out _);
         ProcessUtil.Run("udiskie", "--no-tray", out _, wait:false, useBash:false);
