@@ -129,7 +129,7 @@ public partial class MainView : UserControl
 
         string gitResult = ProcessUtil.Run("git", "branch --show-current", useBash:false);
         gitText.Text = "Branch: " + gitResult.Trim();
-        
+        return;
         RefreshGPUs();
         RefreshMUX();
         LoadSettings();
