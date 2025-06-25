@@ -42,7 +42,7 @@ internal class Program
         Log.WriteLine("Bootloader started: " + VersionInfo.version);
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         LibraryResolver.Init(Assembly.GetExecutingAssembly());
-
+        Log.WriteLine("test"); return;
         // process args
         var controlCenterCompositor = ControlCenterCompositor.Weston;
         var compositor = Compositor.None;
