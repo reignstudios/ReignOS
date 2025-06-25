@@ -42,23 +42,8 @@ if [ "$X11_MODE" = "true" ]; then
 fi
 
 if [ "$KDEG_MODE" = "true" ]; then
-    # tell KDE to exit
+    sleep 1
     sudo pkill kwin_wayland
-    #sudo KWIN_PIDS=$(pgrep -x kwin_wayland)
-    #sudo kill -15 $KWIN_PID 2>/dev/null || true
-    #sleep 3
-    #sudo kill $KWIN_PID
-
-    #mapfile -t pids < <(pgrep -f kwin_wayland)
-    #for pid in "${pids[@]}"; do
-    #    kill -15 "$pid" 2>/dev/null || true
-    #done
-
-    #while pgrep -f kwin_wayland >/dev/null; do
-    #    KWIN_PID=$(pgrep -f kwin_wayland)
-    #    kill -15 $KWIN_PID 2>/dev/null || true
-    #    sleep 1
-    #done
 fi
 
 # write ControlCenter exit code

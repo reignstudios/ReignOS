@@ -316,7 +316,7 @@ internal class Program
                     ProcessUtil.Wait("cage", 6);// wait for cage
                     ProcessUtil.KillHard("cage", true, out _);// kill cage in case its stuck
                 }
-                else if (controlCenterCompositor == ControlCenterCompositor.X11)
+                else if (controlCenterCompositor == ControlCenterCompositor.X11 || controlCenterCompositor == ControlCenterCompositor.KDE_G)
                 {
                     Thread.Sleep(5);// just wait a bit
                 }
