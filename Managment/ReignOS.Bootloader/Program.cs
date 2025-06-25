@@ -282,7 +282,7 @@ internal class Program
                 else if (controlCenterCompositor == ControlCenterCompositor.KDE_G)
                 {
                     Log.WriteLine("Starting KDE-G with ReignOS.ControlCenter...");
-                    result = ProcessUtil.Run("./Start_ControlCenter.sh", "-kde-g", out exitCode, useBash: true);// start ControlCenter
+                    result = ProcessUtil.Run("kwin_wayland", "--lock --xwayland -- ./Start_ControlCenter.sh -kde-g", out exitCode, useBash: true);// start ControlCenter
                 }
 
                 var resultValues = result.Split('\n');

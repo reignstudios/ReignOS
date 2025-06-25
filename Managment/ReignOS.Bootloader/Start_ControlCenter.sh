@@ -23,15 +23,6 @@ if [ "$X11_MODE" = "true" ]; then
 
     # start open-box
     exec openbox-session &
-elif [ "$KDEG_MODE" = "true" ]; then
-    # start KDE-G
-    kwin_wayland --lock --xwayland ./ReignOS.ControlCenter $@
-    exit_code=$?
-    echo "EXIT_CODE: $exit_code"
-    KWIN_PID=$!
-
-    # tell KDE to exit
-    kill -15 $KWIN_PID 2>/dev/null || true
 else
     # Wayland settings
     rot_script=/home/gamer/ReignOS_Ext/Wayland_Settings.sh
@@ -42,13 +33,16 @@ else
 fi
 
 # start ControlCenter
-if [ "$KDEG_MODE" != "true" ]; then
-    ./ReignOS.ControlCenter $@
-    exit_code=$?
-    echo "EXIT_CODE: $exit_code"
-fi
+./ReignOS.ControlCenter $@
+exit_code=$?
+echo "EXIT_CODE: $exit_code"
 
 if [ "$X11_MODE" = "true" ]; then
     sleep 1
     sudo pkill openbox
+fi
+
+if [ "$KDEG_MODE" = "true" ]; then
+    # tell KDE to exit
+    kill -15 $KWIN_PID 2>/dev/null || true
 fi
