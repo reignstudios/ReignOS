@@ -32,6 +32,8 @@ public static class MSI_Claw
 
     public static void Configure()
     {
+        if (Program.hardwareType != HardwareType.MSI_Claw) return;
+
         // configure after sleep fixes
         AudioPatches.Fix1(true);
         WiFiPatches.Fix1(true);
