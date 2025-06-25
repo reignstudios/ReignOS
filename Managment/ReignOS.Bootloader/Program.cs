@@ -139,7 +139,7 @@ internal class Program
         ProcessUtil.Run("chmod", "+x ./Start_KDE-G.sh", useBash: false);
 
         // detect if system needs package updates
-        Log.WriteLine("test: " + PackageUpdates.CheckUpdates()); return;
+        Log.WriteLine("test: " + (PackageUpdates.CheckUpdates() && IsOnline())); return;
         if (PackageUpdates.CheckUpdates() && IsOnline())
         {
             Log.WriteLine("Missing packages...");
@@ -477,7 +477,8 @@ internal class Program
     public static bool IsOnline()
     {
         string result = ProcessUtil.Run("ping", "-c 1 -W 4 google.com", log:false, useBash:false);
-        return result.Contains("1 received");
+        if (result != null) return result.Contains("1 received");
+        return false;
     }
 
     private static void ConfigureX11(string launch)
