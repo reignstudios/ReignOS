@@ -145,7 +145,7 @@ internal class Program
             Environment.ExitCode = 100;
             return;
         }
-        Log.WriteLine("test"); return;
+
         // start auto mounting service
         ProcessUtil.KillHard("udiskie", true, out _);
         ProcessUtil.Run("udiskie", "--no-tray", out _, wait:false, useBash:false);
@@ -211,7 +211,7 @@ internal class Program
             goto SHUTDOWN;
         }
         Thread.Sleep(1000);// give service a sec to config anything needed before launching compositor
-
+        Log.WriteLine("test"); return;
         // manage interfaces
         while (true)
         {
