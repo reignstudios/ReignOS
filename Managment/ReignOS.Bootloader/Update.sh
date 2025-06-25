@@ -107,9 +107,10 @@ if [ "$HAS_UPDATES" = "true" ]; then
         sleep 5
 
         echo "Re-Installing Linux firmware..."
-        sudo pacman --noconfirm -Rdd linux-firmware
-        sudo pacman --noconfirm -Syu linux-firmware
+        sudo pacman --noconfirm -R linux-firmware
         sudo pacman --noconfirm -Syu
+        sudo pacman --noconfirm -S linux-firmware
+        sudo mkinitcpio -P
         reboot
     fi
 
