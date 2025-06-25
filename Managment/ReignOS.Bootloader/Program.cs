@@ -139,7 +139,6 @@ internal class Program
         ProcessUtil.Run("chmod", "+x ./Start_KDE-G.sh", useBash: false);
 
         // detect if system needs package updates
-        Log.WriteLine("test: " + (PackageUpdates.CheckUpdates() && IsOnline())); return;
         if (PackageUpdates.CheckUpdates() && IsOnline())
         {
             Log.WriteLine("Missing packages...");
@@ -148,6 +147,7 @@ internal class Program
         }
 
         // start auto mounting service
+        Log.WriteLine("test"); return;
         ProcessUtil.KillHard("udiskie", true, out _);
         ProcessUtil.Run("udiskie", "--no-tray", out _, wait:false, useBash:false);
 
