@@ -123,7 +123,6 @@ public partial class MainView : UserControl
     public MainView()
     {
         InitializeComponent();
-        return;
         versionText.Text = "Version: " + VersionInfo.version;
         if (Design.IsDesignMode) return;
         compositorText.Text = "Control-Center Compositor: " + Program.compositorMode.ToString();
