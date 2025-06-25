@@ -31,15 +31,15 @@ static class PackageUpdates
     public static bool CheckUpdates()
     {
         // non-restart changes
-        AddLaunchScript();
-        FixOSName();
+        //AddLaunchScript();
+        //FixOSName();
         
         // check bad configs
-        bool badConfig = false;
-        if (CheckBadHostname()) badConfig = true;
+        //bool badConfig = false;
+        //if (CheckBadHostname()) badConfig = true;
         //if (CheckBadKernelSettings()) badConfig = true;
         //if (CheckBadDriverSettings()) badConfig = true;
-        if (badConfig) return true;
+        //if (badConfig) return true;
 
         // check old packages
         // nothing yet...
@@ -96,7 +96,7 @@ static class PackageUpdates
         return false;
     }
 
-    private static void AddLaunchScript()
+    /*private static void AddLaunchScript()
     {
         try
         {
@@ -139,9 +139,9 @@ static class PackageUpdates
         {
             Log.WriteLine(e);
         }
-    }
+    }*/
 
-    private static void FixOSName()
+    /*private static void FixOSName()
     {
         try
         {
@@ -188,9 +188,9 @@ static class PackageUpdates
         {
             Log.WriteLine(e);
         }
-    }
+    }*/
 
-    private static bool CheckBadHostname()
+    /*private static bool CheckBadHostname()
     {
         try
         {
@@ -216,7 +216,7 @@ static class PackageUpdates
         }
 
         return false;
-    }
+    }*/
 
     /*private static bool CheckBadKernelSettings()
     {

@@ -139,6 +139,7 @@ internal class Program
         ProcessUtil.Run("chmod", "+x ./Start_KDE-G.sh", useBash: false);
 
         // detect if system needs package updates
+        PackageUpdates.CheckUpdates();
         Log.WriteLine("test"); return;
         if (PackageUpdates.CheckUpdates() && IsOnline())
         {
