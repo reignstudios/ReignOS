@@ -108,7 +108,6 @@ if [ "$HAS_UPDATES" = "true" ]; then
 
         echo "Re-Installing Linux firmware..."
         sudo pacman --noconfirm -R linux-firmware
-        sudo pacman --noconfirm -Syu
         sudo pacman --noconfirm -S linux-firmware
         sudo mkinitcpio -P
         reboot
