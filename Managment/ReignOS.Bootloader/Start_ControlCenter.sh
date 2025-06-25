@@ -38,9 +38,11 @@ fi
 
 # start ControlCenter
 sleep 4
+cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
 ./ReignOS.ControlCenter $@
 exit_code=$?
 echo "EXIT_CODE: $exit_code"
+sleep 5
 
 if [ "$X11_MODE" = "true" ]; then
     sleep 1
