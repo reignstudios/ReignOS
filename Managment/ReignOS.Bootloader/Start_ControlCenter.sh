@@ -44,6 +44,10 @@ fi
 
 if [ "$KDEG_MODE" = "true" ]; then
     # tell KDE to exit
-    KWIN_PID=$(pgrep -x kwin_wayland)
-    kill -15 $KWIN_PID 2>/dev/null || true
+    KWIN_PIDS=$(pgrep -f kwin_wayland)
+    #kill -15 $KWIN_PID 2>/dev/null || true
+    mapfile -t pids < <(pgrep -f kwin_wayland)
+    for pid in "${pids[@]}"; do
+        kill -15 "$pid" 2>/dev/null || true
+    done
 fi
