@@ -152,9 +152,9 @@ internal class Program
 
         // kill service if its currently running
         ProcessUtil.KillHard("ReignOS.Service", true, out _);
-        Log.WriteLine("test"); return;
+        
         // start service
-        using var serviceProcess = new Process();
+        /*using var serviceProcess = new Process();
         try
         {
             serviceProcess.StartInfo.UseShellExecute = false;
@@ -210,8 +210,8 @@ internal class Program
             Log.WriteLine(e);
             goto SHUTDOWN;
         }
-        Thread.Sleep(1000);// give service a sec to config anything needed before launching compositor
-
+        Thread.Sleep(1000);// give service a sec to config anything needed before launching compositor*/
+        Log.WriteLine("test"); return;
         // manage interfaces
         while (true)
         {
