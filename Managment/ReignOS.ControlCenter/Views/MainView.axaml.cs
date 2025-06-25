@@ -123,13 +123,13 @@ public partial class MainView : UserControl
     public MainView()
     {
         InitializeComponent();
+        return;
         versionText.Text = "Version: " + VersionInfo.version;
         if (Design.IsDesignMode) return;
         compositorText.Text = "Control-Center Compositor: " + Program.compositorMode.ToString();
 
         string gitResult = ProcessUtil.Run("git", "branch --show-current", useBash:false);
         gitText.Text = "Branch: " + gitResult.Trim();
-        return;
         RefreshGPUs();
         RefreshMUX();
         LoadSettings();
