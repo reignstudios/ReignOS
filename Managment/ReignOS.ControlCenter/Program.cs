@@ -11,7 +11,8 @@ enum CompositorMode
 {
     Weston,
     Cage,
-    X11
+    X11,
+    KDE
 }
 
 class Program
@@ -32,6 +33,7 @@ class Program
             if (args.Contains("-weston")) compositorMode = CompositorMode.Weston;
             else if (args.Contains("-cage")) compositorMode = CompositorMode.Cage;
             else if (args.Contains("-x11")) compositorMode = CompositorMode.X11;
+            else if (args.Contains("-kde-g")) compositorMode = CompositorMode.KDE;
         }
 
         // software rendering mode
