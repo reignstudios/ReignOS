@@ -147,12 +147,13 @@ internal class Program
         }
 
         // start auto mounting service
-        Log.WriteLine("test"); return;
         ProcessUtil.KillHard("udiskie", true, out _);
         ProcessUtil.Run("udiskie", "--no-tray", out _, wait:false, useBash:false);
 
+        Log.WriteLine("test"); return;
         // kill service if its currently running
         ProcessUtil.KillHard("ReignOS.Service", true, out _);
+
         // start service
         using var serviceProcess = new Process();
         try
