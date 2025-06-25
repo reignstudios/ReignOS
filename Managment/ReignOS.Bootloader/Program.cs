@@ -139,6 +139,7 @@ internal class Program
         ProcessUtil.Run("chmod", "+x ./Start_KDE-G.sh", useBash: false);
 
         // detect if system needs package updates
+        Log.WriteLine("test"); return;
         if (PackageUpdates.CheckUpdates() && IsOnline())
         {
             Log.WriteLine("Missing packages...");
@@ -147,14 +148,13 @@ internal class Program
         }
 
         // start auto mounting service
-        Log.WriteLine("test"); return;
         ProcessUtil.KillHard("udiskie", true, out _);
         ProcessUtil.Run("udiskie", "--no-tray", out _, wait:false, useBash:false);
 
         // kill service if its currently running
         ProcessUtil.KillHard("ReignOS.Service", true, out _);
         // start service
-        /*using var serviceProcess = new Process();
+        using var serviceProcess = new Process();
         try
         {
             serviceProcess.StartInfo.UseShellExecute = false;
@@ -209,7 +209,7 @@ internal class Program
         {
             Log.WriteLine(e);
             goto SHUTDOWN;
-        }*/
+        }
         Thread.Sleep(1000);// give service a sec to config anything needed before launching compositor
 
         // manage interfaces
