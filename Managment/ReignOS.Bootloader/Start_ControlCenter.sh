@@ -37,7 +37,7 @@ else
 fi
 
 # start ControlCenter
-cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
+sleep 4
 ./ReignOS.ControlCenter $@
 exit_code=$?
 echo "EXIT_CODE: $exit_code"
