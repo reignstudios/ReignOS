@@ -152,7 +152,7 @@ internal class Program
 
         // kill service if its currently running
         ProcessUtil.KillHard("ReignOS.Service", true, out _);
-
+        Log.WriteLine("test"); return;
         // start service
         using var serviceProcess = new Process();
         try
