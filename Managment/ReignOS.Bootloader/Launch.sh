@@ -19,6 +19,7 @@ fi
 cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
 ./ReignOS.Bootloader $@
 exit_code=$?
+exit 0
 
 # install kde min
 if [ $exit_code -eq 10 ]; then
