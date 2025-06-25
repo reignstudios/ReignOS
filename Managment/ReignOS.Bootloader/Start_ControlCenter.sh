@@ -25,9 +25,9 @@ if [ "$X11_MODE" = "true" ]; then
     exec openbox-session &
 elif [ "$KDEG_MODE" = "true" ]; then
     # start KDE-G
-    kwin_wayland --lock --xwayland -- bash -c "./ReignOS.ControlCenter $@
+    kwin_wayland --lock --xwayland ./ReignOS.ControlCenter $@
     exit_code=$?
-    echo 'EXIT_CODE: $exit_code'" &
+    echo "EXIT_CODE: $exit_code"
     KWIN_PID=$!
 
     # tell KDE to exit
