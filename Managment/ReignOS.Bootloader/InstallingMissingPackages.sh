@@ -24,6 +24,7 @@ sudo systemctl enable bolt.service
 
 sudo pacman -S --noconfirm plasma konsole dolphin kate ark exfatprogs dosfstools partitionmanager
 sudo pacman -S --noconfirm maliit-keyboard
+sudo pacman -S --noconfirm qt5-wayland qt6-wayland
 
 sudo pacman -S --noconfirm gparted
 sudo pacman -S --noconfirm flatpak

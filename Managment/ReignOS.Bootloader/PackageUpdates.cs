@@ -78,6 +78,9 @@ static class PackageUpdates
         if (!PackageExits("exfatprogs")) return true;
         if (!PackageExits("dosfstools")) return true;
         if (!PackageExits("partitionmanager")) return true;
+        
+        if (!PackageExits("qt5-wayland")) return true;
+        if (!PackageExits("qt6-wayland")) return true;
         if (!PackageExits("maliit-keyboard")) return true;
 
         if (!PackageExits("gparted")) return true;
