@@ -328,6 +328,7 @@ public partial class MainView : UserControl
                 installProgressBar.IsVisible = true;
                 installTerminalText.Text = "";
                 installTerminalScroll.IsVisible = true;
+                refreshIntegrityCheckbox.IsEnabled = false;
                 InstallUtil.Install(efiPartition, ext4Partition, refreshIntegrityCheckbox.IsChecked == true);
                 break;
             
