@@ -1737,6 +1737,20 @@ public partial class MainView : UserControl
         var item = (ListBoxItem)driveListBox.Items[driveListBox.SelectedIndex];
         var drive = (Drive)item.Tag;
 
+        // fix permissions are uDisk mount points
+        string result = ProcessUtil.Run("udisksctl", "dump | grep -i mountpoints", useBash:true);
+        var lines = result.Split('\n');
+        foreach (var line in lines)
+        {
+            var match = Regex.Match(line, @"\s*MountPoints:\s*(/run/media/gamer/.*)");
+            if (match.Success)
+            {
+                string path = match.Groups[1].Value;
+                ProcessUtil.Run("chown", $"-R gamer:gamer {path}", asAdmin: true, useBash: false, verboseLog: true);
+                ProcessUtil.Run("chmod", $"-R u+rwX {path}", asAdmin: true, useBash: false, verboseLog: true);
+            }
+        }
+
         // unmount partitions and kill auto mount
         ProcessUtil.Run("udiskie-umount", "-a", out _, useBash: false);
         ProcessUtil.Run("systemctl", "stop udisks2", asAdmin: true, useBash: false);
