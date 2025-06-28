@@ -1691,8 +1691,14 @@ public partial class MainView : UserControl
 
         // unmount partitions and kill auto mount
         ProcessUtil.Run("udiskie-umount", "-a", out _, useBash:false);
+        ProcessUtil.Run("systemctl", "stop udisks2", asAdmin:true, useBash:false);
+        Thread.Sleep(1000);
         ProcessUtil.KillHard("udiskie", true, out _);
-        
+
+        // prep mounting
+        ProcessUtil.Run("umount", "-R /mnt/sdcard/", asAdmin: true, useBash: false);
+        ProcessUtil.CreateDirectoryAdmin("/mnt/sdcard/");
+
         // delete old partitions
         foreach (var parition in drive.partitions)
         {
@@ -1705,27 +1711,25 @@ public partial class MainView : UserControl
         // make new partitions
         ProcessUtil.Run("parted", $"-s {drive.disk} mkpart primary ext4 1MiB 100%", asAdmin:true, useBash:false);
 
-        // prep mounting
-        ProcessUtil.Run("umount", "-R /mnt/sdcard/", asAdmin:true, useBash:true);
-        ProcessUtil.CreateDirectoryAdmin("/mnt/sdcard/");
-
         // format partitions
         string partitionPath;
         if (drive.PartitionsUseP()) partitionPath = $"{drive.disk}p1";
         else partitionPath = $"{drive.disk}1";
-        ProcessUtil.Run("mkfs.ext4", partitionPath, asAdmin:true, useBash:true);
+        ProcessUtil.Run("mkfs.ext4", partitionPath, asAdmin:true, useBash:false);
         Thread.Sleep(1000);
-        ProcessUtil.Run("chown", $"-R gamer:gamer {partitionPath}", asAdmin:true, useBash:true);
-        ProcessUtil.Run("chmod", $"-R 777 {partitionPath}", asAdmin: true, useBash: true);
+        ProcessUtil.Run("systemctl", "start udisks2", asAdmin:true, useBash:false);
         Thread.Sleep(1000);
-        ProcessUtil.Run("mount", $"{partitionPath} /mnt/sdcard/", asAdmin:true, useBash:true);
-        ProcessUtil.Run("chown", "-R gamer:gamer /mnt/sdcard/", asAdmin:true, useBash:true);
-        ProcessUtil.Run("chmod", "-R 777 /mnt/sdcard/", asAdmin:true, useBash:true);
+        ProcessUtil.Run("chown", $"-R gamer:gamer {partitionPath}", asAdmin:true, useBash:false);
+        ProcessUtil.Run("chmod", $"-R 777 {partitionPath}", asAdmin: true, useBash:false);
         Thread.Sleep(1000);
-        ProcessUtil.Run("umount", "-R /mnt/sdcard/", asAdmin:true, useBash:true);
+        ProcessUtil.Run("mount", $"{partitionPath} /mnt/sdcard/", asAdmin:true, useBash:false);
+        ProcessUtil.Run("chown", "-R gamer:gamer /mnt/sdcard/", asAdmin:true, useBash:false);
+        ProcessUtil.Run("chmod", "-R 777 /mnt/sdcard/", asAdmin:true, useBash:false);
+        Thread.Sleep(1000);
+        ProcessUtil.Run("umount", "-R /mnt/sdcard/", asAdmin:true, useBash:false);
 
         // start auto mount back up
-        RestartButton_Click(null, null);
+        //RestartButton_Click(null, null);
     }
 
     private void GPUUtilsButton_OnClick(object sender, RoutedEventArgs e)
