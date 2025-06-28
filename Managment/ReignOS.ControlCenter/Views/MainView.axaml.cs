@@ -1710,9 +1710,10 @@ public partial class MainView : UserControl
         if (drive.PartitionsUseP()) partitionPath = $"{drive.disk}p1";
         else partitionPath = $"{drive.disk}1";
         ProcessUtil.Run("mkfs.ext4", partitionPath, asAdmin:true, useBash:true);
-        ProcessUtil.Run("mount", $"{partitionPath} /mnt", asAdmin:true, useBash:true);
+        //ProcessUtil.Run("mount", $"{partitionPath} /mnt", asAdmin:true, useBash:true);
         Thread.Sleep(1000);
-        ProcessUtil.Run("chown", "-R gamer:gamer /mnt", asAdmin:true, useBash:true);
+        ProcessUtil.Run("chown", $"-R gamer:gamer {partitionPath}", asAdmin:true, useBash:true);
+        ProcessUtil.Run("chmod", $"-R 777 {partitionPath}", asAdmin: true, useBash: true);
         Thread.Sleep(1000);
 
         // start auto mount back up
