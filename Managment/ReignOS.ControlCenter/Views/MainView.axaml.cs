@@ -1706,8 +1706,8 @@ public partial class MainView : UserControl
         ProcessUtil.Run("parted", $"-s {drive.disk} mkpart primary ext4 1MiB 100%", asAdmin:true, useBash:false);
 
         // prep mounting
-        ProcessUtil.Run("umount", "-R /mnt/sdcard", asAdmin: true, useBash: true);
-        ProcessUtil.CreateDirectoryAdmin("/mnt/sdcard");
+        ProcessUtil.Run("umount", "-R /mnt/sdcard/", asAdmin:true, useBash:true);
+        ProcessUtil.CreateDirectoryAdmin("/mnt/sdcard/");
 
         // format partitions
         string partitionPath;
@@ -1718,11 +1718,11 @@ public partial class MainView : UserControl
         ProcessUtil.Run("chown", $"-R gamer:gamer {partitionPath}", asAdmin:true, useBash:true);
         ProcessUtil.Run("chmod", $"-R 777 {partitionPath}", asAdmin: true, useBash: true);
         Thread.Sleep(1000);
-        ProcessUtil.Run("mount", $"{partitionPath} /mnt/sdcard", asAdmin:true, useBash:true);
-        ProcessUtil.Run("chown", "-R gamer:gamer /mnt/sdcard", asAdmin:true, useBash:true);
-        ProcessUtil.Run("chmod", "-R 777 /mnt/sdcard", asAdmin:true, useBash:true);
+        ProcessUtil.Run("mount", $"{partitionPath} /mnt/sdcard/", asAdmin:true, useBash:true);
+        ProcessUtil.Run("chown", "-R gamer:gamer /mnt/sdcard/", asAdmin:true, useBash:true);
+        ProcessUtil.Run("chmod", "-R 777 /mnt/sdcard/", asAdmin:true, useBash:true);
         Thread.Sleep(1000);
-        ProcessUtil.Run("umount", "-R /mnt/sdcard", asAdmin:true, useBash:true);
+        ProcessUtil.Run("umount", "-R /mnt/sdcard/", asAdmin:true, useBash:true);
 
         // start auto mount back up
         RestartButton_Click(null, null);
