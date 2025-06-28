@@ -1692,7 +1692,7 @@ public partial class MainView : UserControl
         // unmount partitions and kill auto mount
         ProcessUtil.Run("udiskie-umount", "-a", out _, useBash:false);
         ProcessUtil.Run("systemctl", "stop udisks2", asAdmin:true, useBash:false);
-        Thread.Sleep(1000);
+        Thread.Sleep(2000);
         ProcessUtil.KillHard("udiskie", true, out _);
 
         // prep mounting
@@ -1702,27 +1702,27 @@ public partial class MainView : UserControl
         // delete old partitions
         foreach (var parition in drive.partitions)
         {
-            ProcessUtil.Run("parted", $"-s {drive.disk} rm {parition.number}", asAdmin:true, useBash:false);
+            ProcessUtil.Run("parted", $"-s {drive.disk} rm {parition.number}", asAdmin:true, useBash:false, verboseLog:true);
         }
         
         // make sure gpt partition scheme
-        ProcessUtil.Run("parted", $"-s -a optimal {drive.disk} mklabel gpt", asAdmin:true, useBash:false);// this will destroy existing partitions
+        ProcessUtil.Run("parted", $"-s -a optimal {drive.disk} mklabel gpt", asAdmin:true, useBash:false, verboseLog:true);// this will destroy existing partitions
 
         // make new partitions
-        ProcessUtil.Run("parted", $"-s -a optimal {drive.disk} mkpart primary ext4 4MiB 100%", asAdmin:true, useBash:false);
+        ProcessUtil.Run("parted", $"-s -a optimal {drive.disk} mkpart primary ext4 4MiB 100%", asAdmin:true, useBash:false, verboseLog:true);
 
         // format partitions
         string partitionPath;
         if (drive.PartitionsUseP()) partitionPath = $"{drive.disk}p1";
         else partitionPath = $"{drive.disk}1";
-        ProcessUtil.Run("mkfs.ext4", partitionPath, asAdmin:true, useBash:false);
+        ProcessUtil.Run("mkfs.ext4", partitionPath, asAdmin:true, useBash:false, verboseLog:true);
         Thread.Sleep(1000);
-        ProcessUtil.Run("mount", $"{partitionPath} /mnt/sdcard/", asAdmin:true, useBash:false);
+        ProcessUtil.Run("mount", $"{partitionPath} /mnt/sdcard/", asAdmin:true, useBash:false, verboseLog:true);
         Thread.Sleep(1000);
-        ProcessUtil.Run("chown", "-R gamer:gamer /mnt/sdcard/", asAdmin:true, useBash:false);
-        ProcessUtil.Run("chmod", "-R u+rwX /mnt/sdcard/", asAdmin:true, useBash:false);
+        ProcessUtil.Run("chown", "-R gamer:gamer /mnt/sdcard/", asAdmin:true, useBash:false, verboseLog:true);
+        ProcessUtil.Run("chmod", "-R u+rwX /mnt/sdcard/", asAdmin:true, useBash:false, verboseLog:true);
         Thread.Sleep(1000);
-        ProcessUtil.Run("umount", "-R /mnt/sdcard/", asAdmin:true, useBash:false);
+        ProcessUtil.Run("umount", "-R /mnt/sdcard/", asAdmin:true, useBash:false, verboseLog:true);
         Thread.Sleep(1000);
 
         // shutdown to fully power cycle drive
