@@ -1731,11 +1731,17 @@ public partial class MainView : UserControl
         ShutdownButton_Click(null, null);
     }
 
-    private void FixDrivePermissionsButton_OnClick(object sender, RoutedEventArgs e)
+    private void FixDriveIssuesButton_OnClick(object sender, RoutedEventArgs e)
     {
         if (driveListBox.SelectedIndex < 0) return;
         var item = (ListBoxItem)driveListBox.Items[driveListBox.SelectedIndex];
         var drive = (Drive)item.Tag;
+
+        // unmount partitions and kill auto mount
+        ProcessUtil.Run("udiskie-umount", "-a", out _, useBash: false);
+        ProcessUtil.Run("systemctl", "stop udisks2", asAdmin: true, useBash: false);
+        Thread.Sleep(2000);
+        ProcessUtil.KillHard("udiskie", true, out _);
 
         // fix partitions
         foreach (var partition in drive.partitions)
