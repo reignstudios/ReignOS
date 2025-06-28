@@ -1710,11 +1710,17 @@ public partial class MainView : UserControl
         if (drive.PartitionsUseP()) partitionPath = $"{drive.disk}p1";
         else partitionPath = $"{drive.disk}1";
         ProcessUtil.Run("mkfs.ext4", partitionPath, asAdmin:true, useBash:true);
-        //ProcessUtil.Run("mount", $"{partitionPath} /mnt", asAdmin:true, useBash:true);
         Thread.Sleep(1000);
         ProcessUtil.Run("chown", $"-R gamer:gamer {partitionPath}", asAdmin:true, useBash:true);
         ProcessUtil.Run("chmod", $"-R 777 {partitionPath}", asAdmin: true, useBash: true);
         Thread.Sleep(1000);
+        ProcessUtil.Run("umount", "-R /mnt/sdcard", asAdmin:true, useBash:true);
+        ProcessUtil.CreateDirectoryAdmin("/mnt/sdcard");
+        ProcessUtil.Run("mount", $"{partitionPath} /mnt/sdcard", asAdmin:true, useBash:true);
+        ProcessUtil.Run("chown", "-R gamer:gamer /mnt/sdcard", asAdmin:true, useBash:true);
+        ProcessUtil.Run("chmod", "-R 777 /mnt/sdcard", asAdmin:true, useBash:true);
+        Thread.Sleep(1000);
+        ProcessUtil.Run("umount", "-R /mnt/sdcard", asAdmin:true, useBash:true);
 
         // start auto mount back up
         RestartButton_Click(null, null);

@@ -193,7 +193,7 @@ public static class ProcessUtil
 
     public static void CreateDirectoryAdmin(string path)
     {
-        Run("mkdir", path, asAdmin:true);
+        Run("mkdir", "-p " + path, asAdmin:true);
     }
 
     public static string ReadAllTextAdmin(string path)
