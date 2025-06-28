@@ -1707,9 +1707,10 @@ public partial class MainView : UserControl
         
         // make sure gpt partition scheme
         ProcessUtil.Run("parted", $"-s {drive.disk} mklabel gpt", asAdmin:true, useBash:false);// this will destroy existing partitions
-        
+
         // make new partitions
-        ProcessUtil.Run("parted", $"-s {drive.disk} mkpart primary ext4 1MiB 100%", asAdmin:true, useBash:false);
+        //ProcessUtil.Run("parted", $"-s {drive.disk} mkpart primary ext4 1MiB 100%", asAdmin:true, useBash:false);
+        ProcessUtil.Run("parted", $"-s {drive.disk} mkpart primary ext4 0% 100%", asAdmin: true, useBash: false);
 
         // format partitions
         string partitionPath;
@@ -1718,6 +1719,7 @@ public partial class MainView : UserControl
         ProcessUtil.Run("mkfs.ext4", partitionPath, asAdmin:true, useBash:false);
         Thread.Sleep(1000);
         ProcessUtil.Run("mount", $"{partitionPath} /mnt/sdcard/", asAdmin:true, useBash:false);
+        Thread.Sleep(1000);
         ProcessUtil.Run("chown", "-R gamer:gamer /mnt/sdcard/", asAdmin:true, useBash:false);
         ProcessUtil.Run("chmod", "-R u+rwX /mnt/sdcard/", asAdmin:true, useBash:false);
         Thread.Sleep(1000);
