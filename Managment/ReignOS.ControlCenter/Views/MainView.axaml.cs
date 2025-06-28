@@ -1738,7 +1738,7 @@ public partial class MainView : UserControl
         var drive = (Drive)item.Tag;
 
         // fix permissions are uDisk mount points
-        string result = ProcessUtil.Run("udisksctl", "dump | grep -i mountpoints", useBash:true);
+        string result = ProcessUtil.Run("udisksctl", "dump | grep -i mountpoints", useBash:true, verboseLog: true);
         var lines = result.Split('\n');
         foreach (var line in lines)
         {
