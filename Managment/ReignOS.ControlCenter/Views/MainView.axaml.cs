@@ -1717,6 +1717,8 @@ public partial class MainView : UserControl
         else partitionPath = $"{drive.disk}1";
         ProcessUtil.Run("mkfs.ext4", partitionPath, asAdmin:true, useBash:false, verboseLog:true);
         Thread.Sleep(1000);
+        ProcessUtil.Run("fsck", partitionPath, asAdmin:true, useBash:false, verboseLog:true);
+        Thread.Sleep(1000);
         ProcessUtil.Run("mount", $"{partitionPath} /mnt/sdcard/", asAdmin:true, useBash:false, verboseLog:true);
         Thread.Sleep(1000);
         ProcessUtil.Run("chown", "-R gamer:gamer /mnt/sdcard/", asAdmin:true, useBash:false, verboseLog:true);
@@ -1738,6 +1740,8 @@ public partial class MainView : UserControl
         // fix partitions
         foreach (var partition in drive.partitions)
         {
+            ProcessUtil.Run("fsck", partition.path, asAdmin: true, useBash: false, verboseLog: true);
+            Thread.Sleep(1000);
             ProcessUtil.Run("mount", $"{partition.path} /mnt/sdcard/", asAdmin: true, useBash: false, verboseLog: true);
             Thread.Sleep(1000);
             ProcessUtil.Run("chown", "-R gamer:gamer /mnt/sdcard/", asAdmin: true, useBash: false, verboseLog: true);
