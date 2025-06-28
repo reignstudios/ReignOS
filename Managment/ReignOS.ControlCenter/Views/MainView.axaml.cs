@@ -1711,8 +1711,9 @@ public partial class MainView : UserControl
         else partitionPath = $"{drive.disk}1";
         ProcessUtil.Run("mkfs.ext4", partitionPath, asAdmin:true, useBash:true);
         ProcessUtil.Run("mount", $"{partitionPath} /mnt", asAdmin:true, useBash:true);
-        Thread.Sleep(2000);
+        Thread.Sleep(1000);
         ProcessUtil.Run("chown", "-R gamer:gamer /mnt", asAdmin:true, useBash:true);
+        Thread.Sleep(1000);
 
         // start auto mount back up
         RestartButton_Click(null, null);
