@@ -711,8 +711,8 @@ public partial class MainView : UserControl
         ProcessUtil.Run("parted", $"-s {efiDrive.disk} mklabel gpt", asAdmin:true, useBash:false);
         
         // make new partitions
-        ProcessUtil.Run("parted", $"-s {efiDrive.disk} mkpart ESP fat32 1MiB 513MiB", asAdmin:true, useBash:false);
-        ProcessUtil.Run("parted", $"-s {efiDrive.disk} mkpart primary ext4 513MiB 100%", asAdmin:true, useBash:false);
+        ProcessUtil.Run("parted", $"-s -a optimal {efiDrive.disk} mkpart ESP fat32 1MiB 513MiB", asAdmin:true, useBash:false);
+        ProcessUtil.Run("parted", $"-s -a optimal {efiDrive.disk} mkpart primary ext4 513MiB 100%", asAdmin:true, useBash:false);
 
         // configure partition
         ProcessUtil.Run("parted", $"-s {efiDrive.disk} set 1 boot on", asAdmin:true, useBash:false);

@@ -1706,10 +1706,10 @@ public partial class MainView : UserControl
         }
         
         // make sure gpt partition scheme
-        ProcessUtil.Run("parted", $"-s {drive.disk} mklabel gpt", asAdmin:true, useBash:false);// this will destroy existing partitions
+        ProcessUtil.Run("parted", $"-s -a optimal {drive.disk} mklabel gpt", asAdmin:true, useBash:false);// this will destroy existing partitions
 
         // make new partitions
-        ProcessUtil.Run("parted", $"-s {drive.disk} mkpart primary ext4 4MiB 100%", asAdmin:true, useBash:false);
+        ProcessUtil.Run("parted", $"-s -a optimal {drive.disk} mkpart primary ext4 4MiB 100%", asAdmin:true, useBash:false);
 
         // format partitions
         string partitionPath;
