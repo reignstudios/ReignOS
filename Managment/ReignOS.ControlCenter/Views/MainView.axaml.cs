@@ -1700,10 +1700,10 @@ public partial class MainView : UserControl
         ProcessUtil.CreateDirectoryAdmin("/mnt/sdcard/");
 
         // delete old partitions
-        foreach (var parition in drive.partitions)
+        /*foreach (var parition in drive.partitions)
         {
             ProcessUtil.Run("parted", $"-s {drive.disk} rm {parition.number}", asAdmin:true, useBash:false);
-        }
+        }*/
         
         // make sure gpt partition scheme
         ProcessUtil.Run("parted", $"-s {drive.disk} mklabel gpt", asAdmin:true, useBash:false);
@@ -1716,17 +1716,17 @@ public partial class MainView : UserControl
         if (drive.PartitionsUseP()) partitionPath = $"{drive.disk}p1";
         else partitionPath = $"{drive.disk}1";
         ProcessUtil.Run("mkfs.ext4", partitionPath, asAdmin:true, useBash:false);
-        Thread.Sleep(1000);
-        ProcessUtil.Run("systemctl", "start udisks2", asAdmin:true, useBash:false);
-        Thread.Sleep(1000);
-        ProcessUtil.Run("chown", $"-R gamer:gamer {partitionPath}", asAdmin:true, useBash:false);
-        ProcessUtil.Run("chmod", $"-R 777 {partitionPath}", asAdmin: true, useBash:false);
+        //Thread.Sleep(1000);
+        //ProcessUtil.Run("chown", $"-R gamer:gamer {partitionPath}", asAdmin:true, useBash:false);
+        //ProcessUtil.Run("chmod", $"-R 777 {partitionPath}", asAdmin: true, useBash:false);
         Thread.Sleep(1000);
         ProcessUtil.Run("mount", $"{partitionPath} /mnt/sdcard/", asAdmin:true, useBash:false);
         ProcessUtil.Run("chown", "-R gamer:gamer /mnt/sdcard/", asAdmin:true, useBash:false);
         ProcessUtil.Run("chmod", "-R 777 /mnt/sdcard/", asAdmin:true, useBash:false);
         Thread.Sleep(1000);
         ProcessUtil.Run("umount", "-R /mnt/sdcard/", asAdmin:true, useBash:false);
+        Thread.Sleep(1000);
+        ProcessUtil.Run("systemctl", "start udisks2", asAdmin: true, useBash: false);
 
         // start auto mount back up
         //RestartButton_Click(null, null);
