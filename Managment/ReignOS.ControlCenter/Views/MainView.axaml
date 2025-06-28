@@ -259,6 +259,7 @@
 			
 			<Grid Grid.Column="1">
 				<Button Content="Format Selected Drive" Background="DarkRed" Click="FormatDriveButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,16,0,0"/>
+				<Button Content="Fix Drive Permissions" Background="DarkGreen" Click="FixDrivePermissionsButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,100,0,0"/>
 				<TextBlock Text="NOTE: This will Shutdown the device once finished" FontSize="24" Foreground="DarkRed" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,54,0,0"/>
 				<Button Content="Back" Width="128" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="DriveManagerBackButton_OnClick"/>
 			</Grid>

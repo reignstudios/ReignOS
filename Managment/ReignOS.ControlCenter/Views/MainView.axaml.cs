@@ -1729,6 +1729,25 @@ public partial class MainView : UserControl
         ShutdownButton_Click(null, null);
     }
 
+    private void FixDrivePermissionsButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (driveListBox.SelectedIndex < 0) return;
+        var item = (ListBoxItem)driveListBox.Items[driveListBox.SelectedIndex];
+        var drive = (Drive)item.Tag;
+
+        // fix partitions
+        foreach (var partition in drive.partitions)
+        {
+            ProcessUtil.Run("mount", $"{partition.path} /mnt/sdcard/", asAdmin: true, useBash: false, verboseLog: true);
+            Thread.Sleep(1000);
+            ProcessUtil.Run("chown", "-R gamer:gamer /mnt/sdcard/", asAdmin: true, useBash: false, verboseLog: true);
+            ProcessUtil.Run("chmod", "-R u+rwX /mnt/sdcard/", asAdmin: true, useBash: false, verboseLog: true);
+            Thread.Sleep(1000);
+            ProcessUtil.Run("umount", "-R /mnt/sdcard/", asAdmin: true, useBash: false, verboseLog: true);
+            Thread.Sleep(1000);
+        }
+    }
+
     private void GPUUtilsButton_OnClick(object sender, RoutedEventArgs e)
     {
         mainGrid.IsVisible = false;
