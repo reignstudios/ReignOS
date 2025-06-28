@@ -1756,6 +1756,9 @@ public partial class MainView : UserControl
             ProcessUtil.Run("umount", "-R /mnt/sdcard/", asAdmin: true, useBash: false, verboseLog: true);
             Thread.Sleep(1000);
         }
+
+        // shutdown to fully power cycle drive
+        ShutdownButton_Click(null, null);
     }
 
     private void GPUUtilsButton_OnClick(object sender, RoutedEventArgs e)
