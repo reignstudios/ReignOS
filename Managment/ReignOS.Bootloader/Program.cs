@@ -251,7 +251,20 @@ internal class Program
             if (compositorRan)
             {
                 Log.WriteLine("Waiting...");
-                Thread.Sleep(5000);
+                Thread.Sleep(1000);
+
+                ProcessUtil.Wait("weston", 6);// wait for cage
+                ProcessUtil.KillHard("weston", true, out _);// kill cage in case its stuck
+
+                ProcessUtil.Wait("cage", 6);// wait for cage
+                ProcessUtil.KillHard("cage", true, out _);// kill cage in case its stuck
+
+                ProcessUtil.Wait("openbox", 6);// wait for cage
+                ProcessUtil.KillHard("openbox", true, out _);// kill cage in case its stuck
+
+                ProcessUtil.Wait("kwin_wayland", 6);// wait for cage
+                ProcessUtil.KillHard("kwin_wayland", true, out _);// kill cage in case its stuck
+
                 if (serviceProcess.HasExited)
                 {
                     Log.WriteLine("Service has exited on its own");
@@ -316,9 +329,15 @@ internal class Program
                     ProcessUtil.Wait("cage", 6);// wait for cage
                     ProcessUtil.KillHard("cage", true, out _);// kill cage in case its stuck
                 }
-                else if (controlCenterCompositor == ControlCenterCompositor.X11 || controlCenterCompositor == ControlCenterCompositor.KDE_G)
+                else if (controlCenterCompositor == ControlCenterCompositor.X11)
                 {
-                    Thread.Sleep(5);// just wait a bit
+                    ProcessUtil.Wait("openbox", 6);// wait for cage
+                    ProcessUtil.KillHard("openbox", true, out _);// kill cage in case its stuck
+                }
+                if (controlCenterCompositor == ControlCenterCompositor.KDE_G)
+                {
+                    ProcessUtil.Wait("kwin_wayland", 6);// wait for cage
+                    ProcessUtil.KillHard("kwin_wayland", true, out _);// kill cage in case its stuck
                 }
 
                 // reset things for new compositor
