@@ -44,6 +44,8 @@ public unsafe static class input
     public const int KEY_F16 = 186;
     public const int KEY_F17 = 187;
     public const int KEY_F18 = 188;
+    public const int KEY_F23 = 193;
+    public const int KEY_F24 = 194;
     public const int KEY_LEFTCTRL = 29;
     public const int KEY_RIGHTCTRL = 97;
     public const int KEY_LEFTMETA = 125;

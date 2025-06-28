@@ -19,7 +19,8 @@ namespace ReignOS.Service.Hardware
                 Program.hardwareType == HardwareType.Ayaneo ||
                 Program.hardwareType == HardwareType.AyaneoPro ||
                 Program.hardwareType == HardwareType.AyaneoPlus ||
-                Program.hardwareType == HardwareType.AyaneoFlipDS;
+                Program.hardwareType == HardwareType.AyaneoFlipDS ||
+                Program.hardwareType == HardwareType.Ayaneo3;
 
             if (Program.hardwareType == HardwareType.AyaneoPro)
             {
@@ -53,6 +54,19 @@ namespace ReignOS.Service.Hardware
                 if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_RIGHTCTRL, true), new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_F17, true)))
                 {
                     VirtualGamepad.Write_TriggerLeftSteamMenu();
+                }
+            }
+
+            if (Program.hardwareType == HardwareType.Ayaneo3 || Program.hardwareType == HardwareType.Ayaneo)
+            {
+                if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_F23, true)))
+                {
+                    VirtualGamepad.Write_TriggerLeftSteamMenu();
+                }
+
+                if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_F24, true)))
+                {
+                    VirtualGamepad.Write_TriggerRightSteamMenu();
                 }
             }
 
