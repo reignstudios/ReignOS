@@ -1700,17 +1700,16 @@ public partial class MainView : UserControl
         ProcessUtil.CreateDirectoryAdmin("/mnt/sdcard/");
 
         // delete old partitions
-        /*foreach (var parition in drive.partitions)
+        foreach (var parition in drive.partitions)
         {
             ProcessUtil.Run("parted", $"-s {drive.disk} rm {parition.number}", asAdmin:true, useBash:false);
-        }*/
+        }
         
         // make sure gpt partition scheme
         ProcessUtil.Run("parted", $"-s {drive.disk} mklabel gpt", asAdmin:true, useBash:false);// this will destroy existing partitions
 
         // make new partitions
-        //ProcessUtil.Run("parted", $"-s {drive.disk} mkpart primary ext4 1MiB 100%", asAdmin:true, useBash:false);
-        ProcessUtil.Run("parted", $"-s {drive.disk} mkpart primary ext4 0% 100%", asAdmin: true, useBash: false);
+        ProcessUtil.Run("parted", $"-s {drive.disk} mkpart primary ext4 4MiB 100%", asAdmin:true, useBash:false);
 
         // format partitions
         string partitionPath;
