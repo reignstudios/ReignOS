@@ -204,7 +204,11 @@ internal class Program
 
             // detect possible resume from sleep
             bool resumeFromSleep = false;
-            if (timeSpan.TotalSeconds >= 3) resumeFromSleep = true;
+            if (timeSpan.TotalSeconds >= 3)
+            {
+                resumeFromSleep = true;
+                PowerProfiles.Apply(false);
+            }
 
             // update keyboard
             keyboardInput.ReadNextKeys(out var keys, 15);

@@ -85,8 +85,8 @@ class PowerSetting
 class PowerCPUSetting
 {
     public string name;
-    public int minFreq, maxFreq, minFreqOverride, maxFreqOverride, freqPercentage;
-    public bool? boost, boostOverride;
+    public int minFreq, maxFreq;
+    public bool? boost;
 }
 
 class DisplaySetting
@@ -116,7 +116,8 @@ public partial class MainView : UserControl
     
     private List<PowerSetting> powerSettings = new();
     private List<PowerCPUSetting> powerCPUSettings = new();
-    private bool? powerIntelTurboBoost, powerIntelTurboBoostOverride;
+    private bool? powerIntelTurboBoostEnabled;
+    private bool powerBoostEnabled;
     
     private List<DisplaySetting> displaySettings = new();
     
@@ -363,13 +364,9 @@ public partial class MainView : UserControl
                     {
                         autoCheckUpdatesCheckbox.IsChecked = parts[1] == "On";
                     }
-                    else if (parts[0] == "PowerAdvancedMode")
+                    else if (parts[0] == "PowerPercentage")
                     {
-                        powerAdvancedCheckbox.IsChecked = parts[1] == "On";
-                    }
-                    else if (parts[0] == "PowerSimplePercentage")
-                    {
-                        if (int.TryParse(parts[1], out int value)) powerSimpleSlider.Value = value;
+                        if (int.TryParse(parts[1], out int value)) powerSlider.Value = value;
                     }
                     else if (parts[0].StartsWith("AudioDefault:"))
                     {
@@ -420,56 +417,11 @@ public partial class MainView : UserControl
             Log.WriteLine(e);
         }
 
-        LoadPowerProfileSettings();
-
         if (needsReset)
         {
             SaveSettings();
             App.exitCode = 0;
             MainWindow.singleton.Close();
-        }
-    }
-
-    private void LoadPowerProfileSettings()
-    {
-        if (!File.Exists("/home/gamer/ReignOS_Ext/PowerProfileSettings.txt")) return;
-        try
-        {
-            using (var stream = new FileStream("/home/gamer/ReignOS_Ext/PowerProfileSettings.txt", FileMode.Open, FileAccess.Read))
-            using (var reader = new StreamReader(stream))
-            {
-                while (!reader.EndOfStream)
-                {
-                    var line = reader.ReadLine();
-                    var parts = line.Split(' ');
-                    if (parts == null || parts.Length == 0) continue;
-                    if (parts[0].StartsWith("IntelTurboBoost="))
-                    {
-                        var subParts = parts[0].Split('=');
-                        powerIntelTurboBoostOverride = subParts[1] == "True";
-                    }
-                    else if (parts[0].StartsWith("CPU="))
-                    {
-                        var setting = new PowerCPUSetting();
-                        foreach (var part in parts)
-                        {
-                            var subParts = part.Split('=');
-                            switch (subParts[0])
-                            {
-                                case "CPU": setting.name = subParts[1]; break;
-                                case "MinFreq": int.TryParse(subParts[1], out setting.minFreqOverride); break;
-                                case "MaxFreq": int.TryParse(subParts[1], out setting.maxFreqOverride); break;
-                                case "Boost": setting.boostOverride = subParts[1] == "True"; break;
-                            }
-                        }
-                        powerCPUSettings.Add(setting);
-                    }
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            Log.WriteLine(e);
         }
     }
     
@@ -550,9 +502,9 @@ public partial class MainView : UserControl
                 if (autoCheckUpdatesCheckbox.IsChecked == true) writer.WriteLine("AutoCheckUpdates=On");
                 else writer.WriteLine("AutoCheckUpdates=Off");
                 
-                if (powerAdvancedCheckbox.IsChecked == true) writer.WriteLine("PowerAdvancedMode=On");
-                else writer.WriteLine("PowerAdvancedMode=Off");
-                writer.WriteLine($"PowerSimplePercentage={(int)powerSimpleSlider.Value}");
+                writer.WriteLine($"PowerPercentage={(int)powerSlider.Value}");
+                if (powerIntelTurboBoostCheckbox.IsChecked == true) writer.WriteLine("PowerIntelTurboBoost=True");
+                if (powerBoostCheckBox.IsChecked == true) writer.WriteLine("PowerBoost=True");
 
                 foreach (var setting in audioSettings)
                 {
@@ -2254,9 +2206,9 @@ public partial class MainView : UserControl
         }
     }
     
-    private void PowerSimpleSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+    private void PowerSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
     {
-        powerSimpleFreq.Text = $"Freq: {(int)powerSimpleSlider.Value}%";
+        powerFreq.Text = $"Freq: {(int)powerSlider.Value}%";
     }
     
     private void PowerManagerApplyButton_OnClick(object sender, RoutedEventArgs e)
@@ -2269,35 +2221,23 @@ public partial class MainView : UserControl
         else builder.AppendLine("Profile=NONE");
         
         // intel turbo boost
-        if (powerIntelTurboBoost.HasValue) builder.AppendLine("IntelTurboBoost=" + (powerIntelTurboBoostCheckbox.IsChecked == true ? "True" : "False"));
+        if (powerIntelTurboBoostEnabled != null) builder.AppendLine("IntelTurboBoost=" + (powerIntelTurboBoostCheckbox.IsChecked == true ? "True" : "False"));
 
         // core settings
-        if (powerAdvancedCheckbox.IsChecked == true)
+        bool enableBoost = powerBoostCheckBox.IsChecked == true;
+        double percentage = powerSlider.Value / 100.0;
+        foreach (var s in powerCPUSettings)
         {
-            foreach (ListBoxItem item in powerCPUListBox.Items)
-            {
-                var s = item.Tag as PowerCPUSetting;
-                string boost = "";
-                if (s.boost.HasValue) boost = " Boost=" + (s.boost == true ? "True" : "False");
-                builder.AppendLine($"CPU={s.name} MinFreq={s.minFreq} MaxFreq={s.maxFreq}{boost}");
-            }
-        }
-        else
-        {
-            bool enableBoost = powerSimplerBoost.IsChecked == true;
-            double percentage = powerSimpleSlider.Value / 100.0;
-            foreach (var s in powerCPUSettings)
-            {
-                string boost = "";
-                if (s.boost.HasValue) boost = " Boost=" + (enableBoost ? "True" : "False");
-                int maxFreq = (int)(s.maxFreq * percentage);
-                builder.AppendLine($"CPU={s.name} MinFreq={s.minFreq} MaxFreq={maxFreq}{boost}");
-            }
+            string boost = "";
+            if (s.boost.HasValue) boost = " Boost=" + (enableBoost ? "True" : "False");
+            int maxFreq = (int)(s.minFreq + ((s.maxFreq - s.minFreq) * percentage));
+            builder.AppendLine($"CPU={s.name} MinFreq={s.minFreq} MaxFreq={maxFreq}{boost}");
         }
 
         // finish
-        ProcessUtil.WriteAllTextAdmin("/home/gamer/ReignOS_Ext/PowerProfileSettings.txt", builder);
+        File.WriteAllText("/home/gamer/ReignOS_Ext/PowerProfileSettings.txt", builder.ToString());
         SaveSettings();
+        PowerProfiles.Apply(true);
     }
 
     private void RefreshPowerPage()
@@ -2372,9 +2312,10 @@ public partial class MainView : UserControl
         // get cpu info
         try
         {
-            powerIntelTurboBoost = null;
+            powerIntelTurboBoostEnabled = null;
             string turboBoostPath = "/sys/devices/system/cpu/intel_pstate/no_turbo";
-            if (File.Exists(turboBoostPath)) powerIntelTurboBoost = File.ReadAllText(turboBoostPath).Trim() != "1";
+            if (File.Exists(turboBoostPath)) powerIntelTurboBoostEnabled = File.ReadAllText(turboBoostPath).Trim() != "1";
+            powerIntelTurboBoostCheckbox.IsChecked = powerIntelTurboBoostEnabled;
             
             powerCPUSettings.Clear();
             foreach (var path in Directory.GetDirectories("/sys/devices/system/cpu"))
@@ -2413,10 +2354,10 @@ public partial class MainView : UserControl
         }
         
         // update UI
-        if (powerIntelTurboBoost != null)
+        if (powerIntelTurboBoostEnabled != null)
         {
             powerIntelTurboBoostCheckbox.IsEnabled = true;
-            powerIntelTurboBoostCheckbox.IsChecked = powerIntelTurboBoost;
+            powerIntelTurboBoostCheckbox.IsChecked = powerIntelTurboBoostEnabled;
         }
         else
         {
@@ -2427,46 +2368,10 @@ public partial class MainView : UserControl
         powerCPUListBox.Items.Clear();
         foreach (var setting in powerCPUSettings)
         {
-            var content = new StackPanel();
-            content.Orientation = Orientation.Horizontal;
-            
-            var label = new TextBlock();
-            label.VerticalAlignment = VerticalAlignment.Center;
-            label.Text = $"{setting.name} (MinFreq: {setting.minFreq} MaxFreq: {setting.maxFreq} Boost: {setting.boost})";
-            content.Children.Add(label);
-
-            var minFreqOverride = new TextBox();
-            minFreqOverride.Tag = "MinFreq";
-            minFreqOverride.Margin = new Thickness(8, 0, 0, 0);
-            minFreqOverride.Text =  setting.minFreqOverride.ToString();
-            content.Children.Add(minFreqOverride);
-            
-            var maxFreqOverride = new TextBox();
-            maxFreqOverride.Tag = "MaxFreq";
-            maxFreqOverride.Margin = new Thickness(8, 0, 0, 0);
-            maxFreqOverride.Text = setting.maxFreqOverride.ToString();
-            content.Children.Add(maxFreqOverride);
-
-            if (setting.boost.HasValue)
-            {
-                var boostCheckBox = new CheckBox();
-                boostCheckBox.Tag = "Boost";
-                boostCheckBox.Margin = new Thickness(8, 0, 0, 0);
-                boostCheckBox.Content = "Boost";
-                boostCheckBox.IsChecked = setting.boostOverride;
-                content.Children.Add(boostCheckBox);
-            }
-
             var item = new ListBoxItem();
-            item.Content = content;
+            item.Content = $"{setting.name} (MinFreq: {setting.minFreq} MaxFreq: {setting.maxFreq} Boost: {setting.boost})";
             item.Tag = setting;
             powerCPUListBox.Items.Add(item);
         }
-    }
-
-    private void PowerAdvancedCheckbox_OnIsCheckedChanged(object sender, RoutedEventArgs e)
-    {
-        powerSimpleGrid.IsVisible = powerAdvancedCheckbox.IsChecked != true;
-        powerAdvancedGrid.IsVisible = powerAdvancedCheckbox.IsChecked == true;
     }
 }
