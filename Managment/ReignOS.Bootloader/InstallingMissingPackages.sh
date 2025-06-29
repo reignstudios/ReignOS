@@ -4,30 +4,30 @@
 # nothing yet...
 
 # add pacman packages
-sudo pacman -S --noconfirm linux-headers linux-tools
-sudo pacman -S --noconfirm jq
+sudo pacman -S --noconfirm --needed linux-headers linux-tools
+sudo pacman -S --noconfirm --needed jq
 
-sudo pacman -S --noconfirm wayland-utils
-sudo pacman -S --noconfirm wlr-randr gamescope cage labwc weston
-sudo pacman -S --noconfirm openbox
-sudo pacman -S --noconfirm xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-kde xdg-desktop-portal-gtk
+sudo pacman -S --noconfirm --needed wayland-utils
+sudo pacman -S --noconfirm --needed wlr-randr gamescope cage labwc weston
+sudo pacman -S --noconfirm --needed openbox
+sudo pacman -S --noconfirm --needed xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-kde xdg-desktop-portal-gtk
 
-sudo pacman -S --noconfirm vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-layers
+sudo pacman -S --noconfirm --needed vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-layers
 
-sudo pacman -S --noconfirm alsa-ucm-conf
+sudo pacman -S --noconfirm --needed alsa-ucm-conf
 
-sudo pacman -S --noconfirm bluez bluez-utils
+sudo pacman -S --noconfirm --needed bluez bluez-utils
 sudo systemctl enable bluetooth
 
-sudo pacman -S --noconfirm bolt
+sudo pacman -S --noconfirm --needed bolt
 sudo systemctl enable bolt.service
 
-sudo pacman -S --noconfirm plasma konsole dolphin kate ark exfatprogs dosfstools partitionmanager
-sudo pacman -S --noconfirm maliit-keyboard
-sudo pacman -S --noconfirm qt5-wayland qt6-wayland
+sudo pacman -S --noconfirm --needed plasma konsole dolphin kate ark exfatprogs dosfstools partitionmanager
+sudo pacman -S --noconfirm --needed maliit-keyboard
+sudo pacman -S --noconfirm --needed qt5-wayland qt6-wayland
 
-sudo pacman -S --noconfirm gparted
-sudo pacman -S --noconfirm flatpak
+sudo pacman -S --noconfirm --needed gparted
+sudo pacman -S --noconfirm --needed flatpak
 
 # add yay packages
 if [ ! -d "/home/gamer/yay" ]; then
@@ -37,15 +37,22 @@ if [ ! -d "/home/gamer/yay" ]; then
 	makepkg -si --noconfirm
 fi
 
-yay -S --noconfirm supergfxctl
+yay -S --noconfirm --needed supergfxctl
 
-yay -S --noconfirm ttf-ms-fonts
+yay -S --noconfirm --needed ttf-ms-fonts
 fc-cache -fv
 
-yay -S --noconfirm steamcmd
-yay -S --noconfirm proton-ge-custom
+yay -S --noconfirm --needed steamcmd
+yay -S --noconfirm --needed proton-ge-custom
 
-sudo pacman -S --noconfirm fwupd
+sudo pacman -S --noconfirm --needed fwupd
+
+sudo pacman -S --noconfirm --needed vdpauinfo
+sudo pacman -S --noconfirm --needed ffmpeg gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav
+sudo pacman -S --noconfirm --needed yt-dlp
+sudo pacman -S --noconfirm --needed libva libva-utils gstreamer-vaapi
+sudo pacman -S --noconfirm --needed libvdpau-va-gl mesa-vdpau
+sudo pacman -S --noconfirm --needed libdvdread libdvdnav libdvdcss libbluray
 
 sudo systemctl stop acpid
 sudo systemctl disable acpid

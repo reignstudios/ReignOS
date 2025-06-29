@@ -85,8 +85,8 @@ class PowerSetting
 class PowerCPUSetting
 {
     public string name;
-    public int minFreq, maxFreq, freqPercentage;
-    public bool? boost;
+    public int minFreq, maxFreq, minFreqOverride, maxFreqOverride, freqPercentage;
+    public bool? boost, boostOverride;
 }
 
 class DisplaySetting
@@ -116,7 +116,7 @@ public partial class MainView : UserControl
     
     private List<PowerSetting> powerSettings = new();
     private List<PowerCPUSetting> powerCPUSettings = new();
-    private bool? powerIntelTurboBoost;
+    private bool? powerIntelTurboBoost, powerIntelTurboBoostOverride;
     
     private List<DisplaySetting> displaySettings = new();
     
@@ -363,6 +363,14 @@ public partial class MainView : UserControl
                     {
                         autoCheckUpdatesCheckbox.IsChecked = parts[1] == "On";
                     }
+                    else if (parts[0] == "PowerAdvancedMode")
+                    {
+                        powerAdvancedCheckbox.IsChecked = parts[1] == "On";
+                    }
+                    else if (parts[0] == "PowerSimplePercentage")
+                    {
+                        if (int.TryParse(parts[1], out int value)) powerSimpleSlider.Value = value;
+                    }
                     else if (parts[0].StartsWith("AudioDefault:"))
                     {
                         var audioParts = parts[1].Split(':');
@@ -412,11 +420,56 @@ public partial class MainView : UserControl
             Log.WriteLine(e);
         }
 
+        LoadPowerProfileSettings();
+
         if (needsReset)
         {
             SaveSettings();
             App.exitCode = 0;
             MainWindow.singleton.Close();
+        }
+    }
+
+    private void LoadPowerProfileSettings()
+    {
+        if (!File.Exists("/home/gamer/ReignOS_Ext/PowerProfileSettings.txt")) return;
+        try
+        {
+            using (var stream = new FileStream("/home/gamer/ReignOS_Ext/PowerProfileSettings.txt", FileMode.Open, FileAccess.Read))
+            using (var reader = new StreamReader(stream))
+            {
+                while (!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    var parts = line.Split(' ');
+                    if (parts == null || parts.Length == 0) continue;
+                    if (parts[0].StartsWith("IntelTurboBoost="))
+                    {
+                        var subParts = parts[0].Split('=');
+                        powerIntelTurboBoostOverride = subParts[1] == "True";
+                    }
+                    else if (parts[0].StartsWith("CPU="))
+                    {
+                        var setting = new PowerCPUSetting();
+                        foreach (var part in parts)
+                        {
+                            var subParts = part.Split('=');
+                            switch (subParts[0])
+                            {
+                                case "CPU": setting.name = subParts[1]; break;
+                                case "MinFreq": int.TryParse(subParts[1], out setting.minFreqOverride); break;
+                                case "MaxFreq": int.TryParse(subParts[1], out setting.maxFreqOverride); break;
+                                case "Boost": setting.boostOverride = subParts[1] == "True"; break;
+                            }
+                        }
+                        powerCPUSettings.Add(setting);
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Log.WriteLine(e);
         }
     }
     
@@ -496,6 +549,10 @@ public partial class MainView : UserControl
 
                 if (autoCheckUpdatesCheckbox.IsChecked == true) writer.WriteLine("AutoCheckUpdates=On");
                 else writer.WriteLine("AutoCheckUpdates=Off");
+                
+                if (powerAdvancedCheckbox.IsChecked == true) writer.WriteLine("PowerAdvancedMode=On");
+                else writer.WriteLine("PowerAdvancedMode=Off");
+                writer.WriteLine($"PowerSimplePercentage={(int)powerSimpleSlider.Value}");
 
                 foreach (var setting in audioSettings)
                 {
@@ -2222,7 +2279,7 @@ public partial class MainView : UserControl
                 var s = item.Tag as PowerCPUSetting;
                 string boost = "";
                 if (s.boost.HasValue) boost = " Boost=" + (s.boost == true ? "True" : "False");
-                builder.AppendLine($"Name={s.name} MinFreq={s.minFreq} MaxFreq={s.maxFreq}{boost}");
+                builder.AppendLine($"CPU={s.name} MinFreq={s.minFreq} MaxFreq={s.maxFreq}{boost}");
             }
         }
         else
@@ -2234,12 +2291,13 @@ public partial class MainView : UserControl
                 string boost = "";
                 if (s.boost.HasValue) boost = " Boost=" + (enableBoost ? "True" : "False");
                 int maxFreq = (int)(s.maxFreq * percentage);
-                builder.AppendLine($"Name={s.name} MinFreq={s.minFreq} MaxFreq={maxFreq}{boost}");
+                builder.AppendLine($"CPU={s.name} MinFreq={s.minFreq} MaxFreq={maxFreq}{boost}");
             }
         }
 
         // finish
         ProcessUtil.WriteAllTextAdmin("/home/gamer/ReignOS_Ext/PowerProfileSettings.txt", builder);
+        SaveSettings();
     }
 
     private void RefreshPowerPage()
@@ -2374,19 +2432,19 @@ public partial class MainView : UserControl
             
             var label = new TextBlock();
             label.VerticalAlignment = VerticalAlignment.Center;
-            label.Text = $"{setting.name} (MinFreq: {setting.minFreq} MaxFreq: {setting.maxFreq})";
+            label.Text = $"{setting.name} (MinFreq: {setting.minFreq} MaxFreq: {setting.maxFreq} Boost: {setting.boost})";
             content.Children.Add(label);
 
             var minFreqOverride = new TextBox();
             minFreqOverride.Tag = "MinFreq";
             minFreqOverride.Margin = new Thickness(8, 0, 0, 0);
-            minFreqOverride.Text = setting.minFreq.ToString();
+            minFreqOverride.Text =  setting.minFreqOverride.ToString();
             content.Children.Add(minFreqOverride);
             
             var maxFreqOverride = new TextBox();
             maxFreqOverride.Tag = "MaxFreq";
             maxFreqOverride.Margin = new Thickness(8, 0, 0, 0);
-            maxFreqOverride.Text = setting.maxFreq.ToString();
+            maxFreqOverride.Text = setting.maxFreqOverride.ToString();
             content.Children.Add(maxFreqOverride);
 
             if (setting.boost.HasValue)
@@ -2395,7 +2453,7 @@ public partial class MainView : UserControl
                 boostCheckBox.Tag = "Boost";
                 boostCheckBox.Margin = new Thickness(8, 0, 0, 0);
                 boostCheckBox.Content = "Boost";
-                boostCheckBox.IsChecked = setting.boost;
+                boostCheckBox.IsChecked = setting.boostOverride;
                 content.Children.Add(boostCheckBox);
             }
 

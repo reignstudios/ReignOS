@@ -93,6 +93,13 @@ static class PackageUpdates
         if (!PackageExits("proton-ge-custom")) return true;
 
         if (!PackageExits("fwupd")) return true;
+        
+        if (!PackageExits("vdpauinfo")) return true;
+        if (!PackageExits("ffmpeg")) return true;
+        if (!PackageExits("yt-dlp")) return true;
+        if (!PackageExits("libva")) return true;
+        if (!PackageExits("libvdpau-va-gl")) return true;
+        if (!PackageExits("libdvdread")) return true;
 
         if (PackageExits("acpid")) return true;
 

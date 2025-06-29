@@ -359,6 +359,10 @@ static class InstallUtil
         fileBuilder.AppendLine();// set volume to 100%
         fileBuilder.AppendLine("echo \"Setting volume to 100%...\"");
         fileBuilder.AppendLine("pactl set-sink-volume @DEFAULT_SINK@ 100%");
+        
+        fileBuilder.AppendLine();// make sure git-lfs is hooked up
+        fileBuilder.AppendLine("echo \"Hook up git-lfs...\"");
+        fileBuilder.AppendLine("git lfs install");
 
         fileBuilder.AppendLine();// disable FirstRun
         fileBuilder.AppendLine("echo \"rebooting...\"");
@@ -426,6 +430,15 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-layers");
         Run("pacman", "-S --noconfirm egl-wayland");
         UpdateProgress(50);
+        
+        // codex / misc
+        Run("pacman", "-S --noconfirm vdpauinfo");
+        Run("pacman", "-S --noconfirm ffmpeg gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav");
+        Run("pacman", "-S --noconfirm yt-dlp");
+        Run("pacman", "-S --noconfirm libva libva-utils gstreamer-vaapi");
+        Run("pacman", "-S --noconfirm libvdpau-va-gl mesa-vdpau");
+        Run("pacman", "-S --noconfirm libdvdread libdvdnav libdvdcss libbluray");
+        UpdateProgress(54);
 
         // install x11 graphics drivers
         Run("pacman", "-S --noconfirm xf86-video-intel xf86-video-amdgpu xf86-video-nouveau");

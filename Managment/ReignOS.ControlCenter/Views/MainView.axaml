@@ -200,7 +200,7 @@
 				<Button Content="Network" Margin="4,0,0,0" Click="NetworkManagerButton_OnClick"/>
 				<Button Content="Display" Margin="4,0,0,0" Click="DisplayManagerButton_OnClick"/>
 				<Button Content="Audio" Margin="4,0,0,0" Click="AudioManagerButton_OnClick"/>
-				<!-- <Button Content="Power" Margin="4,0,0,0" Click="PowerManagerButton_OnClick"/> -->
+				<Button Content="Power" Margin="4,0,0,0" Click="PowerManagerButton_OnClick"/>
 			</StackPanel>
 		</Grid>
 		
@@ -360,7 +360,7 @@
 			<Grid Grid.Column="1">
 				<Button Content="Back" Width="128" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="PowerManagerBackButton_OnClick"/>
 				<Button Content="Apply All Settings" Background="#803000" Click="PowerManagerApplyButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,50,0,0"/>
-				<CheckBox Name="powerAdvancedCheckbox" Content="Nerd Mode" Margin="4,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsCheckedChanged="PowerAdvancedCheckbox_OnIsCheckedChanged"/>
+				<CheckBox Name="powerAdvancedCheckbox" Content="Advanced Mode" Margin="4,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsCheckedChanged="PowerAdvancedCheckbox_OnIsCheckedChanged"/>
 				<CheckBox Name="powerActiveCheckbox" Content="Active" Margin="4,100,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsCheckedChanged="PowerActiveCheckbox_OnIsCheckedChanged"/>
 				<CheckBox Name="powerIntelTurboBoostCheckbox" Content="Intel Turbo Boost" Margin="104,100,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 				<Grid Name="powerSimpleGrid" IsVisible="True" Margin="4,150,4,70">
