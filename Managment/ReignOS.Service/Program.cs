@@ -191,6 +191,9 @@ internal class Program
         var bootloaderListenThread = new Thread(ReadBootloaderCommands);
         bootloaderListenThread.IsBackground = true;
         bootloaderListenThread.Start();
+        
+        // apply PowerProfiles
+        PowerProfiles.Apply(false);
 
         // run events
         Log.WriteLine("Running events...");

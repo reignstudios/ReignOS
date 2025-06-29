@@ -360,6 +360,7 @@
 			<Grid Grid.Column="1">
 				<Button Content="Back" Width="128" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="PowerManagerBackButton_OnClick"/>
 				<Button Content="Apply" Background="#803000" Click="PowerManagerApplyButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,50,0,0"/>
+				<TextBlock Text="NOTE: If you change Boosts, Apply then adjust freq and Apply again (or just Apply twice)" FontSize="16" Margin="74,55,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 				<CheckBox Name="powerActiveCheckbox" Content="Active" Margin="4,100,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsCheckedChanged="PowerActiveCheckbox_OnIsCheckedChanged"/>
 				<CheckBox Name="powerIntelTurboBoostCheckbox" Content="Intel Turbo Boost" Margin="104,100,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 				<Grid Name="powerGrid" IsVisible="True" Margin="4,150,4,70">

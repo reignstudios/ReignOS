@@ -85,7 +85,7 @@ class PowerSetting
 class PowerCPUSetting
 {
     public string name;
-    public int minFreq, maxFreq;
+    public int minFreq, maxFreq, minFreqScale, maxFreqScale;
     public bool? boost;
 }
 
@@ -2238,6 +2238,8 @@ public partial class MainView : UserControl
         File.WriteAllText("/home/gamer/ReignOS_Ext/PowerProfileSettings.txt", builder.ToString());
         SaveSettings();
         PowerProfiles.Apply(true);
+        Thread.Sleep(1000);
+        RefreshPowerPage();
     }
 
     private void RefreshPowerPage()
@@ -2313,7 +2315,7 @@ public partial class MainView : UserControl
         try
         {
             powerIntelTurboBoostEnabled = null;
-            string turboBoostPath = "/sys/devices/system/cpu/intel_pstate/no_turbo";
+            const string turboBoostPath = "/sys/devices/system/cpu/intel_pstate/no_turbo";
             if (File.Exists(turboBoostPath)) powerIntelTurboBoostEnabled = File.ReadAllText(turboBoostPath).Trim() != "1";
             powerIntelTurboBoostCheckbox.IsChecked = powerIntelTurboBoostEnabled;
             
@@ -2327,11 +2329,15 @@ public partial class MainView : UserControl
                     string freqPath = Path.Combine(path, "cpufreq");
                     string minFreqPath = Path.Combine(freqPath, "cpuinfo_min_freq");
                     string maxFreqPath = Path.Combine(freqPath, "cpuinfo_max_freq");
+                    string minFreqScalePath = Path.Combine(freqPath, "scaling_min_freq");
+                    string maxFreqScalePath = Path.Combine(freqPath, "scaling_max_freq");
                     var setting = new PowerCPUSetting()
                     {
                         name = cpu,
                         minFreq = int.Parse(File.ReadAllText(minFreqPath).Trim()),
                         maxFreq = int.Parse(File.ReadAllText(maxFreqPath).Trim()),
+                        minFreqScale = int.Parse(File.ReadAllText(minFreqScalePath).Trim()),
+                        maxFreqScale = int.Parse(File.ReadAllText(maxFreqScalePath).Trim())
                     };
                     
                     string boostPath = Path.Combine(freqPath, "boost");
@@ -2369,7 +2375,7 @@ public partial class MainView : UserControl
         foreach (var setting in powerCPUSettings)
         {
             var item = new ListBoxItem();
-            item.Content = $"{setting.name} (MinFreq: {setting.minFreq} MaxFreq: {setting.maxFreq} Boost: {setting.boost})";
+            item.Content = $"{setting.name} (MinFreq: {setting.minFreq} MaxFreq: {setting.maxFreq}) - (MinFreqScale: {setting.minFreqScale} MaxFreqScale: {setting.maxFreqScale}) - Boost: {setting.boost}";
             item.Tag = setting;
             powerCPUListBox.Items.Add(item);
         }

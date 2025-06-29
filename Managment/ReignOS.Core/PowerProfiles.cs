@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading;
 
 namespace ReignOS.Core;
 
@@ -22,11 +23,19 @@ public static class PowerProfiles
                     {
                         var subParts = parts[0].Split('=');
                         string powerProfile = subParts[1];
+                        ProcessUtil.Run("powerprofilesctl", "set " + powerProfile, asAdmin:asAdmin, useBash:false);
+                        Thread.Sleep(1000);// wait a sec before setting other values
                     }
                     else if (parts[0].StartsWith("IntelTurboBoost="))
                     {
                         var subParts = parts[0].Split('=');
                         bool intelTurboBoost = subParts[1] == "True";
+                        const string turboBoostPath = "/sys/devices/system/cpu/intel_pstate/no_turbo";
+                        if (File.Exists(turboBoostPath))
+                        {
+                            if (asAdmin) ProcessUtil.WriteAllTextAdmin(turboBoostPath, intelTurboBoost ? "0" : "1");
+                            else File.WriteAllText(turboBoostPath, intelTurboBoost ? "0" : "1");
+                        }
                     }
                     else if (parts[0].StartsWith("CPU="))
                     {
@@ -43,6 +52,21 @@ public static class PowerProfiles
                                 case "MaxFreq": if (int.TryParse(subParts[1], out int maxFreqValue)) maxFreq = maxFreqValue; break;
                                 case "Boost": boost = subParts[1] == "True"; break;
                             }
+                        }
+
+                        if (name == null || minFreq < 0 || maxFreq < 0) continue;
+                        string cpuPath = Path.Combine("/sys/devices/system/cpu", name, "cpufreq");
+                        if (asAdmin)
+                        {
+                            ProcessUtil.WriteAllTextAdmin(Path.Combine(cpuPath, "scaling_min_freq"), minFreq.ToString());
+                            ProcessUtil.WriteAllTextAdmin(Path.Combine(cpuPath, "scaling_max_freq"), maxFreq.ToString());
+                            if (boost != null) ProcessUtil.WriteAllTextAdmin(Path.Combine(cpuPath, "boost"), boost == true ? "1" : "0");
+                        }
+                        else
+                        {
+                            File.WriteAllText(Path.Combine(cpuPath, "scaling_min_freq"), minFreq.ToString());
+                            File.WriteAllText(Path.Combine(cpuPath, "scaling_max_freq"), maxFreq.ToString());
+                            if (boost != null) File.WriteAllText(Path.Combine(cpuPath, "boost"), boost == true ? "1" : "0");
                         }
                     }
                 }
