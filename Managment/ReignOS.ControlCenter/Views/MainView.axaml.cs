@@ -2312,6 +2312,8 @@ public partial class MainView : UserControl
         }
         
         // get cpu info
+        bool hasBoostCore = false;
+        bool isBoostCoreEnabled = false;
         try
         {
             powerIntelTurboBoostEnabled = null;
@@ -2341,7 +2343,12 @@ public partial class MainView : UserControl
                     };
                     
                     string boostPath = Path.Combine(freqPath, "boost");
-                    if (File.Exists(boostPath)) setting.boost = File.ReadAllText(boostPath).Trim() == "1";
+                    if (File.Exists(boostPath))
+                    {
+                        hasBoostCore = true;
+                        setting.boost = File.ReadAllText(boostPath).Trim() == "1";
+                        if (setting.boost == true) isBoostCoreEnabled = true;
+                    }
                     
                     powerCPUSettings.Add(setting);
                 }
@@ -2371,11 +2378,23 @@ public partial class MainView : UserControl
             powerIntelTurboBoostCheckbox.IsChecked = false;
         }
         
+        if (hasBoostCore)
+        {
+            powerBoostCheckBox.IsEnabled = true;
+            powerBoostCheckBox.IsChecked = isBoostCoreEnabled;
+        }
+        else
+        {
+            powerBoostCheckBox.IsEnabled = false;
+            powerBoostCheckBox.IsChecked = false;
+        }
+        
         powerCPUListBox.Items.Clear();
         foreach (var setting in powerCPUSettings)
         {
             var item = new ListBoxItem();
-            item.Content = $"{setting.name} (MinFreq: {setting.minFreq} MaxFreq: {setting.maxFreq}) - (MinFreqScale: {setting.minFreqScale} MaxFreqScale: {setting.maxFreqScale}) - Boost: {setting.boost}";
+            string boost = setting.boost != null ? $" - Boost: {setting.boost}" : "";
+            item.Content = $"{setting.name} (MinFreq: {setting.minFreq} MaxFreq: {setting.maxFreq}) - (MinFreqScale: {setting.minFreqScale} MaxFreqScale: {setting.maxFreqScale}){boost}";
             item.Tag = setting;
             powerCPUListBox.Items.Add(item);
         }
