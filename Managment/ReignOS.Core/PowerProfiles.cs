@@ -24,7 +24,7 @@ public static class PowerProfiles
                         var subParts = parts[0].Split('=');
                         string powerProfile = subParts[1];
                         ProcessUtil.Run("powerprofilesctl", "set " + powerProfile, asAdmin:asAdmin, useBash:false);
-                        Thread.Sleep(1000);// wait a sec before setting other values
+                        Thread.Sleep(500);// wait a sec before setting other values
                     }
                     else if (parts[0].StartsWith("IntelTurboBoost="))
                     {
