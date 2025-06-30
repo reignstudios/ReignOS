@@ -12,7 +12,7 @@ public struct KeyEvent
     public ushort key;
     public bool pressed, held;
 
-    public KeyEvent(ushort key, bool pressed, bool held)
+    public KeyEvent(ushort key, bool pressed, bool held = false)
     {
         this.key = key;
         this.pressed = pressed;
