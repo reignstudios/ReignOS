@@ -231,8 +231,8 @@ internal class Program
             if (KeyEvent.Pressed(keys))
             {
                 // send signal to bootloader
-                if (KeyEvent.Pressed(keys, input.KEY_VOLUMEDOWN)) Console.WriteLine("SET_VOLUME_DOWN");
-                else if (KeyEvent.Pressed(keys, input.KEY_VOLUMEUP)) Console.WriteLine("SET_VOLUME_UP");
+                if (KeyEvent.Pressed(keys, input.KEY_VOLUMEDOWN, includeHeld:true)) Console.WriteLine("SET_VOLUME_DOWN");
+                else if (KeyEvent.Pressed(keys, input.KEY_VOLUMEUP, includeHeld:true)) Console.WriteLine("SET_VOLUME_UP");
             }
 
             // handle special close steam events

@@ -10,31 +10,33 @@ using System.Collections.Generic;
 public struct KeyEvent
 {
     public ushort key;
-    public bool pressed;
+    public bool pressed, held;
 
-    public KeyEvent(ushort key, bool pressed)
+    public KeyEvent(ushort key, bool pressed, bool held)
     {
         this.key = key;
         this.pressed = pressed;
+        this.held = held;
     }
 
-    public static bool Pressed(KeyList keyEvents)
+    public static bool Pressed(KeyList keyEvents, bool includeHeld = false)
     {
         if (!keyEvents.ready) return false;
         for (int i = 0; i < keyEvents.count; ++i)
         {
-            if (keyEvents.keys[i].pressed) return true;
+            ref var key = ref keyEvents.keys[i];
+            if (key.pressed || (includeHeld && key.held)) return true;
         }
         return false;
     }
 
-    public static bool Pressed(KeyList keyEvents, ushort key)
+    public static bool Pressed(KeyList keyEvents, ushort key, bool includeHeld = false)
     {
         if (!keyEvents.ready) return false;
         for (int i = 0; i < keyEvents.count; ++i)
         {
             ref var e = ref keyEvents.keys[i];
-            if (e.pressed && e.key == key) return true;
+            if ((e.pressed || (includeHeld && e.held)) && e.key == key) return true;
         }
         return false;
     }
@@ -214,6 +216,7 @@ public unsafe class KeyboardInput : IDisposable
                 {
                     key.key = e.code;
                     key.pressed = e.value == 1;
+                    key.held = e.value == 2;
                     hasEvent = true;
                 }
             }
@@ -240,7 +243,7 @@ public unsafe class KeyboardInput : IDisposable
             {
                 if (e.type == input.EV_KEY)
                 {
-                    keys.Add(new KeyEvent(e.code, e.value == 1));
+                    keys.Add(new KeyEvent(e.code, e.value == 1, e.value == 2));
                 }
             }
         }
