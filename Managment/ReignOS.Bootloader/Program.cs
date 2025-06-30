@@ -34,6 +34,8 @@ enum Compositor
 
 internal class Program
 {
+    private static bool kdeActive;
+
     private static void Main(string[] args)
     {
         int exitCode = 0;
@@ -175,12 +177,12 @@ internal class Program
                 if (args != null && args.Data != null)
                 {
                     string value = args.Data;
-                    if (value.Contains("SET_VOLUME_DOWN"))
+                    if (value.Contains("SET_VOLUME_DOWN") && !kdeActive)
                     {
                         //ProcessUtil.Run("amixer", "set Master 5%-");
                         ProcessUtil.Run("pactl", "set-sink-volume @DEFAULT_SINK@ -5%");
                     }
-                    else if (value.Contains("SET_VOLUME_UP"))
+                    else if (value.Contains("SET_VOLUME_UP") && !kdeActive)
                     {
                         //ProcessUtil.Run("amixer", "set Master 5%+");
                         ProcessUtil.Run("pactl", "set-sink-volume @DEFAULT_SINK@ +5%");
@@ -468,6 +470,7 @@ internal class Program
     private static void StartCompositor_KDE(bool useMangoHub, bool disableSteamGPU, bool disableSteamDeck, int gpu, bool useX11, bool useGMode, Process serviceProcess)
     {
         Log.WriteLine("Starting KDE...");
+        kdeActive = true;
         string gpuArg = GetGPUArg(gpu);
         if (useGMode)
         {
@@ -491,6 +494,7 @@ internal class Program
             ProcessUtil.Run($"{gpuArg}startplasma-wayland", "", useBash:true, verboseLog:true);
             serviceProcess.StandardInput.WriteLine("start-inhibit");
         }
+        kdeActive = false;
     }
 
     public static bool IsOnline()
