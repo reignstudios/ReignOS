@@ -37,13 +37,13 @@ if [ ! -d "/home/gamer/yay" ]; then
 	makepkg -si --noconfirm
 fi
 
-yay -S --noconfirm supergfxctl
+yay -S --noconfirm --needed supergfxctl
 
-yay -S --noconfirm ttf-ms-fonts
+yay -S --noconfirm --needed ttf-ms-fonts
 fc-cache -fv
 
-yay -S --noconfirm steamcmd
-yay -S --noconfirm proton-ge-custom
+yay -S --noconfirm --needed steamcmd
+yay -S --noconfirm --needed proton-ge-custom
 
 sudo pacman -S --noconfirm --needed fwupd
 
