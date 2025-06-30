@@ -12,7 +12,7 @@ done
 if [ "$DISABLE_UPDATE" = "false" ]; then
     cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
     chmod +x ./Update.sh
-    ./Update.sh
+    #./Update.sh
 fi
 
 # run bootloader

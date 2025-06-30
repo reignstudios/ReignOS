@@ -176,13 +176,13 @@
 						</Grid>
 					</Grid>
 
-					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
+					<!--<Grid Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>
 							<TextBlock Text="Updates" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="UpdatesApplyButton_Click"/>
 							<CheckBox Name="autoCheckUpdatesCheckbox" Content="Auto Check Updates" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 						</Grid>
-					</Grid>
+					</Grid>-->
 				</StackPanel>
 			</ScrollViewer>
 
