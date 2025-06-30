@@ -227,13 +227,9 @@ internal class Program
             if (Win600.isEnabled) Win600.Update(keys);
             if (TJD.isEnabled) TJD.Update(keys);
 
-            // update volume
-            if (KeyEvent.Pressed(keys))
-            {
-                // send signal to bootloader
-                if (KeyEvent.Pressed(keys, input.KEY_VOLUMEDOWN, includeHeld:true)) Console.WriteLine("SET_VOLUME_DOWN");
-                else if (KeyEvent.Pressed(keys, input.KEY_VOLUMEUP, includeHeld:true)) Console.WriteLine("SET_VOLUME_UP");
-            }
+            // update volume (send signal to bootloader)
+            if (KeyEvent.Pressed(keys, input.KEY_VOLUMEDOWN, includeHeld:true)) Console.WriteLine("SET_VOLUME_DOWN");
+            else if (KeyEvent.Pressed(keys, input.KEY_VOLUMEUP, includeHeld:true)) Console.WriteLine("SET_VOLUME_UP");
 
             // handle special close steam events
             // TODO: invoke "steam -shutdown" if you hold Alt+F4 or Guide+B for more than 4 seconds
