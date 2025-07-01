@@ -138,6 +138,32 @@
         </div>
 
         <div>
+            <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">Device specific fixes</h2>
+            <ul style="color: #888;">
+                <li>
+                    <b><u>Ayaneo Slide / Antec Core HS</u></b><br>
+                    <b>- Fix random reboots</b><br>
+                    <p style="padding-left: 20px; margin: 0;">
+                    * Open terminal<br>
+                    * sudo nano /boot/loader/entries/arch.conf<br>
+                    * Add "acpi=strict" in options: "options root={your-path} rw acpi=strict"<br>
+                    * Remove "pci=realloc" if it exists<br>
+                    * Save and exit: Ctrl+X then Y to save<br>
+                    * reboot<br>
+
+                    <p style="padding-left: 0px; margin: 0;"></p>
+                    <b>- Enable sleep support</b><br>
+                    <p style="padding-left: 20px; margin: 0;">
+                    * Boot into BIOS<br>
+                    * Naviage to "AMD PBS->Power Saving Configurations"<br>
+                    * Change "S3 Enable" to "Modern Standby Enable"<br>
+                    * Make sure "Modern Standby Type" is set to "Modern Standby + S0i2"<br>
+                    * Save and exit<br>
+                </li>
+            </ul>
+        </div>
+
+        <div>
             <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">Known Dock Compatability</h2>
             <ul style="color: #888;">
                 <li>SABRENT Docking Station for Steam Deck (Stable particularlly with MSI-Claw A1M)</li>
