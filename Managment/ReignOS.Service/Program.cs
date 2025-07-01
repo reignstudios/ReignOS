@@ -25,6 +25,7 @@ enum HardwareType
     AyaneoPro,
     AyaneoPlus,
     AyaneoFlipDS,
+    AyaneoSlide,
     Ayaneo3,
 
     // One-Netbook
@@ -100,6 +101,7 @@ internal class Program
             else if (productName.StartsWith("AIR Pro")) hardwareType = HardwareType.AyaneoPro;
             else if (productName.StartsWith("AIR Plus")) hardwareType = HardwareType.AyaneoPlus;
             else if (productName.StartsWith("FLIP DS")) hardwareType = HardwareType.AyaneoFlipDS;
+            else if (productName.StartsWith("SLIDE")) hardwareType = HardwareType.AyaneoSlide;
             else if (productName.StartsWith("AYANEO 3")) hardwareType = HardwareType.Ayaneo3;
             else if (productName.StartsWith("ONE XPLAYER")) hardwareType = HardwareType.OneXPlayer_Gen1;
             else if (productName.StartsWith("ONEXPLAYER")) hardwareType = HardwareType.OneXPlayer_Gen2;

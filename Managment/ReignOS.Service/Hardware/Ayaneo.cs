@@ -20,6 +20,7 @@ namespace ReignOS.Service.Hardware
                 Program.hardwareType == HardwareType.AyaneoPro ||
                 Program.hardwareType == HardwareType.AyaneoPlus ||
                 Program.hardwareType == HardwareType.AyaneoFlipDS ||
+                Program.hardwareType == HardwareType.AyaneoSlide ||
                 Program.hardwareType == HardwareType.Ayaneo3;
 
             if (Program.hardwareType == HardwareType.AyaneoPro)
@@ -41,7 +42,7 @@ namespace ReignOS.Service.Hardware
                 }
             }
 
-            if (Program.hardwareType == HardwareType.AyaneoPlus || Program.hardwareType == HardwareType.Ayaneo)
+            if (Program.hardwareType == HardwareType.AyaneoPlus || Program.hardwareType == HardwareType.AyaneoSlide || Program.hardwareType == HardwareType.Ayaneo)
             {
                 if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTCTRL, true), new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_F17, true)))
                 {
@@ -75,6 +76,7 @@ namespace ReignOS.Service.Hardware
                 Program.hardwareType == HardwareType.AyaneoPro ||
                 Program.hardwareType == HardwareType.AyaneoPlus ||
                 Program.hardwareType == HardwareType.AyaneoFlipDS ||
+                Program.hardwareType == HardwareType.AyaneoSlide ||
                 Program.hardwareType == HardwareType.Ayaneo
             )
             {
