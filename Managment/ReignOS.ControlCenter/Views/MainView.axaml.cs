@@ -366,7 +366,11 @@ public partial class MainView : UserControl
                     }
                     else if (parts[0] == "PowerManager")
                     {
-                        if (parts[1] == "PowerProfiles") powerProfilesCheckbox.IsChecked = true;
+                        if (parts[1] == "PowerProfiles")
+                        {
+                            powerProfilesCheckbox.IsChecked = true;
+                            powerButton.IsVisible = true;
+                        }
                         else if (parts[1] == "PowerStation") powerStationCheckbox.IsChecked = true;
                         else if (parts[1] == "DeckyTDP") powerDeckyTDPCheckbox.IsChecked = true;
                         else if (parts[1] == "Disabled") powerManagementDisabledCheckbox.IsChecked = true;
@@ -2327,16 +2331,13 @@ public partial class MainView : UserControl
         powerListBox.Items.Clear();
         powerActiveCheckbox.IsEnabled = false;
         powerActiveCheckbox.IsChecked = false;
-        if (powerProfilesCheckbox.IsChecked == true)
+        foreach (var setting in powerSettings)
         {
-            foreach (var setting in powerSettings)
-            {
-                var item = new ListBoxItem();
-                string active = setting.active ? " (Active)" : "";
-                item.Content = $"Name: {setting.name}{active}\nDriver: {setting.driver}";
-                item.Tag = setting;
-                powerListBox.Items.Add(item);
-            }
+            var item = new ListBoxItem();
+            string active = setting.active ? " (Active)" : "";
+            item.Content = $"Name: {setting.name}{active}\nDriver: {setting.driver}";
+            item.Tag = setting;
+            powerListBox.Items.Add(item);
         }
         
         // get cpu info

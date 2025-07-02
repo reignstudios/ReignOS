@@ -9,6 +9,7 @@ public static class PowerProfiles
     public static void Apply(bool asAdmin)
     {
         if (!File.Exists("/home/gamer/ReignOS_Ext/PowerProfileSettings.txt")) return;
+        if (!PackageUtils.PackageExits("power-profiles-daemon")) return;
         try
         {
             using (var stream = new FileStream("/home/gamer/ReignOS_Ext/PowerProfileSettings.txt", FileMode.Open, FileAccess.Read))
@@ -21,13 +22,10 @@ public static class PowerProfiles
                     if (parts == null || parts.Length == 0) continue;
                     if (parts[0].StartsWith("Profile="))
                     {
-                        if (PackageUtils.PackageExits("power-profiles-daemon"))
-                        {
-                            var subParts = parts[0].Split('=');
-                            string powerProfile = subParts[1];
-                            ProcessUtil.Run("powerprofilesctl", "set " + powerProfile, asAdmin:asAdmin, useBash:false);
-                            Thread.Sleep(500);// wait a sec before setting other values
-                        }
+                        var subParts = parts[0].Split('=');
+                        string powerProfile = subParts[1];
+                        ProcessUtil.Run("powerprofilesctl", "set " + powerProfile, asAdmin:asAdmin, useBash:false);
+                        Thread.Sleep(500);// wait a sec before setting other values
                     }
                     else if (parts[0].StartsWith("IntelTurboBoost="))
                     {
