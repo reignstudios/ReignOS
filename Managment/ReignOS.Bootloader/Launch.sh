@@ -132,6 +132,27 @@ if [ $exit_code -eq 51 ]; then
   exit 0
 fi
 
+# manage Power Manager
+if [ $exit_code -eq 60 ]; then
+  echo ""
+  echo "Disabling PowerProfiles..."
+  sudo systemctl stop power-profiles-daemon
+  sudo systemctl disable power-profiles-daemon
+  sleep 2
+  sudo reboot -f
+  exit 0
+fi
+
+if [ $exit_code -eq 61 ]; then
+  echo ""
+  echo "Enabling PowerProfiles..."
+  sudo systemctl enable power-profiles-daemon
+  sudo systemctl start power-profiles-daemon
+  sleep 2
+  sudo reboot -f
+  exit 0
+fi
+
 # install missing packages
 if [ $exit_code -eq 100 ]; then
   echo ""

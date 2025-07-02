@@ -180,9 +180,9 @@
 					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>
 							<TextBlock Text="Power Manager" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="MenuInputApplyButton_Click"/>
-							<RadioButton Name="powerProfilesCheckbox" Content="ReignOS" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="powerManagementDisabledCheckbox" Content="InputPlumber" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="PowerControlApplyButton_Click"/>
+							<RadioButton Name="powerProfilesCheckbox" Content="Power Profiles" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<RadioButton Name="powerManagementDisabledCheckbox" Content="Other / Disabled" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="140"/>
 						</Grid>
 					</Grid>
 
@@ -373,11 +373,11 @@
 				<TextBlock Text="NOTE: If you change Boosts, Apply then adjust freq and Apply again (or just Apply twice)" FontSize="16" Margin="74,55,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 				<CheckBox Name="powerActiveCheckbox" Content="Active" Margin="4,100,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsCheckedChanged="PowerActiveCheckbox_OnIsCheckedChanged"/>
 				<CheckBox Name="powerIntelTurboBoostCheckbox" Content="Intel Turbo Boost" Margin="104,100,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+				<CheckBox Name="powerBoostCheckBox" Content="Boost" IsChecked="True" Margin="284,100,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 				<Grid Name="powerGrid" IsVisible="True" Margin="4,150,4,70">
 					<TextBlock Name="powerFreq" Text="Freq: 100%" Margin="4,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 					<Slider Name="powerSlider" Value="100" Margin="4,12,0,0" Width="256" HorizontalAlignment="Left" VerticalAlignment="Top" ValueChanged="PowerSlider_OnValueChanged"/>
-					<CheckBox Name="powerBoostCheckBox" Content="Boost" IsChecked="True" Margin="4,60,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-					<ListBox Name="powerCPUListBox" Margin="0,100,0,0"/>
+					<ListBox Name="powerCPUListBox" Margin="0,70,0,0"/>
 				</Grid>
 			</Grid>
 		</Grid>

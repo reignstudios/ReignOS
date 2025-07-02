@@ -364,6 +364,11 @@ public partial class MainView : UserControl
                     {
                         autoCheckUpdatesCheckbox.IsChecked = parts[1] == "On";
                     }
+                    else if (parts[0] == "PowerManager")
+                    {
+                        if (parts[1] == "PowerProfiles") powerProfilesCheckbox.IsChecked = true;
+                        else if (parts[1] == "Disabled") powerManagementDisabledCheckbox.IsChecked = true;
+                    }
                     else if (parts[0] == "PowerPercentage")
                     {
                         if (int.TryParse(parts[1], out int value)) powerSlider.Value = value;
@@ -501,7 +506,10 @@ public partial class MainView : UserControl
 
                 if (autoCheckUpdatesCheckbox.IsChecked == true) writer.WriteLine("AutoCheckUpdates=On");
                 else writer.WriteLine("AutoCheckUpdates=Off");
-                
+
+                if (powerProfilesCheckbox.IsChecked == true) writer.WriteLine("PowerManager=PowerProfiles");
+                else if (powerManagementDisabledCheckbox.IsChecked == true) writer.WriteLine("PowerManager=Disabled");
+
                 writer.WriteLine($"PowerPercentage={(int)powerSlider.Value}");
                 if (powerIntelTurboBoostCheckbox.IsChecked == true) writer.WriteLine("PowerIntelTurboBoost=True");
                 if (powerBoostCheckBox.IsChecked == true) writer.WriteLine("PowerBoost=True");
@@ -1312,6 +1320,16 @@ public partial class MainView : UserControl
         SaveSettings();
 
         App.exitCode = (inputPlumberInputCheckbox.IsChecked == true) ? 51 : 50;
+        MainWindow.singleton.Close();
+    }
+
+    private void PowerControlApplyButton_Click(object sender, RoutedEventArgs e)
+    {
+        // apply settings
+        SaveSettings();
+
+        if (powerProfilesCheckbox.IsChecked == true) App.exitCode = 60;
+        else if (powerManagementDisabledCheckbox.IsChecked == true) App.exitCode = 61;
         MainWindow.singleton.Close();
     }
 
