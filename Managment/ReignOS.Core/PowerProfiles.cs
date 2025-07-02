@@ -21,10 +21,13 @@ public static class PowerProfiles
                     if (parts == null || parts.Length == 0) continue;
                     if (parts[0].StartsWith("Profile="))
                     {
-                        var subParts = parts[0].Split('=');
-                        string powerProfile = subParts[1];
-                        ProcessUtil.Run("powerprofilesctl", "set " + powerProfile, asAdmin:asAdmin, useBash:false);
-                        Thread.Sleep(500);// wait a sec before setting other values
+                        if (PackageUtils.PackageExits("power-profiles-daemon"))
+                        {
+                            var subParts = parts[0].Split('=');
+                            string powerProfile = subParts[1];
+                            ProcessUtil.Run("powerprofilesctl", "set " + powerProfile, asAdmin:asAdmin, useBash:false);
+                            Thread.Sleep(500);// wait a sec before setting other values
+                        }
                     }
                     else if (parts[0].StartsWith("IntelTurboBoost="))
                     {

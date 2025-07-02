@@ -22,12 +22,6 @@ namespace ReignOS.Bootloader;
 
 static class PackageUpdates
 {
-    private static bool PackageExits(string package)
-    {
-        string result = ProcessUtil.Run("pacman", $"-Q {package}", useBash:false);
-        return result != null && !result.StartsWith("error:");
-    }
-
     public static bool CheckUpdates()
     {
         // non-restart changes
@@ -45,63 +39,63 @@ static class PackageUpdates
         // nothing yet...
 
         // check for missing packages
-        if (!PackageExits("linux-headers")) return true;
-        if (!PackageExits("cpupower")) return true;
-        if (!PackageExits("jq")) return true;
+        if (!PackageUtils.PackageExits("linux-headers")) return true;
+        if (!PackageUtils.PackageExits("cpupower")) return true;
+        if (!PackageUtils.PackageExits("jq")) return true;
 
-        if (!PackageExits("wayland-utils")) return true;
-        if (!PackageExits("weston")) return true;
-        if (!PackageExits("labwc")) return true;
-        if (!PackageExits("cage")) return true;
-        if (!PackageExits("gamescope")) return true;
-        if (!PackageExits("wlr-randr")) return true;
-        if (!PackageExits("openbox")) return true;
-        if (!PackageExits("xdg-desktop-portal")) return true;
-        if (!PackageExits("xdg-desktop-portal-wlr")) return true;
-        if (!PackageExits("xdg-desktop-portal-kde")) return true;
-        if (!PackageExits("xdg-desktop-portal-gtk")) return true;
+        if (!PackageUtils.PackageExits("wayland-utils")) return true;
+        if (!PackageUtils.PackageExits("weston")) return true;
+        if (!PackageUtils.PackageExits("labwc")) return true;
+        if (!PackageUtils.PackageExits("cage")) return true;
+        if (!PackageUtils.PackageExits("gamescope")) return true;
+        if (!PackageUtils.PackageExits("wlr-randr")) return true;
+        if (!PackageUtils.PackageExits("openbox")) return true;
+        if (!PackageUtils.PackageExits("xdg-desktop-portal")) return true;
+        if (!PackageUtils.PackageExits("xdg-desktop-portal-wlr")) return true;
+        if (!PackageUtils.PackageExits("xdg-desktop-portal-kde")) return true;
+        if (!PackageUtils.PackageExits("xdg-desktop-portal-gtk")) return true;
 
-        if (!PackageExits("vulkan-tools")) return true;
-        if (!PackageExits("vulkan-mesa-layers")) return true;
-        if (!PackageExits("lib32-vulkan-mesa-layers")) return true;
+        if (!PackageUtils.PackageExits("vulkan-tools")) return true;
+        if (!PackageUtils.PackageExits("vulkan-mesa-layers")) return true;
+        if (!PackageUtils.PackageExits("lib32-vulkan-mesa-layers")) return true;
 
-        if (!PackageExits("alsa-ucm-conf")) return true;
+        if (!PackageUtils.PackageExits("alsa-ucm-conf")) return true;
 
-        if (!PackageExits("bluez")) return true;
-        if (!PackageExits("bluez-utils")) return true;
+        if (!PackageUtils.PackageExits("bluez")) return true;
+        if (!PackageUtils.PackageExits("bluez-utils")) return true;
 
-        if (!PackageExits("plasma-desktop")) return true;
-        if (!PackageExits("konsole")) return true;
-        if (!PackageExits("dolphin")) return true;
-        if (!PackageExits("kate")) return true;
-        if (!PackageExits("ark")) return true;
-        if (!PackageExits("exfatprogs")) return true;
-        if (!PackageExits("dosfstools")) return true;
-        if (!PackageExits("partitionmanager")) return true;
+        if (!PackageUtils.PackageExits("plasma-desktop")) return true;
+        if (!PackageUtils.PackageExits("konsole")) return true;
+        if (!PackageUtils.PackageExits("dolphin")) return true;
+        if (!PackageUtils.PackageExits("kate")) return true;
+        if (!PackageUtils.PackageExits("ark")) return true;
+        if (!PackageUtils.PackageExits("exfatprogs")) return true;
+        if (!PackageUtils.PackageExits("dosfstools")) return true;
+        if (!PackageUtils.PackageExits("partitionmanager")) return true;
         
-        if (!PackageExits("qt5-wayland")) return true;
-        if (!PackageExits("qt6-wayland")) return true;
-        if (!PackageExits("maliit-keyboard")) return true;
+        if (!PackageUtils.PackageExits("qt5-wayland")) return true;
+        if (!PackageUtils.PackageExits("qt6-wayland")) return true;
+        if (!PackageUtils.PackageExits("maliit-keyboard")) return true;
 
-        if (!PackageExits("gparted")) return true;
-        if (!PackageExits("flatpak")) return true;
+        if (!PackageUtils.PackageExits("gparted")) return true;
+        if (!PackageUtils.PackageExits("flatpak")) return true;
 
-        if (!PackageExits("yay")) return true;
-        if (!PackageExits("supergfxctl")) return true;
-        if (!PackageExits("ttf-ms-fonts")) return true;
-        if (!PackageExits("steamcmd")) return true;
-        if (!PackageExits("proton-ge-custom")) return true;
+        if (!PackageUtils.PackageExits("yay")) return true;
+        if (!PackageUtils.PackageExits("supergfxctl")) return true;
+        if (!PackageUtils.PackageExits("ttf-ms-fonts")) return true;
+        if (!PackageUtils.PackageExits("steamcmd")) return true;
+        if (!PackageUtils.PackageExits("proton-ge-custom")) return true;
 
-        if (!PackageExits("fwupd")) return true;
+        if (!PackageUtils.PackageExits("fwupd")) return true;
         
-        if (!PackageExits("vdpauinfo")) return true;
-        if (!PackageExits("ffmpeg")) return true;
-        if (!PackageExits("yt-dlp")) return true;
-        if (!PackageExits("libva")) return true;
-        if (!PackageExits("libvdpau-va-gl")) return true;
-        if (!PackageExits("libdvdread")) return true;
+        if (!PackageUtils.PackageExits("vdpauinfo")) return true;
+        if (!PackageUtils.PackageExits("ffmpeg")) return true;
+        if (!PackageUtils.PackageExits("yt-dlp")) return true;
+        if (!PackageUtils.PackageExits("libva")) return true;
+        if (!PackageUtils.PackageExits("libvdpau-va-gl")) return true;
+        if (!PackageUtils.PackageExits("libdvdread")) return true;
 
-        if (PackageExits("acpid")) return true;
+        if (PackageUtils.PackageExits("acpid")) return true;
 
         return false;
     }

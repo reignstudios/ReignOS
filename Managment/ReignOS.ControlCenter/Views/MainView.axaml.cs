@@ -2320,13 +2320,18 @@ public partial class MainView : UserControl
         
         // update UI
         powerListBox.Items.Clear();
-        foreach (var setting in powerSettings)
+        powerActiveCheckbox.IsEnabled = false;
+        powerActiveCheckbox.IsChecked = false;
+        if (powerProfilesCheckbox.IsChecked == true)
         {
-            var item = new ListBoxItem();
-            string active = setting.active ? " (Active)" : "";
-            item.Content = $"Name: {setting.name}{active}\nDriver: {setting.driver}";
-            item.Tag = setting;
-            powerListBox.Items.Add(item);
+            foreach (var setting in powerSettings)
+            {
+                var item = new ListBoxItem();
+                string active = setting.active ? " (Active)" : "";
+                item.Content = $"Name: {setting.name}{active}\nDriver: {setting.driver}";
+                item.Tag = setting;
+                powerListBox.Items.Add(item);
+            }
         }
         
         // get cpu info
