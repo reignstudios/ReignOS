@@ -367,6 +367,8 @@ public partial class MainView : UserControl
                     else if (parts[0] == "PowerManager")
                     {
                         if (parts[1] == "PowerProfiles") powerProfilesCheckbox.IsChecked = true;
+                        else if (parts[1] == "PowerStation") powerStationCheckbox.IsChecked = true;
+                        else if (parts[1] == "DeckyTDP") powerDeckyTDPCheckbox.IsChecked = true;
                         else if (parts[1] == "Disabled") powerManagementDisabledCheckbox.IsChecked = true;
                     }
                     else if (parts[0] == "PowerPercentage")
@@ -508,6 +510,8 @@ public partial class MainView : UserControl
                 else writer.WriteLine("AutoCheckUpdates=Off");
 
                 if (powerProfilesCheckbox.IsChecked == true) writer.WriteLine("PowerManager=PowerProfiles");
+                else if (powerStationCheckbox.IsChecked == true) writer.WriteLine("PowerManager=PowerStation");
+                else if (powerDeckyTDPCheckbox.IsChecked == true) writer.WriteLine("PowerManager=DeckyTDP");
                 else if (powerManagementDisabledCheckbox.IsChecked == true) writer.WriteLine("PowerManager=Disabled");
 
                 writer.WriteLine($"PowerPercentage={(int)powerSlider.Value}");
@@ -1327,9 +1331,10 @@ public partial class MainView : UserControl
     {
         // apply settings
         SaveSettings();
-
         if (powerProfilesCheckbox.IsChecked == true) App.exitCode = 60;
-        else if (powerManagementDisabledCheckbox.IsChecked == true) App.exitCode = 61;
+        if (powerStationCheckbox.IsChecked == true) App.exitCode = 61;
+        if (powerDeckyTDPCheckbox.IsChecked == true) App.exitCode = 62;
+        else if (powerManagementDisabledCheckbox.IsChecked == true) App.exitCode = 63;
         MainWindow.singleton.Close();
     }
 

@@ -135,10 +135,17 @@ fi
 # manage Power Manager
 if [ $exit_code -eq 60 ]; then
   echo ""
-  echo "Enabling PowerProfiles..."
+  echo "Uninstalling PowerStation..."
+  sudo systemctl stop powerstation
+  sudo systemctl disable powerstation
+  yay -R --noconfirm powerstation
+
+  echo ""
+  echo "Installing PowerProfiles..."
   sudo pacman -S --noconfirm power-profiles-daemon
   sudo systemctl enable power-profiles-daemon
   sudo systemctl start power-profiles-daemon
+
   sleep 2
   sudo reboot -f
   exit 0
@@ -146,10 +153,35 @@ fi
 
 if [ $exit_code -eq 61 ]; then
   echo ""
-  echo "Disabling PowerProfiles..."
+  echo "Uninstalling PowerProfiles..."
   sudo systemctl stop power-profiles-daemon
   sudo systemctl disable power-profiles-daemon
   sudo pacman -R --noconfirm power-profiles-daemon
+
+  echo ""
+  echo "Installing PowerStation..."
+  yay -S --noconfirm powerstation
+  sudo systemctl enable powerstation
+  sudo systemctl start powerstation
+
+  sleep 2
+  sudo reboot -f
+  exit 0
+fi
+
+if [ $exit_code -eq 63 ]; then
+  echo ""
+  echo "Uninstalling PowerProfiles..."
+  sudo systemctl stop power-profiles-daemon
+  sudo systemctl disable power-profiles-daemon
+  sudo pacman -R --noconfirm power-profiles-daemon
+
+  echo ""
+  echo "Uninstalling PowerStation..."
+  sudo systemctl stop powerstation
+  sudo systemctl disable powerstation
+  yay -R --noconfirm powerstation
+
   sleep 2
   sudo reboot -f
   exit 0

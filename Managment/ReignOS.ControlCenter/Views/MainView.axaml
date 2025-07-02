@@ -182,7 +182,9 @@
 							<TextBlock Text="Power Manager" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="PowerControlApplyButton_Click"/>
 							<RadioButton Name="powerProfilesCheckbox" Content="Power Profiles" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="powerManagementDisabledCheckbox" Content="Other / Disabled" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="140"/>
+							<RadioButton Name="powerStationCheckbox" Content="Power Station" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<RadioButton Name="powerDeckyTDPCheckbox" Content="DeckyTDP" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<RadioButton Name="powerManagementDisabledCheckbox" Content="Other / Disabled" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="140"/>
 						</Grid>
 					</Grid>
 
