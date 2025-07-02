@@ -135,10 +135,10 @@ fi
 # manage Power Manager
 if [ $exit_code -eq 60 ]; then
   echo ""
-  echo "Disabling PowerProfiles..."
-  sudo systemctl stop power-profiles-daemon
-  sudo systemctl disable power-profiles-daemon
-  sudo pacman -R --noconfirm power-profiles-daemon
+  echo "Enabling PowerProfiles..."
+  sudo pacman -S --noconfirm power-profiles-daemon
+  sudo systemctl enable power-profiles-daemon
+  sudo systemctl start power-profiles-daemon
   sleep 2
   sudo reboot -f
   exit 0
@@ -146,10 +146,10 @@ fi
 
 if [ $exit_code -eq 61 ]; then
   echo ""
-  echo "Enabling PowerProfiles..."
-  sudo pacman -S --noconfirm power-profiles-daemon
-  sudo systemctl enable power-profiles-daemon
-  sudo systemctl start power-profiles-daemon
+  echo "Disabling PowerProfiles..."
+  sudo systemctl stop power-profiles-daemon
+  sudo systemctl disable power-profiles-daemon
+  sudo pacman -R --noconfirm power-profiles-daemon
   sleep 2
   sudo reboot -f
   exit 0
