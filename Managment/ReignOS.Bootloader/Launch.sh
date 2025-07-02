@@ -138,7 +138,7 @@ if [ $exit_code -eq 60 ]; then
   echo "Uninstalling PowerStation..."
   sudo systemctl stop powerstation
   sudo systemctl disable powerstation
-  yay -R --noconfirm powerstation
+  yay -R --noconfirm powerstation-bin
 
   echo ""
   echo "Uninstalling DeckyTDP..."
@@ -170,7 +170,7 @@ if [ $exit_code -eq 61 ]; then
 
   echo ""
   echo "Installing PowerStation..."
-  yay -S --noconfirm powerstation
+  yay -S --noconfirm powerstation-bin
   sudo systemctl enable powerstation
   sudo systemctl start powerstation
 
@@ -190,7 +190,7 @@ if [ $exit_code -eq 62 ]; then
   echo "Uninstalling PowerStation..."
   sudo systemctl stop powerstation
   sudo systemctl disable powerstation
-  yay -R --noconfirm powerstation
+  yay -R --noconfirm powerstation-bin
 
   echo ""
   echo "Installing DeckyTDP..."
@@ -212,7 +212,7 @@ if [ $exit_code -eq 63 ]; then
   echo "Uninstalling PowerStation..."
   sudo systemctl stop powerstation
   sudo systemctl disable powerstation
-  yay -R --noconfirm powerstation
+  yay -R --noconfirm powerstation-bin
 
   echo ""
   echo "Uninstalling DeckyTDP..."
