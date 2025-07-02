@@ -366,6 +366,7 @@ public partial class MainView : UserControl
                     }
                     else if (parts[0] == "PowerManager")
                     {
+                        powerButton.IsVisible = false;
                         if (parts[1] == "PowerProfiles")
                         {
                             powerProfilesCheckbox.IsChecked = true;
