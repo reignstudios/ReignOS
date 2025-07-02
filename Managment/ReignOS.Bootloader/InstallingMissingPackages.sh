@@ -28,6 +28,7 @@ sudo pacman -S --noconfirm --needed qt5-wayland qt6-wayland
 
 sudo pacman -S --noconfirm --needed gparted
 sudo pacman -S --noconfirm --needed flatpak
+sudo pacman -S --noconfirm --needed zip unzip gzip bzip2 7zip xz
 
 # add yay packages
 if [ ! -d "/home/gamer/yay" ]; then

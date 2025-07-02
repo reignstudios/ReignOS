@@ -79,6 +79,12 @@ static class PackageUpdates
 
         if (!PackageUtils.PackageExits("gparted")) return true;
         if (!PackageUtils.PackageExits("flatpak")) return true;
+        if (!PackageUtils.PackageExits("zip")) return true;
+        if (!PackageUtils.PackageExits("unzip")) return true;
+        if (!PackageUtils.PackageExits("gzip")) return true;
+        if (!PackageUtils.PackageExits("bzip2")) return true;
+        if (!PackageUtils.PackageExits("7zip")) return true;
+        if (!PackageUtils.PackageExits("xz")) return true;
 
         if (!PackageUtils.PackageExits("yay")) return true;
         if (!PackageUtils.PackageExits("supergfxctl")) return true;

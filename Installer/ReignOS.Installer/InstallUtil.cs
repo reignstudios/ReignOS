@@ -519,8 +519,9 @@ static class InstallUtil
         // install flatpak
         Run("pacman", "-S --noconfirm flatpak");
         UpdateProgress(84);
-        
+
         // install kde
+        Run("pacman", "-S --noconfirm zip unzip gzip bzip2 7zip xz");
         Run("pacman", "-S --noconfirm plasma konsole dolphin kate ark exfatprogs dosfstools partitionmanager");
         Run("pacman", "-S --noconfirm maliit-keyboard");
         UpdateProgress(85);

@@ -194,6 +194,7 @@ if [ $exit_code -eq 62 ]; then
 
   echo ""
   echo "Installing DeckyTDP..."
+  sudo pacman -S --noconfirm --needed 7zip
   curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
 
   sleep 2
