@@ -51,6 +51,8 @@ fi
 
 # update DeckyTDP if it exists
 if [ -e "/home/gamer/homebrew/plugins/SimpleDeckyTDP" ]; then
+    echo ""
+    echo "ReignOS Checking DeckyTDP for updates..."
     curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
 fi
 
