@@ -49,6 +49,11 @@ if [ "$DECKY_LOADER_INSTALLED_VERSION" != "$DECKY_LOADER_VERSION" ]; then
     curl -L https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/install_release.sh | sh
 fi
 
+# update DeckyTDP if it exists
+if [ -e "/home/gamer/homebrew/plugins/SimpleDeckyTDP" ]; then
+    curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
+fi
+
 # make sure no borked pacman lock
 if [ -f "/var/lib/pacman/db.lck" ]; then
     echo "Removing bad pacman db.lck file"

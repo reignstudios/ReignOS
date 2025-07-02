@@ -141,6 +141,11 @@ if [ $exit_code -eq 60 ]; then
   yay -R --noconfirm powerstation
 
   echo ""
+  echo "Uninstalling DeckyTDP..."
+  sudo rm -rf /home/gamer/homebrew/plugins/SimpleDeckyTDP
+  sudo systemctl restart plugin_loader.service
+
+  echo ""
   echo "Installing PowerProfiles..."
   sudo pacman -S --noconfirm power-profiles-daemon
   sudo systemctl enable power-profiles-daemon
@@ -159,10 +164,37 @@ if [ $exit_code -eq 61 ]; then
   sudo pacman -R --noconfirm power-profiles-daemon
 
   echo ""
+  echo "Uninstalling DeckyTDP..."
+  sudo rm -rf /home/gamer/homebrew/plugins/SimpleDeckyTDP
+  sudo systemctl restart plugin_loader.service
+
+  echo ""
   echo "Installing PowerStation..."
   yay -S --noconfirm powerstation
   sudo systemctl enable powerstation
   sudo systemctl start powerstation
+
+  sleep 2
+  sudo reboot -f
+  exit 0
+fi
+
+if [ $exit_code -eq 62 ]; then
+  echo ""
+  echo "Uninstalling PowerProfiles..."
+  sudo systemctl stop power-profiles-daemon
+  sudo systemctl disable power-profiles-daemon
+  sudo pacman -R --noconfirm power-profiles-daemon
+
+  echo ""
+  echo "Uninstalling PowerStation..."
+  sudo systemctl stop powerstation
+  sudo systemctl disable powerstation
+  yay -R --noconfirm powerstation
+
+  echo ""
+  echo "Installing DeckyTDP..."
+  curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
 
   sleep 2
   sudo reboot -f
@@ -181,6 +213,11 @@ if [ $exit_code -eq 63 ]; then
   sudo systemctl stop powerstation
   sudo systemctl disable powerstation
   yay -R --noconfirm powerstation
+
+  echo ""
+  echo "Uninstalling DeckyTDP..."
+  sudo rm -rf /home/gamer/homebrew/plugins/SimpleDeckyTDP
+  sudo systemctl restart plugin_loader.service
 
   sleep 2
   sudo reboot -f
