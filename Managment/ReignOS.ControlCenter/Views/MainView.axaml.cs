@@ -1190,6 +1190,8 @@ public partial class MainView : UserControl
         else if (gameInterface_OpenGamepadUI.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --interface-opengamepadui");
         File.WriteAllText(launchFile, text);
         SaveSettings();
+        App.exitCode = 0;// user reboot to pick up settings
+        MainWindow.singleton.Close();
     }
 
     private void RotApplyButton_OnClick(object sender, RoutedEventArgs e)
