@@ -117,7 +117,7 @@ if [ "$HAS_UPDATES" = "true" ]; then
         sudo pacman --noconfirm -R linux-firmware
         sudo pacman --noconfirm -S linux-firmware
         sudo mkinitcpio -P
-        reboot
+         sudo reboot -f
     fi
 
     if [ $yay_exit_code -ne 0 ]; then
@@ -127,7 +127,7 @@ if [ "$HAS_UPDATES" = "true" ]; then
 
     # reboot if updates ran
     if [ $pacman_exit_code -eq 0 ] || [ $yay_exit_code -eq 0 ]; then
-        reboot
+         sudo reboot -f
     fi
 fi
 
