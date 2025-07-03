@@ -427,6 +427,7 @@ internal class Program
     {
         Log.WriteLine("Starting Gamescope with Steam...");
         DisableX11();
+        string interfaceArg = gameInterface == GameInterface.OpenGamepadUI ? " --interface-opengamepadui" : "";
         string useMangoHubArg = useMangoHub ? " --mangoapp" : "";
         string vrrArg = vrr ? " --adaptive-sync" : "";
         string hdrArg = hdr ? " --hdr-enabled" : "";
@@ -443,31 +444,33 @@ internal class Program
         }
 
         string displayRezArg = (displayWidth > 0 && displayHeight > 0) ? $" -W {displayWidth} -H {displayHeight}" : "";
-        ProcessUtil.Run($"{gpuArg}gamescope", $"-e -f{useMangoHubArg}{vrrArg}{hdrArg}{rotArg}{displayRezArg} -- ./Start_Gamescope.sh{steamGPUArg}{steamDeckArg}", useBash:true, verboseLog:true);// --framerate-limit
+        ProcessUtil.Run($"{gpuArg}gamescope", $"-e -f{useMangoHubArg}{vrrArg}{hdrArg}{rotArg}{displayRezArg} -- ./Start_Gamescope.sh{interfaceArg}{steamGPUArg}{steamDeckArg}", useBash:true, verboseLog:true);// --framerate-limit
     }
 
     private static void StartCompositor_Weston(bool windowedMode)
     {
         Log.WriteLine("Starting Weston with Steam...");
         DisableX11();
+        string interfaceArg = gameInterface == GameInterface.OpenGamepadUI ? " --interface-opengamepadui" : "";
         string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
         string windowedModeArg = !windowedMode ? "--shell=kiosk-shell.so " : "";
         string windowedModeArg2 = windowedMode ? " --windowed-mode" : "";
         string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
         string steamDeckArg = disableSteamDeck ? " --disable-steam-deck" : "";
         string gpuArg = GetGPUArg(gpu);
-        ProcessUtil.Run($"{gpuArg}weston", $"{windowedModeArg}--xwayland -- ./Start_Weston.sh{useMangoHubArg}{windowedModeArg2}{steamGPUArg}{steamDeckArg}", useBash:true, verboseLog: true);
+        ProcessUtil.Run($"{gpuArg}weston", $"{windowedModeArg}--xwayland -- ./Start_Weston.sh{interfaceArg}{useMangoHubArg}{windowedModeArg2}{steamGPUArg}{steamDeckArg}", useBash:true, verboseLog: true);
     }
     
     private static void StartCompositor_Cage()
     {
         Log.WriteLine("Starting Cage with Steam...");
         DisableX11();
+        string interfaceArg = gameInterface == GameInterface.OpenGamepadUI ? " --interface-opengamepadui" : "";
         string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
         string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
         string steamDeckArg = disableSteamDeck ? " --disable-steam-deck" : "";
         string gpuArg = GetGPUArg(gpu);
-        ProcessUtil.Run($"{gpuArg}cage", $"-d -s -- ./Start_Cage.sh{useMangoHubArg}{steamGPUArg}{steamDeckArg}", useBash:true, verboseLog: true);
+        ProcessUtil.Run($"{gpuArg}cage", $"-d -s -- ./Start_Cage.sh{interfaceArg}{useMangoHubArg}{steamGPUArg}{steamDeckArg}", useBash:true, verboseLog: true);
     }
 
     private static void StartCompositor_Labwc()
@@ -482,12 +485,12 @@ internal class Program
     private static void StartCompositor_X11()
     {
         Log.WriteLine("Starting X11 with Steam...");
-
+        string interfaceArg = gameInterface == GameInterface.OpenGamepadUI ? " --interface-opengamepadui" : "";
         string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
         string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
         string steamDeckArg = disableSteamDeck ? " --disable-steam-deck" : "";
         string gpuArg = GetGPUArg(gpu);
-        ConfigureX11($"{gpuArg}/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_X11.sh{useMangoHubArg}{steamGPUArg}{steamDeckArg}");
+        ConfigureX11($"{gpuArg}/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_X11.sh{interfaceArg}{useMangoHubArg}{steamGPUArg}{steamDeckArg}");
         ProcessUtil.Run("startx", "", useBash:false, verboseLog: true);
     }
 
@@ -499,10 +502,11 @@ internal class Program
         if (useGMode)
         {
             DisableX11();
+            string interfaceArg = gameInterface == GameInterface.OpenGamepadUI ? " --interface-opengamepadui" : "";
             string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
             string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
             string steamDeckArg = disableSteamDeck ? " --disable-steam-deck" : "";
-            ProcessUtil.Run($"{gpuArg}./Start_KDE-G.sh{useMangoHubArg}{steamGPUArg}{steamDeckArg}", "", useBash:true, verboseLog:true);
+            ProcessUtil.Run($"{gpuArg}./Start_KDE-G.sh{interfaceArg}{useMangoHubArg}{steamGPUArg}{steamDeckArg}", "", useBash:true, verboseLog:true);
         }
         else if (useX11)
         {
