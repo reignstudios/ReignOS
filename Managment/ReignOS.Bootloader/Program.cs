@@ -152,10 +152,23 @@ internal class Program
         ProcessUtil.Run("chmod", "+x ./Start_KDE-G.sh", useBash: false);
 
         // detect if system needs package updates
-        if (PackageUpdates.CheckUpdates() && IsOnline())
+        if (PackageUpdates.CheckUpdates())
         {
-            Log.WriteLine("Missing packages...");
-            Environment.ExitCode = 100;
+            for (int i = 0; i != 30; ++i)
+            {
+                Thread.Sleep(1000);
+                Log.WriteLine("Missing packages (Waiting for network...)");
+                if (IsOnline())
+                {
+                    Log.WriteLine("Missing packages (Network Connected!)");
+                    Environment.ExitCode = 100;
+                    return;
+                }
+            }
+
+            Log.WriteLine("ERROR: Missing packages (Failed to connect to Network)");
+            Thread.Sleep(5000);
+            Environment.ExitCode = 0;
             return;
         }
 

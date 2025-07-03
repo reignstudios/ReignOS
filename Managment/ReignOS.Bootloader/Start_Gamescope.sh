@@ -46,7 +46,7 @@ done
 
 # start steam
 if [ "$INTERFACE_OPENGAMEPADUI" = "true" ]; then
-    
+    opengamepadui
 else
     if [ "$DISABLE_STEAM_DECK" = "true" ]; then
         if [ "$DISABLE_STEAM_GPU" = "true" ]; then

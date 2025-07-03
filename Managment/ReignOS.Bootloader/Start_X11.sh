@@ -37,7 +37,7 @@ exec openbox-session &
 
 # start steam
 if [ "$INTERFACE_OPENGAMEPADUI" = "true" ]; then
-    
+    opengamepadui
 else
     if [ "$DISABLE_STEAM_DECK" = "true" ]; then
         if [ "$USE_MANGOHUB" = "true" ]; then

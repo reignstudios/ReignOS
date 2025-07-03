@@ -33,7 +33,7 @@ unclutter -idle 3 &
 
 # start steam
 if [ "$INTERFACE_OPENGAMEPADUI" = "true" ]; then
-    
+    opengamepadui
 else
     if [ "$WINDOWED_MODE" = "true" ]; then
         if [ "$DISABLE_STEAM_GPU" = "true" ]; then
