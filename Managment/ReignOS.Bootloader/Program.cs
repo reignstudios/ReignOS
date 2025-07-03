@@ -32,9 +32,31 @@ enum Compositor
     KDE_G
 }
 
+enum GameInterface
+{
+    Steam,
+    OpenGamepadUI
+}
+
 internal class Program
 {
     private static bool kdeActive;
+
+    private static ControlCenterCompositor controlCenterCompositor = ControlCenterCompositor.Weston;
+    private static Compositor compositor = Compositor.None;
+    private static GameInterface gameInterface = GameInterface.Steam;
+    private static bool useControlCenter = false;
+    private static bool useMangoHub = false;
+    private static bool vrr = false;
+    private static bool hdr = false;
+    private static bool disableSteamGPU = false;
+    private static bool disableSteamDeck = false;
+    private static InputMode inputMode = InputMode.ReignOS;
+    private static int gpu = 0;
+    private static ScreenRotation screenRotation = ScreenRotation.Unset;
+    private static bool forceControlCenter = false;
+    private static int displayIndex = 0;
+    private static int displayWidth = 0, displayHeight = 0;
 
     private static void Main(string[] args)
     {
@@ -46,20 +68,6 @@ internal class Program
         LibraryResolver.Init(Assembly.GetExecutingAssembly());
         
         // process args
-        var controlCenterCompositor = ControlCenterCompositor.Weston;
-        var compositor = Compositor.None;
-        bool useControlCenter = false;
-        bool useMangoHub = false;
-        bool vrr = false;
-        bool hdr = false;
-        bool disableSteamGPU = false;
-        bool disableSteamDeck = false;
-        var inputMode = InputMode.ReignOS;
-        int gpu = 0;
-        var screenRotation = ScreenRotation.Unset;
-        bool forceControlCenter = false;
-        int displayIndex = 0;
-        int displayWidth = 0, displayHeight = 0;
         foreach (string arg in args)
         {
             if (arg == "--use-controlcenter") useControlCenter = true;
@@ -77,6 +85,9 @@ internal class Program
             else if (arg == "--kde") compositor = Compositor.KDE;
             else if (arg == "--kde-x11") compositor = Compositor.KDE_X11;
             else if (arg == "--kde-g") compositor = Compositor.KDE_G;
+
+            else if (arg == "--interface-steam") gameInterface = GameInterface.Steam;
+            else if (arg == "--interface-opengamepadui") gameInterface = GameInterface.OpenGamepadUI;
 
             else if (arg.StartsWith("--gpu-"))
             {
@@ -231,15 +242,15 @@ internal class Program
                         compositorRan = false;
                         break;
 
-                    case Compositor.Gamescope: StartCompositor_Gamescope(useMangoHub, vrr, hdr, disableSteamGPU, disableSteamDeck, gpu, displayWidth, displayHeight, screenRotation); break;
-                    case Compositor.Weston: StartCompositor_Weston(useMangoHub, false, disableSteamGPU, disableSteamDeck, gpu); break;
-                    case Compositor.WestonWindowed: StartCompositor_Weston(useMangoHub, true, disableSteamGPU, disableSteamDeck, gpu); break;
-                    case Compositor.Cage: StartCompositor_Cage(useMangoHub, disableSteamGPU, disableSteamDeck, gpu); break;
-                    case Compositor.Labwc: StartCompositor_Labwc(disableSteamGPU, gpu); break;
-                    case Compositor.X11: StartCompositor_X11(useMangoHub, disableSteamGPU, disableSteamDeck, gpu); break;
-                    case Compositor.KDE: StartCompositor_KDE(useMangoHub, disableSteamGPU, disableSteamDeck, gpu, false, false, serviceProcess); break;
-                    case Compositor.KDE_X11: StartCompositor_KDE(useMangoHub, disableSteamGPU, disableSteamDeck, gpu, true, false, serviceProcess); break;
-                    case Compositor.KDE_G: StartCompositor_KDE(useMangoHub, disableSteamGPU, disableSteamDeck, gpu, false, true, serviceProcess); break;
+                    case Compositor.Gamescope: StartCompositor_Gamescope(); break;
+                    case Compositor.Weston: StartCompositor_Weston(false); break;
+                    case Compositor.WestonWindowed: StartCompositor_Weston(true); break;
+                    case Compositor.Cage: StartCompositor_Cage(); break;
+                    case Compositor.Labwc: StartCompositor_Labwc(); break;
+                    case Compositor.X11: StartCompositor_X11(); break;
+                    case Compositor.KDE: StartCompositor_KDE(false, false, serviceProcess); break;
+                    case Compositor.KDE_X11: StartCompositor_KDE(true, false, serviceProcess); break;
+                    case Compositor.KDE_G: StartCompositor_KDE(false, true, serviceProcess); break;
                 }
             }
             catch (Exception e)
@@ -399,7 +410,7 @@ internal class Program
         return "";
     }
 
-    private static void StartCompositor_Gamescope(bool useMangoHub, bool vrr, bool hdr, bool disableSteamGPU, bool disableSteamDeck, int gpu, int displayWidth, int displayHeight, ScreenRotation screenRotation)
+    private static void StartCompositor_Gamescope()
     {
         Log.WriteLine("Starting Gamescope with Steam...");
         DisableX11();
@@ -422,7 +433,7 @@ internal class Program
         ProcessUtil.Run($"{gpuArg}gamescope", $"-e -f{useMangoHubArg}{vrrArg}{hdrArg}{rotArg}{displayRezArg} -- ./Start_Gamescope.sh{steamGPUArg}{steamDeckArg}", useBash:true, verboseLog:true);// --framerate-limit
     }
 
-    private static void StartCompositor_Weston(bool useMangoHub, bool windowedMode, bool disableSteamGPU, bool disableSteamDeck, int gpu)
+    private static void StartCompositor_Weston(bool windowedMode)
     {
         Log.WriteLine("Starting Weston with Steam...");
         DisableX11();
@@ -435,7 +446,7 @@ internal class Program
         ProcessUtil.Run($"{gpuArg}weston", $"{windowedModeArg}--xwayland -- ./Start_Weston.sh{useMangoHubArg}{windowedModeArg2}{steamGPUArg}{steamDeckArg}", useBash:true, verboseLog: true);
     }
     
-    private static void StartCompositor_Cage(bool useMangoHub, bool disableSteamGPU, bool disableSteamDeck, int gpu)
+    private static void StartCompositor_Cage()
     {
         Log.WriteLine("Starting Cage with Steam...");
         DisableX11();
@@ -446,7 +457,7 @@ internal class Program
         ProcessUtil.Run($"{gpuArg}cage", $"-d -s -- ./Start_Cage.sh{useMangoHubArg}{steamGPUArg}{steamDeckArg}", useBash:true, verboseLog: true);
     }
 
-    private static void StartCompositor_Labwc(bool disableSteamGPU, int gpu)
+    private static void StartCompositor_Labwc()
     {
         Log.WriteLine("Starting Labwc with Steam...");
         DisableX11();
@@ -455,7 +466,7 @@ internal class Program
         ProcessUtil.Run($"{gpuArg}labwc", $"--startup ./Start_Labwc.sh{steamGPUArg}", useBash:true, verboseLog: true);
     }
 
-    private static void StartCompositor_X11(bool useMangoHub, bool disableSteamGPU, bool disableSteamDeck, int gpu)
+    private static void StartCompositor_X11()
     {
         Log.WriteLine("Starting X11 with Steam...");
 
@@ -467,7 +478,7 @@ internal class Program
         ProcessUtil.Run("startx", "", useBash:false, verboseLog: true);
     }
 
-    private static void StartCompositor_KDE(bool useMangoHub, bool disableSteamGPU, bool disableSteamDeck, int gpu, bool useX11, bool useGMode, Process serviceProcess)
+    private static void StartCompositor_KDE(bool useX11, bool useGMode, Process serviceProcess)
     {
         Log.WriteLine("Starting KDE...");
         kdeActive = true;
