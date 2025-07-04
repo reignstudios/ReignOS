@@ -45,7 +45,7 @@ fc-cache -fv
 
 yay -S --noconfirm --needed steamcmd
 yay -S --noconfirm --needed proton-ge-custom
-#yay -S --noconfirm --needed opengamepadui-git
+yay -S --noconfirm --needed opengamepadui-git
 
 sudo pacman -S --noconfirm --needed fwupd
 
