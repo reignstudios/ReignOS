@@ -246,11 +246,6 @@ public partial class MainView : UserControl
                         else if (parts[1] == "X11") boot_X11.IsChecked = true;
                         else if (parts[1] == "KDE-G") boot_KDEG.IsChecked = true;
                     }
-                    else if (parts[0] == "GameInterface")
-                    {
-                        if (parts[1] == "Steam") gameInterface_Steam.IsChecked = true;
-                        else if (parts[1] == "OpenGamepadUI") gameInterface_OpenGamepadUI.IsChecked = true;
-                    }
                     else if (parts[0] == "ScreenRotation")
                     {
                         if (parts[1] == "Default") rot_Default.IsChecked = true;
@@ -457,10 +452,6 @@ public partial class MainView : UserControl
                 else if (boot_X11.IsChecked == true) writer.WriteLine("Boot=X11");
                 else if (boot_KDEG.IsChecked == true) writer.WriteLine("Boot=KDE-G");
                 else writer.WriteLine("Boot=ControlCenter");
-
-                if (gameInterface_Steam.IsChecked == true) writer.WriteLine("GameInterface=Steam");
-                else if (gameInterface_OpenGamepadUI.IsChecked == true) writer.WriteLine("GameInterface=OpenGamepadUI");
-                else writer.WriteLine("GameInterface=Steam");
 
                 if (rot_Default.IsChecked == true) writer.WriteLine("ScreenRotation=Default");
                 else if (rot_Left.IsChecked == true) writer.WriteLine("ScreenRotation=Left");
@@ -1177,21 +1168,6 @@ public partial class MainView : UserControl
         else if (boot_KDEG.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --kde-g");
         File.WriteAllText(launchFile, text);
         SaveSettings();
-    }
-
-    private void GameInterfaceApplyButton_OnClick(object sender, RoutedEventArgs e)
-    {
-        string text = File.ReadAllText(launchFile);
-
-        text = text.Replace(" --interface-steam", "");
-        text = text.Replace(" --interface-opengamepadui", "");
-
-        if (gameInterface_Steam.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --interface-steam");
-        else if (gameInterface_OpenGamepadUI.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --interface-opengamepadui");
-        File.WriteAllText(launchFile, text);
-        SaveSettings();
-        App.exitCode = 0;// user reboot to pick up settings
-        MainWindow.singleton.Close();
     }
 
     private void RotApplyButton_OnClick(object sender, RoutedEventArgs e)

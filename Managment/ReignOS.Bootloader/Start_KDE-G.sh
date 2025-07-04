@@ -4,7 +4,6 @@
 USE_MANGOHUB=false
 DISABLE_STEAM_GPU=false
 DISABLE_STEAM_DECK=false
-INTERFACE_OPENGAMEPADUI=false
 for arg in "$@"; do
     if [ "$arg" = "--use-mangohub" ]; then
         USE_MANGOHUB=true
@@ -17,36 +16,28 @@ for arg in "$@"; do
     if [ "$arg" = "--disable-steam-deck" ]; then
         DISABLE_STEAM_DECK=true
     fi
-
-    if [ "$arg" = "--interface-opengamepadui" ]; then
-        INTERFACE_OPENGAMEPADUI=true
-    fi
 done
 
 # start steam
 STEAM_LAUNCH=""
-if [ "$INTERFACE_OPENGAMEPADUI" = "true" ]; then
-    opengamepadui
-else
-    if [ "$DISABLE_STEAM_DECK" = "true" ]; then
-        if [ "$USE_MANGOHUB" = "true" ]; then
-            STEAM_LAUNCH="mangohud steam -bigpicture -no-cef-sandbox"
-        else
-            if [ "$DISABLE_STEAM_GPU" = "true" ]; then
-                STEAM_LAUNCH="env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -no-cef-sandbox"
-            else
-                STEAM_LAUNCH="steam -bigpicture -no-cef-sandbox"
-            fi
-        fi
+if [ "$DISABLE_STEAM_DECK" = "true" ]; then
+    if [ "$USE_MANGOHUB" = "true" ]; then
+        STEAM_LAUNCH="mangohud steam -bigpicture -no-cef-sandbox"
     else
-        if [ "$USE_MANGOHUB" = "true" ]; then
-            STEAM_LAUNCH="mangohud steam -gamepadui -steamdeck -no-cef-sandbox"
+        if [ "$DISABLE_STEAM_GPU" = "true" ]; then
+            STEAM_LAUNCH="env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -no-cef-sandbox"
         else
-            if [ "$DISABLE_STEAM_GPU" = "true" ]; then
-                STEAM_LAUNCH="env MESA_GL_VERSION_OVERRIDE=1.3 steam -gamepadui -steamdeck -no-cef-sandbox"
-            else
-                STEAM_LAUNCH="steam -gamepadui -steamdeck -no-cef-sandbox"
-            fi
+            STEAM_LAUNCH="steam -bigpicture -no-cef-sandbox"
+        fi
+    fi
+else
+    if [ "$USE_MANGOHUB" = "true" ]; then
+        STEAM_LAUNCH="mangohud steam -gamepadui -steamdeck -no-cef-sandbox"
+    else
+        if [ "$DISABLE_STEAM_GPU" = "true" ]; then
+            STEAM_LAUNCH="env MESA_GL_VERSION_OVERRIDE=1.3 steam -gamepadui -steamdeck -no-cef-sandbox"
+        else
+            STEAM_LAUNCH="steam -gamepadui -steamdeck -no-cef-sandbox"
         fi
     fi
 fi

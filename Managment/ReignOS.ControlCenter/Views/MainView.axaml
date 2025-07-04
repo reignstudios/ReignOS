@@ -97,15 +97,6 @@
 							<RadioButton Name="boot_KDEG" Content="KDE-G" Margin="950,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						</Grid>
 					</Grid>
-
-					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
-						<Grid>
-							<TextBlock Text="Interface" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="GameInterfaceApplyButton_OnClick"/>
-							<RadioButton Name="gameInterface_Steam" Content="Steam" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="gameInterface_OpenGamepadUI" Content="OpenGamepadUI" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="140"/>
-						</Grid>
-					</Grid>
 				
 					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>

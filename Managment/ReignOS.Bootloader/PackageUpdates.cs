@@ -91,7 +91,6 @@ static class PackageUpdates
         if (!PackageUtils.PackageExits("ttf-ms-fonts")) return true;
         if (!PackageUtils.PackageExits("steamcmd")) return true;
         if (!PackageUtils.PackageExits("proton-ge-custom")) return true;
-        if (!PackageUtils.PackageExits("opengamepadui")) return true;
 
         if (!PackageUtils.PackageExits("fwupd")) return true;
         

@@ -38,28 +38,20 @@ for arg in "$@"; do
     if [ "$arg" = "--disable-steam-deck" ]; then
         DISABLE_STEAM_DECK=true
     fi
-
-    if [ "$arg" = "--interface-opengamepadui" ]; then
-        INTERFACE_OPENGAMEPADUI=true
-    fi
 done
 
 # start steam
-if [ "$INTERFACE_OPENGAMEPADUI" = "true" ]; then
-    opengamepadui --only-qam
-else
-    if [ "$DISABLE_STEAM_DECK" = "true" ]; then
-        if [ "$DISABLE_STEAM_GPU" = "true" ]; then
-            env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -steamos3 -no-cef-sandbox
-        else
-            steam -bigpicture -steamos3 -no-cef-sandbox
-        fi
+if [ "$DISABLE_STEAM_DECK" = "true" ]; then
+    if [ "$DISABLE_STEAM_GPU" = "true" ]; then
+        env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -steamos3 -no-cef-sandbox
     else
-        if [ "$DISABLE_STEAM_GPU" = "true" ]; then
-            env MESA_GL_VERSION_OVERRIDE=1.3 steam -gamepadui -steamdeck -steamos3 -no-cef-sandbox
-        else
-            steam -gamepadui -steamdeck -steamos3 -no-cef-sandbox
-        fi
+        steam -bigpicture -steamos3 -no-cef-sandbox
+    fi
+else
+    if [ "$DISABLE_STEAM_GPU" = "true" ]; then
+        env MESA_GL_VERSION_OVERRIDE=1.3 steam -gamepadui -steamdeck -steamos3 -no-cef-sandbox
+    else
+        steam -gamepadui -steamdeck -steamos3 -no-cef-sandbox
     fi
 fi
 
