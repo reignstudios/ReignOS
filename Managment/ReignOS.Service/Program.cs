@@ -250,10 +250,18 @@ internal class Program
         
         // shutdown
         Log.WriteLine("Shutting down...");
-        DbusMonitor.Shutdown();
-        MSI_Claw.Dispose();
-        if (inputMode == InputMode.ReignOS) VirtualGamepad.Dispose();
-        if (keyboardInput != null) keyboardInput.Dispose();
+        try
+        {
+            DbusMonitor.Shutdown();
+            MSI_Claw.Dispose();
+            if (inputMode == InputMode.ReignOS) VirtualGamepad.Dispose();
+            if (keyboardInput != null) keyboardInput.Dispose();
+        }
+        catch (Exception e)
+        {
+            Log.WriteLine(e);
+        }
+        Log.Close();
         Environment.ExitCode = isRebootMode == null ? 0 : (isRebootMode == true ? 15 : 16);
     }
 
