@@ -26,6 +26,7 @@ sudo pacman -S --noconfirm --needed plasma konsole dolphin kate ark exfatprogs d
 sudo pacman -S --noconfirm --needed maliit-keyboard
 sudo pacman -S --noconfirm --needed qt5-wayland qt6-wayland
 
+sudo pacman -S --noconfirm --needed wget
 sudo pacman -S --noconfirm --needed gparted
 sudo pacman -S --noconfirm --needed flatpak
 sudo pacman -S --noconfirm --needed zip unzip gzip bzip2 7zip xz

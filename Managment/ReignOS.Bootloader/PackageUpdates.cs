@@ -78,6 +78,7 @@ static class PackageUpdates
         if (!PackageUtils.PackageExits("qt6-wayland")) return true;
         if (!PackageUtils.PackageExits("maliit-keyboard")) return true;
 
+        if (!PackageUtils.PackageExits("wget")) return true;
         if (!PackageUtils.PackageExits("gparted")) return true;
         if (!PackageUtils.PackageExits("flatpak")) return true;
         if (!PackageUtils.PackageExits("zip")) return true;

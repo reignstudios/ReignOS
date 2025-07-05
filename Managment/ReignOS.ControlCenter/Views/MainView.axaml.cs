@@ -1356,10 +1356,26 @@ public partial class MainView : UserControl
     private void KernelApplyButton_Click(object sender, RoutedEventArgs e)
     {
         // apply settings
+        string loader = File.ReadAllText("/boot/loader/loader.conf");
+        if (kernelArchCheckbox.IsChecked == true)
+        {
+            var match = Regex.Match(loader, @"(default=[^\n]*)");
+            if (match.Success) loader = loader.Replace(match.Groups[1].Value, "default=arch.conf");
+            else if (!loader.EndsWith("\n")) loader += "\ndefault=arch.conf";
+            else loader += "default=arch.conf";
+        }
+        else if (kernelChimeraCheckbox.IsChecked == true)
+        {
+            var match = Regex.Match(loader, @"(default=[^\n]*)");
+            if (match.Success) loader = loader.Replace(match.Groups[1].Value, "default=chimera.conf");
+            else if (!loader.EndsWith("\n")) loader += "\ndefault=chimera.conf";
+            else loader += "default=chimera.conf";
+            CopyKernelConf();
+        }
+        
+        ProcessUtil.WriteAllTextAdmin("/boot/loader/loader.conf", loader);
         SaveSettings();
-        if (kernelArchCheckbox.IsChecked == true) App.exitCode = 70;
-        else if (kernelChimeraCheckbox.IsChecked == true) App.exitCode = 71;
-        MainWindow.singleton.Close();
+        RestartButton_Click(null, null);
     }
 
     private void UpdatesApplyButton_Click(object sender, RoutedEventArgs e)
@@ -2037,7 +2053,17 @@ public partial class MainView : UserControl
         string result = kernelArchConf;
         result = result.Replace(kernelArchConf_Options, kernelArchConfigTextBox.Text);
         ProcessUtil.WriteAllTextAdmin("/boot/loader/entries/arch.conf", result);
+        CopyKernelConf();
         RestartButton_Click(null, null);
+    }
+    
+    private void CopyKernelConf()
+    {
+        ProcessUtil.CopyFileAdmin("/boot/loader/entries/arch.conf", "/boot/loader/entries/chimera.conf");
+        string copyConf = File.ReadAllText("/boot/loader/entries/chimera.conf");
+        copyConf = copyConf.Replace("linux /vmlinuz-linux", "linux vmlinuz-linux-chimeraos");
+        copyConf = copyConf.Replace("initrd /initramfs-linux.img", "initrd /initramfs-linux-chimeraos.img");
+        ProcessUtil.WriteAllTextAdmin("/boot/loader/entries/chimera.conf", copyConf);
     }
 
     private void KernelValue_OnIsCheckedChanged(object sender, RoutedEventArgs e)

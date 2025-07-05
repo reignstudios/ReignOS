@@ -222,6 +222,11 @@ public static class ProcessUtil
         }
         Run("tee", path, asAdmin:true, getStandardInput:getStandardInput);
     }
+    
+    public static void CopyFileAdmin(string src, string dst)
+    {
+        Run("cp", $"{src} {dst}", asAdmin:true);
+    }
 
     public static string DeleteFileAdmin(string path)
     {

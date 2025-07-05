@@ -32,6 +32,34 @@ echo "ReignOS Building packages..."
 dotnet publish -r linux-x64 -c Release
 sleep 1
 
+# update or install Chimera-Kernel
+echo ""
+echo "ReignOS Checking Chimera-Kernel for updates..."
+CHIMERA_KERNEL_RELEASE=$(curl -s 'https://api.github.com/repos/ChimeraOS/linux-chimeraos/releases' | jq -r "first(.[] | select(.prerelease == "false"))")
+CHIMERA_KERNEL_VERSION=$(jq -r '.tag_name' <<< ${CHIMERA_KERNEL_RELEASE})
+
+v1="${CHIMERA_KERNEL_VERSION#v}"
+v1=$(printf "%s" "$v1" | grep -oE '^[0-9]+\.[0-9]+\.[0-9]+')
+echo "Latest Chimera Kernel: $v1"
+
+CHIMERA_KERNEL_INSTALLED_VERSION=$(pacman -Q linux-chimeraos)
+v2="${CHIMERA_KERNEL_INSTALLED_VERSION#linux-chimeraos }"
+v2=$(printf "%s" "$v2" | grep -oE '^[0-9]+\.[0-9]+\.[0-9]+')
+echo "Installed Chimera Kernel: $v2"
+
+if [ "$v1" != "$v2" ]; then
+    echo "ReignOS Updating Chimera-Kernel to: $CHIMERA_KERNEL_VERSION"
+    CHIMERA_KERNEL_VERSION_LINK=${CHIMERA_KERNEL_VERSION/-chos/.chos}
+    echo "Kernel: linux-chimeraos-$CHIMERA_KERNEL_VERSION_LINK-x86_64.pkg.tar.zst"
+    echo "Kernel-Headers: linux-chimeraos-headers-$CHIMERA_KERNEL_VERSION_LINK-x86_64.pkg.tar.zst"
+    mkdir -p /home/gamer/ReignOS_Ext/Kernels
+    wget -O /home/gamer/ReignOS_Ext/Kernels/chimera-kernel.pkg.tar.zst https://github.com/ChimeraOS/linux-chimeraos/releases/download/$CHIMERA_KERNEL_VERSION/linux-chimeraos-$CHIMERA_KERNEL_VERSION_LINK-x86_64.pkg.tar.zst
+    wget -O /home/gamer/ReignOS_Ext/Kernels/chimera-kernel-headers.pkg.tar.zst https://github.com/ChimeraOS/linux-chimeraos/releases/download/$CHIMERA_KERNEL_VERSION/linux-chimeraos-headers-$CHIMERA_KERNEL_VERSION_LINK-x86_64.pkg.tar.zst
+    sudo pacman -Syu --noconfirm
+    sudo pacman -S --noconfirm /home/gamer/ReignOS_Ext/Kernels/chimera-kernel.pkg.tar.zst
+    sudo pacman -S --noconfirm /home/gamer/ReignOS_Ext/Kernels/chimera-kernel-headers.pkg.tar.zst
+fi
+
 # update flatpaks (just run this first so they always get ran)
 echo ""
 echo "ReignOS Updating flatpak pacages..."
@@ -41,7 +69,7 @@ flatpak update --noninteractive
 echo ""
 echo "ReignOS Checking DeckyLoader for updates..."
 DECKY_LOADER_RELEASE=$(curl -s 'https://api.github.com/repos/SteamDeckHomebrew/decky-loader/releases' | jq -r "first(.[] | select(.prerelease == "false"))")
-DECKY_LOADER_VERSION=$(jq -r '.tag_name' <<< ${DECKY_LOADER_RELEASE} )
+DECKY_LOADER_VERSION=$(jq -r '.tag_name' <<< ${DECKY_LOADER_RELEASE})
 DECKY_LOADER_INSTALLED_VERSION=$(cat /home/gamer/homebrew/services/.loader.version 2>/dev/null || echo "none")
 if [ "$DECKY_LOADER_INSTALLED_VERSION" != "$DECKY_LOADER_VERSION" ]; then
     echo "ReignOS Updating DeckyLoader..."
@@ -117,7 +145,7 @@ if [ "$HAS_UPDATES" = "true" ]; then
         sudo pacman --noconfirm -R linux-firmware
         sudo pacman --noconfirm -S linux-firmware
         sudo mkinitcpio -P
-         sudo reboot -f
+        sudo reboot -f
     fi
 
     if [ $yay_exit_code -ne 0 ]; then

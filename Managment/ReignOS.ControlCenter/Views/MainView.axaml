@@ -188,7 +188,7 @@
 						</Grid>
 					</Grid>
 
-					<Grid Margin="8,8,8,4" Background="#444444" Height="40" IsVisible="False">
+					<Grid Margin="8,8,8,4" Background="#444444" Height="40" IsVisible="True">
 						<Grid>
 							<TextBlock Text="Kernel" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="KernelApplyButton_Click"/>
