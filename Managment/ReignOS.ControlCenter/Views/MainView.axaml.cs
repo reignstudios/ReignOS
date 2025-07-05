@@ -1359,14 +1359,14 @@ public partial class MainView : UserControl
         string loader = File.ReadAllText("/boot/loader/loader.conf");
         if (kernelArchCheckbox.IsChecked == true)
         {
-            var match = Regex.Match(loader, @"(default=[^\n]*)");
+            var match = Regex.Match(loader, @"(default [^\n]*)");
             if (match.Success) loader = loader.Replace(match.Groups[1].Value, "default arch.conf");
             else if (!loader.EndsWith("\n")) loader += "\ndefault arch.conf";
             else loader += "default arch.conf";
         }
         else if (kernelChimeraCheckbox.IsChecked == true)
         {
-            var match = Regex.Match(loader, @"(default=[^\n]*)");
+            var match = Regex.Match(loader, @"(default [^\n]*)");
             if (match.Success) loader = loader.Replace(match.Groups[1].Value, "default chimera.conf");
             else if (!loader.EndsWith("\n")) loader += "\ndefault chimera.conf";
             else loader += "default chimera.conf";
