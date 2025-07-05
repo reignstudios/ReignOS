@@ -181,7 +181,7 @@ internal class Program
             Log.WriteLine(e);
         }
 
-        if (isRebootMode != null)
+        if (isRebootMode == true)
         {
             ProcessUtil.Run("reboot", "-f", useBash:false);
             return;
