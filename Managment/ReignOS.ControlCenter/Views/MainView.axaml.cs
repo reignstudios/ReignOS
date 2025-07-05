@@ -380,6 +380,11 @@ public partial class MainView : UserControl
                     {
                         if (int.TryParse(parts[1], out int value)) powerSlider.Value = value;
                     }
+                    else if (parts[0] == "Kernel")
+                    {
+                        if (parts[1] == "Arch") kernelArchCheckbox.IsChecked = true;
+                        else if (parts[1] == "Chimera") kernelChimeraCheckbox.IsChecked = true;
+                    }
                     else if (parts[0].StartsWith("AudioDefault:"))
                     {
                         var audioParts = parts[1].Split(':');
@@ -522,6 +527,9 @@ public partial class MainView : UserControl
                 writer.WriteLine($"PowerPercentage={(int)powerSlider.Value}");
                 if (powerIntelTurboBoostCheckbox.IsChecked == true) writer.WriteLine("PowerIntelTurboBoost=True");
                 if (powerBoostCheckBox.IsChecked == true) writer.WriteLine("PowerBoost=True");
+
+                if (kernelArchCheckbox.IsChecked == true) writer.WriteLine("Kernel=Arch");
+                else if (kernelChimeraCheckbox.IsChecked == true) writer.WriteLine("Kernel=Chimera");
 
                 foreach (var setting in audioSettings)
                 {
@@ -1337,9 +1345,18 @@ public partial class MainView : UserControl
         // apply settings
         SaveSettings();
         if (powerProfilesCheckbox.IsChecked == true) App.exitCode = 60;
-        if (powerStationCheckbox.IsChecked == true) App.exitCode = 61;
-        if (powerDeckyTDPCheckbox.IsChecked == true) App.exitCode = 62;
+        else if (powerStationCheckbox.IsChecked == true) App.exitCode = 61;
+        else if (powerDeckyTDPCheckbox.IsChecked == true) App.exitCode = 62;
         else if (powerManagementDisabledCheckbox.IsChecked == true) App.exitCode = 63;
+        MainWindow.singleton.Close();
+    }
+
+    private void KernelApplyButton_Click(object sender, RoutedEventArgs e)
+    {
+        // apply settings
+        SaveSettings();
+        if (kernelArchCheckbox.IsChecked == true) App.exitCode = 70;
+        else if (kernelChimeraCheckbox.IsChecked == true) App.exitCode = 71;
         MainWindow.singleton.Close();
     }
 
