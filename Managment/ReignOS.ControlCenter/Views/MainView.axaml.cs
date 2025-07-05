@@ -2090,6 +2090,9 @@ public partial class MainView : UserControl
     
     private void RefreshKernelPage()
     {
+        // get kernel version
+        kernelVersionTextBox.Text = ProcessUtil.Run("uname", "-r", useBash:false);
+        
         // read config and get options
         kernelArchConf = File.ReadAllText("/boot/loader/entries/arch.conf");
         var match = Regex.Match(kernelArchConf, @"(options root=[^\n]+)");
