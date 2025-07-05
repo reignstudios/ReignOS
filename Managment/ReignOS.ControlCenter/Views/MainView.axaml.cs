@@ -1151,7 +1151,8 @@ public partial class MainView : UserControl
     
     private void CheckUpdatesButton_Click(object sender, RoutedEventArgs e)
     {
-        App.exitCode = 17;// close Managment and launch CheckUpdates.sh
+        if (sender is int value) App.exitCode = value;
+        else App.exitCode = 17;// close Managment and launch CheckUpdates.sh
         MainWindow.singleton.Close();
     }
     
@@ -1375,7 +1376,7 @@ public partial class MainView : UserControl
         
         ProcessUtil.WriteAllTextAdmin("/boot/loader/loader.conf", loader);
         SaveSettings();
-        CheckUpdatesButton_Click(null, null);
+        CheckUpdatesButton_Click(18, null);
     }
 
     private void UpdatesApplyButton_Click(object sender, RoutedEventArgs e)

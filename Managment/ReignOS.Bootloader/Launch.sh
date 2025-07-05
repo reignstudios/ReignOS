@@ -67,6 +67,16 @@ if [ $exit_code -eq 17 ]; then
   exit 0
 fi
 
+if [ $exit_code -eq 18 ]; then
+  echo ""
+  echo "ReignOS (Check for updates and force reboot)..."
+  #if [ "$DISABLE_UPDATE" = "true" ]; then
+    ./Update.sh
+    sudo reboot -f
+  #fi
+  exit 0
+fi
+
 # install Nvidia drivers
 if [ $exit_code -eq 30 ]; then
   echo ""
