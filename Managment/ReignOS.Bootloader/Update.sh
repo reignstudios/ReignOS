@@ -1,4 +1,5 @@
 #!/bin/bash
+HAS_UPDATES=false
 
 # aw87559-firmware = Ayaneo Flip DS (yay needs to ignore this conflict)
 
@@ -59,6 +60,7 @@ if [ "$v1" != "$v2" ]; then
     sudo pacman -Syu --noconfirm
     sudo pacman -S --noconfirm /home/gamer/ReignOS_Ext/Kernels/chimera-kernel.pkg.tar.zst
     sudo pacman -S --noconfirm /home/gamer/ReignOS_Ext/Kernels/chimera-kernel-headers.pkg.tar.zst
+    HAS_UPDATES=true
 fi
 
 # update flatpaks (just run this first so they always get ran)
@@ -96,7 +98,6 @@ fi
 echo ""
 echo "ReignOS Checking 'pacman' for updates..."
 sudo pacman -Sy
-HAS_UPDATES=false
 if pacman -Qu &> /dev/null; then
     echo "Updates are available under pacman"
     HAS_UPDATES=true
