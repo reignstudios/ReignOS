@@ -8,7 +8,6 @@ using System.Collections.Generic;
 static class DbusMonitor
 {
     private static Process process;
-    public static bool? isRebootMode;
 
     public static void Init()
     {
@@ -65,11 +64,11 @@ static class DbusMonitor
         
         if (line.Contains("member=PowerOff"))
         {
-            isRebootMode = false;
+            Program.isRebootMode = false;
         }
         else if (line.Contains("member=Reboot"))
         {
-            isRebootMode = true;
+            Program.isRebootMode = true;
         }
         else if (line.Contains("Access denied due to active block inhibitor"))// || line.Contains("member=ListInhibitors"))
         {

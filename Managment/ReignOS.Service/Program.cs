@@ -63,6 +63,8 @@ internal class Program
     public static KeyboardInput keyboardInput;
     public static InputMode inputMode = InputMode.ReignOS;
 
+    public static bool? isRebootMode;
+
     private static void BindSignalEvents()
     {
         Console.CancelKeyPress += ExitEvent;
@@ -179,6 +181,8 @@ internal class Program
             Log.WriteLine(e);
         }
 
+        if (isRebootMode != null) goto SHUTDOWN;
+
         // if no hardware has known keyboard find generic one
         if (keyboardInput == null)
         {
@@ -241,12 +245,13 @@ internal class Program
         }
         
         // shutdown
+        SHUTDOWN:;
         Log.WriteLine("Shutting down...");
         DbusMonitor.Shutdown();
         MSI_Claw.Dispose();
         if (inputMode == InputMode.ReignOS) VirtualGamepad.Dispose();
         keyboardInput.Dispose();
-        Environment.ExitCode = DbusMonitor.isRebootMode == null ? 0 : (DbusMonitor.isRebootMode == true ? 15 : 16);
+        Environment.ExitCode = isRebootMode == null ? 0 : (isRebootMode == true ? 15 : 16);
     }
 
     private static void ReadBootloaderCommands()

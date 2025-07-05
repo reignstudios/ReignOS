@@ -30,14 +30,16 @@ namespace ReignOS.Service.Hardware
             }
             else if (Program.hardwareType == HardwareType.AyaneoSlide)
             {
-                ForceAcpiStrict("/boot/loader/entries/arch.conf");
-                ForceAcpiStrict("/boot/loader/entries/chimera.conf");
+                bool needsReboot = false;
+                if (ForceAcpiStrict("/boot/loader/entries/arch.conf")) needsReboot = true;
+                if (ForceAcpiStrict("/boot/loader/entries/chimera.conf")) needsReboot = true;
+                if (needsReboot) Program.isRebootMode = true; 
             }
         }
 
-        private static void ForceAcpiStrict(string conf)
+        private static bool ForceAcpiStrict(string conf)
         {
-            if (!File.Exists(conf)) return;
+            if (!File.Exists(conf)) return false;
 
             try
             {
@@ -46,12 +48,14 @@ namespace ReignOS.Service.Hardware
                 {
                     settings = settings.Replace(" rw rootwait", " rw rootwait acpi=strict");
                     ProcessUtil.WriteAllTextAdmin(conf, settings);
+                    return true;
                 }
             }
             catch (Exception e)
             {
                 Log.WriteLine(e);
             }
+            return false;
         }
 
         public static void Update(KeyList keys)
