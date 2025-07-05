@@ -2068,6 +2068,14 @@ public partial class MainView : UserControl
 
     private void KernelValue_OnIsCheckedChanged(object sender, RoutedEventArgs e)
     {
+        // validate conflicting options
+        if (kernel_acpi_strict_Checkbox.IsChecked == true && kernel_acpi_force_Checkbox.IsChecked == true)
+        {
+            kernel_acpi_strict_Checkbox.IsChecked = false;
+            kernel_acpi_force_Checkbox.IsChecked = false;
+        }
+        
+        // update UI
         var match = Regex.Match(kernelArchConf_Options, @"(options root=[^\n|^\s]+)");
         if (match.Success)
         {
