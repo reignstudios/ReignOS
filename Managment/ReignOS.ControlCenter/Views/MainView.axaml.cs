@@ -1375,7 +1375,7 @@ public partial class MainView : UserControl
         
         ProcessUtil.WriteAllTextAdmin("/boot/loader/loader.conf", loader);
         SaveSettings();
-        RestartButton_Click(null, null);
+        CheckUpdatesButton_Click(null, null);
     }
 
     private void UpdatesApplyButton_Click(object sender, RoutedEventArgs e)
