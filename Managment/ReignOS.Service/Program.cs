@@ -181,7 +181,11 @@ internal class Program
             Log.WriteLine(e);
         }
 
-        if (isRebootMode != null) goto SHUTDOWN;
+        if (isRebootMode != null)
+        {
+            ProcessUtil.Run("reboot", "-f", useBash:false);
+            return;
+        }
 
         // if no hardware has known keyboard find generic one
         if (keyboardInput == null)
@@ -245,7 +249,6 @@ internal class Program
         }
         
         // shutdown
-        SHUTDOWN:;
         Log.WriteLine("Shutting down...");
         DbusMonitor.Shutdown();
         MSI_Claw.Dispose();
