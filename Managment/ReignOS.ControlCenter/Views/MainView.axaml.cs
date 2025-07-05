@@ -121,7 +121,7 @@ public partial class MainView : UserControl
     
     private List<DisplaySetting> displaySettings = new();
 
-    private string kernelArchConf;
+    private string kernelArchConf, kernelArchConf_Options;
     
     public MainView()
     {
@@ -2032,9 +2032,17 @@ public partial class MainView : UserControl
         kernelManagerGrid.IsVisible = false;
     }
 
+    private void KernelManagerApplyButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        string result = kernelArchConf;
+        result = result.Replace(kernelArchConf_Options, kernelArchConfigTextBox.Text);
+        ProcessUtil.WriteAllTextAdmin("/boot/loader/entries/arch.conf", result);
+        RestartButton_Click(null, null);
+    }
+
     private void KernelValue_OnIsCheckedChanged(object sender, RoutedEventArgs e)
     {
-        var match = Regex.Match(kernelArchConf, @"(options root=[^\n|^\s]+)");
+        var match = Regex.Match(kernelArchConf_Options, @"(options root=[^\n|^\s]+)");
         if (match.Success)
         {
             // add required options
@@ -2059,12 +2067,20 @@ public partial class MainView : UserControl
         // read config and get options
         kernelArchConf = File.ReadAllText("/boot/loader/entries/arch.conf");
         var match = Regex.Match(kernelArchConf, @"(options root=[^\n]+)");
-        if (match.Success) kernelArchConf = match.Groups[1].Value;
-        kernelArchConfigTextBox.Text = kernelArchConf;
+        if (match.Success)
+        {
+            kernelArchConf_Options = match.Groups[1].Value;
+        }
+        else
+        {
+            KernelManagerBackButton_OnClick(null, null);// exit page if there is an error
+            return;
+        }
+        kernelArchConfigTextBox.Text = kernelArchConf_Options;
         
         // parse custom options
         var builder = new StringBuilder();
-        match = Regex.Match(kernelArchConf, @"options root=.*? ([^\n]*)");
+        match = Regex.Match(kernelArchConf_Options, @"options root=.*? ([^\n]*)");
         if (match.Success)
         {
             var parts = match.Groups[1].Value.Split(' ');
@@ -2082,9 +2098,9 @@ public partial class MainView : UserControl
         kernelCustomTextuBox.Text += builder.ToString();
         
         // setup known options
-        kernel_acpi_strict_Checkbox.IsChecked = kernelArchConf.Contains(" acpi=strict");
-        kernel_acpi_force_Checkbox.IsChecked = kernelArchConf.Contains(" acpi=force");
-        kernel_pci_realloc_Checkbox.IsChecked = kernelArchConf.Contains(" pci=realloc");
+        kernel_acpi_strict_Checkbox.IsChecked = kernelArchConf_Options.Contains(" acpi=strict");
+        kernel_acpi_force_Checkbox.IsChecked = kernelArchConf_Options.Contains(" acpi=force");
+        kernel_pci_realloc_Checkbox.IsChecked = kernelArchConf_Options.Contains(" pci=realloc");
     }
 
     private void DisplayManagerButton_OnClick(object sender, RoutedEventArgs e)

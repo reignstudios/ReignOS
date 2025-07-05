@@ -244,7 +244,7 @@ static class PackageUpdates
                 settings = settings.Replace(" pci=realloc", "");
 
                 // add good args
-                settings = settings.Replace(" rw", " rw rootwait");
+                if (!settings.Contains(" rootwait")) settings = settings.Replace(" rw", " rw rootwait");
                 
                 // use partition ID path
                 string partitionInfoResult = ProcessUtil.Run("blkid", "", asAdmin:true, useBash:false);
@@ -253,11 +253,11 @@ static class PackageUpdates
                 {
                     var match2 = Regex.Match(settings, @" (root=.*?) rw");
                     settings = settings.Replace(match2.Groups[1].Value, $"root=PARTUUID={match.Groups[1].Value}");
+                    
+                    // update conf
+                    settings = settings.TrimEnd();
+                    ProcessUtil.WriteAllTextAdmin(path, settings);
                 }
-
-                // update conf
-                settings = settings.TrimEnd();
-                ProcessUtil.WriteAllTextAdmin(path, settings);
 
                 return true;
             }

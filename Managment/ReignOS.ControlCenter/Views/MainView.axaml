@@ -375,7 +375,7 @@
 				<CheckBox Name="kernel_pci_realloc_Checkbox" Content="pci=realloc (May help with eGPU or thunderbolt issues [such as MSI-Claw])" IsCheckedChanged="KernelValue_OnIsCheckedChanged"/>
 			</StackPanel>
 
-			<Button Content="Apply" Width="128" Height="64" Margin="0,0,146,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="#803000" Click="KernelManagerButton_OnClick"/>
+			<Button Content="Apply" Width="128" Height="64" Margin="0,0,146,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="#803000" Click="KernelManagerApplyButton_OnClick"/>
 			<Button Content="Back" Width="128" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="KernelManagerBackButton_OnClick"/>
 		</Grid>
 		
