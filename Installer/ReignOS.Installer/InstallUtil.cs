@@ -255,7 +255,7 @@ static class InstallUtil
         fileBuilder.AppendLine("title ReignOS");
         fileBuilder.AppendLine("linux /vmlinuz-linux");
         fileBuilder.AppendLine("initrd /initramfs-linux.img");
-        string partitionInfoResult = ProcessUtil.Run("blkid", "", asAdmin:true, useBash:false);
+        string partitionInfoResult = ProcessUtil.Run("blkid", ext4Partition.path, asAdmin:true, useBash:false);
         var match = Regex.Match(partitionInfoResult, @".*?PARTUUID=""(.*?)""");
         if (match.Success) fileBuilder.AppendLine($"options root=PARTUUID={match.Groups[1].Value} rw rootwait");
         else fileBuilder.AppendLine($"options root={ext4Partition.path} rw rootwait");

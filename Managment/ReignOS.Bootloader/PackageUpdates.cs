@@ -247,16 +247,20 @@ static class PackageUpdates
                 if (!settings.Contains(" rootwait")) settings = settings.Replace(" rw", " rw rootwait");
                 
                 // use partition ID path
-                string partitionInfoResult = ProcessUtil.Run("blkid", "", asAdmin:true, useBash:false);
-                var match = Regex.Match(partitionInfoResult, @".*?PARTUUID=""(.*?)""");
+                var match = Regex.Match(settings, @" root=(\S*) rw");
                 if (match.Success)
                 {
-                    var match2 = Regex.Match(settings, @" (root=.*?) rw");
-                    settings = settings.Replace(match2.Groups[1].Value, $"root=PARTUUID={match.Groups[1].Value}");
-                    
-                    // update conf
-                    settings = settings.TrimEnd();
-                    ProcessUtil.WriteAllTextAdmin(path, settings);
+                    string partitionInfoResult = ProcessUtil.Run("blkid", match.Groups[1].Value, asAdmin: true, useBash: false);
+                    match = Regex.Match(partitionInfoResult, @".*?PARTUUID=""(.*?)""");
+                    if (match.Success)
+                    {
+                        var match2 = Regex.Match(settings, @" (root=.*?) rw");
+                        settings = settings.Replace(match2.Groups[1].Value, $"root=PARTUUID={match.Groups[1].Value}");
+
+                        // update conf
+                        settings = settings.TrimEnd();
+                        ProcessUtil.WriteAllTextAdmin(path, settings);
+                    }
                 }
 
                 return true;
