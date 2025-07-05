@@ -49,7 +49,7 @@ echo "Installed Chimera Kernel: $v2"
 
 if [ "$v1" != "$v2" ]; then
     echo "ReignOS Updating Chimera-Kernel to: $CHIMERA_KERNEL_VERSION"
-    CHIMERA_KERNEL_VERSION_LINK=${CHIMERA_KERNEL_VERSION/-chos/.chos}
+    CHIMERA_KERNEL_VERSION_LINK="${CHIMERA_KERNEL_VERSION/-chos/.chos}#v"
     echo "Kernel: linux-chimeraos-$CHIMERA_KERNEL_VERSION_LINK-x86_64.pkg.tar.zst"
     echo "Kernel-Headers: linux-chimeraos-headers-$CHIMERA_KERNEL_VERSION_LINK-x86_64.pkg.tar.zst"
     mkdir -p /home/gamer/ReignOS_Ext/Kernels
