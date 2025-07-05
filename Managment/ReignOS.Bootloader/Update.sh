@@ -60,6 +60,7 @@ if [ "$v1" != "$v2" ]; then
     sudo pacman -Syu --noconfirm
     sudo pacman -U --noconfirm /home/gamer/ReignOS_Ext/Kernels/chimera-kernel.pkg.tar.zst
     sudo pacman -U --noconfirm /home/gamer/ReignOS_Ext/Kernels/chimera-kernel-headers.pkg.tar.zst
+    sudo mkinitcpio -P
     HAS_UPDATES=true
 fi
 
