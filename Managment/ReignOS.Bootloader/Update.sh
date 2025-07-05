@@ -58,8 +58,8 @@ if [ "$v1" != "$v2" ]; then
     wget -O /home/gamer/ReignOS_Ext/Kernels/chimera-kernel.pkg.tar.zst https://github.com/ChimeraOS/linux-chimeraos/releases/download/$CHIMERA_KERNEL_VERSION/linux-chimeraos-$CHIMERA_KERNEL_VERSION_LINK-x86_64.pkg.tar.zst
     wget -O /home/gamer/ReignOS_Ext/Kernels/chimera-kernel-headers.pkg.tar.zst https://github.com/ChimeraOS/linux-chimeraos/releases/download/$CHIMERA_KERNEL_VERSION/linux-chimeraos-headers-$CHIMERA_KERNEL_VERSION_LINK-x86_64.pkg.tar.zst
     sudo pacman -Syu --noconfirm
-    sudo pacman -S --noconfirm /home/gamer/ReignOS_Ext/Kernels/chimera-kernel.pkg.tar.zst
-    sudo pacman -S --noconfirm /home/gamer/ReignOS_Ext/Kernels/chimera-kernel-headers.pkg.tar.zst
+    sudo pacman -U --noconfirm /home/gamer/ReignOS_Ext/Kernels/chimera-kernel.pkg.tar.zst
+    sudo pacman -U --noconfirm /home/gamer/ReignOS_Ext/Kernels/chimera-kernel-headers.pkg.tar.zst
     HAS_UPDATES=true
 fi
 
