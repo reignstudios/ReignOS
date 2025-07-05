@@ -120,6 +120,8 @@ public partial class MainView : UserControl
     private bool powerBoostEnabled;
     
     private List<DisplaySetting> displaySettings = new();
+
+    private string kernelArchConf;
     
     public MainView()
     {
@@ -2015,6 +2017,74 @@ public partial class MainView : UserControl
     private void AudioManagerTestButton_OnClick(object sender, RoutedEventArgs e)
     {
         ProcessUtil.Run("speaker-test", "-c 2 -D pulse -l 1", useBash:false, wait:true);
+    }
+    
+    private void KernelManagerButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        mainGrid.IsVisible = false;
+        kernelManagerGrid.IsVisible = true;
+        RefreshKernelPage();
+    }
+    
+    private void KernelManagerBackButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        mainGrid.IsVisible = true;
+        kernelManagerGrid.IsVisible = false;
+    }
+
+    private void KernelValue_OnIsCheckedChanged(object sender, RoutedEventArgs e)
+    {
+        var match = Regex.Match(kernelArchConf, @"(options root=[^\n|^\s]+)");
+        if (match.Success)
+        {
+            // add required options
+            var builder = new StringBuilder($"{match.Groups[1].Value} rw rootwait");
+            
+            // add known options
+            if (kernel_acpi_strict_Checkbox.IsChecked == true) builder.Append(" acpi=strict");
+            if (kernel_acpi_force_Checkbox.IsChecked == true) builder.Append(" acpi=force");
+            if (kernel_pci_realloc_Checkbox.IsChecked == true) builder.Append(" pci=realloc");
+
+            // add custom options
+            var parts = kernelCustomTextuBox.Text.Replace(",", "").Replace(";", "").Split(" ");
+            foreach (var part in parts) builder.Append(" " + part);
+            
+            // finish
+            kernelArchConfigTextBox.Text = builder.ToString();
+        }
+    }
+    
+    private void RefreshKernelPage()
+    {
+        // read config and get options
+        kernelArchConf = File.ReadAllText("/boot/loader/entries/arch.conf");
+        var match = Regex.Match(kernelArchConf, @"(options root=[^\n]+)");
+        if (match.Success) kernelArchConf = match.Groups[1].Value;
+        kernelArchConfigTextBox.Text = kernelArchConf;
+        
+        // parse custom options
+        var builder = new StringBuilder();
+        match = Regex.Match(kernelArchConf, @"options root=.*? ([^\n]*)");
+        if (match.Success)
+        {
+            var parts = match.Groups[1].Value.Split(' ');
+            foreach (var part in parts)
+            {
+                if (part.Length != 0 &&
+                    part != "rw" &&
+                    part != "rootwait" &&
+                    part != "acpi=strict" && part != "acpi=force" && part != "pci=realloc")
+                {
+                    builder.Append(part + " ");
+                }
+            }
+        }
+        kernelCustomTextuBox.Text += builder.ToString();
+        
+        // setup known options
+        kernel_acpi_strict_Checkbox.IsChecked = kernelArchConf.Contains(" acpi=strict");
+        kernel_acpi_force_Checkbox.IsChecked = kernelArchConf.Contains(" acpi=force");
+        kernel_pci_realloc_Checkbox.IsChecked = kernelArchConf.Contains(" pci=realloc");
     }
 
     private void DisplayManagerButton_OnClick(object sender, RoutedEventArgs e)

@@ -188,7 +188,7 @@
 						</Grid>
 					</Grid>
 
-					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
+					<Grid Margin="8,8,8,4" Background="#444444" Height="40" IsVisible="False">
 						<Grid>
 							<TextBlock Text="Kernel" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="KernelApplyButton_Click"/>
@@ -215,13 +215,13 @@
 			
 			<StackPanel Margin="245,0,4,4" Height="42" VerticalAlignment="Bottom" Background="#000040" Orientation="Horizontal" FlowDirection="RightToLeft">
 				<Button Content="Check Updates" Background="OrangeRed" Margin="4,0,0,0" Click="CheckUpdatesButton_Click"/>
+				<Button Content="Kernel" Margin="4,0,0,0" Click="KernelManagerButton_OnClick"/>
 				<Button Content="GPU" Margin="4,0,0,0" Click="GPUUtilsButton_OnClick"/>
 				<Button Content="Boot" Margin="4,0,0,0" Click="BootManagerButton_OnClick"/>
 				<Button Content="Disk" Margin="4,0,0,0" Click="DriveManagerButton_OnClick"/>
 				<Button Content="Network" Margin="4,0,0,0" Click="NetworkManagerButton_OnClick"/>
 				<Button Content="Display" Margin="4,0,0,0" Click="DisplayManagerButton_OnClick"/>
 				<Button Content="Audio" Margin="4,0,0,0" Click="AudioManagerButton_OnClick"/>
-				<Button Content="Kernel" Margin="4,0,0,0" Click="AudioManagerButton_OnClick"/>
 				<Button Name="powerButton" Content="Power" Margin="4,0,0,0" Click="PowerManagerButton_OnClick"/>
 			</StackPanel>
 		</Grid>
@@ -365,18 +365,18 @@
 		</Grid>
 
 		<Grid Name="kernelManagerGrid" Margin="4" IsVisible="False">
-			<TextBlock Text="arch.conf" Background="#333333" VerticalAlignment="Top"/>
+			<TextBlock Name="kernelArchConfigTextBox" Text="arch.conf" Background="#333333" VerticalAlignment="Top"/>
 			<TextBlock Text="Custom:" Margin="0,40,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-			<TextBox Margin="64,32,0,0" VerticalAlignment="Top"/>
+			<TextBox Name="kernelCustomTextuBox" Margin="64,32,0,0" VerticalAlignment="Top" TextChanged="KernelValue_OnIsCheckedChanged"/>
 			
 			<StackPanel Margin="4,84,4,4">
-				<CheckBox Name="kernel_acpi_strict_Checkbox" Content="acpi=strict (Can help with stability issues [such as Ayaneo-Slide / CoreHS])"/>
-				<CheckBox Name="kernel_acpi_force_Checkbox" Content="acpi=force (May help with stability issues [such as Ayaneo-Air-Plus])"/>
-				<CheckBox Name="kernel_pci_realloc_Checkbox" Content="pci=realloc (May help with eGPU issues [such as MSI-Claw])"/>
+				<CheckBox Name="kernel_acpi_strict_Checkbox" Content="acpi=strict (Can help with stability issues [such as Ayaneo-Slide / CoreHS])" IsCheckedChanged="KernelValue_OnIsCheckedChanged"/>
+				<CheckBox Name="kernel_acpi_force_Checkbox" Content="acpi=force (May help with stability issues [such as Ayaneo-Air-Plus])" IsCheckedChanged="KernelValue_OnIsCheckedChanged"/>
+				<CheckBox Name="kernel_pci_realloc_Checkbox" Content="pci=realloc (May help with eGPU or thunderbolt issues [such as MSI-Claw])" IsCheckedChanged="KernelValue_OnIsCheckedChanged"/>
 			</StackPanel>
 
-			<Button Content="Apply" Width="128" Height="64" Margin="0,0,146,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="#803000"/>
-			<Button Content="Back" Width="128" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+			<Button Content="Apply" Width="128" Height="64" Margin="0,0,146,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="#803000" Click="KernelManagerButton_OnClick"/>
+			<Button Content="Back" Width="128" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="KernelManagerBackButton_OnClick"/>
 		</Grid>
 		
 		<Grid Name="powerManagerGrid" Margin="4" IsVisible="False">

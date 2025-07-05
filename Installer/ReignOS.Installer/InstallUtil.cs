@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Diagnostics;
 using ReignOS.Core;
 
@@ -254,7 +255,10 @@ static class InstallUtil
         fileBuilder.AppendLine("title ReignOS");
         fileBuilder.AppendLine("linux /vmlinuz-linux");
         fileBuilder.AppendLine("initrd /initramfs-linux.img");
-        fileBuilder.AppendLine($"options root={ext4Partition.path} rw pci=realloc");// pci=realloc (this helps resolve eGPU or thunderbolt issues)
+        string partitionInfoResult = ProcessUtil.Run("blkid", "", asAdmin:true, useBash:false);
+        var match = Regex.Match(partitionInfoResult, @".*?PARTUUID=""(.*?)""");
+        if (match.Success) fileBuilder.AppendLine($"options root=PARTUUID={match.Groups[1].Value} rw rootwait");
+        else fileBuilder.AppendLine($"options root={ext4Partition.path} rw rootwait");
         ProcessUtil.WriteAllTextAdmin(path, fileBuilder);
         Run("systemctl", "enable systemd-networkd systemd-resolved");
         UpdateProgress(22);

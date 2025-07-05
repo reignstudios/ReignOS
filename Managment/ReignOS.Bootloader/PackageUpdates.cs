@@ -2,6 +2,7 @@ using ReignOS.Core;
 using System;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace ReignOS.Bootloader;
 
@@ -29,11 +30,11 @@ static class PackageUpdates
         //FixOSName();
         
         // check bad configs
-        //bool badConfig = false;
+        bool badConfig = false;
         //if (CheckBadHostname()) badConfig = true;
-        //if (CheckBadKernelSettings()) badConfig = true;
+        if (CheckBadKernelSettings()) badConfig = true;
         //if (CheckBadDriverSettings()) badConfig = true;
-        //if (badConfig) return true;
+        if (badConfig) return true;
 
         // check old packages
         // nothing yet...
@@ -228,7 +229,7 @@ static class PackageUpdates
         return false;
     }*/
 
-    /*private static bool CheckBadKernelSettings()
+    private static bool CheckBadKernelSettings()
     {
         try
         {
@@ -236,41 +237,26 @@ static class PackageUpdates
             string settings = File.ReadAllText(path);
             if
             (
-                settings.Contains("acpi_osi=Linux") ||
-                settings.Contains("i915.enable_dc=2") ||
-                settings.Contains("i915.enable_psr=1") ||
-                settings.Contains("amdgpu.dpm=1") ||
-                settings.Contains("amdgpu.ppfeaturemask=0xffffffff") ||
-                settings.Contains("amdgpu.dc=1") ||
-                settings.Contains("nouveau.pstate=1") ||
-                settings.Contains("nouveau.perflvl=N") ||
-                settings.Contains("nouveau.perflvl_wr=7777") ||
-                settings.Contains("nouveau.config=NvGspRm=1") ||
-                settings.Contains("nvidia-drm.modeset=1") ||
-                settings.Contains("nvidia_drm.fbdev=0") ||
-                settings.Contains("nvidia.NVreg_PreserveVideoMemoryAllocations=0")
+                !settings.Contains("root=PARTUUID=")
             )
             {
                 // remove bad args
-                settings = settings.Replace("acpi_osi=Linux", "");
-                settings = settings.Replace("i915.enable_dc=2", "");
-                settings = settings.Replace("i915.enable_psr=1", "");
-                settings = settings.Replace("amdgpu.dpm=1", "");
-                settings = settings.Replace("amdgpu.ppfeaturemask=0xffffffff", "");
-                settings = settings.Replace("amdgpu.dc=1", "");
-                settings = settings.Replace("nouveau.pstate=1", "");
-                settings = settings.Replace("nouveau.perflvl=N", "");
-                settings = settings.Replace("nouveau.perflvl_wr=7777", "");
-                settings = settings.Replace("nouveau.config=NvGspRm=1", "");
-                settings = settings.Replace("nvidia-drm.modeset=1", "");
-                settings = settings.Replace("nvidia_drm.fbdev=0", "");
-                settings = settings.Replace("nvidia.NVreg_PreserveVideoMemoryAllocations=0", "");
+                settings = settings.Replace(" pci=realloc", "");
 
                 // add good args
-                settings = settings.Replace(" rw", " rw pci=realloc");
-                settings = settings.TrimEnd();
+                settings = settings.Replace(" rw", " rw rootwait");
+                
+                // use partition ID path
+                string partitionInfoResult = ProcessUtil.Run("blkid", "", asAdmin:true, useBash:false);
+                var match = Regex.Match(partitionInfoResult, @".*?PARTUUID=""(.*?)""");
+                if (match.Success)
+                {
+                    var match2 = Regex.Match(settings, @" (root=.*?) rw");
+                    settings = settings.Replace(match2.Groups[1].Value, $"root=PARTUUID={match.Groups[1].Value}");
+                }
 
                 // update conf
+                settings = settings.TrimEnd();
                 ProcessUtil.WriteAllTextAdmin(path, settings);
 
                 return true;
@@ -282,7 +268,7 @@ static class PackageUpdates
         }
 
         return false;
-    }*/
+    }
 
     /*private static bool CheckBadDriverSettings()
     {
