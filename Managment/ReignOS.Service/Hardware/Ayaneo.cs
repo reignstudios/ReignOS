@@ -2,6 +2,7 @@
 using ReignOS.Service.OS;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,30 @@ namespace ReignOS.Service.Hardware
             if (Program.hardwareType == HardwareType.AyaneoPro)
             {
                 WiFiPatches.Fix2(true);
+            }
+            else if (Program.hardwareType == HardwareType.AyaneoSlide)
+            {
+                ForceAcpiStrict("/boot/loader/entries/arch.conf");
+                ForceAcpiStrict("/boot/loader/entries/chimera.conf");
+            }
+        }
+
+        private static void ForceAcpiStrict(string conf)
+        {
+            if (!File.Exists(conf)) return;
+
+            try
+            {
+                string settings = File.ReadAllText(conf);
+                if (!settings.Contains(" acpi=strict"))
+                {
+                    settings = settings.Replace(" rw rootwait", " rw rootwait acpi=strict");
+                    ProcessUtil.WriteAllTextAdmin(conf, settings);
+                }
+            }
+            catch (Exception e)
+            {
+                Log.WriteLine(e);
             }
         }
 
