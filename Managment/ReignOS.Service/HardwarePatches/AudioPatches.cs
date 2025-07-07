@@ -52,7 +52,7 @@ namespace ReignOS.Service.HardwarePatches
             if (File.Exists(firmwareFile) && File.Exists(firmwareFileSysLink)) return;
 
             Directory.CreateDirectory(firmwareFolder);
-            File.Copy("./Firmware/awinic_smartk_acf.bin", firmwareFile);
+            File.Copy("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Firmware/awinic_smartk_acf.bin", firmwareFile);
             ProcessUtil.Run("ln", $"-s {firmwareFile} {firmwareFileSysLink}", useBash:false);
         }
     }
