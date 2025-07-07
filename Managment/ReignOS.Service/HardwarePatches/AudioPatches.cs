@@ -44,24 +44,27 @@ namespace ReignOS.Service.HardwarePatches
             Program.RunUserCmd("systemctl --user restart wireplumber");
 		}
 
-        public static void InstallFirmware_aw87559()
+        public static bool InstallFirmware_aw87559()
         {
             const string rootFirmwareFolder = "/usr/lib/firmware";
             const string firmwareFolder = rootFirmwareFolder + "/aw87559";
             const string firmwareFile = firmwareFolder + "/awinic_smartk_acf.bin";
             const string firmwareFileSysLink = rootFirmwareFolder + "/aw87xxx_acf.bin";
-            if (File.Exists(firmwareFile) && File.Exists(firmwareFileSysLink)) return;
+            if (File.Exists(firmwareFile) && File.Exists(firmwareFileSysLink)) return false;
 
             try
             {
                 Directory.CreateDirectory(firmwareFolder);
                 File.Copy("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Firmware/aw87559/awinic_smartk_acf.bin", firmwareFile, true);
                 ProcessUtil.Run("ln", $"-s {firmwareFile} {firmwareFileSysLink}", useBash:false);
+                return true;
             }
             catch (Exception e)
             {
                 Log.WriteLine(e);
             }
+
+            return false;
         }
     }
 }
