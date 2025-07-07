@@ -142,24 +142,27 @@
             <ul style="color: #888;">
                 <li>
                     <b><u>Ayaneo Slide / Antec Core HS</u></b><br>
-                    <b>- Fix random reboots</b><br>
+                    <b>- Enable sleep support</b><br>
                     <p style="padding-left: 20px; margin: 0;">
-                    * Open terminal<br>
-                    * sudo nano /boot/loader/entries/arch.conf<br>
-                    * Add "acpi=strict" in options: "options root={your-path} rw acpi=strict"<br>
-                    * Remove "pci=realloc" if it exists<br>
-                    * Save and exit: Ctrl+X then Y to save<br>
-                    * reboot<br>
+                    * See "Other Ayaneo Devices" below.<br>
+                    * NOTE: Slide/CoreHS only works correctly with S0i2 not S0i3<br>
 
                     <p style="padding-left: 0px; margin: 0;"></p>
+                    <b>- Fix random reboots</b><br>
+                    <p style="padding-left: 20px; margin: 0;">
+                    * In Control-Center make sure acpi=strict is checked<br>
+                    * Then make sure you reboot device once after install so this setting takes effect
+                </li>
+                <li>
+                    <b><u>Other Ayaneo Devices</u></b><br>
                     <b>- Enable sleep support</b><br>
                     <p style="padding-left: 20px; margin: 0;">
                     * Boot into BIOS<br>
                     * Naviage to "AMD PBS->Power Saving Configurations"<br>
                     * Change "S3 Enable" to "Modern Standby Enable"<br>
-                    * Make sure "Modern Standby Type" is set to "Modern Standby + S0i2"<br>
+                    * Make sure "Modern Standby Type" is set to "Modern Standby + S0i2 + S0i3" (or just "Modern Standby + S0i2" if S0i3 has issues)<br>
                     * Save and exit<br>
-                    * NOTE: If your BIOS doesn't expose "AMD PBS" you can put <a href="https://github.com/DavidS95/Smokeless_UMAF/raw/main/UMAF_BETA.zip">Smokeless UMAF</a> on a FAT32 drive and boot it to access.
+                    * NOTE: If your BIOS doesn't expose "AMD PBS" you can put <a href="https://github.com/DavidS95/Smokeless_UMAF/raw/main/UMAF_BETA.zip">Smokeless UMAF</a> on a FAT32 drive and boot it to access.<br>
                 </li>
             </ul>
         </div>
