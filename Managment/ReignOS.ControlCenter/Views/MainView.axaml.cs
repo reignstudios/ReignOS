@@ -760,7 +760,7 @@ public partial class MainView : UserControl
             var displaySetting = displaySettings.FirstOrDefault(x => x.enabled);
             if (displaySetting != null)
             {
-                displayArg = $" --display-index={displaySettings.IndexOf(displaySetting)}";
+                displayArg = $" --display-name={displaySetting.name}";
                 if (displaySetting.widthOverride > 0 && displaySetting.heightOverride > 0) displayArg += $" --resolution={displaySetting.widthOverride}x{displaySetting.heightOverride}";
             }
 
@@ -769,10 +769,11 @@ public partial class MainView : UserControl
             text = text.Replace(" --rotation-left", "");
             text = text.Replace(" --rotation-right", "");
             text = text.Replace(" --rotation-flip", "");
-            for (int i = 0; i != 10; i++) text = text.Replace($" --display-index={i}", "");
+            var match = Regex.Match(text, @" --display-name=(\S*)");
+            if (match.Success) text = text.Replace($" --display-name={match.Groups[1].Value}", "");
             while (true)
             {
-                var match = Regex.Match(text, @"( --resolution=\d*x\d*)");
+                match = Regex.Match(text, @"( --resolution=\d*x\d*)");
                 if (!match.Success) break;
                 text = text.Replace(match.Groups[1].Value, "");
             }

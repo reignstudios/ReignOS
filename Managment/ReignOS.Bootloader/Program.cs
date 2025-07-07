@@ -48,7 +48,7 @@ internal class Program
     private static int gpu = 0;
     private static ScreenRotation screenRotation = ScreenRotation.Unset;
     private static bool forceControlCenter = false;
-    private static int displayIndex = 0;
+    private static string displayName = null;
     private static int displayWidth = 0, displayHeight = 0;
 
     private static void Main(string[] args)
@@ -100,10 +100,10 @@ internal class Program
             else if (arg == "--input-inputplumber") inputMode = InputMode.InputPlumber;
             else if (arg == "--input-disable") inputMode = InputMode.Disabled;
             
-            else if (arg.StartsWith("--display-index="))
+            else if (arg.StartsWith("--display-name="))
             {
                 var parts = arg.Split('=');
-                if (parts.Length == 2 && !int.TryParse(parts[1], out displayIndex)) displayIndex = 0;
+                if (parts.Length == 2) displayName = parts[1];
             }
             else if (arg.StartsWith("--resolution"))
             {
@@ -417,6 +417,7 @@ internal class Program
     {
         Log.WriteLine("Starting Gamescope with Steam...");
         DisableX11();
+        string displayArg = displayName != null ? $" -O {displayName}" : "";
         string useMangoHubArg = useMangoHub ? " --mangoapp" : "";
         string vrrArg = vrr ? " --adaptive-sync" : "";
         string hdrArg = hdr ? " --hdr-enabled" : "";
@@ -433,7 +434,7 @@ internal class Program
         }
 
         string displayRezArg = (displayWidth > 0 && displayHeight > 0) ? $" -W {displayWidth} -H {displayHeight}" : "";
-        ProcessUtil.Run($"{gpuArg}gamescope", $"-O eDP-1 -e -f{useMangoHubArg}{vrrArg}{hdrArg}{rotArg}{displayRezArg} -- ./Start_Gamescope.sh{steamGPUArg}{steamDeckArg}", useBash:true, verboseLog:true);// --framerate-limit
+        ProcessUtil.Run($"{gpuArg}gamescope", $"-e -f{displayArg}{useMangoHubArg}{vrrArg}{hdrArg}{rotArg}{displayRezArg} -- ./Start_Gamescope.sh{steamGPUArg}{steamDeckArg}", useBash:true, verboseLog:true);// --framerate-limit
     }
 
     private static void StartCompositor_Weston(bool windowedMode)
