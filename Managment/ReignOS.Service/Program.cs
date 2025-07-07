@@ -1,6 +1,7 @@
 ﻿namespace ReignOS.Service;
 using ReignOS.Core;
 using ReignOS.Service.Hardware;
+using ReignOS.Service.HardwarePatches;
 using ReignOS.Service.OS;
 
 using System;
@@ -145,6 +146,9 @@ internal class Program
         FileUtils.SafeCopy(Path.Combine(srcPath, "YHB-YHB02P25.lua"), Path.Combine(dstPath, "YHB-YHB02P25.lua"));
         FileUtils.SafeCopy(Path.Combine(srcPath, "ZDZ-ZDZ0501.lua"), Path.Combine(dstPath, "ZDZ-ZDZ0501.lua"));
         FileUtils.SafeCopy(Path.Combine(srcPath, "AYA-AYAOLED_FHD.lua"), Path.Combine(dstPath, "AYA-AYAOLED_FHD.lua"));
+
+        // install missing firmware
+        AudioPatches.InstallFirmware_aw87559();
 
         // configure pwr button for sleep
         dstPath = "/etc/systemd/logind.conf.d/";

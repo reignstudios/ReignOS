@@ -12,6 +12,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <None Update="Firmware\aw87559\awinic_smartk_acf.bin">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
       <None Update="Gamescope\AYA-AYAOLED_FHD.lua">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
