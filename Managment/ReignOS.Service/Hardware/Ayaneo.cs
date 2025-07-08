@@ -26,7 +26,7 @@ namespace ReignOS.Service.Hardware
                 Program.hardwareType == HardwareType.AyaneoFlipDS ||
                 Program.hardwareType == HardwareType.AyaneoSlide;
 
-            if (Program.hardwareType == HardwareType.AyaneoPro)
+            if (Program.hardwareType == HardwareType.Ayaneo1 || Program.hardwareType == HardwareType.AyaneoPro)
             {
                 WiFiPatches.Fix2(true);
             }
