@@ -434,7 +434,7 @@ internal class Program
         }
 
         string displayRezArg = (displayWidth > 0 && displayHeight > 0) ? $" -W {displayWidth} -H {displayHeight}" : "";
-        ProcessUtil.Run($"{gpuArg}gamescope", $"-e -f -F fsr {displayArg}{useMangoHubArg}{vrrArg}{hdrArg}{rotArg}{displayRezArg} -- ./Start_Gamescope.sh{steamGPUArg}{steamDeckArg}", useBash:true, verboseLog:true);// --framerate-limit
+        ProcessUtil.Run($"{gpuArg}gamescope", $"-e -f -F fsr --sharpness 10 {displayArg}{useMangoHubArg}{vrrArg}{hdrArg}{rotArg}{displayRezArg} -- ./Start_Gamescope.sh{steamGPUArg}{steamDeckArg}", useBash:true, verboseLog:true);// --framerate-limit
     }
 
     private static void StartCompositor_Weston(bool windowedMode)
