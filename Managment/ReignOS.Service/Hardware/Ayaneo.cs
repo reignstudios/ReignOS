@@ -74,27 +74,11 @@ namespace ReignOS.Service.Hardware
                 
                 if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_RIGHTALT, true), new KeyEvent(input.KEY_RIGHTCTRL, true), new KeyEvent(input.KEY_DELETE, true)))
                 {
-                    VirtualGamepad.Write_TriggerLeftSteamMenu();
+                    VirtualGamepad.Write_TriggerRightSteamMenu();
                 }
             }
 
-            if (Program.hardwareType == HardwareType.AyaneoPro || Program.hardwareType == HardwareType.Ayaneo)
-            {
-                if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_RIGHTCTRL, true), new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_F12, true)))
-                {
-                    VirtualGamepad.Write_TriggerLeftSteamMenu();
-                }
-            }
-
-            if (Program.hardwareType == HardwareType.AyaneoPlus || Program.hardwareType == HardwareType.AyaneoSlide || Program.hardwareType == HardwareType.Ayaneo)
-            {
-                if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTCTRL, true), new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_F17, true)))
-                {
-                    VirtualGamepad.Write_TriggerLeftSteamMenu();
-                }
-            }
-
-            if (Program.hardwareType == HardwareType.AyaneoFlipDS || Program.hardwareType == HardwareType.Ayaneo)
+            if (Program.hardwareType == HardwareType.Ayaneo2 || Program.hardwareType == HardwareType.AyaneoFlipDS || Program.hardwareType == HardwareType.Ayaneo)
             {
                 if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_RIGHTCTRL, true), new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_F17, true)))
                 {
@@ -115,8 +99,25 @@ namespace ReignOS.Service.Hardware
                 }
             }
 
+            if (Program.hardwareType == HardwareType.AyaneoPro || Program.hardwareType == HardwareType.Ayaneo)
+            {
+                if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_RIGHTCTRL, true), new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_F12, true)))
+                {
+                    VirtualGamepad.Write_TriggerLeftSteamMenu();
+                }
+            }
+
+            if (Program.hardwareType == HardwareType.AyaneoPlus || Program.hardwareType == HardwareType.AyaneoSlide || Program.hardwareType == HardwareType.Ayaneo)
+            {
+                if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTCTRL, true), new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_F17, true)))
+                {
+                    VirtualGamepad.Write_TriggerLeftSteamMenu();
+                }
+            }
+
             if
             (
+                Program.hardwareType == HardwareType.Ayaneo2 ||
                 Program.hardwareType == HardwareType.AyaneoPro ||
                 Program.hardwareType == HardwareType.AyaneoPlus ||
                 Program.hardwareType == HardwareType.AyaneoFlipDS ||
