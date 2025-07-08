@@ -50,9 +50,11 @@ public unsafe static class input
     public const int KEY_RIGHTCTRL = 97;
     public const int KEY_LEFTMETA = 125;
     public const int KEY_LEFTALT = 56;
+    public const int KEY_RIGHTALT = 100;
     public const int KEY_LEFTSHIFT = 42;
     public const int KEY_PROG1 = 148;
     public const int KEY_PROG2 = 149;
+    public const int KEY_DELETE = 111;
 
     public const int BTN_MODE = 0x13c;
     public const int BTN_A = 0x130;

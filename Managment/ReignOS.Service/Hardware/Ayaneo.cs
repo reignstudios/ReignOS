@@ -18,11 +18,13 @@ namespace ReignOS.Service.Hardware
         {
             isEnabled =
                 Program.hardwareType == HardwareType.Ayaneo ||
+                Program.hardwareType == HardwareType.Ayaneo1 ||
+                Program.hardwareType == HardwareType.Ayaneo2 ||
+                Program.hardwareType == HardwareType.Ayaneo3 ||
                 Program.hardwareType == HardwareType.AyaneoPro ||
                 Program.hardwareType == HardwareType.AyaneoPlus ||
                 Program.hardwareType == HardwareType.AyaneoFlipDS ||
-                Program.hardwareType == HardwareType.AyaneoSlide ||
-                Program.hardwareType == HardwareType.Ayaneo3;
+                Program.hardwareType == HardwareType.AyaneoSlide;
 
             if (Program.hardwareType == HardwareType.AyaneoPro)
             {
@@ -63,6 +65,19 @@ namespace ReignOS.Service.Hardware
             if (Program.inputMode != InputMode.ReignOS) return;
 
             // relay OEM buttons to virtual gamepad input
+            if (Program.hardwareType == HardwareType.Ayaneo1 || Program.hardwareType == HardwareType.Ayaneo)
+            {
+                if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTMETA, true)))
+                {
+                    VirtualGamepad.Write_TriggerLeftSteamMenu();
+                }
+                
+                if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_RIGHTALT, true), new KeyEvent(input.KEY_RIGHTCTRL, true), new KeyEvent(input.KEY_DELETE, true)))
+                {
+                    VirtualGamepad.Write_TriggerLeftSteamMenu();
+                }
+            }
+
             if (Program.hardwareType == HardwareType.AyaneoPro || Program.hardwareType == HardwareType.Ayaneo)
             {
                 if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_RIGHTCTRL, true), new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_F12, true)))

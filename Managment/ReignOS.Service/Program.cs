@@ -23,11 +23,13 @@ enum HardwareType
 
     // Ayaneo
     Ayaneo,
+    Ayaneo1,
+    Ayaneo2,
+    Ayaneo3,
     AyaneoPro,
     AyaneoPlus,
     AyaneoFlipDS,
     AyaneoSlide,
-    Ayaneo3,
 
     // One-Netbook
     OneXPlayer_Gen1,
@@ -94,7 +96,7 @@ internal class Program
         {
             string vendorName = ProcessUtil.Run("dmidecode", "-s system-manufacturer", out _).Trim();
             Log.WriteLine("Hardware Vendor: " + vendorName);
-            if (vendorName.StartsWith("AYANEO")) hardwareType = HardwareType.Ayaneo;
+            if (vendorName.StartsWith("AYANEO") || vendorName.StartsWith("AYADEVICE")) hardwareType = HardwareType.Ayaneo;
             else if (vendorName.StartsWith("AOKZOE")) hardwareType = HardwareType.AOKZOE;
 
             string productName = ProcessUtil.Run("dmidecode", "-s system-product-name", out _).Trim();
@@ -105,6 +107,7 @@ internal class Program
             else if (productName.StartsWith("AIR Plus")) hardwareType = HardwareType.AyaneoPlus;
             else if (productName.StartsWith("FLIP DS")) hardwareType = HardwareType.AyaneoFlipDS;
             else if (productName.StartsWith("SLIDE")) hardwareType = HardwareType.AyaneoSlide;
+            else if (productName.StartsWith("AYA NEO FOUNDER")) hardwareType = HardwareType.Ayaneo1;
             else if (productName.StartsWith("AYANEO 3")) hardwareType = HardwareType.Ayaneo3;
             else if (productName.StartsWith("ONE XPLAYER")) hardwareType = HardwareType.OneXPlayer_Gen1;
             else if (productName.StartsWith("ONEXPLAYER")) hardwareType = HardwareType.OneXPlayer_Gen2;
