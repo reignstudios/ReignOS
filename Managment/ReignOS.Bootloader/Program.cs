@@ -432,9 +432,9 @@ internal class Program
             case ScreenRotation.Right: rotArg = " --force-orientation right"; break;
             case ScreenRotation.Flip: rotArg = " --force-orientation upsidedown"; break;
         }
-        // FSR: -F fsr --fsr-sharpness 10; DLSS: -F nis --sharpness 10;
+        
         string displayRezArg = (displayWidth > 0 && displayHeight > 0) ? $" -W {displayWidth} -H {displayHeight}" : "";
-        ProcessUtil.Run($"{gpuArg}gamescope", $"-e -f -F fsr --fsr-sharpness 10 -W 1920 -H 1080 -w 1280 -h 720{displayArg}{useMangoHubArg}{vrrArg}{hdrArg}{rotArg}{displayRezArg} -- ./Start_Gamescope.sh{steamGPUArg}{steamDeckArg}", useBash:true, verboseLog:true);// --framerate-limit
+        ProcessUtil.Run($"{gpuArg}gamescope", $"-e -f{displayArg}{useMangoHubArg}{vrrArg}{hdrArg}{rotArg}{displayRezArg} -- ./Start_Gamescope.sh{steamGPUArg}{steamDeckArg}", useBash:true, verboseLog:true);// --framerate-limit
     }
 
     private static void StartCompositor_Weston(bool windowedMode)
