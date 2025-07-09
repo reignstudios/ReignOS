@@ -377,12 +377,12 @@
 				<StackPanel Orientation="Horizontal">
 					<CheckBox Name="kernel_intel_idle_max_cstate_Checkbox" Content="intel_idle.max_cstate=X (May help resume from sleep issues)" IsCheckedChanged="KernelValue_OnIsCheckedChanged" Margin="0,0,8,0"/>
 					<TextBlock Name="kernel_intel_idle_max_cstate_MaxCState" Text="[cstate: Min=1 Max=X]" Margin="0,0,8,0" VerticalAlignment="Center"/>
-					<TextBox Name="kernel_intel_idle_max_cstate_TextBox" Text="1"/>
+					<TextBox Name="kernel_intel_idle_max_cstate_TextBox" Text="1" TextChanged="KernelValue_OnIsCheckedChanged"/>
 				</StackPanel>
 				<StackPanel Orientation="Horizontal">
 					<CheckBox Name="kernel_amd_pstate_processor_max_cstate_Checkbox" Content="amd_pstate=disable processor.max_cstate=X (May help resume from sleep issues)" IsCheckedChanged="KernelValue_OnIsCheckedChanged" Margin="0,0,8,0"/>
 					<TextBlock Name="kernel_amd_pstate_processor_max_cstate_MaxCState" Text="[cstate: Min=1 Max=X]" Margin="0,0,8,0" VerticalAlignment="Center"/>
-					<TextBox Name="kernel_amd_pstate_processor_max_cstate_TextBox" Text="1"/>
+					<TextBox Name="kernel_amd_pstate_processor_max_cstate_TextBox" Text="1" TextChanged="KernelValue_OnIsCheckedChanged"/>
 				</StackPanel>
 				<CheckBox Name="kernel_mem_sleep_default_deep_Checkbox" Content="mem_sleep_default=deep (Force mem sleep mode to deep)" IsCheckedChanged="KernelValue_OnIsCheckedChanged"/>
 				<CheckBox Name="kernel_mem_sleep_default_s2idle_Checkbox" Content="mem_sleep_default=s2idle (Force mem sleep mode to s2idle)" IsCheckedChanged="KernelValue_OnIsCheckedChanged"/>

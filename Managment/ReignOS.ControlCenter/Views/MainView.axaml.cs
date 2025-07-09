@@ -2070,6 +2070,8 @@ public partial class MainView : UserControl
 
     private void KernelValue_OnIsCheckedChanged(object sender, RoutedEventArgs e)
     {
+        if (string.IsNullOrEmpty(kernelArchConf_Options)) return;
+        
         // validate conflicting options
         if (kernel_acpi_strict_Checkbox.IsChecked == true && kernel_acpi_force_Checkbox.IsChecked == true)
         {
