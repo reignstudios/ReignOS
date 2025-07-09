@@ -117,11 +117,11 @@ public partial class MainView : UserControl
     private List<PowerSetting> powerSettings = new();
     private List<PowerCPUSetting> powerCPUSettings = new();
     private bool? powerIntelTurboBoostEnabled;
-    private bool powerBoostEnabled;
     
     private List<DisplaySetting> displaySettings = new();
 
     private string kernelArchConf, kernelArchConf_Options;
+    private int kernelIntelMaxCState, kernelAMDMaxCState;
     
     public MainView()
     {
@@ -2076,7 +2076,21 @@ public partial class MainView : UserControl
             kernel_acpi_strict_Checkbox.IsChecked = false;
             kernel_acpi_force_Checkbox.IsChecked = false;
         }
-        
+
+        if (kernel_mem_sleep_default_deep_Checkbox.IsChecked == true && kernel_mem_sleep_default_s2idle_Checkbox.IsChecked == true)
+        {
+            kernel_mem_sleep_default_deep_Checkbox.IsChecked = false;
+            kernel_mem_sleep_default_s2idle_Checkbox.IsChecked = false;
+        }
+
+        if (!int.TryParse(kernel_intel_idle_max_cstate_TextBox.Text, out int kernel_intel_idle_max_cstate_Value)) kernel_intel_idle_max_cstate_Value = 1;
+        if (kernel_intel_idle_max_cstate_Value < 1) kernel_intel_idle_max_cstate_Value = 1;
+        if (kernel_intel_idle_max_cstate_Value > kernelIntelMaxCState) kernel_intel_idle_max_cstate_Value = kernelIntelMaxCState;
+
+        if (!int.TryParse(kernel_amd_pstate_processor_max_cstate_TextBox.Text, out int kernel_amd_pstate_processor_max_cstate_Value)) kernel_amd_pstate_processor_max_cstate_Value = 1;
+        if (kernel_amd_pstate_processor_max_cstate_Value < 1) kernel_amd_pstate_processor_max_cstate_Value = 1;
+        if (kernel_amd_pstate_processor_max_cstate_Value > kernelAMDMaxCState) kernel_amd_pstate_processor_max_cstate_Value = kernelAMDMaxCState;
+
         // update UI
         var match = Regex.Match(kernelArchConf_Options, @"(options root=[^\n|^\s]+)");
         if (match.Success)
@@ -2088,6 +2102,20 @@ public partial class MainView : UserControl
             if (kernel_acpi_strict_Checkbox.IsChecked == true) builder.Append(" acpi=strict");
             if (kernel_acpi_force_Checkbox.IsChecked == true) builder.Append(" acpi=force");
             if (kernel_pci_realloc_Checkbox.IsChecked == true) builder.Append(" pci=realloc");
+
+            if (kernel_intel_idle_max_cstate_Checkbox.IsChecked == true) builder.Append($" intel_idle.max_cstate={kernel_intel_idle_max_cstate_Value}");
+            if (kernel_amd_pstate_processor_max_cstate_Checkbox.IsChecked == true) builder.Append($" amd_pstate=disable processor.max_cstate={kernel_amd_pstate_processor_max_cstate_Value}");
+
+            if (kernel_mem_sleep_default_deep_Checkbox.IsChecked == true) builder.Append(" mem_sleep_default=deep");
+            if (kernel_mem_sleep_default_s2idle_Checkbox.IsChecked == true) builder.Append(" mem_sleep_default=s2idle");
+
+            if (kernel_i915_audio_Checkbox.IsChecked == true) builder.Append(" i915.audio=0");
+            if (kernel_amdgpu_audio_Checkbox.IsChecked == true) builder.Append(" amdgpu.audio=0");
+            if (kernel_radeon_audio_Checkbox.IsChecked == true) builder.Append(" radeon.audio=0");
+            if (kernel_nouveau_audio_Checkbox.IsChecked == true) builder.Append(" nouveau.audio=0");
+
+            if (kernel_snd_hda_intel_Checkbox.IsChecked == true) ProcessUtil.WriteAllTextAdmin("/etc/modprobe.d/disable-hdmi-audio.conf", "options snd_hda_intel enable=1,0");
+            else ProcessUtil.DeleteFileAdmin("/etc/modprobe.d/disable-hdmi-audio.conf");
 
             // add custom options
             var parts = kernelCustomTextuBox.Text.Replace(",", "").Replace(";", "").Split(" ");
@@ -2102,7 +2130,26 @@ public partial class MainView : UserControl
     {
         // get kernel version
         kernelVersionTextBox.Text = ProcessUtil.Run("uname", "-r", useBash:false);
-        
+
+        // read disable hdmi audio conf
+        kernel_snd_hda_intel_Checkbox.IsChecked = File.Exists("/etc/modprobe.d/disable-hdmi-audio.conf");
+
+        // read cstates
+        string cstatePath = "/sys/module/intel_idle/parameters/max_cstate";
+        if (File.Exists(cstatePath))
+        {
+            string cstate = ProcessUtil.ReadAllTextAdmin(cstatePath);
+            if (int.TryParse(cstate, out kernelIntelMaxCState)) kernel_intel_idle_max_cstate_MaxCState.Text = $"[cstate: Min=1 Max={kernelIntelMaxCState}]";
+        }
+
+        cstatePath = "/sys/module/acpi_idle/parameters/max_cstate";
+        if (!File.Exists(cstatePath)) cstatePath = "/sys/module/processor/parameters/max_cstate";
+        if (File.Exists(cstatePath))
+        {
+            string cstate = ProcessUtil.ReadAllTextAdmin(cstatePath);
+            if (int.TryParse(cstate, out kernelAMDMaxCState)) kernel_amd_pstate_processor_max_cstate_MaxCState.Text = $"[cstate: Min=1 Max={kernelAMDMaxCState}]";
+        }
+
         // read config and get options
         kernelArchConf = File.ReadAllText("/boot/loader/entries/arch.conf");
         var match = Regex.Match(kernelArchConf, @"(options root=[^\n]+)");
@@ -2128,9 +2175,28 @@ public partial class MainView : UserControl
                 if (part.Length != 0 &&
                     part != "rw" &&
                     part != "rootwait" &&
-                    part != "acpi=strict" && part != "acpi=force" && part != "pci=realloc")
+                    part != "acpi=strict" && part != "acpi=force" &&
+                    part != "pci=realloc" &&
+
+                    !part.Contains("intel_idle.max_cstate=") &&
+                    part != "amd_pstate=disable" && !part.Contains("processor.max_cstate=") &&
+
+                    part != "mem_sleep_default=deep" && part != "mem_sleep_default=s2idle" &&
+                    part != "i915.audio=0" && part != "amdgpu.audio=0" && part != "radeon.audio=0" && part != "nouveau.audio=0")
                 {
                     builder.Append(part + " ");
+                }
+
+                if (part.Contains("intel_idle.max_cstate="))
+                {
+                    var subParts = part.Split('=');
+                    if (subParts.Length == 2) kernel_intel_idle_max_cstate_TextBox.Text = subParts[1];
+                }
+
+                if (part.Contains("processor.max_cstate="))
+                {
+                    var subParts = part.Split('=');
+                    if (subParts.Length == 2) kernel_amd_pstate_processor_max_cstate_TextBox.Text = subParts[1];
                 }
             }
         }
@@ -2140,6 +2206,17 @@ public partial class MainView : UserControl
         kernel_acpi_strict_Checkbox.IsChecked = kernelArchConf_Options.Contains(" acpi=strict");
         kernel_acpi_force_Checkbox.IsChecked = kernelArchConf_Options.Contains(" acpi=force");
         kernel_pci_realloc_Checkbox.IsChecked = kernelArchConf_Options.Contains(" pci=realloc");
+
+        kernel_intel_idle_max_cstate_Checkbox.IsChecked = kernelArchConf_Options.Contains(" intel_idle.max_cstate=");
+        kernel_amd_pstate_processor_max_cstate_Checkbox.IsChecked = kernelArchConf_Options.Contains(" amd_pstate=disable processor.max_cstate=");
+
+        kernel_mem_sleep_default_deep_Checkbox.IsChecked = kernelArchConf_Options.Contains(" mem_sleep_default=deep");
+        kernel_mem_sleep_default_s2idle_Checkbox.IsChecked = kernelArchConf_Options.Contains(" mem_sleep_default=s2idle");
+
+        kernel_i915_audio_Checkbox.IsChecked = kernelArchConf_Options.Contains(" i915.audio=0");
+        kernel_amdgpu_audio_Checkbox.IsChecked = kernelArchConf_Options.Contains(" amdgpu.audio=0");
+        kernel_radeon_audio_Checkbox.IsChecked = kernelArchConf_Options.Contains(" radeon.audio=0");
+        kernel_nouveau_audio_Checkbox.IsChecked = kernelArchConf_Options.Contains(" nouveau.audio=0");
     }
 
     private void DisplayManagerButton_OnClick(object sender, RoutedEventArgs e)
