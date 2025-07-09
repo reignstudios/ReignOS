@@ -390,7 +390,7 @@
 				<CheckBox Name="kernel_amdgpu_audio_Checkbox" Content="amdgpu.audio=0 (Disable HDMI audio may help stability issues on some displays)" IsCheckedChanged="KernelValue_OnIsCheckedChanged"/>
 				<CheckBox Name="kernel_radeon_audio_Checkbox" Content="radeon.audio=0 (Disable HDMI audio may help stability issues on some displays)" IsCheckedChanged="KernelValue_OnIsCheckedChanged"/>
 				<CheckBox Name="kernel_nouveau_audio_Checkbox" Content="nouveau.audio=0 (Disable HDMI audio may help stability issues on some displays)" IsCheckedChanged="KernelValue_OnIsCheckedChanged"/>
-				<CheckBox Name="kernel_snd_hda_intel_Checkbox" Content="snd_hda_intel (Disable HDMI audio may help stability issues on some displays) [Will not list in args] [Applies to all GPUs and drivers]" IsCheckedChanged="KernelValue_OnIsCheckedChanged"/>
+				<CheckBox Name="kernel_snd_hda_intel_Checkbox" Content="Disable _snd_hda_intel (Disable HDMI audio may help stability issues on some displays) [NOTE: not listed in args] [Applies to all GPUs and drivers]" IsCheckedChanged="KernelValue_OnIsCheckedChanged"/>
 			</StackPanel>
 
 			<Button Content="Apply" Width="128" Height="64" Margin="0,0,146,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="#803000" Click="KernelManagerApplyButton_OnClick"/>
