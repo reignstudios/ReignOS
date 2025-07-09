@@ -2056,7 +2056,8 @@ public partial class MainView : UserControl
         result = result.Replace(kernelArchConf_Options, kernelArchConfigTextBox.Text);
         ProcessUtil.WriteAllTextAdmin("/boot/loader/entries/arch.conf", result);
         CopyKernelConf();
-        RestartButton_Click(null, null);
+        if (kernel_snd_hda_intel_Checkbox.IsChecked == true) CheckUpdatesButton_Click(19, null);
+        else RestartButton_Click(null, null);
     }
     
     private void CopyKernelConf()
@@ -2116,15 +2117,8 @@ public partial class MainView : UserControl
             if (kernel_radeon_audio_Checkbox.IsChecked == true) builder.Append(" radeon.audio=0");
             if (kernel_nouveau_audio_Checkbox.IsChecked == true) builder.Append(" nouveau.audio=0");
 
-            if (kernel_snd_hda_intel_Checkbox.IsChecked == true)
-            {
-                ProcessUtil.WriteAllTextAdmin("/etc/modprobe.d/disable-hdmi-audio.conf", "options snd_hda_intel enable=1,0");
-                CheckUpdatesButton_Click(19, null);
-            }
-            else
-            {
-                ProcessUtil.DeleteFileAdmin("/etc/modprobe.d/disable-hdmi-audio.conf");
-            }
+            if (kernel_snd_hda_intel_Checkbox.IsChecked == true) ProcessUtil.WriteAllTextAdmin("/etc/modprobe.d/disable-hdmi-audio.conf", "options snd_hda_intel enable=1,0");
+            else ProcessUtil.DeleteFileAdmin("/etc/modprobe.d/disable-hdmi-audio.conf");
 
             // add custom options
             var parts = kernelCustomTextuBox.Text.Replace(",", "").Replace(";", "").Split(" ");
