@@ -1,20 +1,5 @@
 #!/bin/bash
 
-# args
-#DISABLE_UPDATE=false
-#for arg in "$@"; do
-#    if [ "$arg" = "--disable-update" ]; then
-#        DISABLE_UPDATE=true
-#    fi
-#done
-
-# check updates
-#if [ "$DISABLE_UPDATE" = "false" ]; then
-#    cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
-#    chmod +x ./Update.sh
-#    ./Update.sh
-#fi
-
 # run bootloader
 cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
 ./ReignOS.Bootloader $@
@@ -60,20 +45,24 @@ fi
 if [ $exit_code -eq 17 ]; then
   echo ""
   echo "ReignOS (Check for updates)..."
-  #if [ "$DISABLE_UPDATE" = "true" ]; then
-    ./Update.sh
-  #fi
+  ./Update.sh
   loginctl terminate-user gamer
   exit 0
 fi
 
 if [ $exit_code -eq 18 ]; then
   echo ""
-  echo "ReignOS (Check for updates and force reboot)..."
-  #if [ "$DISABLE_UPDATE" = "true" ]; then
-    ./Update.sh
-    sudo reboot -f
-  #fi
+  echo "ReignOS (Check for updates and reboot)..."
+  ./Update.sh
+  sudo reboot -f
+  exit 0
+fi
+
+if [ $exit_code -eq 19 ]; then
+  echo ""
+  echo "ReignOS (Run mkinitcpio and reboot)..."
+  sudo mkinitcpio -P
+  sudo reboot -f
   exit 0
 fi
 
