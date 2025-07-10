@@ -45,13 +45,13 @@ if [ "$DISABLE_STEAM_DECK" = "true" ]; then
     if [ "$DISABLE_STEAM_GPU" = "true" ]; then
         env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -steamos3 -no-cef-sandbox
     else
-        env ENABLE_LSFG=1 LSFG_MULTIPLIER=4 steam -bigpicture -steamos3 -no-cef-sandbox
+        steam -bigpicture -steamos3 -no-cef-sandbox
     fi
 else
     if [ "$DISABLE_STEAM_GPU" = "true" ]; then
         env MESA_GL_VERSION_OVERRIDE=1.3 steam -gamepadui -steamdeck -steamos3 -no-cef-sandbox
     else
-        env ENABLE_LSFG=1 LSFG_MULTIPLIER=4 steam -gamepadui -steamdeck -steamos3 -no-cef-sandbox
+        steam -gamepadui -steamdeck -steamos3 -no-cef-sandbox
     fi
 fi
 
