@@ -427,11 +427,7 @@ internal class Program
 
     private static string GetGPUArg(int gpu)
     {
-        if (gpu == 100)
-        {
-            return "prime-run ";
-        }
-
+        if (gpu == 100) return "prime-run ";
         return "";
     }
 
