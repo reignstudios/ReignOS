@@ -52,7 +52,7 @@ internal class Program
     private static bool forceControlCenter = false;
     private static string displayName = null;
     private static int displayWidth = 0, displayHeight = 0;
-    private static int audioMaxVolume = 100, audioCurrentVolume = 50;
+    private static int audioMaxVolume = 150, audioCurrentVolume = 50;
 
     private static void Main(string[] args)
     {
