@@ -1,4 +1,6 @@
-﻿namespace ReignOS.Bootloader;
+﻿using System.Text.RegularExpressions;
+
+namespace ReignOS.Bootloader;
 using ReignOS.Core;
 
 using System;
@@ -50,6 +52,7 @@ internal class Program
     private static bool forceControlCenter = false;
     private static string displayName = null;
     private static int displayWidth = 0, displayHeight = 0;
+    private static int audioMaxVolume = 100, audioCurrentVolume = 50;
 
     private static void Main(string[] args)
     {
@@ -169,6 +172,9 @@ internal class Program
         // kill service if its currently running
         ProcessUtil.KillHard("ReignOS.Service", true, out _);
         
+        // get current audio volume
+        GetCurrentAudioVolume();
+        
         // start service
         using var serviceProcess = new Process();
         try
@@ -194,12 +200,18 @@ internal class Program
                     if (value.Contains("SET_VOLUME_DOWN") && !kdeActive)
                     {
                         //ProcessUtil.Run("amixer", "set Master 5%-");
-                        ProcessUtil.Run("pactl", "set-sink-volume @DEFAULT_SINK@ -5%");
+                        //ProcessUtil.Run("pactl", "set-sink-volume @DEFAULT_SINK@ -5%");
+                        audioCurrentVolume -= 5;
+                        if (audioCurrentVolume < 0) audioCurrentVolume = 0;
+                        ProcessUtil.Run("pactl", $"set-sink-volume @DEFAULT_SINK@ {audioCurrentVolume}%");
                     }
                     else if (value.Contains("SET_VOLUME_UP") && !kdeActive)
                     {
                         //ProcessUtil.Run("amixer", "set Master 5%+");
-                        ProcessUtil.Run("pactl", "set-sink-volume @DEFAULT_SINK@ +5%");
+                        //ProcessUtil.Run("pactl", "set-sink-volume @DEFAULT_SINK@ +5%");
+                        audioCurrentVolume += 5;
+                        if (audioCurrentVolume > 100) audioCurrentVolume = audioMaxVolume;
+                        ProcessUtil.Run("pactl", $"set-sink-volume @DEFAULT_SINK@ {audioCurrentVolume}%");
                     }
                     else if (value.StartsWith("ReignOS.Service.COMMAND: "))// service wants to run user-space command
                     {
@@ -401,6 +413,16 @@ internal class Program
     {
         if (e != null) Log.WriteLine($"Unhandled exception: {e}");
         else Log.WriteLine("Unhandled exception: Unknown");
+    }
+
+    private static void GetCurrentAudioVolume()
+    {
+        string result = ProcessUtil.Run("pactl", "get-sink-volume @DEFAULT_SINK@");
+        var match = Regex.Match(result, @"\s*(\d*)%\s*");
+        if (match.Success)
+        {
+            if (!int.TryParse(match.Groups[1].Value, out audioCurrentVolume)) audioCurrentVolume = 50;
+        }
     }
 
     private static string GetGPUArg(int gpu)

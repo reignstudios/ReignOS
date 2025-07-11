@@ -2117,8 +2117,15 @@ public partial class MainView : UserControl
             if (kernel_radeon_audio_Checkbox.IsChecked == true) builder.Append(" radeon.audio=0");
             if (kernel_nouveau_audio_Checkbox.IsChecked == true) builder.Append(" nouveau.audio=0");
 
-            if (kernel_snd_hda_intel_Checkbox.IsChecked == true) ProcessUtil.WriteAllTextAdmin("/etc/modprobe.d/disable-hdmi-audio.conf", "options snd_hda_intel enable=1,0");
-            else ProcessUtil.DeleteFileAdmin("/etc/modprobe.d/disable-hdmi-audio.conf");
+            if (kernel_snd_hda_intel_Checkbox.IsChecked == true)
+            {
+                //ProcessUtil.WriteAllTextAdmin("/etc/modprobe.d/snd_hda_intel.conf", "options snd_hda_intel enable=0,0,0,0,0,0,0,0,0,0");
+                ProcessUtil.WriteAllTextAdmin("/etc/modprobe.d/snd_hda_intel.conf", "options snd_hda_intel power_save=0 power_save_controller=N");
+            }
+            else
+            {
+                ProcessUtil.DeleteFileAdmin("/etc/modprobe.d/snd_hda_intel.conf");
+            }
 
             // add custom options
             var parts = kernelCustomTextuBox.Text.Replace(",", "").Replace(";", "").Split(" ");
@@ -2135,7 +2142,7 @@ public partial class MainView : UserControl
         kernelVersionTextBox.Text = ProcessUtil.Run("uname", "-r", useBash:false);
 
         // read disable hdmi audio conf
-        kernel_snd_hda_intel_Checkbox.IsChecked = File.Exists("/etc/modprobe.d/disable-hdmi-audio.conf");
+        kernel_snd_hda_intel_Checkbox.IsChecked = File.Exists("/etc/modprobe.d/snd_hda_intel.conf");
 
         // read cstates
         string cstatePath = "/sys/module/intel_idle/parameters/max_cstate";
