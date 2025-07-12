@@ -414,7 +414,7 @@ static class InstallUtil
 
         // install misc apps
         Run("pacman", "-S --noconfirm nano evtest efibootmgr");
-        Run("pacman", "-S --noconfirm dmidecode udev python");
+        Run("pacman", "-S --noconfirm dmidecode hwinfo udev python");
         UpdateProgress(31);
 
         // install firmware update support
@@ -469,6 +469,7 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm sof-firmware");
         Run("pacman", "-S --noconfirm pipewire pipewire-pulse pipewire-alsa pipewire-jack wireplumber");
         Run("systemctl", "--user enable pipewire pipewire-pulse wireplumber");
+        Run("systemctl", "--user enable pipewire.socket pipewire.service pipewire-pulse.socket pipewire-pulse.service");
         UpdateProgress(60);
 
         // install power

@@ -6,6 +6,7 @@
 # add pacman packages
 sudo pacman -S --noconfirm --needed linux-headers linux-tools
 sudo pacman -S --noconfirm --needed jq
+sudo pacman -S --noconfirm --needed hwinfo
 
 sudo pacman -S --noconfirm --needed wayland-utils
 sudo pacman -S --noconfirm --needed wlr-randr gamescope cage labwc weston
@@ -59,3 +60,6 @@ sudo pacman -S --noconfirm --needed libdvdread libdvdnav libdvdcss libbluray
 sudo systemctl stop acpid
 sudo systemctl disable acpid
 sudo pacman -R --noconfirm acpid
+
+# enable missing audio services
+systemctl --user enable pipewire.socket pipewire.service pipewire-pulse.socket pipewire-pulse.service

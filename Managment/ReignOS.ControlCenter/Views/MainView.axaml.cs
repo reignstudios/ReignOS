@@ -2052,12 +2052,71 @@ public partial class MainView : UserControl
 
     private void KernelManagerApplyButton_OnClick(object sender, RoutedEventArgs e)
     {
-        string result = kernelArchConf;
-        result = result.Replace(kernelArchConf_Options, kernelArchConfigTextBox.Text);
-        ProcessUtil.WriteAllTextAdmin("/boot/loader/entries/arch.conf", result);
+        // write snd_hda_intel settings
+        if (kernel_snd_hda_intel_DisableSleep_Checkbox.IsChecked == true)
+        {
+            ProcessUtil.WriteAllTextAdmin("/etc/modprobe.d/snd_hda_intel_sleep.conf", "options snd_hda_intel power_save=0 power_save_controller=N");
+        }
+        else
+        {
+            ProcessUtil.DeleteFileAdmin("/etc/modprobe.d/snd_hda_intel_sleep.conf");
+        }
+            
+        if (kernel_snd_hda_intel_DisableHDMI_Checkbox.IsChecked == true)
+        {
+            // reset audio system so 'aplay' can grab non-disabled cards
+            void standardOut(string line) {}
+            ProcessUtil.Run("systemctl", "--user stop pipewire.socket pipewire.service pipewire-pulse.socket pipewire-pulse.service", useBash:false, standardOut:standardOut);
+            ProcessUtil.Run("modprobe", "-r snd_hda_intel", asAdmin:true, useBash:false);
+            ProcessUtil.DeleteFileAdmin("/etc/modprobe.d/snd_hda_intel_disable.conf");
+            Thread.Sleep(1000);
+            ProcessUtil.Run("modprobe", "snd_hda_intel", asAdmin:true, useBash:false);
+            ProcessUtil.Run("systemctl", "--user start pipewire.socket pipewire.service pipewire-pulse.socket pipewire-pulse.service", useBash:false, standardOut:standardOut);
+            Thread.Sleep(1000);
+            
+            // get current audio device layout
+            string result = ProcessUtil.Run("aplay", "-l", useBash:false);
+            var lines = result.Split('\n');
+            var cards = new Dictionary<string, string>();
+            foreach (string line in lines)
+            {
+                var match = Regex.Match(line, @"card (\d):\s");
+                if (match.Success)
+                {
+                    if (line.Contains("HDMI")) cards[match.Groups[1].Value] = "0";
+                    else cards[match.Groups[1].Value] = "1";
+                }
+            }
+
+            string enableLine = "";
+            foreach (var card in cards)
+            {
+                if (enableLine == "") enableLine += "enable=" + card.Value;
+                else enableLine += "," + card.Value;
+            }
+                
+            ProcessUtil.WriteAllTextAdmin("/etc/modprobe.d/snd_hda_intel_disable.conf", $"options snd_hda_intel {enableLine}");
+        }
+        else
+        {
+            ProcessUtil.DeleteFileAdmin("/etc/modprobe.d/snd_hda_intel_disable.conf");
+        }
+        
+        // write kernel settings
+        string archConf = kernelArchConf;
+        archConf = archConf.Replace(kernelArchConf_Options, kernelArchConfigTextBox.Text);
+        ProcessUtil.WriteAllTextAdmin("/boot/loader/entries/arch.conf", archConf);
         CopyKernelConf();
-        if (kernel_snd_hda_intel_Checkbox.IsChecked == true) CheckUpdatesButton_Click(19, null);
-        else RestartButton_Click(null, null);
+        
+        // reboot
+        if (kernel_snd_hda_intel_DisableSleep_Checkbox.IsChecked == true || kernel_snd_hda_intel_DisableHDMI_Checkbox.IsChecked == true)
+        {
+            CheckUpdatesButton_Click(19, null);// run "sudo mkinitcpio -P" before reboot
+        }
+        else
+        {
+            RestartButton_Click(null, null);
+        }
     }
     
     private void CopyKernelConf()
@@ -2117,16 +2176,6 @@ public partial class MainView : UserControl
             if (kernel_radeon_audio_Checkbox.IsChecked == true) builder.Append(" radeon.audio=0");
             if (kernel_nouveau_audio_Checkbox.IsChecked == true) builder.Append(" nouveau.audio=0");
 
-            if (kernel_snd_hda_intel_Checkbox.IsChecked == true)
-            {
-                //ProcessUtil.WriteAllTextAdmin("/etc/modprobe.d/snd_hda_intel.conf", "options snd_hda_intel enable=0,0,0,0,0,0,0,0,0,0");
-                ProcessUtil.WriteAllTextAdmin("/etc/modprobe.d/snd_hda_intel.conf", "options snd_hda_intel power_save=0 power_save_controller=N");
-            }
-            else
-            {
-                ProcessUtil.DeleteFileAdmin("/etc/modprobe.d/snd_hda_intel.conf");
-            }
-
             // add custom options
             var parts = kernelCustomTextuBox.Text.Replace(",", "").Replace(";", "").Split(" ");
             foreach (var part in parts) builder.Append(" " + part);
@@ -2142,7 +2191,8 @@ public partial class MainView : UserControl
         kernelVersionTextBox.Text = ProcessUtil.Run("uname", "-r", useBash:false);
 
         // read disable hdmi audio conf
-        kernel_snd_hda_intel_Checkbox.IsChecked = File.Exists("/etc/modprobe.d/snd_hda_intel.conf");
+        kernel_snd_hda_intel_DisableSleep_Checkbox.IsChecked = File.Exists("/etc/modprobe.d/snd_hda_intel_sleep.conf");
+        kernel_snd_hda_intel_DisableHDMI_Checkbox.IsChecked = File.Exists("/etc/modprobe.d/snd_hda_intel_disable.conf");
 
         // read cstates
         string cstatePath = "/sys/module/intel_idle/parameters/max_cstate";
