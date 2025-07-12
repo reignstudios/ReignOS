@@ -105,6 +105,12 @@ static class PackageUpdates
         if (!PackageUtils.PackageExits("libdvdread")) return true;
 
         if (PackageUtils.PackageExits("acpid")) return true;
+        
+        // check for non-active services
+        if (!PackageUtils.ServiceEnabled("pipewire.socket", true, false)) return true;
+        if (!PackageUtils.ServiceEnabled("pipewire.service", true, false)) return true;
+        if (!PackageUtils.ServiceEnabled("pipewire-pulse.socket", true, false)) return true;
+        if (!PackageUtils.ServiceEnabled("pipewire-pulse.service", true, false)) return true;
 
         return false;
     }
