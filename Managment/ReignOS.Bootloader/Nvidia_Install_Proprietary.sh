@@ -9,6 +9,7 @@ sudo pacman -R --noconfirm xf86-video-nouveau
 echo "Installing Nvidia Proprietary drivers"
 sudo pacman -S --noconfirm nvidia nvidia-utils lib32-nvidia-utils nvidia-settings nvidia-prime egl-wayland
 sudo pacman -S --noconfirm nvidia-lts
+sudo pacman -S --noconfirm egl-gbm
 sudo mkinitcpio -P
 sudo systemctl enable nvidia-suspend.service nvidia-hibernate.service nvidia-resume.service
 
