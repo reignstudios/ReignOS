@@ -1,5 +1,6 @@
 #!/bin/bash
 HAS_UPDATES=false
+REBOOT=false
 
 # aw87559-firmware = Ayaneo Flip DS (yay needs to ignore this conflict)
 
@@ -32,54 +33,6 @@ cd /home/gamer/ReignOS/Managment
 echo "ReignOS Building packages..."
 dotnet publish -r linux-x64 -c Release
 sleep 1
-
-# update or install Chimera-Kernel
-echo ""
-echo "ReignOS Checking Chimera-Kernel for updates..."
-CHIMERA_KERNEL_RELEASE=$(curl -s 'https://api.github.com/repos/ChimeraOS/linux-chimeraos/releases' | jq -r "first(.[] | select(.prerelease == "false"))")
-CHIMERA_KERNEL_VERSION=$(jq -r '.tag_name' <<< ${CHIMERA_KERNEL_RELEASE})
-
-v1="${CHIMERA_KERNEL_VERSION#v}"
-v1=$(printf "%s" "$v1" | grep -oE '^[0-9]+\.[0-9]+\.[0-9]+')
-echo "Latest Chimera Kernel: $v1"
-
-CHIMERA_KERNEL_INSTALLED_VERSION=$(pacman -Q linux-chimeraos)
-v2="${CHIMERA_KERNEL_INSTALLED_VERSION#linux-chimeraos }"
-v2=$(printf "%s" "$v2" | grep -oE '^[0-9]+\.[0-9]+\.[0-9]+')
-echo "Installed Chimera Kernel: $v2"
-
-if [ "$v1" != "$v2" ]; then
-    echo "ReignOS Updating Chimera-Kernel to: $CHIMERA_KERNEL_VERSION"
-    CHIMERA_KERNEL_VERSION_LINK="${CHIMERA_KERNEL_VERSION/-chos/.chos}"
-    CHIMERA_KERNEL_VERSION_LINK="${CHIMERA_KERNEL_VERSION_LINK#v}"
-    echo "Kernel: linux-chimeraos-$CHIMERA_KERNEL_VERSION_LINK-x86_64.pkg.tar.zst"
-    echo "Kernel-Headers: linux-chimeraos-headers-$CHIMERA_KERNEL_VERSION_LINK-x86_64.pkg.tar.zst"
-    mkdir -p /home/gamer/ReignOS_Ext/Kernels
-    wget -O /home/gamer/ReignOS_Ext/Kernels/chimera-kernel.pkg.tar.zst https://github.com/ChimeraOS/linux-chimeraos/releases/download/$CHIMERA_KERNEL_VERSION/linux-chimeraos-$CHIMERA_KERNEL_VERSION_LINK-x86_64.pkg.tar.zst
-    wget -O /home/gamer/ReignOS_Ext/Kernels/chimera-kernel-headers.pkg.tar.zst https://github.com/ChimeraOS/linux-chimeraos/releases/download/$CHIMERA_KERNEL_VERSION/linux-chimeraos-headers-$CHIMERA_KERNEL_VERSION_LINK-x86_64.pkg.tar.zst
-    sudo pacman -Syu --noconfirm
-    sudo pacman -U --noconfirm /home/gamer/ReignOS_Ext/Kernels/chimera-kernel.pkg.tar.zst
-    sudo pacman -U --noconfirm /home/gamer/ReignOS_Ext/Kernels/chimera-kernel-headers.pkg.tar.zst
-    sudo mkinitcpio -P
-    HAS_UPDATES=true
-fi
-
-# update flatpaks (just run this first so they always get ran)
-echo ""
-echo "ReignOS Updating flatpak pacages..."
-flatpak update --noninteractive
-
-# update or install decky-loader
-echo ""
-echo "ReignOS Updating DeckyLoader..."
-curl -L https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/install_release.sh | sh
-
-# update DeckyTDP if it exists
-if [ -e "/home/gamer/homebrew/plugins/SimpleDeckyTDP" ]; then
-    echo ""
-    echo "ReignOS Checking DeckyTDP for updates..."
-    curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
-fi
 
 # make sure no borked pacman lock
 if [ -f "/var/lib/pacman/db.lck" ]; then
@@ -127,11 +80,6 @@ if [ "$HAS_UPDATES" = "true" ]; then
     yay -Syu --noconfirm --ignore aw87559-firmware
     yay_exit_code=$?
 
-    # firmware
-    echo "ReignOS Updating fwupdmgr firmware..."
-    sudo fwupdmgr refresh -y
-    sudo fwupdmgr update -y --no-reboot-check
-
     # just stop everything if Pacman fails to update (but allow ReignOS git to update before this)
     if [ $pacman_exit_code -ne 0 ]; then
         echo "ERROR: ReignOS Updating Pacman failed: $pacman_exit_code 'hit Ctrl+C to stop boot'"
@@ -151,8 +99,66 @@ if [ "$HAS_UPDATES" = "true" ]; then
 
     # reboot if updates ran
     if [ $pacman_exit_code -eq 0 ] || [ $yay_exit_code -eq 0 ]; then
-         sudo reboot -f
+         REBOOT=true
     fi
+fi
+
+# update or install Chimera-Kernel
+echo ""
+echo "ReignOS Checking Chimera-Kernel for updates..."
+CHIMERA_KERNEL_RELEASE=$(curl -s 'https://api.github.com/repos/ChimeraOS/linux-chimeraos/releases' | jq -r "first(.[] | select(.prerelease == "false"))")
+CHIMERA_KERNEL_VERSION=$(jq -r '.tag_name' <<< ${CHIMERA_KERNEL_RELEASE})
+
+v1="${CHIMERA_KERNEL_VERSION#v}"
+v1=$(printf "%s" "$v1" | grep -oE '^[0-9]+\.[0-9]+\.[0-9]+')
+echo "Latest Chimera Kernel: $v1"
+
+CHIMERA_KERNEL_INSTALLED_VERSION=$(pacman -Q linux-chimeraos)
+v2="${CHIMERA_KERNEL_INSTALLED_VERSION#linux-chimeraos }"
+v2=$(printf "%s" "$v2" | grep -oE '^[0-9]+\.[0-9]+\.[0-9]+')
+echo "Installed Chimera Kernel: $v2"
+
+if [ "$v1" != "$v2" ]; then
+    echo "ReignOS Updating Chimera-Kernel to: $CHIMERA_KERNEL_VERSION"
+    CHIMERA_KERNEL_VERSION_LINK="${CHIMERA_KERNEL_VERSION/-chos/.chos}"
+    CHIMERA_KERNEL_VERSION_LINK="${CHIMERA_KERNEL_VERSION_LINK#v}"
+    echo "Kernel: linux-chimeraos-$CHIMERA_KERNEL_VERSION_LINK-x86_64.pkg.tar.zst"
+    echo "Kernel-Headers: linux-chimeraos-headers-$CHIMERA_KERNEL_VERSION_LINK-x86_64.pkg.tar.zst"
+    mkdir -p /home/gamer/ReignOS_Ext/Kernels
+    wget -O /home/gamer/ReignOS_Ext/Kernels/chimera-kernel.pkg.tar.zst https://github.com/ChimeraOS/linux-chimeraos/releases/download/$CHIMERA_KERNEL_VERSION/linux-chimeraos-$CHIMERA_KERNEL_VERSION_LINK-x86_64.pkg.tar.zst
+    wget -O /home/gamer/ReignOS_Ext/Kernels/chimera-kernel-headers.pkg.tar.zst https://github.com/ChimeraOS/linux-chimeraos/releases/download/$CHIMERA_KERNEL_VERSION/linux-chimeraos-headers-$CHIMERA_KERNEL_VERSION_LINK-x86_64.pkg.tar.zst
+    sudo pacman -Syu --noconfirm
+    sudo pacman -U --noconfirm /home/gamer/ReignOS_Ext/Kernels/chimera-kernel.pkg.tar.zst
+    sudo pacman -U --noconfirm /home/gamer/ReignOS_Ext/Kernels/chimera-kernel-headers.pkg.tar.zst
+    sudo mkinitcpio -P
+    REBOOT=true
+fi
+
+# update flatpaks (just run this first so they always get ran)
+echo ""
+echo "ReignOS Updating flatpak pacages..."
+flatpak update --noninteractive
+
+# update or install decky-loader
+echo ""
+echo "ReignOS Updating DeckyLoader..."
+curl -L https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/install_release.sh | sh
+
+# update DeckyTDP if it exists
+if [ -e "/home/gamer/homebrew/plugins/SimpleDeckyTDP" ]; then
+    echo ""
+    echo "ReignOS Checking DeckyTDP for updates..."
+    curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
+fi
+
+# firmware
+echo ""
+echo "ReignOS Updating fwupdmgr firmware..."
+sudo fwupdmgr refresh -y
+sudo fwupdmgr update -y --no-reboot-check
+
+if [ "$REBOOT" = "true" ]; then
+    sudo reboot -f
 fi
 
 exit 0
