@@ -415,6 +415,7 @@ static class InstallUtil
         // install misc apps
         Run("pacman", "-S --noconfirm nano evtest efibootmgr");
         Run("pacman", "-S --noconfirm dmidecode hwinfo udev python");
+        Run("pacman", "-S --noconfirm rsync");
         UpdateProgress(31);
 
         // install firmware update support

@@ -44,6 +44,7 @@ static class PackageUpdates
         if (!PackageUtils.PackageExits("cpupower")) return true;
         if (!PackageUtils.PackageExits("jq")) return true;
         if (!PackageUtils.PackageExits("hwinfo")) return true;
+        if (!PackageUtils.PackageExits("rsync")) return true;
 
         if (!PackageUtils.PackageExits("wayland-utils")) return true;
         if (!PackageUtils.PackageExits("weston")) return true;

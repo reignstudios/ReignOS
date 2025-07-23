@@ -7,6 +7,7 @@
 sudo pacman -S --noconfirm --needed linux-headers linux-tools
 sudo pacman -S --noconfirm --needed jq
 sudo pacman -S --noconfirm --needed hwinfo
+sudo pacman -S --noconfirm --needed rsync
 
 sudo pacman -S --noconfirm --needed wayland-utils
 sudo pacman -S --noconfirm --needed wlr-randr gamescope cage labwc weston
