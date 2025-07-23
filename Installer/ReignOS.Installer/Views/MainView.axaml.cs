@@ -435,7 +435,7 @@ public partial class MainView : UserControl
         var item = (ListBoxItem)connectionListBox.Items[connectionListBox.SelectedIndex];
         var ssid = (string)item.Content;
         ProcessUtil.KillHard("iwctl", true, out _);// make sure any failed processes are not open
-        ProcessUtil.Run("iwctl", $"--passphrase '{networkPasswordText.Text}' station {wlanDevice} connect '{ssid}'", useBash: false);
+        ProcessUtil.Run("iwctl", $"--passphrase '{networkPasswordText.Text}' station {wlanDevice} connect '{ssid}'", useBash: true);
         string result = ProcessUtil.Run("iwctl", $"station {wlanDevice} show", useBash: false);
         Console.WriteLine(result);
     }
