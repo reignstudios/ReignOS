@@ -404,3 +404,6 @@ OR just access via: /media/sf_VirtualBox
 # mount ISO to inspect files
 mount -o loop out/<file-name>.iso /mnt
 umount -R /mnt
+
+# KeyCode ref
+https://elixir.bootlin.com/linux/v6.11.4/source/include/uapi/linux/input-event-codes.h
