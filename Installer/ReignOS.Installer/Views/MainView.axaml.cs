@@ -393,7 +393,7 @@ public partial class MainView : UserControl
         }
 
         wlanDevices.Clear();
-        ProcessUtil.Run("iwctl", "device list", standardOut:deviceOut);
+        ProcessUtil.Run("iwctl", "device list", standardOut:deviceOut, useBash: false);
         
         // choose device
         if (wlanDevices.Count == 0) return;
@@ -421,8 +421,8 @@ public partial class MainView : UserControl
             }
         }
 
-        ProcessUtil.Run("iwctl", $"station {wlanDevice} scan");
-        ProcessUtil.Run("iwctl", $"station {wlanDevice} get-networks", standardOut:ssidOut);
+        ProcessUtil.Run("iwctl", $"station {wlanDevice} scan", useBash: false);
+        ProcessUtil.Run("iwctl", $"station {wlanDevice} get-networks", standardOut:ssidOut, useBash: false);
         connectionListBox.Items.Clear();
         foreach (var ssid in ssids) connectionListBox.Items.Add(new ListBoxItem { Content = ssid });
     }
@@ -435,8 +435,8 @@ public partial class MainView : UserControl
         var item = (ListBoxItem)connectionListBox.Items[connectionListBox.SelectedIndex];
         var ssid = (string)item.Content;
         ProcessUtil.KillHard("iwctl", true, out _);// make sure any failed processes are not open
-        ProcessUtil.Run("iwctl", $"--passphrase {networkPasswordText.Text} station {wlanDevice} connect {ssid}", asAdmin:true);
-        string result = ProcessUtil.Run("iwctl", $"station {wlanDevice} show");
+        ProcessUtil.Run("iwctl", $"--passphrase '{networkPasswordText.Text}' station {wlanDevice} connect '{ssid}'", useBash: false);
+        string result = ProcessUtil.Run("iwctl", $"station {wlanDevice} show", useBash: false);
         Console.WriteLine(result);
     }
     
