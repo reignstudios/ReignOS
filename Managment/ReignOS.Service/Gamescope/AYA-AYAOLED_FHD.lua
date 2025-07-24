@@ -1,4 +1,4 @@
--- OneXPlayer OneXFly F1 Pro
+-- Ayaneo3
 
 local panel_id = "aya_fhd_oled"
 local panel_name = "AYA FHD OLED Panel"
