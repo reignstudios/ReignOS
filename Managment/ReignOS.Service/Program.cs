@@ -162,19 +162,14 @@ internal class Program
         dstPath = "/etc/systemd/logind.conf.d/";
         if (!Directory.Exists(dstPath)) Directory.CreateDirectory(dstPath);
         dstPath = Path.Combine(dstPath, "reignos.conf");
-        if (File.Exists(dstPath))
-        {
-            File.Delete(dstPath);
-            ProcessUtil.Run("systemctl", "restart systemd-logind");
-        }
-        /*if (!File.Exists(dstPath))// old suspend systemd settings
+        if (!File.Exists(dstPath))// old suspend systemd settings
         {
             var builder = new StringBuilder();
             builder.AppendLine("[Login]");
-            builder.AppendLine("HandlePowerKey=suspend");
+            builder.AppendLine("HandlePowerKey=ignore");
             File.WriteAllText(dstPath, builder.ToString());
             ProcessUtil.Run("systemctl", "restart systemd-logind");
-        }*/
+        }
 
         // init virtual gamepad
         if (inputMode == InputMode.ReignOS) VirtualGamepad.Init();
@@ -262,7 +257,7 @@ internal class Program
             if (KeyEvent.Pressed(keys, input.KEY_POWER))
             {
                 Log.WriteLine("PowerButton Pressed");
-                ProcessUtil.Run("systemctl", "suspend", useBash: true);// TODO: add hibernate option
+                ProcessUtil.Run("systemctl", "suspend", useBash: false);// TODO: add hibernate option
             }
 
             // handle special close steam events
