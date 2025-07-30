@@ -65,6 +65,7 @@ internal class Program
 
     public static KeyboardInput keyboardInput;
     public static InputMode inputMode = InputMode.ReignOS;
+    private static bool hibernatePowerButton = false;
 
     public static bool? isRebootMode;
 
@@ -90,6 +91,9 @@ internal class Program
             if (arg == "--input-inputplumber") inputMode = InputMode.InputPlumber;
             else if (arg == "--input-disable") inputMode = InputMode.Disabled;
         }
+        
+        // check if hibernation file exists
+        hibernatePowerButton = File.Exists("/swapfile");
 
         // detect system hardware
         try
@@ -257,7 +261,8 @@ internal class Program
             if (KeyEvent.Pressed(keys, input.KEY_POWER))
             {
                 Log.WriteLine("PowerButton Pressed");
-                ProcessUtil.Run("systemctl", "suspend", useBash: false);// TODO: add hibernate option
+                if (hibernatePowerButton) ProcessUtil.Run("systemctl", "hibernate", useBash: false);
+                else ProcessUtil.Run("systemctl", "suspend", useBash: false);
             }
 
             // handle special close steam events
