@@ -162,7 +162,7 @@ internal class Program
             return;
         }
 
-        // configure pwr button for sleep
+        // configure power button for sleep
         dstPath = "/etc/systemd/logind.conf.d/";
         if (!Directory.Exists(dstPath)) Directory.CreateDirectory(dstPath);
         dstPath = Path.Combine(dstPath, "reignos.conf");
@@ -173,6 +173,27 @@ internal class Program
             builder.AppendLine("HandlePowerKey=ignore");
             File.WriteAllText(dstPath, builder.ToString());
             ProcessUtil.Run("systemctl", "restart systemd-logind");
+        }
+        
+        // force sleep events to hibernate events
+        dstPath = "/etc/systemd/system/systemd-suspend.service.d";
+        if (!Directory.Exists(dstPath)) Directory.CreateDirectory(dstPath);
+        dstPath = Path.Combine(dstPath, "reignos.conf");
+        if (hibernatePowerButton && !File.Exists(dstPath))// old suspend systemd settings
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine("[Service]");
+            builder.AppendLine("# ignore event");
+            builder.AppendLine("ExecStart=");
+            builder.AppendLine("# hibernate instead");
+            builder.AppendLine("ExecStart=/usr/lib/systemd/systemd-sleep hibernate");
+            File.WriteAllText(dstPath, builder.ToString());
+            ProcessUtil.Run("systemctl", "daemon-reload");
+        }
+        else if (File.Exists(dstPath))
+        {
+            File.Delete(dstPath);
+            ProcessUtil.Run("systemctl", "daemon-reload");
         }
 
         // init virtual gamepad
