@@ -65,7 +65,7 @@ internal class Program
 
     public static KeyboardInput keyboardInput;
     public static InputMode inputMode = InputMode.ReignOS;
-    private static bool hibernatePowerButton = false;
+    private static bool hibernatePowerButton = false, disablePowerButton = false;
 
     public static bool? isRebootMode;
 
@@ -258,7 +258,7 @@ internal class Program
             else if (KeyEvent.Pressed(keys, input.KEY_VOLUMEUP, includeHeld:true)) Console.WriteLine("SET_VOLUME_UP");
             
             // handle rest state
-            if (KeyEvent.Pressed(keys, input.KEY_POWER))
+            if (!disablePowerButton && KeyEvent.Pressed(keys, input.KEY_POWER))
             {
                 Log.WriteLine("PowerButton Pressed");
                 if (hibernatePowerButton) ProcessUtil.Run("systemctl", "hibernate", useBash: false);
@@ -294,8 +294,16 @@ internal class Program
         while (true)
         {
             string line = Console.ReadLine();
-            if (line == "stop-inhibit") DbusMonitor.Shutdown();
-            else if (line == "start-inhibit") DbusMonitor.Init();
+            if (line == "stop-inhibit")
+            {
+                disablePowerButton = true;
+                DbusMonitor.Shutdown();
+            }
+            else if (line == "start-inhibit")
+            {
+                disablePowerButton = false;
+                DbusMonitor.Init();
+            }
         }
     }
 
