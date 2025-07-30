@@ -172,6 +172,12 @@ public unsafe class KeyboardInput : IDisposable
                             handles.Add(handle);
                             continue;
                         }
+                        else if (TestBit(input.KEY_POWER, key_bits) != 0)
+                        {
+                            Log.WriteLine($"PowerButton device found path:{path}");
+                            handles.Add(handle);
+                            continue;
+                        }
                     }
                 }
                 else
