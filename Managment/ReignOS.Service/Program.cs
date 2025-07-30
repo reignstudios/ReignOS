@@ -261,7 +261,8 @@ internal class Program
             // handle rest state
             if (KeyEvent.Pressed(keys, input.KEY_POWER))
             {
-                ProcessUtil.Run("systemctl", "suspend", useBash: false);// TODO: add hibernate option
+                Log.WriteLine("PowerButton Pressed");
+                ProcessUtil.Run("systemctl", "suspend", useBash: true);// TODO: add hibernate option
             }
 
             // handle special close steam events
