@@ -122,6 +122,8 @@ public partial class MainView : UserControl
 
     private string kernelArchConf, kernelArchConf_Options;
     private int kernelIntelMaxCState, kernelAMDMaxCState;
+
+    private bool hibernatePowerButton;
     
     public MainView()
     {
@@ -145,6 +147,9 @@ public partial class MainView : UserControl
         connectedTimer.AutoReset = true;
         connectedTimer.Start();
         ConnectedTimer(null, null);
+        
+        // check if hibernation file exists
+        hibernatePowerButton = File.Exists("/swapfile");
     }
 
     private void RefreshGPUs()
@@ -1143,7 +1148,8 @@ public partial class MainView : UserControl
     
     private void SleepButton_Click(object sender, RoutedEventArgs e)
     {
-        ProcessUtil.Run("systemctl", "suspend", out _, wait:false, useBash:false);
+        if (hibernatePowerButton) ProcessUtil.Run("systemctl", "hibernate", wait:false, useBash:false);
+        else ProcessUtil.Run("systemctl", "suspend", wait:false, useBash:false);
     }
     
     private void RestartButton_Click(object sender, RoutedEventArgs e)
