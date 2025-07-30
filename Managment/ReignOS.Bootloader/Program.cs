@@ -52,7 +52,7 @@ internal class Program
     private static bool forceControlCenter = false;
     private static string displayName = null;
     private static int displayWidth = 0, displayHeight = 0;
-    private static int audioMaxVolume = 200, audioCurrentVolume = 50;
+    private static int audioMaxVolume = 150, audioCurrentVolume = 50;
 
     private static void Main(string[] args)
     {
@@ -210,7 +210,7 @@ internal class Program
                         //ProcessUtil.Run("amixer", "set Master 5%+");
                         //ProcessUtil.Run("pactl", "set-sink-volume @DEFAULT_SINK@ +5%");
                         audioCurrentVolume += 5;
-                        if (audioCurrentVolume > 100) audioCurrentVolume = audioMaxVolume;
+                        if (audioCurrentVolume > audioMaxVolume) audioCurrentVolume = audioMaxVolume;
                         ProcessUtil.Run("pactl", $"set-sink-volume @DEFAULT_SINK@ {audioCurrentVolume}%");
                     }
                     else if (value.StartsWith("ReignOS.Service.COMMAND: "))// service wants to run user-space command
