@@ -196,6 +196,15 @@
 							<RadioButton Name="kernelChimeraCheckbox" Content="Chimera" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						</Grid>
 					</Grid>
+					
+					<Grid Margin="8,8,8,4" Background="#444444" Height="40" IsVisible="True">
+						<Grid>
+							<TextBlock Text="Rest Mode" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RestApplyButton_Click"/>
+							<RadioButton Name="restSleepCheckbox" Content="Sleep" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<RadioButton Name="restHibernateCheckbox" Content="Hibernate" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						</Grid>
+					</Grid>
 
 					<Grid Margin="8,8,8,4" Background="#444444" Height="40" IsVisible="False">
 						<Grid>
@@ -282,7 +291,7 @@
 			<Grid Grid.Column="1">
 				<Button Content="Format Selected Drive" Background="DarkRed" Click="FormatDriveButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,16,0,0"/>
 				<Button Content="Fix Drive Issues" Background="DarkGreen" Click="FixDriveIssuesButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,100,0,0"/>
-				<TextBlock Text="NOTE: This will Shutdown the device once finished" FontSize="24" Foreground="DarkRed" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,54,0,0"/>
+				<TextBlock Text="NOTE: This will Shutdown the device once finished (UI will lock and take time, wait)" FontSize="24" Foreground="DarkRed" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,54,0,0"/>
 				<Button Content="Back" Width="128" Height="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="DriveManagerBackButton_OnClick"/>
 			</Grid>
 		</Grid>

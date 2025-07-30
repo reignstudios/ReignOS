@@ -387,6 +387,11 @@ public partial class MainView : UserControl
                         if (parts[1] == "Arch") kernelArchCheckbox.IsChecked = true;
                         else if (parts[1] == "Chimera") kernelChimeraCheckbox.IsChecked = true;
                     }
+                    else if (parts[0] == "Rest")
+                    {
+                        if (parts[1] == "Sleep") restSleepCheckbox.IsChecked = true;
+                        else if (parts[1] == "Hibernate") restHibernateCheckbox.IsChecked = true;
+                    }
                     else if (parts[0].StartsWith("AudioDefault:"))
                     {
                         var audioParts = parts[1].Split(':');
@@ -532,6 +537,9 @@ public partial class MainView : UserControl
 
                 if (kernelArchCheckbox.IsChecked == true) writer.WriteLine("Kernel=Arch");
                 else if (kernelChimeraCheckbox.IsChecked == true) writer.WriteLine("Kernel=Chimera");
+                
+                if (restSleepCheckbox.IsChecked == true) writer.WriteLine("Rest=Sleep");
+                else if (restHibernateCheckbox.IsChecked == true) writer.WriteLine("Rest=Hibernate");
 
                 foreach (var setting in audioSettings)
                 {
@@ -1378,6 +1386,162 @@ public partial class MainView : UserControl
         ProcessUtil.WriteAllTextAdmin("/boot/loader/loader.conf", loader);
         SaveSettings();
         CheckUpdatesButton_Click(18, null);
+    }
+
+    private void RestApplyButton_Click(object sender, RoutedEventArgs e)
+    {
+        Log.WriteLine("Rest Apply...");
+        
+        // disable existing swap if any
+        ProcessUtil.Run("swapoff", "-a", asAdmin: true, useBash: false);
+        
+        // apply settings
+        if (restSleepCheckbox.IsChecked == true) RestApply_Sleep();
+        else if (restHibernateCheckbox.IsChecked == true) RestApply_Hibernate();
+        
+        // finish
+        SaveSettings();
+        App.exitCode = 19;// reboot after mkinitcpio
+        MainWindow.singleton.Close();
+    }
+
+    private void RestApply_Sleep()
+    {
+        // disable swap file
+        string filename = "/etc/fstab";
+        string text = File.ReadAllText(filename);
+        if (text.Contains("/swapfile none swap defaults 0 0"))
+        {
+            text = text.Replace("/swapfile none swap defaults 0 0", "").TrimEnd();
+            ProcessUtil.WriteAllTextAdmin(filename, text);
+        }
+        
+        // delete swap file
+        ProcessUtil.DeleteFileAdmin("/swapfile");
+        
+        // remove "resume" hook
+        filename = "/etc/mkinitcpio.conf";
+        text = File.ReadAllText(filename);
+        var lines = text.Split('\n');
+        foreach (string line in lines)
+        {
+            if (!line.StartsWith("HOOKS=")) continue;
+            var match = Regex.Match(line, @"(HOOKS=\(.*\))");
+            if (match.Success)
+            {
+                string segment = match.Groups[1].Value;
+                if (segment.Contains("filesystems resume"))
+                {
+                    string newLine = segment.Replace("filesystems resume", "filesystems");
+                    text = text.Replace(segment, newLine);
+                    ProcessUtil.WriteAllTextAdmin(filename, text);
+                    break;
+                }
+            }
+        }
+
+        // update kernel config
+        {
+            filename = "/boot/loader/entries/arch.conf";
+            text = File.ReadAllText(filename);
+            lines = text.Split('\n');
+            string segment = lines.FirstOrDefault(x => x.StartsWith("options "));
+            if (segment != null)
+            {
+                var match = Regex.Match(segment, @"( resume=\S* resume_offset=.\S*)");
+                if (match.Success)
+                {
+                    segment = match.Groups[1].Value;
+                    text = text.Replace(segment, "");
+                    ProcessUtil.WriteAllTextAdmin(filename, text);
+                    CopyKernelConf();
+                }
+            }
+        }
+    }
+
+    private void RestApply_Hibernate()
+    {
+        // get system total ram size in KB
+        string result = ProcessUtil.Run("awk", "'/MemTotal/ {print $2}' /proc/meminfo", asAdmin: false, useBash: true);
+        if (!int.TryParse(result, out int ramSize))
+        {
+            Log.WriteLine("Failed to get total ram");
+            return;
+        }
+        ramSize /= 1024;// get ram in MB
+        
+        // create swap file the size of ram
+        ProcessUtil.Run("dd", $"if=/dev/zero of=/swapfile bs=1M count={ramSize} status=progress", asAdmin: true, useBash: true);
+        ProcessUtil.Run("chmod", "600 /swapfile", asAdmin: true, useBash: false);
+        ProcessUtil.Run("mkswap", "/swapfile", asAdmin: true, useBash: false);
+        
+        // enable swap file
+        ProcessUtil.Run("swapon /swapfile", "/swapfile", asAdmin: true, useBash: false);
+        string filename = "/etc/fstab";
+        string text = File.ReadAllText(filename);
+        if (!text.Contains("/swapfile none swap defaults 0 0"))
+        {
+            text += "\n/swapfile none swap defaults 0 0";
+            ProcessUtil.WriteAllTextAdmin(filename, text);
+        }
+        
+        // add "resume" hook
+        filename = "/etc/mkinitcpio.conf";
+        text = File.ReadAllText(filename);
+        var lines = text.Split('\n');
+        foreach (string line in lines)
+        {
+            if (!line.StartsWith("HOOKS=")) continue;
+            var match = Regex.Match(line, @"(HOOKS=\(.*\))");
+            if (!match.Success)
+            {
+                Log.WriteLine("Failed to get mkinitcpio.conf hooks");
+                continue;
+            }
+
+            string segment = match.Groups[1].Value;
+            if (!segment.Contains("filesystems"))
+            {
+                Log.WriteLine("Failed to get mkinitcpio.conf HOOKS filesystems");
+                continue;
+            }
+
+            if (!segment.Contains("filesystems resume"))
+            {
+                string newSegment = segment.Replace("filesystems", "filesystems resume");
+                text = text.Replace(segment, newSegment);
+                ProcessUtil.WriteAllTextAdmin(filename, text);
+                break;
+            }
+        }
+        
+        // get resume partition offset
+        string resumeOffset = ProcessUtil.Run("filefrag", "-v /swapfile | awk '/ 0:/ {print $4}' | cut -d'.' -f1", asAdmin: true, useBash: true);
+        resumeOffset = resumeOffset.TrimEnd();
+        
+        // update kernel config
+        {
+            filename = "/boot/loader/entries/arch.conf";
+            text = File.ReadAllText(filename);
+            var match = Regex.Match(text, @"options root=(\S*)");
+            if (!match.Success)
+            {
+                Log.WriteLine("Failed to get arch.conf options root path");
+                return;
+            }
+            
+            string segment = match.Groups[1].Value;
+            if (!segment.Contains("resume=") && !segment.Contains("resume_offset="))
+            {
+                text = text.Replace("rootwait", $"rootwait resume={segment} resume_offset={resumeOffset}");
+                ProcessUtil.WriteAllTextAdmin(filename, text);
+                CopyKernelConf();
+            }
+        }
+
+        // configure GPU (probably not needed)
+        //ProcessUtil.Run("systemctl", "enable nvidia-suspend.service nvidia-hibernate.service nvidia-resume.service", asAdmin: true, useBash: false);
     }
 
     private void UpdatesApplyButton_Click(object sender, RoutedEventArgs e)
@@ -2242,7 +2406,9 @@ public partial class MainView : UserControl
                     part != "amd_pstate=disable" && !part.Contains("processor.max_cstate=") &&
 
                     part != "mem_sleep_default=deep" && part != "mem_sleep_default=s2idle" &&
-                    part != "i915.audio=0" && part != "amdgpu.audio=0" && part != "radeon.audio=0" && part != "nouveau.audio=0")
+                    part != "i915.audio=0" && part != "amdgpu.audio=0" && part != "radeon.audio=0" && part != "nouveau.audio=0" &&
+                    
+                    !part.Contains("resume=") && !part.Contains("resume_offset="))
                 {
                     builder.Append(part + " ");
                 }

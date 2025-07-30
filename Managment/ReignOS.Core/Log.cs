@@ -23,7 +23,7 @@ public static class Log
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
             string filename = Path.Combine(path, prefix + ".log");
             stream = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.Read);
-            writer =  new StreamWriter(stream);
+            writer = new StreamWriter(stream);
         }
         catch (Exception e)
         {
@@ -35,16 +35,19 @@ public static class Log
 
     public static void Close()
     {
-        if (writer != null)
+        lock (lockObj)
         {
-            writer.Dispose();
-            writer = null;
-        }
-        
-        if (stream != null)
-        {
-            stream.Dispose();
-            stream = null;
+            if (writer != null)
+            {
+                writer.Dispose();
+                writer = null;
+            }
+
+            if (stream != null)
+            {
+                stream.Dispose();
+                stream = null;
+            }
         }
     }
 
@@ -52,6 +55,7 @@ public static class Log
     {
         lock (lockObj)
         {
+            if (writer == null) return;
             writer.Write(prefix + message);
             writer.Flush();
             stream.Flush();
@@ -67,6 +71,7 @@ public static class Log
     {
         lock (lockObj)
         {
+            if (writer == null) return;
             writer.WriteLine(prefix + message);
             writer.Flush();
             stream.Flush();
@@ -82,6 +87,7 @@ public static class Log
     {
         lock (lockObj)
         {
+            if (writer == null) return;
             writer.Write(prefix + header);
             int i = 0;
             char c = (char)nativeText[0];
