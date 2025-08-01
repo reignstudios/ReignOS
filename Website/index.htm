@@ -128,6 +128,15 @@
         </div>
 
         <div>
+            <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">Post-Install Notes</h2>
+            <ul style="color: #888;">
+                <li>You can use Control-Center to default to booting a particular compositor like Gamescope</li>
+                <li>You can always return to Control-Center by exiting Steam or Logging out of KDE</li>
+                <li>Look at "GPU Troubleshooting" if Control-Center is not launching (changing its compositor can resolve issue)</li>
+            </ul>
+        </div>
+
+        <div>
             <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">Installer Troubleshooting</h2>
             <ul style="color: #888;">
                 <li>Tethered networks may have issues (WiFi or Ethernet over Dock prefered)</li>
@@ -301,7 +310,7 @@
             <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">GPU Troubleshooting</h2>
             <ul style="color: #888;">
                 <li>
-                    Launch Control-Center with Cage or X11:<br>
+                    Launch Control-Center with Cage, X11 or KDE-G:<br>
                     * Exit to terminal<br>
                     * Type: nano ReignOS_Launch.sh<br>
                     * Add the argument '--controlcenter-cage' or '--controlcenter-x11' or '--controlcenter-kde-g' after '--use-controlcenter' arg<br>
