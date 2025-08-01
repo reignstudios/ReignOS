@@ -2526,13 +2526,22 @@ public partial class MainView : UserControl
             int brightness = 0, count = 0;
             foreach (string dir in Directory.GetDirectories("/sys/class/backlight"))
             {
-                var lines = File.ReadAllLines(Path.Combine(dir, "brightness"));
-                if (lines != null && lines.Length != 0 && int.TryParse(lines[0], out int b))
+                try
                 {
-                    brightness += b;
-                    count++;
+                    var brightnessText = File.ReadAllText(Path.Combine(dir, "brightness")).Trim();
+                    var maxBrightnessText = File.ReadAllText(Path.Combine(dir, "max_brightness")).Trim();
+                    if (int.TryParse(brightnessText, out int b) && int.TryParse(maxBrightnessText, out int maxB))
+                    {
+                        brightness += (int)((b / (double)maxB) * 100);
+                        count++;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.WriteLine(ex);
                 }
             }
+
             if (count > 0) brightness /= count;
             displayBrightnessSlider.Value = Math.Clamp(brightness, 0, 100);
         }
@@ -2624,11 +2633,15 @@ public partial class MainView : UserControl
     {
         try
         {
-            int brightness = (int)displayBrightnessSlider.Value;
-            string brightnessText = brightness.ToString();
+            double brightness = displayBrightnessSlider.Value / 100;
             foreach (string dir in Directory.GetDirectories("/sys/class/backlight"))
             {
-                ProcessUtil.WriteAllTextAdmin(Path.Combine(dir, "brightness"), brightnessText);
+                var maxBrightnessText = File.ReadAllText(Path.Combine(dir, "max_brightness")).Trim();
+                if (int.TryParse(maxBrightnessText, out int maxBrightness))
+                {
+                    maxBrightness = (int)(maxBrightness * brightness);
+                    ProcessUtil.WriteAllTextAdmin(Path.Combine(dir, "brightness"), maxBrightness.ToString());
+                }
             }
         }
         catch (Exception ex)
