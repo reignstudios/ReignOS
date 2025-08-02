@@ -70,6 +70,7 @@ else
   cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
   ./Update.sh
   loginctl terminate-user gamer
+  exit 0
   
   #(
   #  sleep 10
