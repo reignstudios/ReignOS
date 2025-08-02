@@ -25,24 +25,30 @@ if [ "$EXIT" = "true" ]; then
 fi
 
 if [ "$CHECK" = "true" ]; then
-  # check if pacman updates exist
   HAS_UPDATES=false
-  echo ""
-  echo "ReignOS Checking 'pacman' for updates..."
-  sudo pacman -Sy
-  if pacman -Qu &> /dev/null; then
-      echo "Updates are available under pacman"
-      HAS_UPDATES=true
+  
+  # check if management has updates
+  cd /home/gamer/ReignOS
+  git fetch
+  local=$(git rev-parse @)
+  upstream=$(git rev-parse @{u} 2>/dev/null)
+  if [[ "$local" != "$upstream" ]]; then
+    HAS_UPDATES=true
+  fi
+  
+  # check if pacman updates exist
+  if [ "$HAS_UPDATES" = "false" ]; then
+    sudo pacman -Sy
+    if pacman -Qu &> /dev/null; then
+        HAS_UPDATES=true
+    fi
   fi
   
   # check if yay updates exist
   if [ "$HAS_UPDATES" = "false" ]; then
-    echo ""
-    echo "ReignOS Checking 'yay' for updates..."
     yay -Sy
     HAS_UPDATES=false
     if yay -Qu --ignore aw87559-firmware &> /dev/null; then
-        echo "Updates are available under yay"
         HAS_UPDATES=true
     fi
   fi
