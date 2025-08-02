@@ -64,28 +64,25 @@ else
   # force exit ReignOS managment
   sudo pkill ReignOS.Service
   sudo pkill ReignOS.Bootloader
-  sudo pkill steam
   
   # run ReignOS updates
   cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
   ./Update.sh
-  loginctl terminate-user gamer
-  exit 0
   
-  #(
-  #  sleep 10
-  #  steam -shutdown
-  #  SECONDS=0
-  #  while pgrep -u gamer steam > /dev/null; do
-  #      sleep 1
-  #      if (( SECONDS >= timeout )); then
-  #        sudo pkill steam
-  #        sleep 5
-  #        break
-  #      fi
-  #  done
-  #  loginctl terminate-user gamer
-  #) &
+  (
+    sleep 20
+    steam -shutdown
+    SECONDS=0
+    while pgrep -u gamer steam > /dev/null; do
+        sleep 1
+        if (( SECONDS >= 20 )); then
+          sudo pkill steam
+          sleep 5
+          break
+        fi
+    done
+    loginctl terminate-user gamer
+  ) &
     
-  #exit 1
+  exit 1
 fi
