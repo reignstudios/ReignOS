@@ -71,7 +71,7 @@ else
   
   (
     sudo pkill steam
-    sleep 5
+    sleep 10
     loginctl terminate-user gamer
   ) &
 fi
