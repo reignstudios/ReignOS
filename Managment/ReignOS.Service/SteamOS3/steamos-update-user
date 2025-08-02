@@ -79,7 +79,7 @@ else
   echo "100%"
   #steam -shutdown
   #sudo reboot -f
-  ( steam -shutdown && sleep 10 && loginctl terminate-user gamer ) &
+  ( steam -shutdown && sleep 20 && loginctl terminate-user gamer ) &
   #( sleep 5 && sudo reboot -f ) &
   #loginctl terminate-user gamer
   exit 1
