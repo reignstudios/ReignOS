@@ -70,10 +70,10 @@ else
   ./Update.sh
   steam -shutdown
   (
-    while ! pgrep -u gamer -x steam > /dev/null; do
+    while pgrep -u gamer steam > /dev/null; do
         sleep 1
     done
-    #sleep 15 &&
+    
     loginctl terminate-user gamer
   ) &
 fi
