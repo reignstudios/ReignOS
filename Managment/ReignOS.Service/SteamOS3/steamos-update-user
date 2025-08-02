@@ -68,7 +68,6 @@ else
   # run ReignOS updates
   cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
   ./Update.sh
-  echo "100%"
-  ( sleep 1 && steam -shutdown && sleep 10 && loginctl terminate-user gamer ) &
-  exit 1
+  steam -shutdown
+  ( sleep 10 && loginctl terminate-user gamer ) &
 fi
