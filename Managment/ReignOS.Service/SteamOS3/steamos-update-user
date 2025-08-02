@@ -62,8 +62,8 @@ if [ "$CHECK" = "true" ]; then
   fi
 else
   # force exit ReignOS managment
-  pkill ReignOS.Service
-  pkill ReignOS.Bootloader
+  sudo pkill ReignOS.Service
+  sudo pkill ReignOS.Bootloader
   
   # exit steam
   #steam -shutdown
@@ -79,7 +79,7 @@ else
   echo "100%"
   #steam -shutdown
   #sudo reboot -f
-  ( sleep 5 && steam -shutdown ) &
+  ( steam -shutdown && sleep 10 && loginctl terminate-user gamer ) &
   #( sleep 5 && sudo reboot -f ) &
   #loginctl terminate-user gamer
   exit 1
