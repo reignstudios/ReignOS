@@ -30,9 +30,9 @@ if [ "$CHECK" = "true" ]; then
   # check if management has updates
   cd /home/gamer/ReignOS
   git fetch
-  local=$(git rev-parse @)
-  upstream=$(git rev-parse @{u} 2>/dev/null)
-  if [[ "$local" != "$upstream" ]]; then
+  git_local=$(git rev-parse @)
+  git_upstream=$(git rev-parse @{u} 2>/dev/null)
+  if [[ "$git_local" != "$git_upstream" ]]; then
     HAS_UPDATES=true
   fi
   
@@ -57,6 +57,7 @@ if [ "$CHECK" = "true" ]; then
     # just tell steam there are no updates
     exit 7
   else
+    # tell steam there is update
     exit 0
   fi
 else
