@@ -7,4 +7,5 @@
 # steamos-update --enable-duplicate-detection       -- should perform an update
 # steamos-update                                    -- should perform an update
 
-exec runuser -u gamer -- ./steamos-update-user $@
+exec runuser -u gamer -- /usr/bin/steamos-update-user $@
+exit 7
