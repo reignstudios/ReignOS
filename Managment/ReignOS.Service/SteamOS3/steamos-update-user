@@ -65,22 +65,9 @@ else
   sudo pkill ReignOS.Service
   sudo pkill ReignOS.Bootloader
   
-  # exit steam
-  #steam -shutdown
-  
-  # wait for steam to exit
-  #while pgrep -u gamer steam > /dev/null; do
-      #sleep 1
-  #done
-  
   # run ReignOS updates
   cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
   ./Update.sh
-  echo "100%"
-  #steam -shutdown
-  #sudo reboot -f
-  ( steam -shutdown && sleep 20 && loginctl terminate-user gamer ) &
-  #( sleep 5 && sudo reboot -f ) &
-  #loginctl terminate-user gamer
-  exit 1
+  ( sleep 1 && steam -shutdown && sleep 10 && loginctl terminate-user gamer ) &
+  exit 0
 fi
