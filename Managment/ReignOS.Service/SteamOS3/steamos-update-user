@@ -76,8 +76,9 @@ else
   # run ReignOS updates
   cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
   ./Update.sh
-  steam -shutdown
+  #steam -shutdown
   #sudo reboot -f
+  ( sleep 3 && steam -shutdown ) &
   ( sleep 8 && sudo reboot -f ) &
   #loginctl terminate-user gamer
   #exit 0
