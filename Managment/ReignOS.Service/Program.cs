@@ -143,6 +143,7 @@ internal class Program
         FileUtils.InstallScript(Path.Combine(srcPath, "steamos-select-branch"), Path.Combine(dstPath, "steamos-select-branch"));
         FileUtils.InstallScript(Path.Combine(srcPath, "steamos-session-select"), Path.Combine(dstPath, "steamos-session-select"));
         FileUtils.InstallScript(Path.Combine(srcPath, "steamos-update"), Path.Combine(dstPath, "steamos-update"));
+        FileUtils.InstallScript(Path.Combine(srcPath, "steamos-update-user"), Path.Combine(dstPath, "steamos-update-user"));
 
         srcPath = Path.Combine(processPath, "SteamOS3/polkit-1/");
         dstPath = "/usr/share/polkit-1/actions";
