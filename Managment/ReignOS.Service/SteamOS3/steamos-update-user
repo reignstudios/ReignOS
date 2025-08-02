@@ -68,12 +68,14 @@ else
   # run ReignOS updates
   cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
   ./Update.sh
-  steam -shutdown
   (
+    steam -shutdown
     while pgrep -u gamer steam > /dev/null; do
         sleep 1
     done
     
     loginctl terminate-user gamer
   ) &
+    
+  exit 1
 fi
