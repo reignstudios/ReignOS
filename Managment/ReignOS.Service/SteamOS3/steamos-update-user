@@ -66,16 +66,17 @@ else
   pkill ReignOS.Bootloader
   
   # exit steam
-  steam -shutdown
+  #steam -shutdown
   
   # wait for steam to exit
-  while pgrep -u gamer steam > /dev/null; do
-      sleep 1
-  done
+  #while pgrep -u gamer steam > /dev/null; do
+      #sleep 1
+  #done
   
   # run ReignOS updates
   cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
   ./Update.sh
-  loginctl terminate-user gamer
-  exit 0
+  sudo reboot -f
+  #loginctl terminate-user gamer
+  #exit 0
 fi
