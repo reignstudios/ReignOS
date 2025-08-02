@@ -16,10 +16,10 @@ for arg in "$@"; do
   
   if [ "$arg" = "--supports-duplicate-detection" ]; then
       EXIT=true
-    fi
+  fi
 done
 
-if [ "$EXIT" = "true" ]; then
+if [ "$EXIT" = "true" ] && [ "$CHECK" = "false" ]; then
   # exit with no special signal
   exit 0
 fi
