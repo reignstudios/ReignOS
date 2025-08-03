@@ -384,6 +384,21 @@
                     * exit
                 </li>
         </div>
+
+        <div>
+            <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">Virtual Box</h2>
+            <ul style="color: #888;">
+                <li>
+                    Virtual Box is not really tested but you should run these commands if you're using it<br>
+                    * sudo pacman -S virtualbox-guest-utils<br>
+                    * sudo modprobe vboxguest<br>
+                    * sudo modprobe vboxsf<br>
+                    * sudo modprobe vboxvideo<br>
+                    * sudo systemctl enable vboxservice.service<br>
+                    * reboot<br>
+                </li>
+            </ul>
+        </div>
     </div>
 </body>
 </html>
