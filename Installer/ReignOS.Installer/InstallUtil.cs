@@ -108,6 +108,7 @@ static class InstallUtil
 
         archRootMode = false;
         ProcessUtil.KillHard("arch-chroot", true, out _);
+        cancel = false;// reset canceled to avoid exceptions
         Run("umount", "-R /var/cache/pacman/pkg");
         Run("umount", "-R /root/.nuget");
         Run("umount", "-R /mnt/boot");

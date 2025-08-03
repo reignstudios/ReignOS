@@ -149,22 +149,28 @@ public partial class MainView : UserControl
     private static StringBuilder installOutputBuilder = new StringBuilder();
     public static void ProcessOutput(string line)
     {
+        //Log.WriteLine(line);// NOTE: this is already logged from ProcessUtil
+        string lineLower = line.ToLower();
         Dispatcher.UIThread.InvokeAsync(() =>
         {
-            Log.WriteLine(line);
-
             installOutputBuilder.AppendLine(line);
             const int maxLength = 2048;
             if (installOutputBuilder.Length > maxLength) installOutputBuilder.Remove(0, installOutputBuilder.Length - maxLength);
             singleton.installTerminalText.Text = installOutputBuilder.ToString();
             singleton.installTerminalScroll.ScrollToEnd();
 
-            if (line.ToLower().Contains("error:"))
+            // allow user to exit installer
+            if (lineLower.Contains("error:"))
             {
                 singleton.exitButton.IsEnabled = true;
-                InstallUtil.cancel = true;
             }
         });
+
+        // cancel install
+        if (lineLower.Contains("error:"))
+        {
+            InstallUtil.cancel = true;
+        }
     }
 
     private void RotationToggleButton_OnIsCheckedChanged(object sender, RoutedEventArgs e)
