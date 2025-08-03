@@ -416,6 +416,7 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm nano evtest efibootmgr");
         Run("pacman", "-S --noconfirm dmidecode hwinfo udev python");
         Run("pacman", "-S --noconfirm rsync");
+        Run("pacman", "-S --noconfirm wget");
         UpdateProgress(31);
 
         // install firmware update support
@@ -536,6 +537,7 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm zip unzip gzip bzip2 7zip xz");
         Run("pacman", "-S --noconfirm plasma konsole dolphin kate ark exfatprogs dosfstools partitionmanager");
         Run("pacman", "-S --noconfirm maliit-keyboard");
+        Run("pacman", "-S --noconfirm qt5-wayland qt6-wayland");
         UpdateProgress(85);
 
         // install gparted

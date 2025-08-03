@@ -76,7 +76,7 @@ public partial class MainView : UserControl
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Log.WriteLine(e);
             }
         }
     }
@@ -115,13 +115,13 @@ public partial class MainView : UserControl
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
+                    Log.WriteLine(ex);
                 }
             });
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
+            Log.WriteLine(ex);
         }
     }
 
@@ -157,13 +157,13 @@ public partial class MainView : UserControl
             if (installOutputBuilder.Length > maxLength) installOutputBuilder.Remove(0, installOutputBuilder.Length - maxLength);
             singleton.installTerminalText.Text = installOutputBuilder.ToString();
             singleton.installTerminalScroll.ScrollToEnd();
-        });
 
-        if (line.ToLower().Contains("error:"))
-        {
-            singleton.exitButton.IsEnabled = true;
-            InstallUtil.cancel = true;
-        }
+            if (line.ToLower().Contains("error:"))
+            {
+                singleton.exitButton.IsEnabled = true;
+                InstallUtil.cancel = true;
+            }
+        });
     }
 
     private void RotationToggleButton_OnIsCheckedChanged(object sender, RoutedEventArgs e)
@@ -258,7 +258,7 @@ public partial class MainView : UserControl
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Log.WriteLine(ex);
             }
         }
         else
@@ -388,7 +388,7 @@ public partial class MainView : UserControl
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Log.WriteLine(e);
             }
         }
 
@@ -398,7 +398,7 @@ public partial class MainView : UserControl
         // choose device
         if (wlanDevices.Count == 0) return;
         wlanDevice = wlanDevices[0];
-        Console.WriteLine("wlanDevice: " + wlanDevice);
+        Log.WriteLine("wlanDevice: " + wlanDevice);
         
         // get SSID
         var ssids = new List<string>();
@@ -417,7 +417,7 @@ public partial class MainView : UserControl
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Log.WriteLine(e);
             }
         }
 
@@ -437,7 +437,7 @@ public partial class MainView : UserControl
         ProcessUtil.KillHard("iwctl", true, out _);// make sure any failed processes are not open
         ProcessUtil.Run("iwctl", $"--passphrase '{networkPasswordText.Text}' station {wlanDevice} connect '{ssid}'", useBash: true);
         string result = ProcessUtil.Run("iwctl", $"station {wlanDevice} show", useBash: false);
-        Console.WriteLine(result);
+        Log.WriteLine(result);
     }
     
     private void RefreshDrivesButton_OnClick(object sender, RoutedEventArgs e)
@@ -555,7 +555,7 @@ public partial class MainView : UserControl
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e);
+                        Log.WriteLine(e);
                     }
                 }
             }
@@ -584,7 +584,7 @@ public partial class MainView : UserControl
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    Log.WriteLine(e);
                 }
             }
             else if (line.StartsWith("Number "))
@@ -739,14 +739,14 @@ public partial class MainView : UserControl
 
     private void OpenGPartedButton_OnClick(object sender, RoutedEventArgs e)
     {
-        if (Program.compositorMode == CompositorMode.Weston || Program.compositorMode == CompositorMode.Labwc)
+        if (Program.compositorMode == CompositorMode.Weston || Program.compositorMode == CompositorMode.Labwc || Program.compositorMode == CompositorMode.X11)
         {
             ProcessUtil.Run("gparted", "", wait:true, asAdmin:true);
             driveListBox.Items.Clear();
         }
         else
         {
-            Console.WriteLine("Relaunch with 'install.sh -labwc'");
+            Log.WriteLine("Relaunch with 'install.sh -labwc'");
             MainWindow.singleton.Close();// exit so user can use labwc
         }
     }
