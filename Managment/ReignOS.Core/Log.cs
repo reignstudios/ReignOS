@@ -23,7 +23,7 @@ public static class Log
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
             string filename = Path.Combine(path, prefix + ".log");
             stream = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.Read);
-            writer = new StreamWriter(stream);
+            writer = new StreamWriter(stream, Encoding.UTF8);
         }
         catch (Exception e)
         {
@@ -56,9 +56,13 @@ public static class Log
         lock (lockObj)
         {
             if (writer == null) return;
-            writer.Write(prefix + message);
-            writer.Flush();
-            stream.Flush();
+            try
+            {
+                writer.Write(prefix + message);
+                writer.Flush();
+                stream.Flush();
+            }
+            catch { }
         }
     }
 
@@ -72,9 +76,13 @@ public static class Log
         lock (lockObj)
         {
             if (writer == null) return;
-            writer.WriteLine(prefix + message);
-            writer.Flush();
-            stream.Flush();
+            try
+            {
+                writer.WriteLine(prefix + message);
+                writer.Flush();
+                stream.Flush();
+            }
+            catch { }
         }
     }
 
@@ -88,18 +96,22 @@ public static class Log
         lock (lockObj)
         {
             if (writer == null) return;
-            writer.Write(prefix + header);
-            int i = 0;
-            char c = (char)nativeText[0];
-            while (c != '\0')
+            try
             {
-                writer.Write(c);
-                i++;
-                c = (char)nativeText[i];
+                writer.Write(prefix + header);
+                int i = 0;
+                char c = (char)nativeText[0];
+                while (c != '\0')
+                {
+                    writer.Write(c);
+                    i++;
+                    c = (char)nativeText[i];
+                }
+                writer.WriteLine();
+                writer.Flush();
+                stream.Flush();
             }
-            writer.WriteLine();
-            writer.Flush();
-            stream.Flush();
+            catch { }
         }
     }
 }
