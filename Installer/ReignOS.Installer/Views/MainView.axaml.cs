@@ -46,6 +46,7 @@ public partial class MainView : UserControl
         singleton = this;
         InitializeComponent();
         versionText.Text = "Version: " + VersionInfo.version;
+        compositorText.Text = "Compositor: " + Program.compositorMode.ToString();
         if (Design.IsDesignMode) return;
         
         InstallUtil.InstallProgress += InstallProgress;
@@ -148,10 +149,10 @@ public partial class MainView : UserControl
     private static StringBuilder installOutputBuilder = new StringBuilder();
     public static void ProcessOutput(string line)
     {
-        Log.WriteLine(line);
-
         Dispatcher.UIThread.InvokeAsync(() =>
         {
+            Log.WriteLine(line);
+
             installOutputBuilder.AppendLine(line);
             const int maxLength = 2048;
             if (installOutputBuilder.Length > maxLength) installOutputBuilder.Remove(0, installOutputBuilder.Length - maxLength);

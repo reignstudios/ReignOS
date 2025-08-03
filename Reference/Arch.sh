@@ -320,7 +320,12 @@ xorg-server-xwayland
 wayland
 wayland-protocols
 wayland-utils
+xorg
+xorg-server
+xorg-xinit
 xorg-xev
+xf86-input-libinput
+xterm
 xbindkeys
 xorg-xinput
 xorg-xmodmap
@@ -340,6 +345,10 @@ vulkan-icd-loader
 vulkan-tools
 vulkan-mesa-layers
 egl-wayland
+xf86-video-intel
+xf86-video-amdgpu
+xf86-video-nouveau
+glxinfo
 
 # allow installer to access mirror list
 nano pacman.conf # uncomment files below
