@@ -100,7 +100,6 @@ static class PackageUpdates
         
         if (!PackageUtils.PackageExits("vdpauinfo")) return true;
         if (!PackageUtils.PackageExits("ffmpeg")) return true;
-        if (!PackageUtils.PackageExits("yt-dlp")) return true;
         if (!PackageUtils.PackageExits("libva")) return true;
         if (!PackageUtils.PackageExits("libvdpau-va-gl")) return true;
         if (!PackageUtils.PackageExits("libdvdread")) return true;

@@ -53,7 +53,6 @@ sudo pacman -S --noconfirm --needed fwupd
 
 sudo pacman -S --noconfirm --needed vdpauinfo
 sudo pacman -S --noconfirm --needed ffmpeg gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav
-sudo pacman -S --noconfirm --needed yt-dlp
 sudo pacman -S --noconfirm --needed libva libva-utils gstreamer-vaapi
 sudo pacman -S --noconfirm --needed libvdpau-va-gl mesa-vdpau
 sudo pacman -S --noconfirm --needed libdvdread libdvdnav libdvdcss libbluray

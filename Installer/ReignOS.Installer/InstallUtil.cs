@@ -457,7 +457,6 @@ static class InstallUtil
         // codex / misc
         Run("pacman", "-S --noconfirm vdpauinfo");
         Run("pacman", "-S --noconfirm ffmpeg gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav");
-        Run("pacman", "-S --noconfirm yt-dlp");
         Run("pacman", "-S --noconfirm libva libva-utils gstreamer-vaapi");
         Run("pacman", "-S --noconfirm libvdpau-va-gl mesa-vdpau");
         Run("pacman", "-S --noconfirm libdvdread libdvdnav libdvdcss libbluray");
@@ -480,7 +479,7 @@ static class InstallUtil
         // install audio
         Run("pacman", "-S --noconfirm alsa-utils alsa-plugins alsa-ucm-conf");
         Run("pacman", "-S --noconfirm sof-firmware");
-        Run("pacman", "-R --noconfirm jack2");// remove jack2 which alsa can install and let pipewire-jack install its version instead
+        Run("pacman", "-Rdd --noconfirm jack2");// force remove jack2 let pipewire-jack install its version instead
         Run("pacman", "-S --noconfirm pipewire pipewire-pulse pipewire-alsa pipewire-jack wireplumber");
         Run("systemctl", "--user enable pipewire pipewire-pulse wireplumber");
         Run("systemctl", "--user enable pipewire.socket pipewire.service pipewire-pulse.socket pipewire-pulse.service");
