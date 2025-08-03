@@ -120,17 +120,27 @@ static class InstallUtil
     {
         progressTask = "Refreshing Integrity (can take 10-15 min, please wait)...";
         UpdateProgress(0);
+        archRootMode = false;
 
         static void standardOut(string line)
         {
             // do nothing: just used to keep output read
         }
 
+        // update pacman
         Run("pacman", "-Sy --noconfirm");
+
+        // update time
         Run("timedatectl", "set-ntp true");
         Run("hwclock", "--systohc");
         Thread.Sleep(1000);
         Run("timedatectl", "");// log time
+
+        // update mirror list to use newer versions
+        string countryCode = ProcessUtil.Run("curl", "-s https://ipapi.co/country/", useBash:true).Trim();
+        ProcessUtil.Run("reflector", $"--country {countryCode} --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist", useBash: true, asAdmin: true);
+
+        // update keyring
         Run("pacman", "-Sy archlinux-keyring --noconfirm");
         Run("pacman-key", "--init", standardOut: standardOut);
         Run("pacman-key", "--populate archlinux", standardOut:standardOut);
@@ -470,6 +480,7 @@ static class InstallUtil
         // install audio
         Run("pacman", "-S --noconfirm alsa-utils alsa-plugins alsa-ucm-conf");
         Run("pacman", "-S --noconfirm sof-firmware");
+        Run("pacman", "-R --noconfirm jack2");// remove jack2 which alsa can install and let pipewire-jack install its version instead
         Run("pacman", "-S --noconfirm pipewire pipewire-pulse pipewire-alsa pipewire-jack wireplumber");
         Run("systemctl", "--user enable pipewire pipewire-pulse wireplumber");
         Run("systemctl", "--user enable pipewire.socket pipewire.service pipewire-pulse.socket pipewire-pulse.service");
