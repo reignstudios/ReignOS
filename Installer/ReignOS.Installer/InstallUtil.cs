@@ -52,7 +52,7 @@ static class InstallUtil
     private static Thread installThread;
     private static float progress;
     private static string progressTask;
-    public static bool cancel;
+    public static bool cancel, failIfError = true;
     private static bool refreshIntegrity;
 
     private static void UpdateProgress(int progress)
@@ -61,10 +61,12 @@ static class InstallUtil
         InstallProgress?.Invoke(progressTask, progress);
     }
 
-    private static void Run(string name, string args, ProcessUtil.ProcessOutputDelegate standardOut = null, ProcessUtil.ProcessInputDelegate getStandardInput = null, string workingDir = null)
+    private static void Run(string name, string args, ProcessUtil.ProcessOutputDelegate standardOut = null, ProcessUtil.ProcessInputDelegate getStandardInput = null, string workingDir = null, bool triggerFail = true)
     {
         if (cancel) throw new Exception("Install Cancelled");
-        
+
+        bool origFailIfError = failIfError;
+        failIfError = triggerFail;
         if (!archRootMode)
         {
             ProcessUtil.Run(name, args, asAdmin:true, enterAdminPass:false, standardOut:standardOut, getStandardInput:getStandardInput, workingDir:workingDir, verboseLog:true);
@@ -73,6 +75,7 @@ static class InstallUtil
         {
             ProcessUtil.Run("arch-chroot", $"/mnt bash -c \\\"{name} {args}\\\"", asAdmin:true, enterAdminPass:false, standardOut:standardOut, getStandardInput:getStandardInput, workingDir:workingDir, verboseLog:true);
         }
+        failIfError = origFailIfError;
     }
     
     public static void Install(Partition efiPartition, Partition ext4Partition, bool refreshIntegrity)
@@ -87,6 +90,7 @@ static class InstallUtil
     private static void InstallThread()
     {
         cancel = false;
+        failIfError = true;
         ProcessUtil.ProcessOutput += Views.MainView.ProcessOutput;
         progress = 0;
         archRootMode = false;
@@ -107,6 +111,7 @@ static class InstallUtil
         }
 
         cancel = false;// reset canceled to avoid exceptions
+        failIfError = false;// do not trigger fails in cleanup
         archRootMode = false;
         ProcessUtil.KillHard("arch-chroot", true, out _);
         Run("umount", "-R /var/cache/pacman/pkg");
@@ -161,10 +166,10 @@ static class InstallUtil
         Run("timedatectl", "");// log time
 
         // unmount conflicting mounts
-        Run("umount", "-R /var/cache/pacman/pkg");
-        Run("umount", "-R /root/.nuget");
-        Run("umount", "-R /mnt/boot");
-        Run("umount", "-R /mnt");
+        Run("umount", "-R /var/cache/pacman/pkg", triggerFail:false);
+        Run("umount", "-R /root/.nuget", triggerFail: false);
+        Run("umount", "-R /mnt/boot", triggerFail: false);
+        Run("umount", "-R /mnt", triggerFail: false);
         UpdateProgress(1);
 
         // sync pacman db
@@ -479,7 +484,7 @@ static class InstallUtil
         // install audio
         Run("pacman", "-S --noconfirm alsa-utils alsa-plugins alsa-ucm-conf");
         Run("pacman", "-S --noconfirm sof-firmware");
-        Run("pacman", "-Rdd --noconfirm jack2");// force remove jack2 let pipewire-jack install its version instead
+        Run("pacman", "-Rdd --noconfirm jack2", triggerFail: false);// force remove jack2 let pipewire-jack install its version instead
         Run("pacman", "-S --noconfirm pipewire pipewire-pulse pipewire-alsa pipewire-jack wireplumber");
         Run("systemctl", "--user enable pipewire pipewire-pulse wireplumber");
         Run("systemctl", "--user enable pipewire.socket pipewire.service pipewire-pulse.socket pipewire-pulse.service");
@@ -525,15 +530,15 @@ static class InstallUtil
         UpdateProgress(80);
 
         // remove AMD driver defaults steam might try to install
-        Run("pacman", "-R amdvlk");
-        Run("pacman", "-R lib32-amdvlk");
-        Run("pacman", "-R amdvlk-pro");
-        Run("pacman", "-R amdvlk-git");
+        Run("pacman", "-R amdvlk", triggerFail: false);
+        Run("pacman", "-R lib32-amdvlk", triggerFail: false);
+        Run("pacman", "-R amdvlk-pro", triggerFail: false);
+        Run("pacman", "-R amdvlk-git", triggerFail: false);
         UpdateProgress(81);
 
         // remove Nvidia driver defaults steam might try to install
-        Run("pacman", "-R nvidia-utils");
-        Run("pacman", "-R lib32-nvidia-utils");
+        Run("pacman", "-R nvidia-utils", triggerFail: false);
+        Run("pacman", "-R lib32-nvidia-utils", triggerFail: false);
         UpdateProgress(82);
 
         // install wayland mouse util

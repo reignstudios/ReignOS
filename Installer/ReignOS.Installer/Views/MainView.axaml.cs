@@ -150,7 +150,7 @@ public partial class MainView : UserControl
     public static void ProcessOutput(string line)
     {
         //Log.WriteLine(line);// NOTE: this is already logged from ProcessUtil
-        string lineLower = line.ToLower();
+        bool error = InstallUtil.failIfError && line.ToLower().Contains("error:");
         Dispatcher.UIThread.InvokeAsync(() =>
         {
             installOutputBuilder.AppendLine(line);
@@ -160,14 +160,14 @@ public partial class MainView : UserControl
             singleton.installTerminalScroll.ScrollToEnd();
 
             // allow user to exit installer
-            if (lineLower.Contains("error:"))
+            if (error)
             {
                 singleton.exitButton.IsEnabled = true;
             }
         });
 
         // cancel install
-        if (lineLower.Contains("error:"))
+        if (error)
         {
             InstallUtil.cancel = true;
         }
