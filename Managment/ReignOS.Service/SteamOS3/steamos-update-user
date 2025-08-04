@@ -9,7 +9,7 @@
 
 EXIT=false
 CHECK=false
-RUN_UPDATE=false
+RUN_UPDATE=true
 for arg in "$@"; do
   if [ "$arg" = "check" ]; then
     CHECK=true
@@ -26,7 +26,7 @@ done
 
 if [ "$EXIT" = "true" ]; then
   # exit with no special signal
-  exit 0
+  exit 7
 fi
 
 if [ "$CHECK" = "true" ]; then
