@@ -130,13 +130,9 @@ static class PackageUpdates
             var lines = text.Split('\n');
             foreach (string line in lines)
             {
-                if (line.StartsWith("#IgnorePkg ")) text = text.Replace("#IgnorePkg ", "IgnorePkg ");
-                else if (line.StartsWith("# IgnorePkg ")) text = text.Replace("# IgnorePkg ", "IgnorePkg ");
-
-                var match = Regex.Match(line, @"(IgnorePkg\s*=\s*)(.*)");
-                if (match.Success)
+                if ((line.StartsWith("#IgnorePkg ") || line.StartsWith("# IgnorePkg ") || line.StartsWith("IgnorePkg ")) && !line.Contains(" jack2"))
                 {
-                    text = text.Replace(line, $"IgnorePkg = jack2");
+                    text = text.Replace(line, "IgnorePkg = jack2");
                     break;
                 }
             }
