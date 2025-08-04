@@ -165,6 +165,9 @@ internal class Program
             return;
         }
 
+        // delete steam-update log
+        File.Delete("/home/gamer/steam-update.log");
+
         // start auto mounting service
         ProcessUtil.KillHard("udiskie", true, out _);
         ProcessUtil.Run("udiskie", "--no-tray", out _, wait:false, useBash:false);
