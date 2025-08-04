@@ -21,7 +21,7 @@ done
 
 if [ "$EXIT" = "true" ] && [ "$CHECK" = "false" ]; then
   # exit with no special signal
-  exit 0
+  exit 7
 fi
 
 if [ "$CHECK" = "true" ]; then
