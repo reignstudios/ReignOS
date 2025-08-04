@@ -414,6 +414,7 @@ static class InstallUtil
 
         fileBuilder.AppendLine();// run main updates scripts at least once
         fileBuilder.AppendLine("echo \"Running main update script...\"");
+        fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Update.sh");
         fileBuilder.AppendLine("chmod +x /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Update.sh");
         fileBuilder.AppendLine("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Update.sh");
 
