@@ -6,7 +6,7 @@
 # steamos-update check                              -- should check for update
 # steamos-update --enable-duplicate-detection       -- should perform an update
 # steamos-update                                    -- should perform an update
- 
+
 EXIT=false
 CHECK=false
 RUN_UPDATE=false
@@ -20,7 +20,7 @@ for arg in "$@"; do
   fi
   
   if [ "$arg" = "--supports-duplicate-detection" ]; then
-      EXIT=true
+    EXIT=true
   fi
 done
 
@@ -65,7 +65,7 @@ if [ "$CHECK" = "true" ]; then
     # tell steam there is update
     exit 0
   fi
-elfi if [ "$RUN_UPDATE" = "true" ]; then
+elfi [ "$RUN_UPDATE" = "true" ]; then
   # force exit ReignOS managment
   sudo pkill ReignOS.Service
   sudo pkill ReignOS.Bootloader
