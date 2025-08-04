@@ -65,7 +65,7 @@ if [ "$CHECK" = "true" ]; then
     # tell steam there is update
     exit 0
   fi
-elfi [ "$RUN_UPDATE" = "true" ]; then
+elif [ "$RUN_UPDATE" = "true" ]; then
   # force exit ReignOS managment
   sudo pkill ReignOS.Service
   sudo pkill ReignOS.Bootloader
