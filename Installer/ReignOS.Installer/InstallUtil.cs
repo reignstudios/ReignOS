@@ -273,7 +273,9 @@ static class InstallUtil
         UpdateProgress(20);
 
         // configure hosts file
-        string hostname = $"reignos_{Guid.NewGuid()}";
+        string id = Guid.NewGuid().ToString();
+        id = id.Split('-')[0];
+        string hostname = $"reignos-{id}";
         Run("echo", $"\"{hostname}\" > /etc/hostname");
         path = "/mnt/etc/hosts";
         fileBuilder = new StringBuilder(File.ReadAllText(path));
