@@ -30,7 +30,7 @@ for arg in "$@"; do
   fi
 done
 
-if [ "$EXIT" = "false" ]; then
+if [ "$EXIT" = "true" ]; then
   echo "Exit..." >> /home/gamer/steam-update.log
   exit 0
 fi
@@ -79,7 +79,7 @@ if [ "$CHECK" = "true" ] || [ "$RUN_UPDATE" = "true" ]; then
   fi
 fi
 
-if [ "$RUN_UPDATE" = "true" ] && [ "$HAS_UPDATES" = "true" ]; then
+if [ "$RUN_UPDATE" = "true" ] && [ "$CHECK" = "false" ] && [ "$HAS_UPDATES" = "true" ]; then
   echo "Updating..." >> /home/gamer/steam-update.log
 
   # force exit ReignOS managment
