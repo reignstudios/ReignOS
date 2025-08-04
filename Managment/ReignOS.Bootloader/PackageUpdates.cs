@@ -136,7 +136,7 @@ static class PackageUpdates
                 var match = Regex.Match(line, @"(IgnorePkg\s*=\s*)(.*)");
                 if (match.Success)
                 {
-                    text = text.Replace(match.Groups[1].Value, $"IgnorePkg = jack2");
+                    text = text.Replace(line, $"IgnorePkg = jack2");
                     break;
                 }
             }
