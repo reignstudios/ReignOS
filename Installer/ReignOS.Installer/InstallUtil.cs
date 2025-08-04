@@ -189,11 +189,18 @@ static class InstallUtil
             Run("umount", "-R /mnt/boot");
             Run("umount", "-R /mnt");
             UpdateProgress(1);
-        }
 
-        // sync pacman db
-        Run("pacman", "-Sy --noconfirm");
-        UpdateProgress(2);
+            // sync pacman db
+            Run("pacman", "-Sy --noconfirm");
+            UpdateProgress(2);
+
+            // init pacman keyring
+            static void standardOut(string line)
+            {
+                // do nothing: just used to keep output read
+            }
+            Run("pacman-key", "--init", standardOut: standardOut);
+        }
 
         // make sure we re-format drives before installing
         Views.MainView.FormatExistingPartitions(efiPartition, ext4Partition);
