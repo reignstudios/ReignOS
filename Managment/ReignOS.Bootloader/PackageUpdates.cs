@@ -34,7 +34,7 @@ static class PackageUpdates
         
         // check bad configs
         bool badConfig = false;
-        //if (CheckBadHostname()) badConfig = true;
+        if (CheckBadHostname()) badConfig = true;
         if (CheckBadKernelSettings()) badConfig = true;
         //if (CheckBadDriverSettings()) badConfig = true;
         if (badConfig) return true;
@@ -125,8 +125,7 @@ static class PackageUpdates
     {
         try
         {
-            //const string pacmanConf = "/etc/pacman.conf";
-            const string pacmanConf = "/home/gamer/Downloads/pacman.conf";
+            const string pacmanConf = "/etc/pacman.conf";
             string text = File.ReadAllText(pacmanConf);
             var lines = text.Split('\n');
             foreach (string line in lines)
@@ -243,15 +242,17 @@ static class PackageUpdates
         }
     }*/
 
-    /*private static bool CheckBadHostname()
+    private static bool CheckBadHostname()
     {
         try
         {
             const string path = "/etc/hostname";
             string hostname = File.ReadAllText(path).Trim();
-            if (hostname == "reignos")
+            if (hostname == "reignos" || hostname.StartsWith("reignos_"))
             {
-                hostname = $"reignos_{Guid.NewGuid()}";
+                string id = Guid.NewGuid().ToString();
+                id = id.Split('-')[0];
+                hostname = $"reignos-{id}";
                 void getStandardInput_hostname(StreamWriter writer)
                 {
                     writer.WriteLine(hostname);
@@ -269,7 +270,7 @@ static class PackageUpdates
         }
 
         return false;
-    }*/
+    }
 
     private static bool CheckBadKernelSettings()
     {
