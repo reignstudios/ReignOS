@@ -75,3 +75,6 @@ else
     loginctl terminate-user gamer
   ) &
 fi
+
+# just exit saying no updates by default
+exit 7
