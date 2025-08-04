@@ -7,11 +7,12 @@
 # steamos-update --enable-duplicate-detection       -- should perform an update
 # steamos-update                                    -- should perform an update
 
+echo "---" >> /home/gamer/steam-update.log
 echo "Arguments: $@" >> /home/gamer/steam-update.log
 
 EXIT=false
 CHECK=false
-RUN_UPDATE=false
+RUN_UPDATE=true
 for arg in "$@"; do
   if [ "$arg" = "check" ]; then
     CHECK=true
@@ -29,9 +30,14 @@ for arg in "$@"; do
   fi
 done
 
-if [ "$CHECK" = "true" ] && [ "$EXIT" = "false" ]; then
+if [ "$EXIT" = "false" ]; then
+  echo "Exit..." >> /home/gamer/steam-update.log
+  exit 0
+fi
+
+HAS_UPDATES=false
+if [ "$CHECK" = "true" ] || [ "$RUN_UPDATE" = "true" ]; then
   echo "Checking updates..." >> /home/gamer/steam-update.log
-  HAS_UPDATES=false
   
   # check if management has updates
   cd /home/gamer/ReignOS
@@ -59,16 +65,21 @@ if [ "$CHECK" = "true" ] && [ "$EXIT" = "false" ]; then
     fi
   fi
   
-  if [ "$HAS_UPDATES" = "false" ]; then
-    # just tell steam there are no updates
-    echo "No updates" >> /home/gamer/steam-update.log
-    exit 7
-  else
-    # tell steam there is update
-    echo "Has updates" >> /home/gamer/steam-update.log
-    exit 0
+  # only exit if check only
+  if [ "$CHECK" = "true" ]; then
+    if [ "$HAS_UPDATES" = "false" ]; then
+      # just tell steam there are no updates
+      echo "No updates" >> /home/gamer/steam-update.log
+      exit 7
+    else
+      # tell steam there is update
+      echo "Has updates" >> /home/gamer/steam-update.log
+      exit 0
+    fi
   fi
-elif [ "$RUN_UPDATE" = "true" ] && [ "$EXIT" = "false" ]; then
+fi
+
+if [ "$RUN_UPDATE" = "true" ] && [ "$HAS_UPDATES" = "true" ]; then
   echo "Updating..." >> /home/gamer/steam-update.log
 
   # force exit ReignOS managment
