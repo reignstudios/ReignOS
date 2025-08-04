@@ -42,6 +42,22 @@ public class Drive
     }
 }
 
+public class FailIfError : IDisposable
+{
+    private bool failIfError;
+
+    public FailIfError(bool shouldFailIfError)
+    {
+        failIfError = InstallUtil.failIfError;
+        InstallUtil.failIfError = shouldFailIfError;
+    }
+
+    public void Dispose()
+    {
+        InstallUtil.failIfError = failIfError;
+    }
+}
+
 static class InstallUtil
 {
     public delegate void InstallProgressDelegate(string task, float progress);
@@ -61,12 +77,10 @@ static class InstallUtil
         InstallProgress?.Invoke(progressTask, progress);
     }
 
-    private static void Run(string name, string args, ProcessUtil.ProcessOutputDelegate standardOut = null, ProcessUtil.ProcessInputDelegate getStandardInput = null, string workingDir = null, bool triggerFail = true)
+    private static void Run(string name, string args, ProcessUtil.ProcessOutputDelegate standardOut = null, ProcessUtil.ProcessInputDelegate getStandardInput = null, string workingDir = null)
     {
         if (cancel) throw new Exception("Install Cancelled");
 
-        bool origFailIfError = failIfError;
-        failIfError = triggerFail;
         if (!archRootMode)
         {
             ProcessUtil.Run(name, args, asAdmin:true, enterAdminPass:false, standardOut:standardOut, getStandardInput:getStandardInput, workingDir:workingDir, verboseLog:true);
@@ -75,7 +89,6 @@ static class InstallUtil
         {
             ProcessUtil.Run("arch-chroot", $"/mnt bash -c \\\"{name} {args}\\\"", asAdmin:true, enterAdminPass:false, standardOut:standardOut, getStandardInput:getStandardInput, workingDir:workingDir, verboseLog:true);
         }
-        failIfError = origFailIfError;
     }
     
     public static void Install(Partition efiPartition, Partition ext4Partition, bool refreshIntegrity)
@@ -132,25 +145,28 @@ static class InstallUtil
             // do nothing: just used to keep output read
         }
 
-        // update pacman
-        Run("pacman", "-Sy --noconfirm");
+        using (new FailIfError(false))
+        {
+            // update pacman
+            Run("pacman", "-Sy --noconfirm");
 
-        // update time
-        Run("timedatectl", "set-ntp true");
-        Run("hwclock", "--systohc");
-        Thread.Sleep(1000);
-        Run("timedatectl", "");// log time
+            // update time
+            Run("timedatectl", "set-ntp true");
+            Run("hwclock", "--systohc");
+            Thread.Sleep(1000);
+            Run("timedatectl", "");// log time
 
-        // update mirror list to use newer versions
-        string countryCode = ProcessUtil.Run("curl", "-s https://ipapi.co/country/", useBash:true).Trim();
-        ProcessUtil.Run("reflector", $"--country {countryCode} --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist", useBash: true, asAdmin: true);
+            // update mirror list to use newer versions
+            string countryCode = ProcessUtil.Run("curl", "-s https://ipapi.co/country/", useBash:true).Trim();
+            ProcessUtil.Run("reflector", $"--country {countryCode} --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist", useBash: true, asAdmin: true);
 
-        // update keyring
-        Run("pacman", "-Sy archlinux-keyring --noconfirm");
-        Run("pacman-key", "--init", standardOut: standardOut);
-        Run("pacman-key", "--populate archlinux", standardOut:standardOut);
-        Run("pacman-key", "--refresh-keys", standardOut: standardOut);
-        Run("pacman-key", "--updatedb", standardOut: standardOut);
+            // update keyring
+            Run("pacman", "-Sy archlinux-keyring --noconfirm");
+            Run("pacman-key", "--init", standardOut: standardOut);
+            Run("pacman-key", "--populate archlinux", standardOut:standardOut);
+            Run("pacman-key", "--refresh-keys", standardOut: standardOut);
+            Run("pacman-key", "--updatedb", standardOut: standardOut);
+        }
     }
 
     private static void InstallBaseArch()
@@ -159,18 +175,21 @@ static class InstallUtil
         UpdateProgress(0);
 
         // basic pacman & time refresh
-        Run("pacman", "-Sy --noconfirm");
-        Run("timedatectl", "set-ntp true");
-        Run("hwclock", "--systohc");
-        Thread.Sleep(1000);
-        Run("timedatectl", "");// log time
+        using (new FailIfError(false))
+        {
+            Run("pacman", "-Sy --noconfirm");
+            Run("timedatectl", "set-ntp true");
+            Run("hwclock", "--systohc");
+            Thread.Sleep(1000);
+            Run("timedatectl", "");// log time
 
-        // unmount conflicting mounts
-        Run("umount", "-R /var/cache/pacman/pkg", triggerFail:false);
-        Run("umount", "-R /root/.nuget", triggerFail: false);
-        Run("umount", "-R /mnt/boot", triggerFail: false);
-        Run("umount", "-R /mnt", triggerFail: false);
-        UpdateProgress(1);
+            // unmount conflicting mounts
+            Run("umount", "-R /var/cache/pacman/pkg");
+            Run("umount", "-R /root/.nuget");
+            Run("umount", "-R /mnt/boot");
+            Run("umount", "-R /mnt");
+            UpdateProgress(1);
+        }
 
         // sync pacman db
         Run("pacman", "-Sy --noconfirm");
@@ -484,7 +503,7 @@ static class InstallUtil
         // install audio
         Run("pacman", "-S --noconfirm alsa-utils alsa-plugins alsa-ucm-conf");
         Run("pacman", "-S --noconfirm sof-firmware");
-        Run("pacman", "-Rdd --noconfirm jack2", triggerFail: false);// force remove jack2 let pipewire-jack install its version instead
+        using (new FailIfError(false)) Run("pacman", "-Rdd --noconfirm jack2");// force remove jack2 let pipewire-jack install its version instead
         Run("pacman", "-S --noconfirm pipewire pipewire-pulse pipewire-alsa pipewire-jack wireplumber");
         Run("systemctl", "--user enable pipewire pipewire-pulse wireplumber");
         Run("systemctl", "--user enable pipewire.socket pipewire.service pipewire-pulse.socket pipewire-pulse.service");
@@ -529,17 +548,20 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm steam");//steam-native-runtime (use Arch libs)
         UpdateProgress(80);
 
-        // remove AMD driver defaults steam might try to install
-        Run("pacman", "-R amdvlk", triggerFail: false);
-        Run("pacman", "-R lib32-amdvlk", triggerFail: false);
-        Run("pacman", "-R amdvlk-pro", triggerFail: false);
-        Run("pacman", "-R amdvlk-git", triggerFail: false);
-        UpdateProgress(81);
+        using (new FailIfError(false))
+        {
+            // remove AMD driver defaults steam might try to install
+            Run("pacman", "-R amdvlk");
+            Run("pacman", "-R lib32-amdvlk");
+            Run("pacman", "-R amdvlk-pro");
+            Run("pacman", "-R amdvlk-git");
+            UpdateProgress(81);
 
-        // remove Nvidia driver defaults steam might try to install
-        Run("pacman", "-R nvidia-utils", triggerFail: false);
-        Run("pacman", "-R lib32-nvidia-utils", triggerFail: false);
-        UpdateProgress(82);
+            // remove Nvidia driver defaults steam might try to install
+            Run("pacman", "-R nvidia-utils");
+            Run("pacman", "-R lib32-nvidia-utils");
+            UpdateProgress(82);
+        }
 
         // install wayland mouse util
         Run("pacman", "-S --noconfirm unclutter");
