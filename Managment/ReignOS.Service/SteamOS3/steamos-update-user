@@ -7,74 +7,7 @@
 # steamos-update --enable-duplicate-detection       -- should perform an update
 # steamos-update                                    -- should perform an update
 
-EXIT=false
-CHECK=false
-for arg in "$@"; do
-  if [ "$arg" = "check" ]; then
-    CHECK=true
-  fi
-  
-  if [ "$arg" = "--supports-duplicate-detection" ]; then
-      EXIT=true
-  fi
-done
 
-if [ "$EXIT" = "true" ] && [ "$CHECK" = "false" ]; then
-  # exit with no special signal
-  exit 7
-fi
-
-if [ "$CHECK" = "true" ]; then
-  HAS_UPDATES=false
-  
-  # check if management has updates
-  cd /home/gamer/ReignOS
-  git fetch
-  git_local=$(git rev-parse @)
-  git_upstream=$(git rev-parse @{u} 2>/dev/null)
-  if [[ "$git_local" != "$git_upstream" ]]; then
-    HAS_UPDATES=true
-  fi
-  
-  # check if pacman updates exist
-  if [ "$HAS_UPDATES" = "false" ]; then
-    sudo pacman -Sy
-    if pacman -Qu &> /dev/null; then
-        HAS_UPDATES=true
-    fi
-  fi
-  
-  # check if yay updates exist
-  if [ "$HAS_UPDATES" = "false" ]; then
-    yay -Sy
-    HAS_UPDATES=false
-    if yay -Qu --ignore aw87559-firmware &> /dev/null; then
-        HAS_UPDATES=true
-    fi
-  fi
-  
-  if [ "$HAS_UPDATES" = "false" ]; then
-    # just tell steam there are no updates
-    exit 7
-  else
-    # tell steam there is update
-    exit 0
-  fi
-else
-  # force exit ReignOS managment
-  sudo pkill ReignOS.Service
-  sudo pkill ReignOS.Bootloader
-  
-  # run ReignOS updates
-  cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
-  ./Update.sh
-  
-  (
-    sudo pkill steam
-    sleep 10
-    loginctl terminate-user gamer
-  ) &
-fi
 
 # just exit saying no updates by default
 exit 7
