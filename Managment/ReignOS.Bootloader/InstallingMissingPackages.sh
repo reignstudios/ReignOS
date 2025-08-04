@@ -18,6 +18,9 @@ sudo pacman -S --noconfirm --needed vulkan-tools vulkan-mesa-layers lib32-vulkan
 
 sudo pacman -S --noconfirm --needed alsa-ucm-conf
 
+sudo pacman -Rdd --noconfirm jack2
+sudo pacman -S --noconfirm --needed pipewire pipewire-pulse pipewire-alsa pipewire-jack wireplumber
+
 sudo pacman -S --noconfirm --needed bluez bluez-utils
 sudo systemctl enable bluetooth
 

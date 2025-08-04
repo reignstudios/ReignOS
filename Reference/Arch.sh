@@ -1,5 +1,8 @@
 # Gamescope args: https://github.com/ValveSoftware/gamescope/blob/f1f105b3a95b4fec5c92e8a10e6927cbb76fe804/src/main.cpp#L209
 
+# to install installer apps on existing Arch install
+sudo pacman -S arch-install-scripts
+
 # to fix missing install
 # boot back into USB image
 lsblk

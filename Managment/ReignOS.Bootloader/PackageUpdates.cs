@@ -29,6 +29,9 @@ static class PackageUpdates
         //AddLaunchScript();
         //FixOSName();
         
+        // ignore packages
+        IgnorePackages();
+        
         // check bad configs
         bool badConfig = false;
         //if (CheckBadHostname()) badConfig = true;
@@ -106,6 +109,9 @@ static class PackageUpdates
 
         if (PackageUtils.PackageExits("acpid")) return true;
         
+        if (PackageUtils.PackageExits("jack2")) return true;
+        if (!PackageUtils.PackageExits("pipewire-jack")) return true;
+        
         // check for non-active services
         if (!PackageUtils.ServiceEnabled("pipewire.socket", true, false)) return true;
         if (!PackageUtils.ServiceEnabled("pipewire.service", true, false)) return true;
@@ -113,6 +119,34 @@ static class PackageUpdates
         if (!PackageUtils.ServiceEnabled("pipewire-pulse.service", true, false)) return true;
 
         return false;
+    }
+
+    private static void IgnorePackages()
+    {
+        try
+        {
+            //const string pacmanConf = "/etc/pacman.conf";
+            const string pacmanConf = "/home/gamer/Downloads/pacman.conf";
+            string text = File.ReadAllText(pacmanConf);
+            var lines = text.Split('\n');
+            foreach (string line in lines)
+            {
+                if (line.StartsWith("#IgnorePkg ")) text = text.Replace("#IgnorePkg ", "IgnorePkg ");
+                else if (line.StartsWith("# IgnorePkg ")) text = text.Replace("# IgnorePkg ", "IgnorePkg ");
+
+                var match = Regex.Match(line, @"(IgnorePkg\s*=\s*)(.*)");
+                if (match.Success)
+                {
+                    text = text.Replace(match.Groups[1].Value, $"IgnorePkg = {match.Groups[2].Value} jack2");
+                    break;
+                }
+            }
+            ProcessUtil.WriteAllTextAdmin(pacmanConf, text);
+        }
+        catch (Exception e)
+        {
+            Log.WriteLine(e);
+        }
     }
 
     /*private static void AddLaunchScript()

@@ -503,7 +503,7 @@ static class InstallUtil
         // install audio
         Run("pacman", "-S --noconfirm alsa-utils alsa-plugins alsa-ucm-conf");
         Run("pacman", "-S --noconfirm sof-firmware");
-        using (new FailIfError(false)) Run("pacman", "-Rdd --noconfirm jack2");// force remove jack2 let pipewire-jack install its version instead
+        using (new FailIfError(false)) Run("pacman", "-Rdd --noconfirm jack2");// force remove jack2 let pipewire-jack install instead (installed from ffmpeg)
         Run("pacman", "-S --noconfirm pipewire pipewire-pulse pipewire-alsa pipewire-jack wireplumber");
         Run("systemctl", "--user enable pipewire pipewire-pulse wireplumber");
         Run("systemctl", "--user enable pipewire.socket pipewire.service pipewire-pulse.socket pipewire-pulse.service");
