@@ -6,7 +6,7 @@
 # steamos-update check                              -- should check for update
 # steamos-update --enable-duplicate-detection       -- should perform an update
 # steamos-update                                    -- should perform an update
-
+ 
 EXIT=false
 CHECK=false
 RUN_UPDATE=false
