@@ -7,6 +7,8 @@
 # steamos-update --enable-duplicate-detection       -- should perform an update
 # steamos-update                                    -- should perform an update
 
+echo "Arguments: $@" >> /home/gamer/steam-update.log
+
 EXIT=false
 CHECK=false
 RUN_UPDATE=true
