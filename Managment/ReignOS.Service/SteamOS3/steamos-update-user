@@ -24,7 +24,7 @@ for arg in "$@"; do
   fi
 done
 
-if [ "$EXIT" = "true" ] then
+if [ "$EXIT" = "true" ]; then
   # exit with no special signal
   exit 0
 fi
