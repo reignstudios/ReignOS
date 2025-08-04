@@ -431,13 +431,15 @@ static class InstallUtil
         else fileText = "";
         fileBuilder = new StringBuilder(fileText);
         fileBuilder.AppendLine();
-        fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/FirstRun.sh");
-        fileBuilder.AppendLine("chmod +x /home/gamer/FirstRun.sh");
-        fileBuilder.AppendLine("/home/gamer/FirstRun.sh");
         fileBuilder.AppendLine("sudo chown -R $USER /root/.nuget");
         fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS");
         fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS_Launch.sh");
         fileBuilder.AppendLine("chmod +x /home/gamer/ReignOS_Launch.sh");
+
+        fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/FirstRun.sh");
+        fileBuilder.AppendLine("chmod +x /home/gamer/FirstRun.sh");
+
+        fileBuilder.AppendLine("/home/gamer/FirstRun.sh");
         fileBuilder.AppendLine("/home/gamer/ReignOS_Launch.sh");
         File.WriteAllText(path, fileBuilder.ToString());
         UpdateProgress(30);
