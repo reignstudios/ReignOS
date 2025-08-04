@@ -11,27 +11,26 @@ echo "Arguments: $@" >> /home/gamer/steam-update.log
 
 EXIT=false
 CHECK=false
-RUN_UPDATE=true
+RUN_UPDATE=false
 for arg in "$@"; do
   if [ "$arg" = "check" ]; then
     CHECK=true
+    echo "CHECK=true" >> /home/gamer/steam-update.log
   fi
 
   if [ "$arg" = "--enable-duplicate-detection" ]; then
     RUN_UPDATE=true
+    echo "RUN_UPDATE=true" >> /home/gamer/steam-update.log
   fi
   
   if [ "$arg" = "--supports-duplicate-detection" ]; then
     EXIT=true
+    echo "EXIT=true" >> /home/gamer/steam-update.log
   fi
 done
 
-if [ "$EXIT" = "true" ]; then
-  # exit with no special signal
-  exit 7
-fi
-
-if [ "$CHECK" = "true" ]; then
+if [ "$CHECK" = "true" ] && [ "$EXIT" = "false" ]; then
+  echo "Checking updates..." >> /home/gamer/steam-update.log
   HAS_UPDATES=false
   
   # check if management has updates
@@ -62,12 +61,16 @@ if [ "$CHECK" = "true" ]; then
   
   if [ "$HAS_UPDATES" = "false" ]; then
     # just tell steam there are no updates
+    echo "Has updates" >> /home/gamer/steam-update.log
     exit 7
   else
     # tell steam there is update
+    echo "No updates" >> /home/gamer/steam-update.log
     exit 0
   fi
-elif [ "$RUN_UPDATE" = "true" ]; then
+elif [ "$RUN_UPDATE" = "true" ] && [ "$EXIT" = "false" ]; then
+  echo "Updating..." >> /home/gamer/steam-update.log
+
   # force exit ReignOS managment
   sudo pkill ReignOS.Service
   sudo pkill ReignOS.Bootloader
@@ -84,4 +87,5 @@ elif [ "$RUN_UPDATE" = "true" ]; then
 fi
 
 # just exit saying no updates by default
+echo "Done" >> /home/gamer/steam-update.log
 exit 7
