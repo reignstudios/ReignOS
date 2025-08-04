@@ -61,11 +61,11 @@ if [ "$CHECK" = "true" ] && [ "$EXIT" = "false" ]; then
   
   if [ "$HAS_UPDATES" = "false" ]; then
     # just tell steam there are no updates
-    echo "Has updates" >> /home/gamer/steam-update.log
+    echo "No updates" >> /home/gamer/steam-update.log
     exit 7
   else
     # tell steam there is update
-    echo "No updates" >> /home/gamer/steam-update.log
+    echo "Has updates" >> /home/gamer/steam-update.log
     exit 0
   fi
 elif [ "$RUN_UPDATE" = "true" ] && [ "$EXIT" = "false" ]; then
