@@ -412,15 +412,17 @@ static class InstallUtil
         fileBuilder.AppendLine("echo \"Hook up git-lfs...\"");
         fileBuilder.AppendLine("git lfs install");
 
+        fileBuilder.AppendLine();// disable FirstRun
+        fileBuilder.AppendLine("echo \"rebooting...\"");
+        fileBuilder.AppendLine("echo -n > /home/gamer/FirstRun.sh");
+
         fileBuilder.AppendLine();// run main updates scripts at least once
         fileBuilder.AppendLine("echo \"Running main update script...\"");
         fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Update.sh");
         fileBuilder.AppendLine("chmod +x /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Update.sh");
         fileBuilder.AppendLine("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Update.sh");
 
-        fileBuilder.AppendLine();// disable FirstRun
-        fileBuilder.AppendLine("echo \"rebooting...\"");
-        fileBuilder.AppendLine("echo -n > /home/gamer/FirstRun.sh");
+        // finish
         fileBuilder.AppendLine("reboot");
         File.WriteAllText(path, fileBuilder.ToString());
         UpdateProgress(29);
