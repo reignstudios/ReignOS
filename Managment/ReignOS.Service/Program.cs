@@ -167,14 +167,11 @@ internal class Program
         dstPath = "/etc/systemd/logind.conf.d/";
         if (!Directory.Exists(dstPath)) Directory.CreateDirectory(dstPath);
         dstPath = Path.Combine(dstPath, "reignos.conf");
-        if (!File.Exists(dstPath))// old suspend systemd settings
-        {
-            var builder = new StringBuilder();
-            builder.AppendLine("[Login]");
-            builder.AppendLine("HandlePowerKey=ignore");
-            File.WriteAllText(dstPath, builder.ToString());
-            ProcessUtil.Run("systemctl", "restart systemd-logind");
-        }
+        var builder = new StringBuilder();
+        builder.AppendLine("[Login]");
+        builder.AppendLine("HandlePowerKey=ignore");
+        File.WriteAllText(dstPath, builder.ToString());
+        ProcessUtil.Run("systemctl", "restart systemd-logind");
         
         // force sleep events to hibernate events
         dstPath = "/etc/systemd/system/systemd-suspend.service.d";
@@ -182,7 +179,7 @@ internal class Program
         dstPath = Path.Combine(dstPath, "reignos.conf");
         if (hibernatePowerButton && !File.Exists(dstPath))// old suspend systemd settings
         {
-            var builder = new StringBuilder();
+            builder = new StringBuilder();
             builder.AppendLine("[Service]");
             builder.AppendLine("# ignore event");
             builder.AppendLine("ExecStart=");
