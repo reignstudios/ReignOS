@@ -326,7 +326,7 @@ namespace ReignOS.Service.Hardware
                     device.ReadData(readData, 0, readData.Length, out _);*/
 
                 // TEST: pop out event
-                    var data = new byte[] {
+                    /*var data = new byte[] {
 0x3c,
 0x07,
 0x21,
@@ -604,7 +604,7 @@ namespace ReignOS.Service.Hardware
 };
                     device.WriteData(data, 0, data.Length);
                     System.Threading.Thread.Sleep(100);
-                    device.ReadData(readData, 0, readData.Length, out _);
+                    device.ReadData(readData, 0, readData.Length, out _);*/
                 }
             }
         }
