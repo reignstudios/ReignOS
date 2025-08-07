@@ -85,6 +85,14 @@
 
 			<ScrollViewer Margin="4,250,4,50" Background="#202020">
 				<StackPanel Orientation="Vertical">
+					<Grid Name="ayaneo3PopGrid" Margin="8,8,8,4" Background="#444444" Height="40">
+						<Grid>
+							<TextBlock Text="Ayaneo 3" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+							<Button Content="Pop Out" Width="128" HorizontalContentAlignment="Center" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="Ayaneo3_PopOut_Button_OnClick"/>
+							<Button Content="Popped In" Width="128" HorizontalContentAlignment="Center" Margin="300,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="Ayaneo3_PoppedIn_Button_OnClick"/>
+						</Grid>
+					</Grid>
+
 					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>
 							<TextBlock Text="Default Boot" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
@@ -232,6 +240,7 @@
 				<Button Content="Display" Margin="4,0,0,0" Click="DisplayManagerButton_OnClick"/>
 				<Button Content="Audio" Margin="4,0,0,0" Click="AudioManagerButton_OnClick"/>
 				<Button Name="powerButton" Content="Power" Margin="4,0,0,0" Click="PowerManagerButton_OnClick"/>
+				<Button Name="ayaneoButton" Content="Ayaneo" Margin="4,0,0,0" Click="PowerManagerButton_OnClick"/>
 			</StackPanel>
 		</Grid>
 		

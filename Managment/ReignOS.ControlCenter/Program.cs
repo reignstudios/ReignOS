@@ -18,6 +18,7 @@ enum CompositorMode
 class Program
 {
     public static CompositorMode compositorMode = CompositorMode.Weston;
+    public static bool ayaneo3;
 
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
@@ -34,6 +35,8 @@ class Program
             else if (args.Contains("-cage")) compositorMode = CompositorMode.Cage;
             else if (args.Contains("-x11")) compositorMode = CompositorMode.X11;
             else if (args.Contains("-kde-g")) compositorMode = CompositorMode.KDE;
+
+            else if (args.Contains("-ayaneo3")) ayaneo3 = true;
         }
 
         // software rendering mode

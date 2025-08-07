@@ -246,6 +246,7 @@ internal class Program
         // run events
         Log.WriteLine("Running events...");
         var time = DateTime.Now;
+        float wakeFromSleepTime = 0;
         while (!exit)
         {
             // update time
@@ -258,6 +259,7 @@ internal class Program
             if (timeSpan.TotalSeconds >= 3)
             {
                 resumeFromSleep = true;
+                wakeFromSleepTime = 0;
                 PowerProfiles.Apply(false);
             }
 
@@ -280,7 +282,7 @@ internal class Program
             else if (KeyEvent.Pressed(keys, input.KEY_VOLUMEUP, includeHeld:true)) Console.WriteLine("SET_VOLUME_UP");
             
             // handle rest state
-            if (!disablePowerButton && KeyEvent.Pressed(keys, input.KEY_POWER))
+            if (!disablePowerButton && !resumeFromSleep && wakeFromSleepTime >= 5 && KeyEvent.Pressed(keys, input.KEY_POWER))
             {
                 Log.WriteLine("PowerButton Pressed");
                 if (hibernatePowerButton) ProcessUtil.Run("systemctl", "hibernate", useBash: false);
@@ -291,7 +293,9 @@ internal class Program
             // TODO: invoke "steam -shutdown" if you hold Alt+F4 or Guide+B for more than 4 seconds
 
             // sleep thread
-            Thread.Sleep(1000 / 30);
+            const int sleepMS = 1000 / 30;
+            Thread.Sleep(sleepMS);
+            wakeFromSleepTime += sleepMS / 1000f;
         }
         
         // shutdown

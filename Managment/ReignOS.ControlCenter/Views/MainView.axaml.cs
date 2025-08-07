@@ -150,6 +150,9 @@ public partial class MainView : UserControl
         
         // check if hibernation file exists
         hibernatePowerButton = File.Exists("/swapfile");
+
+        // enable Ayaneo3 options
+        ayaneo3PopGrid.IsVisible = Program.ayaneo3;
     }
 
     private void RefreshGPUs()
@@ -2892,5 +2895,15 @@ public partial class MainView : UserControl
             item.Tag = setting;
             powerCPUListBox.Items.Add(item);
         }
+    }
+
+    private void Ayaneo3_PopOut_Button_OnClick(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void Ayaneo3_PoppedIn_Button_OnClick(object sender, RoutedEventArgs e)
+    {
+
     }
 }
