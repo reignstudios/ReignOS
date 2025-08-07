@@ -259,6 +259,9 @@ namespace ReignOS.Service.Hardware
                     System.Threading.Thread.Sleep(100);
                     for (int i = 0; i != 32; ++i)
                     {
+                        byte s = 0x00;
+                        if (i == 0x16) s = 72;
+                        else if (i == 0x17) s = 73;
                     data = new byte[] {
 0x00,
 0x00,
@@ -272,7 +275,7 @@ namespace ReignOS.Service.Hardware
 0x00,
 0x00,
 0x00,
-0x00,
+s,
 0x00,
 0x00,
 0x00,
