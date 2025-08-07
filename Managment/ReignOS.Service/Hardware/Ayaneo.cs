@@ -46,7 +46,7 @@ namespace ReignOS.Service.Hardware
                     var readData = new byte[256];
                     byte[] data;
 
-                    data = new byte[] {
+                    /*data = new byte[] {
 0x00,
 0x00,
 0x00,
@@ -254,7 +254,7 @@ namespace ReignOS.Service.Hardware
 };
                     device.WriteData(data, 0, data.Length);
                     System.Threading.Thread.Sleep(100);
-                    device.ReadData(readData, 0, readData.Length, out _);
+                    device.ReadData(readData, 0, readData.Length, out _);*/
 
                     System.Threading.Thread.Sleep(100);
                     for (int i = 0; i != 32; ++i)
