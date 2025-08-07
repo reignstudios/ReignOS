@@ -43,6 +43,7 @@ namespace ReignOS.Service.Hardware
                 var device = new HidDevice();
                 if (device.Init(7247, 2, true) || device.handles.Count >= 1)
                 {
+                    var readData = new byte[256];
                     var data = new byte[] {
 0x3c,
 0x07,
@@ -110,6 +111,8 @@ namespace ReignOS.Service.Hardware
 0x00
 };
                     device.WriteData(data, 0, data.Length);
+                    System.Threading.Thread.Sleep(100);
+                    device.ReadData(readData, 0, readData.Length, out _);
 
                     data = new byte[] {
 0x00,
@@ -178,6 +181,8 @@ namespace ReignOS.Service.Hardware
 0x00
 };
                     device.WriteData(data, 0, data.Length);
+                    System.Threading.Thread.Sleep(100);
+                    device.ReadData(readData, 0, readData.Length, out _);
 
                     data = new byte[] {
 0xb3,
@@ -246,6 +251,8 @@ namespace ReignOS.Service.Hardware
 0x00
 };
                     device.WriteData(data, 0, data.Length);
+                    System.Threading.Thread.Sleep(100);
+                    device.ReadData(readData, 0, readData.Length, out _);
 
                     data = new byte[] {
 0x00,
@@ -314,6 +321,8 @@ namespace ReignOS.Service.Hardware
 0x00
 };
                     device.WriteData(data, 0, data.Length);
+                    System.Threading.Thread.Sleep(100);
+                    device.ReadData(readData, 0, readData.Length, out _);
                 }
             }
         }
