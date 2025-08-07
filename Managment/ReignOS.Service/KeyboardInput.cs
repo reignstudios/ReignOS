@@ -160,13 +160,13 @@ public unsafe class KeyboardInput : IDisposable
                         NativeUtils.ZeroMemory(key_bits, key_bitsSize);
                         if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_KEY_key_bitsSize_), key_bits) < 0) goto CONTINUE;
                         
-                        if (TestBit(input.KEY_VOLUMEDOWN, key_bits) != 0 && TestBit(input.KEY_VOLUMEUP, key_bits) != 0)
+                        if (TestBit(input.KEY_VOLUMEDOWN, key_bits) != 0 || TestBit(input.KEY_VOLUMEUP, key_bits) != 0)
                         {
                             Log.WriteLine($"Media Keyboard device found path:{path}");
                             handles.Add(handle);
                             continue;
                         }
-                        else if (TestBit(input.KEY_A, key_bits) != 0 && TestBit(input.KEY_Z, key_bits) != 0)
+                        else if (TestBit(input.KEY_A, key_bits) != 0 || TestBit(input.KEY_Z, key_bits) != 0)
                         {
                             Log.WriteLine($"Keyboard device found path:{path}");
                             handles.Add(handle);
@@ -175,6 +175,12 @@ public unsafe class KeyboardInput : IDisposable
                         else if (TestBit(input.KEY_POWER, key_bits) != 0)
                         {
                             Log.WriteLine($"PowerButton device found path:{path}");
+                            handles.Add(handle);
+                            continue;
+                        }
+                        else if (TestBit(input.KEY_F24, key_bits) != 0)
+                        {
+                            Log.WriteLine($"Extra input device found:{path}");
                             handles.Add(handle);
                             continue;
                         }
