@@ -349,7 +349,11 @@ static class PackageUpdates
             string loader = File.ReadAllText("/boot/loader/loader.conf");
 
             var match = Regex.Match(loader, @"(default [^\n]*)");
-            if (!match.Success) loader += "\ndefault arch.conf";
+            if (!match.Success)
+            {
+                if (!loader.EndsWith("\n")) loader += "\ndefault arch.conf";
+                else loader += "default arch.conf";
+            }
 
             ProcessUtil.WriteAllTextAdmin("/boot/loader/loader.conf", loader);
         }
