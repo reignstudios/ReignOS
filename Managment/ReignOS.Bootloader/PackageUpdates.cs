@@ -28,15 +28,14 @@ static class PackageUpdates
         // non-restart changes
         //AddLaunchScript();
         //FixOSName();
-        
-        // ignore packages
         IgnorePackages();
         
-        // check bad configs
+        // check bad configs (do them all at once then reboot)
         bool badConfig = false;
         if (CheckBadHostname()) badConfig = true;
         if (CheckBadKernelSettings()) badConfig = true;
         //if (CheckBadDriverSettings()) badConfig = true;
+        if (CheckNonArchKernelDefault()) badConfig = true;
         if (badConfig) return true;
 
         // check old packages
@@ -342,4 +341,23 @@ static class PackageUpdates
 
         return false;
     }*/
+
+    private static bool CheckNonArchKernelDefault()
+    {
+        try
+        {
+            string loader = File.ReadAllText("/boot/loader/loader.conf");
+
+            var match = Regex.Match(loader, @"(default [^\n]*)");
+            if (!match.Success) loader += "\ndefault arch.conf";
+
+            ProcessUtil.WriteAllTextAdmin("/boot/loader/loader.conf", loader);
+        }
+        catch (Exception e)
+        {
+            Log.WriteLine(e);
+        }
+
+        return false;
+    }
 }

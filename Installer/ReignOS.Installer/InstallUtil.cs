@@ -307,6 +307,13 @@ static class InstallUtil
         Run("systemctl", "enable systemd-networkd systemd-resolved");
         UpdateProgress(22);
 
+        // ensure systemd-boot defaults to arch kernel and not chimera
+        path = "/mnt/boot/loader/loader.conf";
+        fileText = ProcessUtil.ReadAllTextAdmin(path);
+        fileText += "\ndefault arch.conf";
+        ProcessUtil.WriteAllTextAdmin(path, fileText);
+        UpdateProgress(23);
+
         // configure root pass
         Run("echo", "'root:gamer' | chpasswd");
         UpdateProgress(24);
