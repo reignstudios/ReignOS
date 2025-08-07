@@ -178,12 +178,6 @@ public unsafe class KeyboardInput : IDisposable
                             handles.Add(handle);
                             continue;
                         }
-                        else if (TestBit(input.KEY_F24, key_bits) != 0)
-                        {
-                            Log.WriteLine($"Extra input device found:{path}");
-                            handles.Add(handle);
-                            continue;
-                        }
                     }
                 }
                 else
