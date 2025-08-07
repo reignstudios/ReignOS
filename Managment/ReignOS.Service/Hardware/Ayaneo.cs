@@ -263,7 +263,7 @@ namespace ReignOS.Service.Hardware
                         if (i == 0x16) s = 72;
                         else if (i == 0x17) s = 73;
                     data = new byte[] {
-0x00,
+s,
 0x00,
 0x00,
 0x0b,
