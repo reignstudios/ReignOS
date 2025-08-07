@@ -309,7 +309,8 @@ static class InstallUtil
 
         // ensure systemd-boot defaults to arch kernel and not chimera
         path = "/mnt/boot/loader/loader.conf";
-        fileText = ProcessUtil.ReadAllTextAdmin(path);
+        fileText = "";
+        if (File.Exists(path)) fileText = ProcessUtil.ReadAllTextAdmin(path);
         fileText += "\ndefault arch.conf";
         ProcessUtil.WriteAllTextAdmin(path, fileText);
         UpdateProgress(23);
