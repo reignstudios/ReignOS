@@ -312,40 +312,37 @@ internal class Program
             // start control center
             if (useControlCenter)
             {
+                string result = string.Empty;
                 void ControlCenter_StandardOut(string line)
                 {
+                    result += line + "\n";
                     if (line == "ayaneo-popout-module" || line == "ayaneo-poppedin-module")
                     {
-                        try
-                        {
-                            if (!serviceProcess.HasExited) serviceProcess.StandardInput.WriteLine(line);
-                        }
-                        catch { }
+                        if (!serviceProcess.HasExited) serviceProcess.StandardInput.WriteLine(line);
                     }
                 }
 
                 string ayaneoArg = ayaneoMagicModuleMode ? " -ayaneo-modules" : "";
-                string result = string.Empty;
                 if (controlCenterCompositor == ControlCenterCompositor.Weston)
                 {
                     Log.WriteLine("Starting Weston with ReignOS.ControlCenter...");
-                    result = ProcessUtil.Run("weston", $"--shell=kiosk-shell.so --xwayland -- ./Start_ControlCenter.sh -weston{ayaneoArg}", out exitCode, useBash:true, standardOut:ControlCenter_StandardOut);// start ControlCenter
+                    ProcessUtil.Run("weston", $"--shell=kiosk-shell.so --xwayland -- ./Start_ControlCenter.sh -weston{ayaneoArg}", out exitCode, useBash:true, standardOut:ControlCenter_StandardOut);// start ControlCenter
                 }
                 else if (controlCenterCompositor == ControlCenterCompositor.Cage)
                 {
                     Log.WriteLine("Starting Cage with ReignOS.ControlCenter...");
-                    result = ProcessUtil.Run("cage", $"-d -s -- ./Start_ControlCenter.sh -cage{ayaneoArg}", out exitCode, useBash:true, standardOut:ControlCenter_StandardOut);// start ControlCenter
+                    ProcessUtil.Run("cage", $"-d -s -- ./Start_ControlCenter.sh -cage{ayaneoArg}", out exitCode, useBash:true, standardOut:ControlCenter_StandardOut);// start ControlCenter
                 }
                 else if (controlCenterCompositor == ControlCenterCompositor.X11)
                 {
                     Log.WriteLine("Starting X11 with ReignOS.ControlCenter...");
                     ConfigureX11($"/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_ControlCenter.sh -x11{ayaneoArg}");
-                    result = ProcessUtil.Run("startx", "", useBash:false, standardOut:ControlCenter_StandardOut);// start ControlCenter
+                    ProcessUtil.Run("startx", "", useBash:false, standardOut:ControlCenter_StandardOut);// start ControlCenter
                 }
                 else if (controlCenterCompositor == ControlCenterCompositor.KDE_G)
                 {
                     Log.WriteLine("Starting KDE-G with ReignOS.ControlCenter...");
-                    result = ProcessUtil.Run("kwin_wayland", $"--lock --xwayland -- bash -c './Start_ControlCenter.sh -kde-g{ayaneoArg}'", out exitCode, useBash: true, standardOut:ControlCenter_StandardOut);// start ControlCenter
+                    ProcessUtil.Run("kwin_wayland", $"--lock --xwayland -- bash -c './Start_ControlCenter.sh -kde-g{ayaneoArg}'", out exitCode, useBash: true, standardOut:ControlCenter_StandardOut);// start ControlCenter
                 }
 
                 var resultValues = result.Split('\n');
