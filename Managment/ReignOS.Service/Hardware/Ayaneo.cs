@@ -294,7 +294,7 @@ namespace ReignOS.Service.Hardware
             data[i++] = 0x64;
             WriteDeviceData(device, data);
             QuePattern();
-            Thread.Sleep(1000);
+            Thread.Sleep(100);
 
             // set xpad mode
             QuePattern();
