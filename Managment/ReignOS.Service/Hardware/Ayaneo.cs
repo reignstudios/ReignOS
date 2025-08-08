@@ -207,13 +207,6 @@ namespace ReignOS.Service.Hardware
             Log.WriteLine("MagicModule_PoppedIn...");
             if (Program.hardwareType != HardwareType.Ayaneo3) return;
 
-            /*// reset device
-            using (var resetDevice = new HidDevice())
-            {
-                resetDevice.Init(7247, 2, true, resetDevice:true);
-                Thread.Sleep(1000);
-            }*/
-
             // init hid device
             using var device = new HidDevice();
             if (!device.Init(7247, 2, true, blocking:true) || device.handles.Count == 0) return;
@@ -295,6 +288,13 @@ namespace ReignOS.Service.Hardware
             WriteDeviceData(device, data); 
             QuePattern();
 
+            // reset device
+            Thread.Sleep(500);
+            using (var resetDevice = new HidDevice())
+            {
+                resetDevice.Init(7247, 2, true, resetDevice:true);
+            }
+
             // set xpad mode
             Thread.Sleep(500);
             QuePattern();
@@ -311,6 +311,11 @@ namespace ReignOS.Service.Hardware
             QuePattern();
 
             Log.WriteLine("MagicModule_PoppedIn: Done!");
+
+            // power off
+            /*Thread.Sleep(500);
+            Program.isRebootMode = false;// shutdown
+            Program.exit = true;*/
         }
 
         private static void WriteStandardModuleData1(HidDevice device, byte[] data)
