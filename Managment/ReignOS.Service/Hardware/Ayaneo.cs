@@ -294,9 +294,9 @@ namespace ReignOS.Service.Hardware
             data[i++] = 0x64;
             WriteDeviceData(device, data);
             QuePattern();
-            Thread.Sleep(100);
 
-            // set xpad mode
+            /*// set xpad mode
+            Thread.Sleep(100);
             QuePattern();
             i = 0;
             Array.Clear(data, 0, data.Length);
@@ -308,7 +308,7 @@ namespace ReignOS.Service.Hardware
             WriteDeviceData(device, data);
             WriteStandardModuleData2(device, data);
             WriteStandardModuleData1(device, data);
-            QuePattern();
+            QuePattern();*/
 
             Log.WriteLine("MagicModule_PoppedIn: Done!");
         }
