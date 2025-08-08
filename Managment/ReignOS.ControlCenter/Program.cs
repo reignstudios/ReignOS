@@ -36,7 +36,7 @@ class Program
             else if (args.Contains("-x11")) compositorMode = CompositorMode.X11;
             else if (args.Contains("-kde-g")) compositorMode = CompositorMode.KDE;
 
-            else if (args.Contains("-ayaneo-modules")) ayaneoModules = true;
+            if (args.Contains("-ayaneo-modules")) ayaneoModules = true;
         }
 
         // software rendering mode
