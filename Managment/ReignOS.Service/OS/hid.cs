@@ -12,6 +12,8 @@ public unsafe static class hid
     public const uint HIDIOCGRAWINFO = 0x80084803;
     public const uint HIDIOCGRDESCSIZE = 0x80044801;
     public const uint HIDIOCGRDESC = 0x90044802;
+
+    public const uint USBDEVFS_RESET = 21780;
     
     public const uint HIDIOCGRAWNAME_256 = 0x81004804;// HIDIOCGRAWNAME(256)
     public const uint HIDIOCGRAWPHYS_256 = 0x81004805;// HIDIOCGRAWPHYS(256)

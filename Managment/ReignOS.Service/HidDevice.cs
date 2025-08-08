@@ -9,7 +9,7 @@ public unsafe class HidDevice : IDisposable
 {
     public List<int> handles;
     
-    public bool Init(ushort vendorID, ushort productID, bool openAll)
+    public bool Init(ushort vendorID, ushort productID, bool openAll, bool resetDevice = false)
     {
         const int bufferSize = 256;
         byte* buffer = stackalloc byte[bufferSize];
@@ -22,12 +22,23 @@ public unsafe class HidDevice : IDisposable
             string path = "/dev/hidraw" + i.ToString();
             byte[] uinputPath = Encoding.UTF8.GetBytes(path);
             int handle;
-            fixed (byte* uinputPathPtr = uinputPath) handle = c.open(uinputPathPtr, c.O_RDWR | c.O_NONBLOCK);
+            if (resetDevice) fixed (byte* uinputPathPtr = uinputPath) handle = c.open(uinputPathPtr, c.O_WRONLY | c.O_NONBLOCK);
+            else fixed (byte* uinputPathPtr = uinputPath) handle = c.open(uinputPathPtr, c.O_RDWR | c.O_NONBLOCK);
             if (handle < 0) continue;
             
             // validate hardware
             hid.hidraw_devinfo info;
-            if (c.ioctl(handle, hid.HIDIOCGRAWINFO, &info) < 0) goto CONTINUE;
+            if (resetDevice)
+            {
+                c.ioctl(handle, hid.USBDEVFS_RESET, null);
+                c.close(handle);// always close handle in reset mode
+                if (!openAll) return true;// stop if we're done
+                else goto CONTINUE;
+            }
+            else
+            {
+                if (c.ioctl(handle, hid.HIDIOCGRAWINFO, &info) < 0) goto CONTINUE;
+            }
             if (info.vendor == vendorID && info.product == productID)
             {
                 Log.WriteLine($"HID device found type:{BusType(info.bustype)} vendorID:{vendorID} productID:{productID} path:{path}");
@@ -55,8 +66,11 @@ public unsafe class HidDevice : IDisposable
                     Log.WriteLine("HID Physical Location: ", buffer);
                 }
 
+                // stop if we're done
                 if (!openAll) return true;
-                continue;// don't close this handle
+
+                // don't close this handle
+                continue;
             }
             
             // close

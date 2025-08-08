@@ -201,12 +201,22 @@ namespace ReignOS.Service.Hardware
         {
             Log.WriteLine("MagicModule_PoppedIn...");
             if (Program.hardwareType != HardwareType.Ayaneo3) return;
+
+            // reset device
+            using (var resetDevice = new HidDevice())
+            {
+                resetDevice.Init(7247, 2, true, resetDevice:true);
+                Thread.Sleep(1000);
+            }
+
+            // send enable data
             using var device = new HidDevice();
             if (!device.Init(7247, 2, true) || device.handles.Count == 0) return;
             var data = new byte[256];
             int i;
 
-            i = 0;
+            // this seems to disable the hardware
+            /*i = 0;
             Array.Clear(data, 0, data.Length);
             data[i++] = 0x00;
             data[i++] = 0x00;
@@ -216,7 +226,7 @@ namespace ReignOS.Service.Hardware
             WriteDeviceData(device, data);
 
             WriteStandardModuleData2(device, data);
-            WriteStandardModuleData1(device, data);
+            WriteStandardModuleData1(device, data);*/
 
             for (int l = 0; l != 32; ++l)
             {
