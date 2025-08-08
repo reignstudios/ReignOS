@@ -324,8 +324,7 @@ namespace ReignOS.Service.Hardware
 
             // power off
             Thread.Sleep(500);
-            Program.isRebootMode = false;// shutdown
-            Program.exit = true;
+            ProcessUtil.Run("poweroff", "-f", useBash:false);
         }
 
         private static void WriteStandardModuleData1(HidDevice device, byte[] data)
