@@ -30,6 +30,7 @@ public unsafe class HidDevice : IDisposable
             hid.hidraw_devinfo info;
             if (resetDevice)
             {
+                Log.WriteLine($"Reseting device handle for vendorID:{vendorID} productID:{productID} path:{path}");
                 c.ioctl(handle, hid.USBDEVFS_RESET, null);
                 c.close(handle);// always close handle in reset mode
                 if (!openAll) return true;// stop if we're done
