@@ -206,6 +206,18 @@ namespace ReignOS.Service.Hardware
             var data = new byte[256];
             int i;
 
+            i = 0;
+            Array.Clear(data, 0, data.Length);
+            data[i++] = 0x00;
+            data[i++] = 0x00;
+            data[i++] = 0x00;
+            data[i++] = 0x0a;
+            data[i++] = 0x01;
+            WriteDeviceData(device, data);
+
+            WriteStandardModuleData2(device, data);
+            WriteStandardModuleData1(device, data);
+
             for (int l = 0; l != 32; ++l)
             {
                 byte s = 0x00;
