@@ -207,14 +207,8 @@ namespace ReignOS.Service.Hardware
             Log.WriteLine("MagicModule_PoppedIn...");
             if (Program.hardwareType != HardwareType.Ayaneo3) return;
 
-            // init hid device
-            using var device = new HidDevice();
-            if (!device.Init(7247, 2, true, blocking:true) || device.handles.Count == 0) return;
-            var data = new byte[256];
-            int i;
-
             // command que pattern
-            void QuePattern()
+            static void QuePattern(HidDevice device, byte[] data)
             {
                 for (int l = 0; l != 32; ++l)
                 {
@@ -222,7 +216,7 @@ namespace ReignOS.Service.Hardware
                     if (l == 0x16) s = 0x72;
                     else if (l == 0x17) s = 0x73;
 
-                    i = 0;
+                    int i = 0;
                     Array.Clear(data, 0, data.Length);
                     data[i++] = s;
                     data[i++] = 0x00;
@@ -243,74 +237,88 @@ namespace ReignOS.Service.Hardware
                 WriteStandardModuleData1(device, data);
             }
 
-            // Ayaneo opens app (device init)
-            QuePattern();
-            i = 0;
-            Array.Clear(data, 0, data.Length);
-            data[i++] = 0xc4;
-            data[i++] = 0x07;
-            data[i++] = 0x21;
-            data[i++] = 0x09;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x03;
-            data[i++] = 0xff;
-            data[i++] = 0xff;
-            data[i++] = 0xff;
-            data[i++] = 0x03;
-            data[i++] = 0xff;
-            data[i++] = 0xff;
-            data[i++] = 0xff;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x88;
-            data[i++] = 0x00;
-            data[i++] = 0x33;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x01;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x40;
-            data[i++] = 0x64;
-            data[i++] = 0x64;
-            WriteDeviceData(device, data); 
-            QuePattern();
+            // init hid device
+            using (var device = new HidDevice())
+            {
+                if (!device.Init(7247, 2, true, blocking:true) || device.handles.Count == 0) return;
+                var data = new byte[256];
+                int i;
 
-            // set xpad mode
-            Thread.Sleep(500);
-            QuePattern();
-            i = 0;
-            Array.Clear(data, 0, data.Length);
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x0a;
-            data[i++] = 0x01;
-            WriteDeviceData(device, data);
-            WriteStandardModuleData2(device, data);
-            WriteStandardModuleData1(device, data);
-            //QuePattern();
+                // Ayaneo opens app (device init)
+                QuePattern(device, data);
+                i = 0;
+                Array.Clear(data, 0, data.Length);
+                data[i++] = 0xc4;
+                data[i++] = 0x07;
+                data[i++] = 0x21;
+                data[i++] = 0x09;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x03;
+                data[i++] = 0xff;
+                data[i++] = 0xff;
+                data[i++] = 0xff;
+                data[i++] = 0x03;
+                data[i++] = 0xff;
+                data[i++] = 0xff;
+                data[i++] = 0xff;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x88;
+                data[i++] = 0x00;
+                data[i++] = 0x33;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x01;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x40;
+                data[i++] = 0x64;
+                data[i++] = 0x64;
+                WriteDeviceData(device, data); 
+                QuePattern(device, data);
+
+                // set xpad mode
+                Thread.Sleep(500);
+                QuePattern(device, data);
+                i = 0;
+                Array.Clear(data, 0, data.Length);
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x0a;
+                data[i++] = 0x01;
+                WriteDeviceData(device, data);
+                WriteStandardModuleData2(device, data);
+                WriteStandardModuleData1(device, data);
+                //QuePattern(device, data);
+            }
 
             // reset device
-            //Thread.Sleep(500);
             using (var resetDevice = new HidDevice())
             {
                 resetDevice.Init(7247, 2, true, resetDevice: true);
             }
-            QuePattern();
 
+            using (var device = new HidDevice())
+            {
+                if (!device.Init(7247, 2, true, blocking: true) || device.handles.Count == 0) return;
+                var data = new byte[256];
+                QuePattern(device, data);
+            }
+
+            // finished
             Log.WriteLine("MagicModule_PoppedIn: Done!");
 
             // power off
