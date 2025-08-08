@@ -9,7 +9,7 @@ public unsafe class HidDevice : IDisposable
 {
     public List<int> handles;
     
-    public bool Init(ushort vendorID, ushort productID, bool openAll, bool resetDevice = false)
+    public bool Init(ushort vendorID, ushort productID, bool openAll, bool blocking = false, bool resetDevice = false)
     {
         const int bufferSize = 256;
         byte* buffer = stackalloc byte[bufferSize];
@@ -22,8 +22,9 @@ public unsafe class HidDevice : IDisposable
             string path = "/dev/hidraw" + i.ToString();
             byte[] uinputPath = Encoding.UTF8.GetBytes(path);
             int handle;
-            if (resetDevice) fixed (byte* uinputPathPtr = uinputPath) handle = c.open(uinputPathPtr, c.O_WRONLY | c.O_NONBLOCK);
-            else fixed (byte* uinputPathPtr = uinputPath) handle = c.open(uinputPathPtr, c.O_RDWR | c.O_NONBLOCK);
+            int blockFlag = blocking ? c.O_NONBLOCK : 0;
+            if (resetDevice) fixed (byte* uinputPathPtr = uinputPath) handle = c.open(uinputPathPtr, c.O_WRONLY | blockFlag);
+            else fixed (byte* uinputPathPtr = uinputPath) handle = c.open(uinputPathPtr, c.O_RDWR | blockFlag);
             if (handle < 0) continue;
             
             // validate hardware

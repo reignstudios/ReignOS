@@ -136,13 +136,17 @@ namespace ReignOS.Service.Hardware
         {
             Log.WriteLine("MagicModule_PopOut...");
             if (Program.hardwareType != HardwareType.Ayaneo3) return;
+
+            // init hid device
             using var device = new HidDevice();
-            if (!device.Init(7247, 2, true) || device.handles.Count == 0) return;
+            if (!device.Init(7247, 2, true, blocking: true) || device.handles.Count == 0) return;
             var data = new byte[256];
             int i;
 
+            // command pattern 1
             WriteStandardModuleData1(device, data);
 
+            // popout commands
             i = 0;
             Array.Clear(data, 0, data.Length);
             data[i++] = 0x00;
@@ -193,6 +197,7 @@ namespace ReignOS.Service.Hardware
             data[i++] = 0x64;
             WriteDeviceData(device, data);
 
+            // command pattern 2
             WriteStandardModuleData2(device, data);
             Log.WriteLine("MagicModule_PopOut: Done!");
         }
@@ -202,21 +207,97 @@ namespace ReignOS.Service.Hardware
             Log.WriteLine("MagicModule_PoppedIn...");
             if (Program.hardwareType != HardwareType.Ayaneo3) return;
 
-            // reset device
+            /*// reset device
             using (var resetDevice = new HidDevice())
             {
                 resetDevice.Init(7247, 2, true, resetDevice:true);
                 Thread.Sleep(1000);
-            }
+            }*/
 
-            // send enable data
+            // init hid device
             using var device = new HidDevice();
-            if (!device.Init(7247, 2, true) || device.handles.Count == 0) return;
+            if (!device.Init(7247, 2, true, blocking:true) || device.handles.Count == 0) return;
             var data = new byte[256];
             int i;
 
-            // this seems to disable the hardware
-            /*i = 0;
+            // command que pattern
+            void QuePattern()
+            {
+                for (int l = 0; l != 32; ++l)
+                {
+                    byte s = 0x00;
+                    if (l == 0x16) s = 72;
+                    else if (l == 0x17) s = 73;
+
+                    i = 0;
+                    Array.Clear(data, 0, data.Length);
+                    data[i++] = s;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x0b;
+                    data[i++] = 0x07;
+                    data[i++] = (byte)l;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = s;
+                    WriteDeviceData(device, data, sleepBeforeRead: 10);
+                }
+
+                WriteStandardModuleData2(device, data);
+                WriteStandardModuleData1(device, data);
+            }
+
+            // Ayaneo opens app (device init)
+            QuePattern();
+            i = 0;
+            Array.Clear(data, 0, data.Length);
+            data[i++] = 0xc4;
+            data[i++] = 0x07;
+            data[i++] = 0x21;
+            data[i++] = 0x09;
+            data[i++] = 0x00;
+            data[i++] = 0x00;
+            data[i++] = 0x00;
+            data[i++] = 0x03;
+            data[i++] = 0xff;
+            data[i++] = 0xff;
+            data[i++] = 0xff;
+            data[i++] = 0x03;
+            data[i++] = 0xff;
+            data[i++] = 0xff;
+            data[i++] = 0xff;
+            data[i++] = 0x00;
+            data[i++] = 0x00;
+            data[i++] = 0x00;
+            data[i++] = 0x00;
+            data[i++] = 0x88;
+            data[i++] = 0x00;
+            data[i++] = 0x33;
+            data[i++] = 0x00;
+            data[i++] = 0x00;
+            data[i++] = 0x00;
+            data[i++] = 0x00;
+            data[i++] = 0x00;
+            data[i++] = 0x00;
+            data[i++] = 0x00;
+            data[i++] = 0x00;
+            data[i++] = 0x00;
+            data[i++] = 0x01;
+            data[i++] = 0x00;
+            data[i++] = 0x00;
+            data[i++] = 0x00;
+            data[i++] = 0x40;
+            data[i++] = 0x64;
+            data[i++] = 0x64;
+            WriteDeviceData(device, data);
+            QuePattern();
+
+            // set xpad mode
+            i = 0;
             Array.Clear(data, 0, data.Length);
             data[i++] = 0x00;
             data[i++] = 0x00;
@@ -224,36 +305,10 @@ namespace ReignOS.Service.Hardware
             data[i++] = 0x0a;
             data[i++] = 0x01;
             WriteDeviceData(device, data);
-
-            WriteStandardModuleData2(device, data);
-            WriteStandardModuleData1(device, data);*/
-
-            for (int l = 0; l != 32; ++l)
-            {
-                byte s = 0x00;
-                if (l == 0x16) s = 72;
-                else if (l == 0x17) s = 73;
-
-                i = 0;
-                Array.Clear(data, 0, data.Length);
-                data[i++] = s;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x0b;
-                data[i++] = 0x07;
-                data[i++] = (byte)l;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = s;
-                WriteDeviceData(device, data, sleepBeforeRead:10);
-            }
-
             WriteStandardModuleData2(device, data);
             WriteStandardModuleData1(device, data);
+            QuePattern();
+
             Log.WriteLine("MagicModule_PoppedIn: Done!");
         }
 
@@ -313,7 +368,7 @@ namespace ReignOS.Service.Hardware
             WriteDeviceData(device, data);
         }
 
-        private static void WriteDeviceData(HidDevice device, byte[] data, int packetSize = 64, int sleepBeforeRead = 100)
+        private static void WriteDeviceData(HidDevice device, byte[] data, int packetSize = 64, int sleepBeforeRead = 15)
         {
             device.WriteData(data, 0, packetSize);
             Thread.Sleep(sleepBeforeRead);
