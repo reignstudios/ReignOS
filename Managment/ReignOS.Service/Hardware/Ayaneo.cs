@@ -306,6 +306,7 @@ namespace ReignOS.Service.Hardware
             }
 
             // reset device
+            /*Thread.Sleep(100);
             using (var resetDevice = new HidDevice())
             {
                 resetDevice.Init(7247, 2, true, resetDevice: true);
@@ -316,15 +317,15 @@ namespace ReignOS.Service.Hardware
                 if (!device.Init(7247, 2, true, blocking: true) || device.handles.Count == 0) return;
                 var data = new byte[256];
                 QuePattern(device, data);
-            }
+            }*/
 
             // finished
             Log.WriteLine("MagicModule_PoppedIn: Done!");
 
             // power off
-            /*Thread.Sleep(500);
+            Thread.Sleep(500);
             Program.isRebootMode = false;// shutdown
-            Program.exit = true;*/
+            Program.exit = true;
         }
 
         private static void WriteStandardModuleData1(HidDevice device, byte[] data)

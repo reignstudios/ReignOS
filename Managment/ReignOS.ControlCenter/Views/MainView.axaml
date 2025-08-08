@@ -90,6 +90,7 @@
 							<TextBlock Text="Ayaneo Modules" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Pop Out" Width="128" HorizontalContentAlignment="Center" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="AyaneoModules_PopOut_Button_OnClick"/>
 							<Button Content="Popped In" Width="128" HorizontalContentAlignment="Center" Margin="260,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="AyaneoModules_PoppedIn_Button_OnClick"/>
+							<TextBlock Text="NOTE: Popped-In will power-off device (then let sit for 10 sec without AC power)" Width="540" Foreground="Orange" Margin="400,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 						</Grid>
 					</Grid>
 
