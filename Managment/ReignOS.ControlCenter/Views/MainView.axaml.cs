@@ -152,7 +152,7 @@ public partial class MainView : UserControl
         hibernatePowerButton = File.Exists("/swapfile");
 
         // enable Ayaneo3 options
-        ayaneo3PopGrid.IsVisible = Program.ayaneo3;
+        ayaneoModulePopGrid.IsVisible = Program.ayaneoModules;
     }
 
     private void RefreshGPUs()
@@ -2897,13 +2897,13 @@ public partial class MainView : UserControl
         }
     }
 
-    private void Ayaneo3_PopOut_Button_OnClick(object sender, RoutedEventArgs e)
+    private void AyaneoModules_PopOut_Button_OnClick(object sender, RoutedEventArgs e)
     {
-
+        Console.WriteLine("ayaneo-popout-module");
     }
 
-    private void Ayaneo3_PoppedIn_Button_OnClick(object sender, RoutedEventArgs e)
+    private void AyaneoModules_PoppedIn_Button_OnClick(object sender, RoutedEventArgs e)
     {
-
+        Console.WriteLine("ayaneo-poppedin-module");
     }
 }

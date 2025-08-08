@@ -5,7 +5,7 @@ using System.Text;
 using System;
 using System.Collections.Generic;
 
-public unsafe class HidDevice
+public unsafe class HidDevice : IDisposable
 {
     public List<int> handles;
     

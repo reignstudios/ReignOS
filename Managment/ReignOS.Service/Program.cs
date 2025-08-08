@@ -327,6 +327,14 @@ internal class Program
                 disablePowerButton = false;
                 DbusMonitor.Init();
             }
+            else if (line == "ayaneo-popout-module")
+            {
+                Ayaneo.MagicModule_PopOut();
+            }
+            else if (line == "ayaneo-poppedin-module")
+            {
+                Ayaneo.MagicModule_PoppedIn();
+            }
         }
     }
 
