@@ -323,8 +323,8 @@ namespace ReignOS.Service.Hardware
             Log.WriteLine("MagicModule_PoppedIn: Done!");
 
             // power off
-            Thread.Sleep(500);
-            ProcessUtil.Run("poweroff", "-f", useBash:false);
+            //Thread.Sleep(500);
+            //ProcessUtil.Run("poweroff", "-f", useBash:false);
         }
 
         private static void WriteStandardModuleData1(HidDevice device, byte[] data)
