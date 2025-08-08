@@ -226,13 +226,12 @@ namespace ReignOS.Service.Hardware
                 for (int l = 0; l != 32; ++l)
                 {
                     byte s = 0x00;
-                    if (l == 0x16) s = 72;
-                    else if (l == 0x17) s = 73;
+                    if (l == 0x16) s = 0x72;
+                    else if (l == 0x17) s = 0x73;
 
                     i = 0;
                     Array.Clear(data, 0, data.Length);
                     data[i++] = s;
-                    data[i++] = 0x00;
                     data[i++] = 0x00;
                     data[i++] = 0x0b;
                     data[i++] = 0x07;
@@ -297,7 +296,8 @@ namespace ReignOS.Service.Hardware
             QuePattern();
 
             // set xpad mode
-            /*i = 0;
+            QuePattern();
+            i = 0;
             Array.Clear(data, 0, data.Length);
             data[i++] = 0x00;
             data[i++] = 0x00;
@@ -307,7 +307,7 @@ namespace ReignOS.Service.Hardware
             WriteDeviceData(device, data);
             WriteStandardModuleData2(device, data);
             WriteStandardModuleData1(device, data);
-            QuePattern();*/
+            QuePattern();
 
             Log.WriteLine("MagicModule_PoppedIn: Done!");
         }
