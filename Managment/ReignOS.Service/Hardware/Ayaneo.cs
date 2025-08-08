@@ -288,13 +288,6 @@ namespace ReignOS.Service.Hardware
             WriteDeviceData(device, data); 
             QuePattern();
 
-            // reset device
-            Thread.Sleep(500);
-            using (var resetDevice = new HidDevice())
-            {
-                resetDevice.Init(7247, 2, true, resetDevice:true);
-            }
-
             // set xpad mode
             Thread.Sleep(500);
             QuePattern();
@@ -308,6 +301,14 @@ namespace ReignOS.Service.Hardware
             WriteDeviceData(device, data);
             WriteStandardModuleData2(device, data);
             WriteStandardModuleData1(device, data);
+            //QuePattern();
+
+            // reset device
+            //Thread.Sleep(500);
+            using (var resetDevice = new HidDevice())
+            {
+                resetDevice.Init(7247, 2, true, resetDevice: true);
+            }
             QuePattern();
 
             Log.WriteLine("MagicModule_PoppedIn: Done!");
