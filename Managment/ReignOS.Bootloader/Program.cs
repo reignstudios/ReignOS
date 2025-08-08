@@ -316,7 +316,11 @@ internal class Program
                 {
                     if (line == "ayaneo-popout-module" || line == "ayaneo-poppedin-module")
                     {
-                        serviceProcess.StandardInput.WriteLine(line);
+                        try
+                        {
+                            if (!serviceProcess.HasExited) serviceProcess.StandardInput.WriteLine(line);
+                        }
+                        catch { }
                     }
                 }
 
@@ -532,17 +536,17 @@ internal class Program
         }
         else if (useX11)
         {
-            serviceProcess.StandardInput.WriteLine("stop-inhibit");
+            if (!serviceProcess.HasExited) serviceProcess.StandardInput.WriteLine("stop-inhibit");
             ConfigureX11($"{gpuArg}startplasma-x11");
             ProcessUtil.Run("startx", "", useBash:false, verboseLog:true);
-            serviceProcess.StandardInput.WriteLine("start-inhibit");
+            if (!serviceProcess.HasExited) serviceProcess.StandardInput.WriteLine("start-inhibit");
         }
         else
         {
-            serviceProcess.StandardInput.WriteLine("stop-inhibit");
+            if (!serviceProcess.HasExited) serviceProcess.StandardInput.WriteLine("stop-inhibit");
             DisableX11();
             ProcessUtil.Run($"{gpuArg}startplasma-wayland", "", useBash:true, verboseLog:true);
-            serviceProcess.StandardInput.WriteLine("start-inhibit");
+            if (!serviceProcess.HasExited) serviceProcess.StandardInput.WriteLine("start-inhibit");
         }
         kdeActive = false;
     }
