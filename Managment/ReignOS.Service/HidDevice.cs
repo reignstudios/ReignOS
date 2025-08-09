@@ -29,7 +29,7 @@ public unsafe class HidDevice : IDisposable
             string path = "/dev/hidraw" + i.ToString();
             byte[] uinputPath = Encoding.UTF8.GetBytes(path);
             int handle;
-            int blockFlag = blocking ? c.O_NONBLOCK : 0;
+            int blockFlag = blocking ? 0 : c.O_NONBLOCK;
             if (resetDevice) fixed (byte* uinputPathPtr = uinputPath) handle = c.open(uinputPathPtr, c.O_WRONLY | blockFlag);
             else fixed (byte* uinputPathPtr = uinputPath) handle = c.open(uinputPathPtr, c.O_RDWR | blockFlag);
             if (handle < 0) continue;
