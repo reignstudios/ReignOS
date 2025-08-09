@@ -97,6 +97,12 @@ class DisplaySetting
     public bool enabled;
 }
 
+enum KernelSettingsCopy
+{
+    Chimera,
+    Bazzite
+}
+
 public partial class MainView : UserControl
 {
     private const string launchFile = "/home/gamer/ReignOS_Launch.sh";
@@ -394,6 +400,7 @@ public partial class MainView : UserControl
                     {
                         if (parts[1] == "Arch") kernelArchCheckbox.IsChecked = true;
                         else if (parts[1] == "Chimera") kernelChimeraCheckbox.IsChecked = true;
+                        else if (parts[1] == "Bazzite") kernelBazziteCheckbox.IsChecked = true;
                     }
                     else if (parts[0] == "Rest")
                     {
@@ -545,7 +552,8 @@ public partial class MainView : UserControl
 
                 if (kernelArchCheckbox.IsChecked == true) writer.WriteLine("Kernel=Arch");
                 else if (kernelChimeraCheckbox.IsChecked == true) writer.WriteLine("Kernel=Chimera");
-                
+                else if (kernelBazziteCheckbox.IsChecked == true) writer.WriteLine("Kernel=Bazzite");
+
                 if (restSleepCheckbox.IsChecked == true) writer.WriteLine("Rest=Sleep");
                 else if (restHibernateCheckbox.IsChecked == true) writer.WriteLine("Rest=Hibernate");
 
@@ -1389,9 +1397,17 @@ public partial class MainView : UserControl
             if (match.Success) loader = loader.Replace(match.Groups[1].Value, "default chimera.conf");
             else if (!loader.EndsWith("\n")) loader += "\ndefault chimera.conf";
             else loader += "default chimera.conf";
-            CopyKernelConf();
+            CopyKernelConf(KernelSettingsCopy.Chimera);
         }
-        
+        else if (kernelBazziteCheckbox.IsChecked == true)
+        {
+            var match = Regex.Match(loader, @"(default [^\n]*)");
+            if (match.Success) loader = loader.Replace(match.Groups[1].Value, "default bazzite.conf");
+            else if (!loader.EndsWith("\n")) loader += "\ndefault bazzite.conf";
+            else loader += "default bazzite.conf";
+            CopyKernelConf(KernelSettingsCopy.Bazzite);
+        }
+
         ProcessUtil.WriteAllTextAdmin("/boot/loader/loader.conf", loader);
         SaveSettings();
         CheckUpdatesButton_Click(18, null);
@@ -1463,7 +1479,8 @@ public partial class MainView : UserControl
                     segment = match.Groups[1].Value;
                     text = text.Replace(segment, "");
                     ProcessUtil.WriteAllTextAdmin(filename, text);
-                    CopyKernelConf();
+                    CopyKernelConf(KernelSettingsCopy.Chimera);
+                    CopyKernelConf(KernelSettingsCopy.Bazzite);
                 }
             }
         }
@@ -1545,7 +1562,8 @@ public partial class MainView : UserControl
             {
                 text = text.Replace("rootwait", $"rootwait resume={segment} resume_offset={resumeOffset}");
                 ProcessUtil.WriteAllTextAdmin(filename, text);
-                CopyKernelConf();
+                CopyKernelConf(KernelSettingsCopy.Chimera);
+                CopyKernelConf(KernelSettingsCopy.Bazzite);
             }
         }
 
@@ -2279,8 +2297,9 @@ public partial class MainView : UserControl
         string archConf = kernelArchConf;
         archConf = archConf.Replace(kernelArchConf_Options, kernelArchConfigTextBox.Text);
         ProcessUtil.WriteAllTextAdmin("/boot/loader/entries/arch.conf", archConf);
-        CopyKernelConf();
-        
+        CopyKernelConf(KernelSettingsCopy.Chimera);
+        CopyKernelConf(KernelSettingsCopy.Bazzite);
+
         // reboot
         if (kernel_snd_hda_intel_DisableSleep_Checkbox.IsChecked == true || kernel_snd_hda_intel_DisableHDMI_Checkbox.IsChecked == true)
         {
@@ -2292,13 +2311,26 @@ public partial class MainView : UserControl
         }
     }
     
-    private void CopyKernelConf()
+    private void CopyKernelConf(KernelSettingsCopy target)
     {
-        ProcessUtil.CopyFileAdmin("/boot/loader/entries/arch.conf", "/boot/loader/entries/chimera.conf");
-        string copyConf = File.ReadAllText("/boot/loader/entries/chimera.conf");
-        copyConf = copyConf.Replace("linux /vmlinuz-linux", "linux vmlinuz-linux-chimeraos");
-        copyConf = copyConf.Replace("initrd /initramfs-linux.img", "initrd /initramfs-linux-chimeraos.img");
-        ProcessUtil.WriteAllTextAdmin("/boot/loader/entries/chimera.conf", copyConf);
+        if (target == KernelSettingsCopy.Chimera)
+        {
+            const string targetKernelConfig = "/boot/loader/entries/chimera.conf";
+            ProcessUtil.CopyFileAdmin("/boot/loader/entries/arch.conf", targetKernelConfig);
+            string copyConf = File.ReadAllText(targetKernelConfig);
+            copyConf = copyConf.Replace("linux /vmlinuz-linux", "linux vmlinuz-linux-chimeraos");
+            copyConf = copyConf.Replace("initrd /initramfs-linux.img", "initrd /initramfs-linux-chimeraos.img");
+            ProcessUtil.WriteAllTextAdmin(targetKernelConfig, copyConf);
+        }
+        else if (target == KernelSettingsCopy.Bazzite)
+        {
+            const string targetKernelConfig = "/boot/loader/entries/bazzite.conf";
+            ProcessUtil.CopyFileAdmin("/boot/loader/entries/arch.conf", targetKernelConfig);
+            string copyConf = File.ReadAllText(targetKernelConfig);
+            copyConf = copyConf.Replace("linux /vmlinuz-linux", "linux vmlinuz-linux-bazzite");
+            copyConf = copyConf.Replace("initrd /initramfs-linux.img", "initrd /initramfs-linux-bazzite.img");
+            ProcessUtil.WriteAllTextAdmin(targetKernelConfig, copyConf);
+        }
     }
 
     private void KernelValue_OnIsCheckedChanged(object sender, RoutedEventArgs e)

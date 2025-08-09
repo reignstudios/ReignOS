@@ -203,6 +203,7 @@
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="KernelApplyButton_Click"/>
 							<RadioButton Name="kernelArchCheckbox" Content="Arch" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 							<RadioButton Name="kernelChimeraCheckbox" Content="Chimera" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<RadioButton Name="kernelBazziteCheckbox" Content="Bazzite" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						</Grid>
 					</Grid>
 					
