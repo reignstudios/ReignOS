@@ -345,6 +345,7 @@ internal class Program
                     ProcessUtil.Run("kwin_wayland", $"--lock --xwayland -- bash -c './Start_ControlCenter.sh -kde-g{ayaneoArg}'", out exitCode, useBash: true, standardOut:ControlCenter_StandardOut);// start ControlCenter
                 }
 
+                Thread.Sleep(1000);
                 var resultValues = result.Split('\n');
                 var exitCodeValue = resultValues.FirstOrDefault(x => x.Contains("EXIT_CODE: "));// get ControlCenter exit code (Weston doesn't pass this back like Cage)
                 if (exitCodeValue != null)
@@ -395,7 +396,7 @@ internal class Program
                 else
                 {
                     exitCode = 0;
-                    Thread.Sleep(5000);// wait a little before loading a new compositor
+                    Thread.Sleep(2000);// wait a little before loading a new compositor
                 }
             }
         }
