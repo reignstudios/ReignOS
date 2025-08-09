@@ -42,7 +42,7 @@ static class PackageUpdates
         // nothing yet...
 
         // check for missing packages
-        //if (!PackageUtils.PackageExits("linux-bazzite")) return true;
+        if (!PackageUtils.PackageExits("linux-bazzite-bin")) return true;
         if (!PackageUtils.PackageExits("linux-headers")) return true;
         if (!PackageUtils.PackageExits("cpupower")) return true;
         if (!PackageUtils.PackageExits("jq")) return true;

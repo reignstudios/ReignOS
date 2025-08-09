@@ -66,3 +66,6 @@ sudo pacman -R --noconfirm acpid
 
 # enable missing audio services
 systemctl --user enable pipewire.socket pipewire.service pipewire-pulse.socket pipewire-pulse.service
+
+# install bazzite kernel
+yay -S --noconfirm --needed linux-bazzite-bin
