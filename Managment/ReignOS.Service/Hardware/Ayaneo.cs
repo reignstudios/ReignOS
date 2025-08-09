@@ -143,9 +143,6 @@ namespace ReignOS.Service.Hardware
             var data = new byte[256];
             int i;
 
-            // command pattern 1
-            //WriteStandardModuleData1(device, data);
-
             // popout commands
             i = 0;
             Array.Clear(data);
@@ -197,8 +194,6 @@ namespace ReignOS.Service.Hardware
             data[i++] = 0x64;
             WriteDeviceData(device, data);
 
-            // command pattern 2
-            //WriteStandardModuleData2(device, data);
             Log.WriteLine("MagicModule_PopOut: Done!");
         }
 
@@ -207,36 +202,6 @@ namespace ReignOS.Service.Hardware
             Log.WriteLine("MagicModule_PoppedIn...");
             if (Program.hardwareType != HardwareType.Ayaneo3) return;
 
-            // command que pattern
-            /*static void QuePattern(HidDevice device, byte[] data)
-            {
-                for (int l = 0; l != 32; ++l)
-                {
-                    byte s = 0x00;
-                    if (l == 0x16) s = 0x72;
-                    else if (l == 0x17) s = 0x73;
-
-                    int i = 0;
-                    Array.Clear(data);
-                    data[i++] = s;
-                    data[i++] = 0x00;
-                    data[i++] = 0x0b;
-                    data[i++] = 0x07;
-                    data[i++] = (byte)l;
-                    data[i++] = 0x00;
-                    data[i++] = 0x00;
-                    data[i++] = 0x00;
-                    data[i++] = 0x00;
-                    data[i++] = 0x00;
-                    data[i++] = 0x00;
-                    data[i++] = s;
-                    WriteDeviceData(device, data, sleepBeforeRead: 10);
-                }
-
-                WriteStandardModuleData2(device, data);
-                WriteStandardModuleData1(device, data);
-            }*/
-
             // init hid device
             using (var device = new HidDevice())
             {
@@ -244,23 +209,7 @@ namespace ReignOS.Service.Hardware
                 var data = new byte[256];
                 int i;
 
-                // set xpad mode
-                Thread.Sleep(500);
-                //QuePattern(device, data);
-                i = 0;
-                Array.Clear(data);
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x0a;
-                data[i++] = 0x01;
-                WriteDeviceData(device, data);
-                //WriteStandardModuleData2(device, data);
-                //WriteStandardModuleData1(device, data);
-                //QuePattern(device, data);
-
                 // Ayaneo opens app (device init)
-                //QuePattern(device, data);
                 i = 0;
                 Array.Clear(data);
                 data[i++] = 0xc4;
@@ -302,32 +251,57 @@ namespace ReignOS.Service.Hardware
                 data[i++] = 0x64;
                 data[i++] = 0x64;
                 WriteDeviceData(device, data);
-                //QuePattern(device, data);
-            }
 
-            // reset device
-            /*Thread.Sleep(100);
-            using (var resetDevice = new HidDevice())
-            {
-                resetDevice.Init(7247, 2, true, resetDevice: true);
+                // set xpad mode
+                Thread.Sleep(500);
+                i = 0;
+                Array.Clear(data);
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x0a;
+                data[i++] = 0x01;
+                WriteDeviceData(device, data);
             }
-
-            using (var device = new HidDevice())
-            {
-                if (!device.Init(7247, 2, true, blocking: true) || device.handles.Count == 0) return;
-                var data = new byte[256];
-                QuePattern(device, data);
-            }*/
 
             // finished
             Log.WriteLine("MagicModule_PoppedIn: Done!");
 
             // power off
-            //Thread.Sleep(500);
-            //ProcessUtil.Run("poweroff", "-f", useBash:false);
+            Thread.Sleep(500);
+            ProcessUtil.Run("poweroff", "-f", useBash:false);
         }
 
-        /*private static void WriteStandardModuleData1(HidDevice device, byte[] data)
+        /*private static void WriteQuePattern(HidDevice device, byte[] data)
+        {
+            for (int l = 0; l != 32; ++l)
+            {
+                byte s = 0x00;
+                if (l == 0x16) s = 0x72;
+                else if (l == 0x17) s = 0x73;
+
+                int i = 0;
+                Array.Clear(data);
+                data[i++] = s;
+                data[i++] = 0x00;
+                data[i++] = 0x0b;
+                data[i++] = 0x07;
+                data[i++] = (byte)l;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = s;
+                WriteDeviceData(device, data, sleepBeforeRead: 10);
+            }
+
+            WriteStandardModuleData2(device, data);
+            WriteStandardModuleData1(device, data);
+        }
+
+        private static void WriteStandardModuleData1(HidDevice device, byte[] data)
         {
             int i = 0;
             Array.Clear(data);
@@ -388,8 +362,6 @@ namespace ReignOS.Service.Hardware
             device.WriteData(data, 0, packetSize);
             Thread.Sleep(sleepBeforeRead);
 
-            //Array.Clear(data, 0, data.Length);
-            //device.ReadData(data, 0, data.Length, out _);
             for (int i = 0; i != 8; ++i)
             {
                 Thread.Sleep(sleepBeforeRead);
