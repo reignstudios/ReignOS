@@ -78,7 +78,7 @@
         </p>
 
         <div class="description">
-            ReignOS is a SteamOS like Arch distro but with its own unique take focused on general portability.
+            ReignOS is a SteamOS / SteamDeck like Arch distro but with its own unique take focused on general portability.
             It supports Gamescope, Weston, Cage, X11 and KDE compositors for better compatibility with some hardware.
         </div>
 
@@ -87,8 +87,34 @@
             <li>Hybrid-Graphics, mGPU and eGPU systems supported</li>
             <!-- <li>Docks or multi-monitor options supported</li> -->
             <li>Most General PC hardware should just work</li>
-            <li>Dual-Boot with Windows</li>
+            <li>Dual-Boot with Windows or other Linux distros</li>
         </ul>
+
+        <div>
+            <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">Examples</h2>
+            <img src="Examples.jpg"
+                style="
+                width:512px; height:512px; display:block; object-fit:cover;
+
+                /* Bevel thickness */
+                --fade: 40px;
+
+                /* Four-side mask + intersection for 45° beveled corners */
+                -webkit-mask-image:
+                linear-gradient(to bottom, transparent 0, white var(--fade), white 100%),
+                linear-gradient(to left,   transparent 0, white var(--fade), white 100%),
+                linear-gradient(to top,    transparent 0, white var(--fade), white 100%),
+                linear-gradient(to right,  transparent 0, white var(--fade), white 100%);
+                -webkit-mask-composite: source-in, source-in, source-in;
+
+                mask-image:
+                linear-gradient(to bottom, transparent 0, white var(--fade), white 100%),
+                linear-gradient(to left,   transparent 0, white var(--fade), white 100%),
+                linear-gradient(to top,    transparent 0, white var(--fade), white 100%),
+                linear-gradient(to right,  transparent 0, white var(--fade), white 100%);
+                mask-composite: intersect;
+            "/>
+        </div>
 
         <div>
             <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">Known working hardware</h2>
