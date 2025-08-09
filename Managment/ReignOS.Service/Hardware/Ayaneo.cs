@@ -244,6 +244,21 @@ namespace ReignOS.Service.Hardware
                 var data = new byte[256];
                 int i;
 
+                // set xpad mode
+                Thread.Sleep(500);
+                //QuePattern(device, data);
+                i = 0;
+                Array.Clear(data);
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x0a;
+                data[i++] = 0x01;
+                WriteDeviceData(device, data);
+                //WriteStandardModuleData2(device, data);
+                //WriteStandardModuleData1(device, data);
+                //QuePattern(device, data);
+
                 // Ayaneo opens app (device init)
                 //QuePattern(device, data);
                 i = 0;
@@ -286,22 +301,7 @@ namespace ReignOS.Service.Hardware
                 data[i++] = 0x40;
                 data[i++] = 0x64;
                 data[i++] = 0x64;
-                WriteDeviceData(device, data); 
-                //QuePattern(device, data);
-
-                // set xpad mode
-                Thread.Sleep(500);
-                //QuePattern(device, data);
-                i = 0;
-                Array.Clear(data);
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x0a;
-                data[i++] = 0x01;
                 WriteDeviceData(device, data);
-                //WriteStandardModuleData2(device, data);
-                //WriteStandardModuleData1(device, data);
                 //QuePattern(device, data);
             }
 
@@ -327,7 +327,7 @@ namespace ReignOS.Service.Hardware
             //ProcessUtil.Run("poweroff", "-f", useBash:false);
         }
 
-        private static void WriteStandardModuleData1(HidDevice device, byte[] data)
+        /*private static void WriteStandardModuleData1(HidDevice device, byte[] data)
         {
             int i = 0;
             Array.Clear(data);
@@ -381,7 +381,7 @@ namespace ReignOS.Service.Hardware
             data[i++] = 0x00;
             data[i++] = 0x08;
             WriteDeviceData(device, data);
-        }
+        }*/
 
         private static void WriteDeviceData(HidDevice device, byte[] data, int packetSize = 64, int sleepBeforeRead = 15)
         {
