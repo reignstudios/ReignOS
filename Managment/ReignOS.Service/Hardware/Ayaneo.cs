@@ -392,7 +392,7 @@ namespace ReignOS.Service.Hardware
             //device.ReadData(data, 0, data.Length, out _);
             for (int i = 0; i != 8; ++i)
             {
-                Thread.Sleep(10);
+                Thread.Sleep(sleepBeforeRead);
                 Array.Clear(data);
                 if (device.ReadData(data, 0, data.Length, out nint sizeRead))
                 {
