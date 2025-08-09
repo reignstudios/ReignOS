@@ -144,7 +144,7 @@ namespace ReignOS.Service.Hardware
             int i;
 
             // command pattern 1
-            //WriteStandardModuleData1(device, data);
+            WriteStandardModuleData1(device, data);
 
             // popout commands
             i = 0;
@@ -198,7 +198,7 @@ namespace ReignOS.Service.Hardware
             WriteDeviceData(device, data);
 
             // command pattern 2
-            //WriteStandardModuleData2(device, data);
+            WriteStandardModuleData2(device, data);
             Log.WriteLine("MagicModule_PopOut: Done!");
         }
 
@@ -327,7 +327,7 @@ namespace ReignOS.Service.Hardware
             //ProcessUtil.Run("poweroff", "-f", useBash:false);
         }
 
-        /*private static void WriteStandardModuleData1(HidDevice device, byte[] data)
+        private static void WriteStandardModuleData1(HidDevice device, byte[] data)
         {
             int i = 0;
             Array.Clear(data);
@@ -381,7 +381,7 @@ namespace ReignOS.Service.Hardware
             data[i++] = 0x00;
             data[i++] = 0x08;
             WriteDeviceData(device, data);
-        }*/
+        }
 
         private static void WriteDeviceData(HidDevice device, byte[] data, int packetSize = 64, int sleepBeforeRead = 15)
         {
