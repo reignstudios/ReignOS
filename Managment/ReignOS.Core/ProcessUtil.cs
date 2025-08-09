@@ -103,7 +103,7 @@ public static class ProcessUtil
                                 }
                             }
                         }
-
+                        
                         process.OutputDataReceived += ReadLine;
                         process.ErrorDataReceived += ReadLine;
                         process.BeginOutputReadLine();
@@ -126,6 +126,12 @@ public static class ProcessUtil
                         {
                             exitCode = -1;
                         }
+                    }
+
+                    if (standardOut != null && !disableStdRead)
+                    {
+                        process.StandardOutput.BaseStream.Flush();
+                        process.StandardError.BaseStream.Flush();
                     }
 
                     string resultOutput = string.Empty;
