@@ -4,12 +4,19 @@ using ReignOS.Core;
 using System.Text;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 public unsafe class HidDevice : IDisposable
 {
     public List<int> handles;
     
-    public bool Init(ushort vendorID, ushort productID, bool openAll, bool blocking = false, bool resetDevice = false)
+    public bool Init
+    (
+        ushort vendorID, ushort productID, bool openAll,
+        string name = null, bool nameIsContains = false,
+        string physicalLocation = null, bool physicalLocationIsContains = false,
+        bool blocking = false, bool resetDevice = false
+    )
     {
         const int bufferSize = 256;
         byte* buffer = stackalloc byte[bufferSize];
@@ -44,9 +51,9 @@ public unsafe class HidDevice : IDisposable
             if (info.vendor == vendorID && info.product == productID)
             {
                 Log.WriteLine($"HID device found type:{BusType(info.bustype)} vendorID:{vendorID} productID:{productID} path:{path}");
-                handles.Add(handle);
             
                 // get name
+                string deviceName = null;
                 NativeUtils.ZeroMemory(buffer, bufferSize);
                 if (c.ioctl(handle, hid.HIDIOCGRAWNAME_256, buffer) < 0)
                 {
@@ -54,10 +61,12 @@ public unsafe class HidDevice : IDisposable
                 }
                 else
                 {
+                    deviceName = Marshal.PtrToStringUTF8((IntPtr)buffer);
                     Log.WriteLine("HID Name: ", buffer);
                 }
 
                 // get physical location
+                string devicePhysicalLocation = null;
                 NativeUtils.ZeroMemory(buffer, bufferSize);
                 if (c.ioctl(handle, hid.HIDIOCGRAWPHYS_256, buffer) < 0)
                 {
@@ -65,7 +74,26 @@ public unsafe class HidDevice : IDisposable
                 }
                 else
                 {
+                    devicePhysicalLocation = Marshal.PtrToStringUTF8((IntPtr)buffer);
                     Log.WriteLine("HID Physical Location: ", buffer);
+                }
+
+                // add handle
+                if (name != null)
+                {
+                    if (nameIsContains && deviceName.Contains(name)) handles.Add(handle);
+                    else if (deviceName == name) handles.Add(handle);
+                    else goto CONTINUE;
+                }
+                else if (physicalLocation != null)
+                {
+                    if (physicalLocationIsContains && devicePhysicalLocation.Contains(physicalLocation)) handles.Add(handle);
+                    else if (devicePhysicalLocation == physicalLocation) handles.Add(handle);
+                    else goto CONTINUE;
+                }
+                else
+                {
+                    handles.Add(handle);
                 }
 
                 // stop if we're done

@@ -139,7 +139,7 @@ namespace ReignOS.Service.Hardware
 
             // init hid device
             using var device = new HidDevice();
-            if (!device.Init(7247, 2, true, blocking: true) || device.handles.Count == 0) return;
+            if (!device.Init(7247, 2, false, physicalLocation:"input0", physicalLocationIsContains:true, blocking: true) || device.handles.Count == 0) return;
             var data = new byte[256];
             int i;
 
@@ -240,7 +240,7 @@ namespace ReignOS.Service.Hardware
             // init hid device
             using (var device = new HidDevice())
             {
-                if (!device.Init(7247, 2, true, blocking:true) || device.handles.Count == 0) return;
+                if (!device.Init(7247, 2, false, physicalLocation: "input0", physicalLocationIsContains: true, blocking:true) || device.handles.Count == 0) return;
                 var data = new byte[256];
                 int i;
 
@@ -323,8 +323,8 @@ namespace ReignOS.Service.Hardware
             Log.WriteLine("MagicModule_PoppedIn: Done!");
 
             // power off
-            Thread.Sleep(500);
-            ProcessUtil.Run("poweroff", "-f", useBash:false);
+            //Thread.Sleep(500);
+            //ProcessUtil.Run("poweroff", "-f", useBash:false);
         }
 
         private static void WriteStandardModuleData1(HidDevice device, byte[] data)
