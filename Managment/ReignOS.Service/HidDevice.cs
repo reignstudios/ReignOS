@@ -48,34 +48,23 @@ public unsafe class HidDevice : IDisposable
             {
                 if (c.ioctl(handle, hid.HIDIOCGRAWINFO, &info) < 0) goto CONTINUE;
             }
+
             if (info.vendor == vendorID && info.product == productID)
             {
-                Log.WriteLine($"HID device found type:{BusType(info.bustype)} vendorID:{vendorID} productID:{productID} path:{path}");
-            
                 // get name
                 string deviceName = null;
                 NativeUtils.ZeroMemory(buffer, bufferSize);
-                if (c.ioctl(handle, hid.HIDIOCGRAWNAME_256, buffer) < 0)
-                {
-                    Log.WriteLine("Failed: HIDIOCGRAWNAME");
-                }
-                else
+                if (c.ioctl(handle, hid.HIDIOCGRAWNAME_256, buffer) >= 0)
                 {
                     deviceName = Marshal.PtrToStringUTF8((IntPtr)buffer);
-                    Log.WriteLine("HID Name: ", buffer);
                 }
 
                 // get physical location
                 string devicePhysicalLocation = null;
                 NativeUtils.ZeroMemory(buffer, bufferSize);
-                if (c.ioctl(handle, hid.HIDIOCGRAWPHYS_256, buffer) < 0)
-                {
-                    Log.WriteLine("Failed: HIDIOCGRAWPHYS");
-                }
-                else
+                if (c.ioctl(handle, hid.HIDIOCGRAWPHYS_256, buffer) >= 0)
                 {
                     devicePhysicalLocation = Marshal.PtrToStringUTF8((IntPtr)buffer);
-                    Log.WriteLine("HID Physical Location: ", buffer);
                 }
 
                 // add handle
@@ -96,13 +85,16 @@ public unsafe class HidDevice : IDisposable
                     handles.Add(handle);
                 }
 
+                // log
+                Log.WriteLine($"HID device found type:{BusType(info.bustype)} vendorID:{vendorID} productID:{productID} path:{path} deviceName:{deviceName} devicePhysicalLocation:{devicePhysicalLocation}");
+
                 // stop if we're done
                 if (!openAll) return true;
 
                 // don't close this handle
                 continue;
             }
-            
+
             // close
             CONTINUE: c.close(handle);
         }
