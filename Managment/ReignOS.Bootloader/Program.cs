@@ -53,6 +53,7 @@ internal class Program
     private static string displayName = null;
     private static int displayWidth = 0, displayHeight = 0;
     private static int audioMaxVolume = 150, audioCurrentVolume = 50;
+    private static bool reignMonitor = false;
 
     private static bool ayaneoMagicModuleMode;
 
@@ -125,6 +126,7 @@ internal class Program
                 }
             }
             
+            else if (arg == "--reign-monitor") reignMonitor = true;
             else if (arg == "--force-controlcenter") forceControlCenter = true;
         }
         
@@ -521,7 +523,7 @@ internal class Program
     private static void StartCompositor_KDE(bool useX11, bool useGMode, Process serviceProcess)
     {
         Log.WriteLine("Starting KDE...");
-        kdeActive = true;
+        if (!useGMode) kdeActive = true;
         string gpuArg = GetGPUArg(gpu);
         if (useGMode)
         {
@@ -529,7 +531,8 @@ internal class Program
             string useMangoHubArg = useMangoHub ? " --use-mangohub" : "";
             string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
             string steamDeckArg = disableSteamDeck ? " --disable-steam-deck" : "";
-            ProcessUtil.Run($"{gpuArg}./Start_KDE-G.sh{useMangoHubArg}{steamGPUArg}{steamDeckArg}", "", useBash:true, verboseLog:true);
+            string reignMonitorArg = reignMonitor ? " --reign-monitor" : "";
+            ProcessUtil.Run($"{gpuArg}./Start_KDE-G.sh{useMangoHubArg}{steamGPUArg}{steamDeckArg}{reignMonitorArg}", "", useBash:true, verboseLog:true);
         }
         else if (useX11)
         {

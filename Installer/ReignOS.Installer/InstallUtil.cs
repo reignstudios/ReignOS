@@ -483,7 +483,7 @@ static class InstallUtil
 
         // install misc apps
         Run("pacman", "-S --noconfirm nano evtest efibootmgr");
-        Run("pacman", "-S --noconfirm dmidecode hwinfo udev python");
+        Run("pacman", "-S --noconfirm dmidecode hwinfo sysstat udev python");
         Run("pacman", "-S --noconfirm rsync");
         Run("pacman", "-S --noconfirm wget");
         UpdateProgress(31);

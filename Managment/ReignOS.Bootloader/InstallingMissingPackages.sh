@@ -17,6 +17,7 @@ fi
 # add pacman packages
 sudo pacman -S --noconfirm --needed jq
 sudo pacman -S --noconfirm --needed hwinfo
+sudo pacman -S --noconfirm --needed sysstat
 sudo pacman -S --noconfirm --needed rsync
 
 sudo pacman -S --noconfirm --needed wayland-utils

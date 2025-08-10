@@ -4,6 +4,7 @@
 USE_MANGOHUB=false
 DISABLE_STEAM_GPU=false
 DISABLE_STEAM_DECK=false
+REIGN_MONITOR=false
 for arg in "$@"; do
     if [ "$arg" = "--use-mangohub" ]; then
         USE_MANGOHUB=true
@@ -15,6 +16,10 @@ for arg in "$@"; do
 
     if [ "$arg" = "--disable-steam-deck" ]; then
         DISABLE_STEAM_DECK=true
+    fi
+    
+    if [ "$arg" = "--reign-monitor" ]; then
+        REIGN_MONITOR=true
     fi
 done
 
@@ -43,9 +48,12 @@ else
 fi
 
 # start KDE with steam
-REIGN_MONITOR=/home/gamer/ReignOS/Managment/ReignOS.Monitor/bin/Release/net8.0/linux-x64/publish/ReignOS.Monitor
-#kwin_wayland --lock --xwayland -- bash -c "$STEAM_LAUNCH" &
-kwin_wayland --lock --xwayland -- bash -c '"$1" & exec "$2"' _ "$REIGN_MONITOR" "$STEAM_LAUNCH" &
+if [ "$USE_MANGOHUB" = "true" ]; then
+  REIGN_MONITOR_PATH=/home/gamer/ReignOS/Managment/ReignOS.Monitor/bin/Release/net8.0/linux-x64/publish/ReignOS.Monitor
+  kwin_wayland --lock --xwayland -- bash -c '"$1" & exec "$2"' _ "$REIGN_MONITOR_PATH" "$STEAM_LAUNCH" &
+else
+  kwin_wayland --lock --xwayland -- bash -c "$STEAM_LAUNCH" &
+fi
 KWIN_PID=$!
 
 # wait for steam to start
