@@ -42,7 +42,6 @@ static class PackageUpdates
         // nothing yet...
 
         // check for missing packages
-        if (!PackageUtils.PackageExits("linux-bazzite-bin")) return true;
         if (!PackageUtils.PackageExits("linux-headers")) return true;
         if (!PackageUtils.PackageExits("cpupower")) return true;
         if (!PackageUtils.PackageExits("jq")) return true;
@@ -348,14 +347,8 @@ static class PackageUpdates
         try
         {
             string loader = File.ReadAllText("/boot/loader/loader.conf");
-
             var match = Regex.Match(loader, @"(default [^\n]*)");
-            if (!match.Success)
-            {
-                if (!loader.EndsWith("\n")) loader += "\ndefault arch.conf";
-                else loader += "default arch.conf";
-            }
-
+            if (!match.Success) loader += "\ndefault arch.conf";
             ProcessUtil.WriteAllTextAdmin("/boot/loader/loader.conf", loader);
         }
         catch (Exception e)

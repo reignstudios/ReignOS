@@ -1382,29 +1382,37 @@ public partial class MainView : UserControl
 
     private void KernelApplyButton_Click(object sender, RoutedEventArgs e)
     {
+        static void RemoveEntries(ref string loader)
+        {
+            while (true)
+            {
+                var match = Regex.Match(loader, @"(default [^\n]*)");
+                if (match.Success) loader = loader.Replace(match.Groups[1].Value, "");
+                else break;
+            }
+            loader = loader.TrimEnd('\n').TrimEnd();
+        }
+        
         // apply settings
         string loader = File.ReadAllText("/boot/loader/loader.conf");
         if (kernelArchCheckbox.IsChecked == true)
         {
-            var match = Regex.Match(loader, @"(default [^\n]*)");
-            if (match.Success) loader = loader.Replace(match.Groups[1].Value, "default arch.conf");
-            else if (!loader.EndsWith("\n")) loader += "\ndefault arch.conf";
-            else loader += "default arch.conf";
+            RemoveEntries(ref loader);
+            loader += "\ndefault arch.conf";
+            ProcessUtil.WriteAllTextAdmin("/boot/ReignOS_Kernel.txt", "Arch");
         }
         else if (kernelChimeraCheckbox.IsChecked == true)
         {
-            var match = Regex.Match(loader, @"(default [^\n]*)");
-            if (match.Success) loader = loader.Replace(match.Groups[1].Value, "default chimera.conf");
-            else if (!loader.EndsWith("\n")) loader += "\ndefault chimera.conf";
-            else loader += "default chimera.conf";
+            RemoveEntries(ref loader);
+            loader += "\ndefault chimera.conf";
+            ProcessUtil.WriteAllTextAdmin("/boot/ReignOS_Kernel.txt", "Chimera");
             CopyKernelConf(KernelSettingsCopy.Chimera);
         }
         else if (kernelBazziteCheckbox.IsChecked == true)
         {
-            var match = Regex.Match(loader, @"(default [^\n]*)");
-            if (match.Success) loader = loader.Replace(match.Groups[1].Value, "default bazzite.conf");
-            else if (!loader.EndsWith("\n")) loader += "\ndefault bazzite.conf";
-            else loader += "default bazzite.conf";
+            RemoveEntries(ref loader);
+            loader += "\ndefault bazzite.conf";
+            ProcessUtil.WriteAllTextAdmin("/boot/ReignOS_Kernel.txt", "Bazzite");
             CopyKernelConf(KernelSettingsCopy.Bazzite);
         }
 
