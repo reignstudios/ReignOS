@@ -81,7 +81,6 @@ namespace ReignOS.Service.HardwarePatches
 
         private static bool InstallFirmware_Bazzite(string srcFirmwareFile, string dstFirmwareFile)
         {
-            //const string firmwareFolder = "/usr/local/firmware/";
             const string firmwareFolder = "/usr/lib/firmware/";
             string firmwareFile = firmwareFolder + dstFirmwareFile;
             if (File.Exists(firmwareFile)) return false;
@@ -102,7 +101,7 @@ namespace ReignOS.Service.HardwarePatches
 
         private static void InstallFirmware_Bazzite_SysLink(string file, string link)
         {
-            const string firmwareFolder = "/usr/local/firmware/";
+            const string firmwareFolder = "/usr/lib/firmware/";
             ProcessUtil.Run("ln", $"-s {firmwareFolder}{file} {firmwareFolder}{link}", useBash: false);
         }
     }

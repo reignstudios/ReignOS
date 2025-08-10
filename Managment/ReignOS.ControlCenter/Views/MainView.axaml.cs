@@ -377,10 +377,6 @@ public partial class MainView : UserControl
                         else if (parts[1] == "HHD") hhdInputCheckbox.IsChecked = true;
                         else if (parts[1] == "Disable") disableInputCheckbox.IsChecked = true;
                     }
-                    else if (parts[0] == "AutoCheckUpdates")
-                    {
-                        autoCheckUpdatesCheckbox.IsChecked = parts[1] == "On";
-                    }
                     else if (parts[0] == "PowerManager")
                     {
                         powerButton.IsVisible = false;
@@ -407,6 +403,10 @@ public partial class MainView : UserControl
                     {
                         if (parts[1] == "Sleep") restSleepCheckbox.IsChecked = true;
                         else if (parts[1] == "Hibernate") restHibernateCheckbox.IsChecked = true;
+                    }
+                    else if (parts[0] == "ReignOS.Monitor")
+                    {
+                        reignMonitorCheckbox.IsChecked = parts[1] == "Enabled";
                     }
                     else if (parts[0].StartsWith("AudioDefault:"))
                     {
@@ -540,9 +540,6 @@ public partial class MainView : UserControl
                 else if (hhdInputCheckbox.IsChecked == true) writer.WriteLine("Input=HHD");
                 else writer.WriteLine("Input=ReignOS");
 
-                if (autoCheckUpdatesCheckbox.IsChecked == true) writer.WriteLine("AutoCheckUpdates=On");
-                else writer.WriteLine("AutoCheckUpdates=Off");
-
                 if (powerProfilesCheckbox.IsChecked == true) writer.WriteLine("PowerManager=PowerProfiles");
                 else if (powerStationCheckbox.IsChecked == true) writer.WriteLine("PowerManager=PowerStation");
                 else if (powerDeckyTDPCheckbox.IsChecked == true) writer.WriteLine("PowerManager=DeckyTDP");
@@ -558,6 +555,9 @@ public partial class MainView : UserControl
 
                 if (restSleepCheckbox.IsChecked == true) writer.WriteLine("Rest=Sleep");
                 else if (restHibernateCheckbox.IsChecked == true) writer.WriteLine("Rest=Hibernate");
+                
+                if (reignMonitorCheckbox.IsChecked == true) writer.WriteLine("ReignOS.Monitor=Enabled");
+                else writer.WriteLine("ReignOS.Monitor=Disabled");
 
                 foreach (var setting in audioSettings)
                 {
@@ -1582,36 +1582,6 @@ public partial class MainView : UserControl
 
         // configure GPU (probably not needed)
         //ProcessUtil.Run("systemctl", "enable nvidia-suspend.service nvidia-hibernate.service nvidia-resume.service", asAdmin: true, useBash: false);
-    }
-
-    private void UpdatesApplyButton_Click(object sender, RoutedEventArgs e)
-    {
-        // apply settings
-        string text = File.ReadAllText(launchFile);
-        foreach (string line in text.Split('\n'))
-        {
-            if (line.Contains("--use-controlcenter"))
-            {
-                string newLine = line;
-
-                // remove existing options
-                newLine = newLine.Replace(" --disable-update", "");
-
-                // gather new options
-                string args = "";
-                if (autoCheckUpdatesCheckbox.IsChecked != true) args += " --disable-update";
-
-                // apply options
-                text = text.Replace(line, newLine + args);
-
-                break;
-            }
-        }
-        File.WriteAllText(launchFile, text);
-        SaveSettings();
-
-        App.exitCode = 0;// restart user
-        MainWindow.singleton.Close();
     }
 
     private void BootManagerButton_OnClick(object sender, RoutedEventArgs e)
@@ -2950,5 +2920,17 @@ public partial class MainView : UserControl
     private void AyaneoModules_PoppedIn_Button_OnClick(object sender, RoutedEventArgs e)
     {
         Console.WriteLine("ayaneo-poppedin-module");
+    }
+
+    private void ReignMonitorApplyButton_Click(object sender, RoutedEventArgs e)
+    {
+        string text = File.ReadAllText(launchFile);
+        text = text.Replace(" --reign-monitor", "");
+        if (reignMonitorCheckbox.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --reign-monitor");
+        File.WriteAllText(launchFile, text);
+        
+        SaveSettings();
+        App.exitCode = 0;
+        MainWindow.singleton.Close();
     }
 }

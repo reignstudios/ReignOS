@@ -1,0 +1,31 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="960" d:DesignHeight="640"
+        x:Class="ReignOS.Monitor.MainWindow"
+        Title="ReignOS.Monitor" SystemDecorations="None">
+    <Grid>
+        <StackPanel Margin="4">
+            <Grid>
+                <TextBlock Text="CPU:"/>
+                <ProgressBar Name="cpuPercentage" Height="16" Margin="50,0,0,0"/>
+            </Grid>
+            
+            <Grid Margin="0,4,0,0">
+                <TextBlock Text="GPU:"/>
+                <ProgressBar Name="gpuPercentage" Height="16" Margin="50,0,0,0"/>
+            </Grid>
+            
+            <Grid Margin="0,4,0,0">
+                <TextBlock Text="RAM:"/>
+                <ProgressBar Name="ramPercentage" Height="16" Margin="50,0,0,0"/>
+            </Grid>
+            
+            <Grid Margin="0,4,0,0">
+                <TextBlock Text="VRAM:"/>
+                <ProgressBar Name="vramPercentage" Height="16" Margin="50,0,0,0"/>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Window>
