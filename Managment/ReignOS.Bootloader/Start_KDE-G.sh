@@ -44,7 +44,7 @@ fi
 
 # start KDE with steam
 REIGN_MONITOR=/home/gamer/ReignOS/Managment/ReignOS.Monitor/bin/Release/net8.0/linux-x64/publish/ReignOS.Monitor
-kwin_wayland --lock --xwayland -- bash -lc '"$REIGN_MONITOR" & exec "$STEAM_LAUNCH"' &
+kwin_wayland --lock --xwayland -- bash -c '"$REIGN_MONITOR" & exec "$STEAM_LAUNCH"' &
 KWIN_PID=$!
 
 # wait for steam to start
