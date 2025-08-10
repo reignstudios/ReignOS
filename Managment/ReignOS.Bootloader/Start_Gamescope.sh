@@ -45,13 +45,13 @@ if [ "$DISABLE_STEAM_DECK" = "true" ]; then
     if [ "$DISABLE_STEAM_GPU" = "true" ]; then
         env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -steamos3 -no-cef-sandbox
     else
-        steam -bigpicture -steamos3 -no-cef-sandbox
+        steam -bigpicture -steamos3 -no-cef-sandbox --enable-gpu-rasterization --ignore-gpu-blocklist --enable-zero-copy --enable-native-gpu-memory-buffers
     fi
 else
     if [ "$DISABLE_STEAM_GPU" = "true" ]; then
         env MESA_GL_VERSION_OVERRIDE=1.3 steam -gamepadui -steamdeck -steamos3 -no-cef-sandbox
     else
-        steam -gamepadui -steamdeck -steamos3 -no-cef-sandbox
+        steam -gamepadui -steamdeck -steamos3 -no-cef-sandbox --enable-gpu-rasterization --ignore-gpu-blocklist --enable-zero-copy --enable-native-gpu-memory-buffers
     fi
 fi
 
