@@ -2944,5 +2944,7 @@ public partial class MainView : UserControl
         }*/
         
         SaveSettings();
+        App.exitCode = 0;
+        MainWindow.singleton.Close();
     }
 }
