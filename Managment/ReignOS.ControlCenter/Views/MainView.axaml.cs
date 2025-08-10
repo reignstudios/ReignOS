@@ -2924,13 +2924,19 @@ public partial class MainView : UserControl
 
     private void ReignMonitorApplyButton_Click(object sender, RoutedEventArgs e)
     {
-        string text = File.ReadAllText(launchFile);
-        text = text.Replace(" --reign-monitor", "");
-        if (reignMonitorCheckbox.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --reign-monitor");
-        File.WriteAllText(launchFile, text);
-        
+        string path = "/home/gamer/.config/autostart/";
+        if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+        path += "ReignOS.Monitor.desktop";
+        if (reignMonitorCheckbox.IsChecked == true)
+        {
+            string appPath = "/home/gamer/ReignOS/Managment/ReignOS.Monitor/bin/Release/net8.0/linux-x64/publish/ReignOS.Monitor";
+            string desktop = $"[Desktop Entry]\nType=Application\nExec={appPath}\nHidden=false\nX-GNOME-Autostart-enabled=true\nName=ReignOS.Monitor\n";
+            File.WriteAllText(path, desktop);
+        }
+        else
+        {
+            File.Delete(path);
+        }
         SaveSettings();
-        App.exitCode = 0;
-        MainWindow.singleton.Close();
     }
 }

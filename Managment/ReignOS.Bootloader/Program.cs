@@ -53,7 +53,6 @@ internal class Program
     private static string displayName = null;
     private static int displayWidth = 0, displayHeight = 0;
     private static int audioMaxVolume = 150, audioCurrentVolume = 50;
-    private static bool reignMonitor = false;
 
     private static bool ayaneoMagicModuleMode;
 
@@ -126,7 +125,6 @@ internal class Program
                 }
             }
             
-            else if (arg == "--reign-monitor") reignMonitor = true;
             else if (arg == "--force-controlcenter") forceControlCenter = true;
         }
         
