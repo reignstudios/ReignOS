@@ -16,7 +16,7 @@ sudo pacman -S --noconfirm --needed xdg-desktop-portal xdg-desktop-portal-wlr xd
 
 sudo pacman -S --noconfirm --needed vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-layers
 
-sudo pacman -S --noconfirm --needed alsa-ucm-conf
+sudo pacman -S --noconfirm --needed alsa-firmware alsa-ucm-conf
 
 sudo pacman -Rdd --noconfirm jack2
 sudo pacman -S --noconfirm --needed pipewire pipewire-pulse pipewire-alsa pipewire-jack wireplumber
@@ -53,6 +53,7 @@ fc-cache -fv
 yay -S --noconfirm --needed steamcmd
 yay -S --noconfirm --needed proton-ge-custom
 
+sudo pacman -S --noconfirm --needed dkms
 sudo pacman -S --noconfirm --needed fwupd
 
 sudo pacman -S --noconfirm --needed vdpauinfo

@@ -478,6 +478,7 @@ static class InstallUtil
 
         // install firmware update support
         Run("pacman", "-S --noconfirm fwupd");
+        Run("pacman", "-S --noconfirm dkms");
         UpdateProgress(32);
 
         // install wayland
@@ -523,7 +524,7 @@ static class InstallUtil
         UpdateProgress(58);
 
         // install audio
-        Run("pacman", "-S --noconfirm alsa-utils alsa-plugins alsa-ucm-conf");
+        Run("pacman", "-S --noconfirm alsa-firmware alsa-utils alsa-plugins alsa-ucm-conf");
         Run("pacman", "-S --noconfirm sof-firmware");
         using (new FailIfError(false)) Run("pacman", "-Rdd --noconfirm jack2");// force remove jack2 let pipewire-jack install instead (installed from ffmpeg)
         Run("pacman", "-S --noconfirm pipewire pipewire-pulse pipewire-alsa pipewire-jack wireplumber");

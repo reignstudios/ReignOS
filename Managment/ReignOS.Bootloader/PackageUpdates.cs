@@ -64,6 +64,7 @@ static class PackageUpdates
         if (!PackageUtils.PackageExits("vulkan-mesa-layers")) return true;
         if (!PackageUtils.PackageExits("lib32-vulkan-mesa-layers")) return true;
 
+        if (!PackageUtils.PackageExits("alsa-firmware")) return true;
         if (!PackageUtils.PackageExits("alsa-ucm-conf")) return true;
 
         if (!PackageUtils.PackageExits("bluez")) return true;
@@ -100,6 +101,7 @@ static class PackageUpdates
         if (!PackageUtils.PackageExits("steamcmd")) return true;
         if (!PackageUtils.PackageExits("proton-ge-custom")) return true;
 
+        if (!PackageUtils.PackageExits("dkms")) return true;
         if (!PackageUtils.PackageExits("fwupd")) return true;
         
         if (!PackageUtils.PackageExits("vdpauinfo")) return true;
