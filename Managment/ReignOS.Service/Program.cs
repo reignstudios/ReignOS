@@ -157,7 +157,7 @@ internal class Program
         FileUtils.SafeCopy(Path.Combine(srcPath, "AYA-AYAOLED_FHD.lua"), Path.Combine(dstPath, "AYA-AYAOLED_FHD.lua"));
 
         // install missing firmware
-        if (AudioPatches.InstallFirmware_aw87559())
+        if (AudioPatches.InstallFirmware_aw87559() || AudioPatches.InstallFirmware_Bazzite())
         {
             ProcessUtil.Run("reboot", "-f", useBash: false);
             return;

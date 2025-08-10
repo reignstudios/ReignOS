@@ -15,6 +15,18 @@
       <None Update="Firmware\aw87559\awinic_smartk_acf.bin">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Firmware\Bazzite\awinic\aw87xxx_acf_flip.bin">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Firmware\Bazzite\awinic\aw87xxx_acf_kun.bin">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Firmware\Bazzite\awinic\aw87xxx_acf_minipro.bin">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Firmware\Bazzite\awinic\aw87xxx_acf_orangepi.bin">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
       <None Update="Gamescope\AYA-AYAOLED_FHD.lua">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
@@ -54,6 +66,10 @@
         <None Update="SteamOS3\steamos-update-user">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Firmware\Bazzite\" />
     </ItemGroup>
 
     <Target Name="BuildNativeLibrary" AfterTargets="Publish">

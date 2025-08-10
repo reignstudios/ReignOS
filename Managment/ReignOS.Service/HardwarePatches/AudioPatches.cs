@@ -66,5 +66,43 @@ namespace ReignOS.Service.HardwarePatches
 
             return false;
         }
+
+        public static bool InstallFirmware_Bazzite()
+        {
+            bool result = false;
+            if (InstallFirmware_Bazzite("awinic/aw87xxx_acf_flip.bin", "aw87xxx_acf_flip.bin")) result = true;
+            if (InstallFirmware_Bazzite("awinic/aw87xxx_acf_kun.bin", "aw87xxx_acf_kun.bin")) result = true;
+            if (InstallFirmware_Bazzite("awinic/aw87xxx_acf_minipro.bin", "aw87xxx_acf_minipro.bin")) result = true;
+            if (InstallFirmware_Bazzite("awinic/aw87xxx_acf_orangepi.bin", "aw87xxx_acf_orangepi.bin")) result = true;
+            InstallFirmware_Bazzite_SysLink("aw87xxx_acf_minipro.bin", "aw87xxx_acf_air1s.bin");
+            InstallFirmware_Bazzite_SysLink("aw87xxx_acf_minipro.bin", "aw87xxx_acf_airplus.bin");
+            return result;
+        }
+
+        private static bool InstallFirmware_Bazzite(string srcFirmwareFile, string dstFirmwareFile)
+        {
+            const string firmwareFolder = "/usr/local/firmware/";
+            string firmwareFile = firmwareFolder + dstFirmwareFile;
+            if (File.Exists(firmwareFile)) return false;
+
+            try
+            {
+                Directory.CreateDirectory(firmwareFolder);
+                File.Copy("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Firmware/Bazzite/" + srcFirmwareFile, firmwareFile, true);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.WriteLine(e);
+            }
+
+            return false;
+        }
+
+        private static void InstallFirmware_Bazzite_SysLink(string file, string link)
+        {
+            const string firmwareFolder = "/usr/local/firmware/";
+            ProcessUtil.Run("ln", $"-s {firmwareFolder}{file} {firmwareFolder}{link}", useBash: false);
+        }
     }
 }
