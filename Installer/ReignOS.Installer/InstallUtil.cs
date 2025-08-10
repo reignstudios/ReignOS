@@ -596,6 +596,7 @@ static class InstallUtil
         // install kde
         Run("pacman", "-S --noconfirm zip unzip gzip bzip2 7zip xz");
         Run("pacman", "-S --noconfirm plasma konsole dolphin kate ark exfatprogs dosfstools partitionmanager");
+        Run("pacman", "-S --noconfirm btrfs-progs ntfs-3g");
         Run("pacman", "-S --noconfirm maliit-keyboard");
         Run("pacman", "-S --noconfirm qt5-wayland qt6-wayland");
         UpdateProgress(85);

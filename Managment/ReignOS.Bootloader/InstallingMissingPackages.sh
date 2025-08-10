@@ -28,6 +28,7 @@ sudo pacman -S --noconfirm --needed bolt
 sudo systemctl enable bolt.service
 
 sudo pacman -S --noconfirm --needed plasma konsole dolphin kate ark exfatprogs dosfstools partitionmanager
+sudo pacman -S --noconfirm --needed btrfs-progs ntfs-3g
 sudo pacman -S --noconfirm --needed maliit-keyboard
 sudo pacman -S --noconfirm --needed qt5-wayland qt6-wayland
 

@@ -77,6 +77,8 @@ static class PackageUpdates
         if (!PackageUtils.PackageExits("exfatprogs")) return true;
         if (!PackageUtils.PackageExits("dosfstools")) return true;
         if (!PackageUtils.PackageExits("partitionmanager")) return true;
+        if (!PackageUtils.PackageExits("btrfs-progs")) return true;
+        if (!PackageUtils.PackageExits("ntfs-3g")) return true;
         
         if (!PackageUtils.PackageExits("qt5-wayland")) return true;
         if (!PackageUtils.PackageExits("qt6-wayland")) return true;
