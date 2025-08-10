@@ -104,7 +104,7 @@ if [ "$HAS_UPDATES" = "true" ]; then
 fi
 
 # update or install Chimera or Bazzite Kernel
-KERNEL_USED=$(</bool/ReignOS_Kernel.txt)
+KERNEL_USED=$(</boot/ReignOS_Kernel.txt)
 if [[ "$KERNEL_USED" == "Arch" ]]; then
   sudo pacman --noconfirm -R linux-chimeraos # remove chimera kernel
   yay --noconfirm -R linux-bazzite-bin # remove bazzite kernel
