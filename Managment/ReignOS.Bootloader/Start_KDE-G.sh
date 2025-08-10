@@ -43,7 +43,8 @@ else
 fi
 
 # start KDE with steam
-kwin_wayland --lock --xwayland -- bash -c "$STEAM_LAUNCH" &
+REIGN_MONITOR=/home/gamer/ReignOS/Managment/ReignOS.Monitor/bin/Release/net8.0/linux-x64/publish/ReignOS.Monitor
+kwin_wayland --lock --xwayland -- bash -c "$REIGN_MONITOR & $STEAM_LAUNCH" &
 KWIN_PID=$!
 
 # wait for steam to start
