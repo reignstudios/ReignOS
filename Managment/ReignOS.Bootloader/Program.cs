@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text;
+using System.Text.RegularExpressions;
 
 namespace ReignOS.Bootloader;
 using ReignOS.Core;
@@ -314,13 +315,17 @@ internal class Program
             // start control center
             if (useControlCenter)
             {
-                string result = string.Empty;
+                var result = new StringBuilder();
                 void ControlCenter_StandardOut(string line)
                 {
-                    result += line + "\n";
+                    lock (result) result.AppendLine(line);
                     if (line == "ayaneo-popout-module" || line == "ayaneo-poppedin-module")
                     {
-                        if (!serviceProcess.HasExited) serviceProcess.StandardInput.WriteLine(line);
+                        try
+                        {
+                            if (!serviceProcess.HasExited) serviceProcess.StandardInput.WriteLine(line);
+                        }
+                        catch {}
                     }
                 }
 
@@ -347,11 +352,14 @@ internal class Program
                     ProcessUtil.Run("kwin_wayland", $"--lock --xwayland -- bash -c './Start_ControlCenter.sh -kde-g{ayaneoArg}'", out exitCode, useBash: true, standardOut:ControlCenter_StandardOut);// start ControlCenter
                 }
 
-                var resultValues = result.Split('\n');
-                var exitCodeValue = resultValues.FirstOrDefault(x => x.Contains("EXIT_CODE: "));// get ControlCenter exit code (Weston doesn't pass this back like Cage)
-                if (exitCodeValue != null)
+                lock (result)
                 {
-                    if (!int.TryParse(exitCodeValue.Replace("EXIT_CODE: ", ""), out exitCode)) exitCode = 0;
+                    var resultValues = result.ToString().Split('\n');
+                    var exitCodeValue = resultValues.FirstOrDefault(x => x.Contains("EXIT_CODE: "));// get ControlCenter exit code (Weston doesn't pass this back like Cage)
+                    if (exitCodeValue != null)
+                    {
+                        if (!int.TryParse(exitCodeValue.Replace("EXIT_CODE: ", ""), out exitCode)) exitCode = 0;
+                    }
                 }
 
                 bool exitLoop = false;

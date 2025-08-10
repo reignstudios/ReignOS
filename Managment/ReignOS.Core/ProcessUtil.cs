@@ -128,12 +128,6 @@ public static class ProcessUtil
                         }
                     }
 
-                    if (standardOut != null && !disableStdRead)
-                    {
-                        process.StandardOutput.BaseStream.Flush();
-                        process.StandardError.BaseStream.Flush();
-                    }
-
                     string resultOutput = string.Empty;
                     if (standardOut == null && !disableStdRead)
                     {
