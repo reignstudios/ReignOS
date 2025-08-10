@@ -182,7 +182,8 @@
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="MenuInputApplyButton_Click"/>
 							<RadioButton Name="reignOSInputCheckbox" Content="ReignOS" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 							<RadioButton Name="inputPlumberInputCheckbox" Content="InputPlumber" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="disableInputCheckbox" Content="Disable" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<RadioButton Name="hhdInputCheckbox" Content="HHD" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<RadioButton Name="disableInputCheckbox" Content="Disable" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						</Grid>
 					</Grid>
 					
@@ -385,7 +386,7 @@
 		</Grid>
 
 		<Grid Name="kernelManagerGrid" Margin="4" IsVisible="False">
-			<TextBlock Name="kernelArchConfigTextBox" Text="arch.conf" Background="#333333" VerticalAlignment="Top" Margin="0,0,200,0"/>
+			<TextBlock Name="kernelArchConfigTextBox" Text="arch.conf" Background="#333333" VerticalAlignment="Top" Margin="0,0,240,0"/>
 			<TextBlock Name="kernelVersionTextBox" Text="Kernel v0.0.0" Foreground="DarkGray" HorizontalAlignment="Right" VerticalAlignment="Top"/>
 			<TextBlock Text="Custom:" Margin="0,40,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 			<TextBox Name="kernelCustomTextuBox" Margin="64,32,0,0" VerticalAlignment="Top" TextChanged="KernelValue_OnIsCheckedChanged"/>

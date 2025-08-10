@@ -374,6 +374,7 @@ public partial class MainView : UserControl
                     {
                         if (parts[1] == "ReignOS") reignOSInputCheckbox.IsChecked = true;
                         else if (parts[1] == "InputPlumber") inputPlumberInputCheckbox.IsChecked = true;
+                        else if (parts[1] == "HHD") hhdInputCheckbox.IsChecked = true;
                         else if (parts[1] == "Disable") disableInputCheckbox.IsChecked = true;
                     }
                     else if (parts[0] == "AutoCheckUpdates")
@@ -536,6 +537,7 @@ public partial class MainView : UserControl
 
                 if (disableInputCheckbox.IsChecked == true) writer.WriteLine("Input=Disable");
                 else if (inputPlumberInputCheckbox.IsChecked == true) writer.WriteLine("Input=InputPlumber");
+                else if (hhdInputCheckbox.IsChecked == true) writer.WriteLine("Input=HHD");
                 else writer.WriteLine("Input=ReignOS");
 
                 if (autoCheckUpdatesCheckbox.IsChecked == true) writer.WriteLine("AutoCheckUpdates=On");
@@ -1354,6 +1356,7 @@ public partial class MainView : UserControl
                 string args = "";
                 if (reignOSInputCheckbox.IsChecked == true) args += " --input-reignos";
                 else if (inputPlumberInputCheckbox.IsChecked == true) args += " --input-inputplumber";
+                else if (hhdInputCheckbox.IsChecked == true) args += " --input-hhd";
                 else if (disableInputCheckbox.IsChecked == true) args += " --input-disable";
 
                 // apply options
@@ -1365,7 +1368,9 @@ public partial class MainView : UserControl
         File.WriteAllText(launchFile, text);
         SaveSettings();
 
-        App.exitCode = (inputPlumberInputCheckbox.IsChecked == true) ? 51 : 50;
+        if (inputPlumberInputCheckbox.IsChecked == true) App.exitCode = 51;
+        else if (hhdInputCheckbox.IsChecked == true) App.exitCode = 52;
+        else App.exitCode = 50;
         MainWindow.singleton.Close();
     }
 

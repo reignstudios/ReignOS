@@ -115,6 +115,13 @@ if [ $exit_code -eq 50 ]; then
   sudo systemctl stop inputplumber inputplumber-suspend
   sudo systemctl disable inputplumber inputplumber-suspend
   sudo pacman -R --noconfirm inputplumber
+  
+  echo "Uninstalling HHD..."
+  systemctl --user stop hhd-user
+  systemctl --user disable hhd-user
+  yay -R --noconfirm hhd-user
+  yay -R --noconfirm hhd
+  
   sleep 2
   sudo reboot -f
   exit 0
@@ -122,10 +129,31 @@ fi
 
 if [ $exit_code -eq 51 ]; then
   echo ""
+  echo "Uninstalling HHD..."
+  systemctl --user stop hhd-user
+  systemctl --user disable hhd-user
+  yay -R --noconfirm hhd-user
+  yay -R --noconfirm hhd
+  
   echo "Installing InputPlumber..."
   sudo pacman -S --noconfirm inputplumber
   sudo systemctl enable inputplumber inputplumber-suspend
   sudo systemctl start inputplumber inputplumber-suspend
+  sleep 2
+  sudo reboot -f
+  exit 0
+fi
+
+if [ $exit_code -eq 52 ]; then
+  echo ""
+  echo "Uninstalling InputPlumber..."
+  sudo systemctl stop inputplumber inputplumber-suspend
+  sudo systemctl disable inputplumber inputplumber-suspend
+  sudo pacman -R --noconfirm inputplumber
+  
+  echo "Installing HHD..."
+  yay -S --noconfirm hhd hhd-user
+  systemctl --user enable hhd-user
   sleep 2
   sudo reboot -f
   exit 0
