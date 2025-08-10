@@ -21,6 +21,8 @@ namespace ReignOS.Bootloader;
 // to decode edid
 // cat /sys/class/drm/card0-HDMI-A-1/edid | edid-decode
 
+// maybe wanted late packages: asusctl
+
 static class PackageUpdates
 {
     public static bool CheckUpdates()
@@ -69,6 +71,7 @@ static class PackageUpdates
 
         if (!PackageUtils.PackageExits("bluez")) return true;
         if (!PackageUtils.PackageExits("bluez-utils")) return true;
+        if (!PackageUtils.PackageExits("bcm20702a1-firmware")) return true;
 
         if (!PackageUtils.PackageExits("plasma-desktop")) return true;
         if (!PackageUtils.PackageExits("konsole")) return true;
@@ -109,6 +112,14 @@ static class PackageUpdates
         if (!PackageUtils.PackageExits("libva")) return true;
         if (!PackageUtils.PackageExits("libvdpau-va-gl")) return true;
         if (!PackageUtils.PackageExits("libdvdread")) return true;
+
+        if (!PackageUtils.PackageExits("ayaneo-platform-dkms-git")) return true;
+        if (!PackageUtils.PackageExits("ayn-platform-dkms-git")) return true;
+
+        if (!PackageUtils.PackageExits("rtl8812au-dkms-git")) return true;
+        if (!PackageUtils.PackageExits("rtl8814au-dkms-git")) return true;
+        if (!PackageUtils.PackageExits("rtl88x2bu-dkms-git")) return true;
+        if (!PackageUtils.PackageExits("rtl8821au-dkms-git")) return true;
 
         if (PackageUtils.PackageExits("acpid")) return true;
         

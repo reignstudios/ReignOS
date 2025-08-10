@@ -392,25 +392,37 @@ static class InstallUtil
 
         fileBuilder.AppendLine();// install MUX support
         fileBuilder.AppendLine("echo \"Installing NUX support...\"");
-        fileBuilder.AppendLine("yay -S supergfxctl --noconfirm");
+        fileBuilder.AppendLine("yay -S --noconfirm supergfxctl");
 
         fileBuilder.AppendLine();// install extra fonts
         fileBuilder.AppendLine("echo \"Installing extra fonts...\"");
-        fileBuilder.AppendLine("yay -S ttf-ms-fonts --noconfirm");
+        fileBuilder.AppendLine("yay -S --noconfirm ttf-ms-fonts");
         fileBuilder.AppendLine("fc-cache -fv");
 
         fileBuilder.AppendLine();// install steamcmd
         fileBuilder.AppendLine("echo \"Installing steamcmd...\"");
-        fileBuilder.AppendLine("yay -S steamcmd --noconfirm");
+        fileBuilder.AppendLine("yay -S --noconfirm steamcmd");
 
         fileBuilder.AppendLine();// install ProtonGE
         fileBuilder.AppendLine("echo \"Installing ProtonGE...\"");
-        fileBuilder.AppendLine("yay -S proton-ge-custom --noconfirm");
+        fileBuilder.AppendLine("yay -S --noconfirm proton-ge-custom");
 
         fileBuilder.AppendLine();// install DeckyLoader
         fileBuilder.AppendLine("echo \"Installing DeckyLoader...\"");
         fileBuilder.AppendLine("sudo pacman -S --noconfirm jq");
         fileBuilder.AppendLine("curl -L https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/install_release.sh | sh");
+
+        fileBuilder.AppendLine();// install misc drivers
+        fileBuilder.AppendLine("echo \"Installing Misc Drivers...\"");
+        fileBuilder.AppendLine("yay -S --noconfirm bcm20702a1-firmware");
+
+        fileBuilder.AppendLine("yay -S --noconfirm ayaneo-platform-dkms-git");
+        fileBuilder.AppendLine("yay -S --noconfirm ayn-platform-dkms-git");
+
+        fileBuilder.AppendLine("yay -S --noconfirm rtl8812au-dkms-git");
+        fileBuilder.AppendLine("yay -S --noconfirm rtl8814au-dkms-git");
+        fileBuilder.AppendLine("yay -S --noconfirm rtl88x2bu-dkms-git");
+        fileBuilder.AppendLine("yay -S --noconfirm rtl8821au-dkms-git");
 
         fileBuilder.AppendLine();// set volume to 100%
         fileBuilder.AppendLine("echo \"Setting volume to 100%...\"");

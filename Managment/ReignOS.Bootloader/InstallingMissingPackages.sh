@@ -3,8 +3,18 @@
 # remove old packages
 # nothing yet...
 
-# add pacman packages
+# add core pacman packages
 sudo pacman -S --noconfirm --needed linux-headers linux-tools
+
+# make sure yay installed
+if [ ! -d "/home/gamer/yay" ]; then
+	cd /home/gamer
+	git clone https://aur.archlinux.org/yay.git
+	cd /home/gamer/yay
+	makepkg -si --noconfirm
+fi
+
+# add pacman packages
 sudo pacman -S --noconfirm --needed jq
 sudo pacman -S --noconfirm --needed hwinfo
 sudo pacman -S --noconfirm --needed rsync
@@ -23,6 +33,7 @@ sudo pacman -S --noconfirm --needed pipewire pipewire-pulse pipewire-alsa pipewi
 
 sudo pacman -S --noconfirm --needed bluez bluez-utils
 sudo systemctl enable bluetooth
+yay -S --noconfirm --needed bcm20702a1-firmware
 
 sudo pacman -S --noconfirm --needed bolt
 sudo systemctl enable bolt.service
@@ -36,14 +47,6 @@ sudo pacman -S --noconfirm --needed wget
 sudo pacman -S --noconfirm --needed gparted
 sudo pacman -S --noconfirm --needed flatpak
 sudo pacman -S --noconfirm --needed zip unzip gzip bzip2 7zip xz
-
-# add yay packages
-if [ ! -d "/home/gamer/yay" ]; then
-	cd /home/gamer
-	git clone https://aur.archlinux.org/yay.git
-	cd /home/gamer/yay
-	makepkg -si --noconfirm
-fi
 
 yay -S --noconfirm --needed supergfxctl
 
@@ -61,6 +64,14 @@ sudo pacman -S --noconfirm --needed ffmpeg gstreamer gst-plugins-base gst-plugin
 sudo pacman -S --noconfirm --needed libva libva-utils gstreamer-vaapi
 sudo pacman -S --noconfirm --needed libvdpau-va-gl mesa-vdpau
 sudo pacman -S --noconfirm --needed libdvdread libdvdnav libdvdcss libbluray
+
+yay -S --noconfirm --needed ayaneo-platform-dkms-git
+yay -S --noconfirm --needed ayn-platform-dkms-git
+
+yay -S --noconfirm --needed rtl8812au-dkms-git
+yay -S --noconfirm --needed rtl8814au-dkms-git
+yay -S --noconfirm --needed rtl88x2bu-dkms-git
+yay -S --noconfirm --needed rtl8821au-dkms-git
 
 sudo systemctl stop acpid
 sudo systemctl disable acpid
