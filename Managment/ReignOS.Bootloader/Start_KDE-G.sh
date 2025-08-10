@@ -44,21 +44,22 @@ fi
 
 # start KDE with steam
 REIGN_MONITOR=/home/gamer/ReignOS/Managment/ReignOS.Monitor/bin/Release/net8.0/linux-x64/publish/ReignOS.Monitor
-kwin_wayland --lock --xwayland -- bash -c $($REIGN_MONITOR & $STEAM_LAUNCH) &
+#kwin_wayland --lock --xwayland -- bash -c "$STEAM_LAUNCH" &
+kwin_wayland --lock --xwayland --exit-with-session
 KWIN_PID=$!
 
 # wait for steam to start
-while ! pgrep -u gamer -x steam > /dev/null; do
-    sleep 1
-done
+#while ! pgrep -u gamer -x steam > /dev/null; do
+#    sleep 1
+#done
 
 # wait for steam to exit
-while pgrep -u gamer steam > /dev/null; do
-    sleep 1
-done
+#while pgrep -u gamer steam > /dev/null; do
+#    sleep 1
+#done
 
 # tell KDE to exit
-kill -15 $KWIN_PID 2>/dev/null || true
+#kill -15 $KWIN_PID 2>/dev/null || true
 
 # run post kill
 ./PostKill.sh &
