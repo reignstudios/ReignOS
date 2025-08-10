@@ -48,7 +48,7 @@ else
 fi
 
 # start KDE with steam
-if [ "$USE_MANGOHUB" = "true" ]; then
+if [ "$REIGN_MONITOR" = "true" ]; then
   REIGN_MONITOR_PATH=/home/gamer/ReignOS/Managment/ReignOS.Monitor/bin/Release/net8.0/linux-x64/publish/ReignOS.Monitor
   kwin_wayland --lock --xwayland -- bash -c '"$1" & exec "$2"' _ "$REIGN_MONITOR_PATH" "$STEAM_LAUNCH" &
 else
