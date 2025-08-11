@@ -223,7 +223,7 @@
 						<Grid>
 							<TextBlock Text="ReignOS.Monitor" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="ReignMonitorApplyButton_Click"/>
-							<CheckBox Name="reignMonitorCheckbox" Content="Auto Check Updates" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+							<CheckBox Name="reignMonitorCheckbox" Content="Enable" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 						</Grid>
 					</Grid>
 				</StackPanel>
