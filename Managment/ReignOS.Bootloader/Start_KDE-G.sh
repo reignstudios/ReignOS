@@ -56,7 +56,7 @@ if [ "$REIGN_MONITOR" = "true" ]; then
     /home/gamer/ReignOS/Managment/ReignOS.Monitor/bin/Release/net8.0/linux-x64/publish/ReignOS.Monitor &
     eval "$STEAM_LAUNCH"
     wmctrl -c "ReignOS.Monitor"
-  '
+  ' &
 else
   kwin_wayland --lock --xwayland -- bash -c "$STEAM_LAUNCH" &
 fi
@@ -71,7 +71,6 @@ done
 while pgrep -u gamer steam > /dev/null; do
     sleep 1
 done
-sleep 2
 
 # tell KDE to exit
 kill -15 $KWIN_PID 2>/dev/null || true
