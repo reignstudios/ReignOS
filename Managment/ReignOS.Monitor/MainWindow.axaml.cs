@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using System.Threading;
@@ -104,7 +105,7 @@ public partial class MainWindow : Window
         {
             foreach (string path in Directory.GetDirectories(hwPath))
             {
-                if (!path.StartsWith("hwmon")) continue;
+                if (!Regex.IsMatch(path, hwPath + "/hwmon")) continue;
                 
                 string hwPath_rpm = path + "/fan1_input";
                 if (!File.Exists(hwPath_rpm)) continue;
@@ -133,7 +134,7 @@ public partial class MainWindow : Window
         {
             foreach (string path in Directory.GetDirectories(hwPath))
             {
-                if (!path.StartsWith("hwmon")) continue;
+                if (!Regex.IsMatch(path, hwPath + "/hwmon")) continue;
                 
                 string hwPath_enable = path + "/pwm1_enable";
                 string hwPath_percentage = path + "/pwm1";
