@@ -66,6 +66,9 @@ while pgrep -u gamer steam > /dev/null; do
     sleep 1
 done
 
+# tell ReignOS.Monitor to close
+wmctrl -c "ReignOS.Monitor"
+
 # tell KDE to exit
 kill -15 $KWIN_PID 2>/dev/null || true
 sleep 5 # post-kill will sleep too but give extra time

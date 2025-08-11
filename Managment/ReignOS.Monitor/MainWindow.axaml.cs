@@ -13,17 +13,19 @@ public partial class MainWindow : Window
     private Timer timer;
     private double cpu, gpu, ram, vram;
     private int fan = -1;
-    private double lastFanSpeedValue;
+    private double lastFanSpeedValue = -1;
     
     public MainWindow()
     {
         InitializeComponent();
         if (Design.IsDesignMode) return;
+        Closing += OnClosing;
+        
         lastFanSpeedValue = fanSpeed.Value;
+        ApplyFanSettings(false, 255);
         
         // start monitor timer
         timer = new Timer(TimerCallback, null, 100, 5000);
-        Closing += OnClosing;
     }
 
     private void OnClosing(object? sender, WindowClosingEventArgs e)

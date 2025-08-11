@@ -614,6 +614,7 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm btrfs-progs ntfs-3g");
         Run("pacman", "-S --noconfirm maliit-keyboard");
         Run("pacman", "-S --noconfirm qt5-wayland qt6-wayland");
+        Run("pacman", "-S --noconfirm wmctrl");
         UpdateProgress(85);
 
         // install gparted
