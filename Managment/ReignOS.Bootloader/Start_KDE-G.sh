@@ -50,7 +50,7 @@ fi
 # start KDE with steam
 if [ "$REIGN_MONITOR" = "true" ]; then
   REIGN_MONITOR_PATH=/home/gamer/ReignOS/Managment/ReignOS.Monitor/bin/Release/net8.0/linux-x64/publish/ReignOS.Monitor
-  kwin_wayland --lock --xwayland -- bash -c '"$1" & exec "$2"' _ "$REIGN_MONITOR_PATH" "$STEAM_LAUNCH" &
+  kwin_wayland --lock --xwayland -- bash -c '"$1" & exec "$2" && exec "$3"' _ "$REIGN_MONITOR_PATH" "$STEAM_LAUNCH" "wmctrl -c ReignOS.Monitor" &
 else
   kwin_wayland --lock --xwayland -- bash -c "$STEAM_LAUNCH" &
 fi
@@ -65,10 +65,6 @@ done
 while pgrep -u gamer steam > /dev/null; do
     sleep 1
 done
-
-# tell ReignOS.Monitor to close
-wmctrl -c "ReignOS.Monitor"
-sleep 1
 
 # tell KDE to exit
 kill -15 $KWIN_PID 2>/dev/null || true
