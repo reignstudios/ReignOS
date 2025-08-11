@@ -417,6 +417,8 @@
                     * sudo pacman -Sy<br>
                     * sudo timedatectl set-ntp true<br>
                     * sudo hwclock --systohc<br>
+                    * COUNTRY=$(curl -s https://ipapi.co/country/)<br>
+                    * reflector --country $COUNTRY --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist<br>
                     * sudo pacman -Sy archlinux-keyring<br>
                     * sudo pacman-key --init<br>
                     * sudo pacman-key --populate archlinux<br>
