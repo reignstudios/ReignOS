@@ -188,9 +188,9 @@
                     * In Control-Center, use Bazzite Kernel and click Apply<br>
                     * In Control-Center, use InputPlumber and click Apply<br>
                     * In KDE, open Settings->Touchscreen and set these in Device list<br>
-                        - Set Device 1 "Target display" to "(0,0 1920*1080)"<br>
-                        - Set Device 2 "Target display" to "(468,1080 960*640)"<br>
-                        - Set Device 3 "Target display" to "Automatic"<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;- Set Device 1 "Target display" to "(0,0 1920*1080)"<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;- Set Device 2 "Target display" to "(468,1080 960*640)"<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;- Set Device 3 "Target display" to "Automatic"<br>
 
                     <p style="padding-left: 0px; margin: 0;"></p>
                     <b>- ReignOS Monitor app</b><br>
@@ -232,6 +232,23 @@
                 <li>Linux Pass: 'gamer' (changing this can break operation)</li>
                 <li>Linux root User: 'root' (changing this can break operation)</li>
                 <li>Linux root Pass: 'gamer' (changing this can break operation)</li>
+            </ul>
+        </div>
+
+        <div>
+            <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">Auto mount internal drives</h2>
+            <ul style="color: #888;">
+                <li>In KDE, open "KDE Partition Manager"</li>
+                <li>Unmount the partition you want to change setting on if mounted</li>
+                <li>Right-Click on partition and click "Edit Mount Point"</li>
+                <li>Change "Path" to something like "/mnt/games</li>
+                <li>Click, ok then reboot to confirm working</li>
+                <li>
+                    Once mounted you may need to change permission to write drive<br>
+                    * Right-Click in mounted drive and "Open Terminal Here"<br>
+                    * sudo chown -R gamer:gamer ./<br>
+                    * sudo chmod -R u+rwX ./<br>
+                </li>
             </ul>
         </div>
 
