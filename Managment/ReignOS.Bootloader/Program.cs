@@ -152,6 +152,7 @@ internal class Program
         ProcessUtil.Run("chmod", "+x ./Start_Labwc.sh", useBash:false);
         ProcessUtil.Run("chmod", "+x ./Start_X11.sh", useBash:false);
         ProcessUtil.Run("chmod", "+x ./Start_KDE-G.sh", useBash: false);
+        ProcessUtil.Run("chmod", "+x ./Start_KDE-G_LaunchSteam.sh", useBash: false);
 
         // detect if system needs package updates
         if (PackageUpdates.CheckUpdates())
