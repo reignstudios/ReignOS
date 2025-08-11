@@ -423,6 +423,8 @@ static class InstallUtil
         fileBuilder.AppendLine("yay -S --noconfirm rtl8814au-dkms-git");
         fileBuilder.AppendLine("yay -S --noconfirm rtl88x2bu-dkms-git");
         fileBuilder.AppendLine("yay -S --noconfirm rtl8821au-dkms-git");
+        
+        fileBuilder.AppendLine("yay -S --noconfirm ryzenadj");
 
         fileBuilder.AppendLine();// set volume to 100%
         fileBuilder.AppendLine("echo \"Setting volume to 100%...\"");

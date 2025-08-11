@@ -7,24 +7,45 @@
         Title="ReignOS.Monitor" SystemDecorations="None">
     <Grid>
         <StackPanel Margin="4">
-            <Grid>
+            <TextBlock Text="Status" HorizontalAlignment="Center"/>
+            <Separator Margin="0,4,0,4"/>
+            
+            <Grid Margin="0,4,0,0">
                 <TextBlock Text="CPU:"/>
-                <ProgressBar Name="cpuPercentage" Height="16" Margin="50,0,0,0"/>
+                <ProgressBar Name="cpuPercentage" Height="16" Margin="55,0,0,0"/>
             </Grid>
             
             <Grid Margin="0,4,0,0">
                 <TextBlock Text="GPU:"/>
-                <ProgressBar Name="gpuPercentage" Height="16" Margin="50,0,0,0"/>
+                <ProgressBar Name="gpuPercentage" Height="16" Margin="55,0,0,0"/>
             </Grid>
             
             <Grid Margin="0,4,0,0">
                 <TextBlock Text="RAM:"/>
-                <ProgressBar Name="ramPercentage" Height="16" Margin="50,0,0,0"/>
+                <ProgressBar Name="ramPercentage" Height="16" Margin="55,0,0,0"/>
             </Grid>
             
             <Grid Margin="0,4,0,0">
                 <TextBlock Text="VRAM:"/>
-                <ProgressBar Name="vramPercentage" Height="16" Margin="50,0,0,0"/>
+                <ProgressBar Name="vramPercentage" Height="16" Margin="55,0,0,0"/>
+            </Grid>
+            
+            <Grid Margin="0,4,0,0">
+                <TextBlock Text="Fan:"/>
+                <TextBlock Name="fanRPM" Height="16" Margin="55,0,0,0"/>
+            </Grid>
+            
+            <TextBlock Text="Control" HorizontalAlignment="Center" Margin="0,8,0,0"/>
+            <Separator Margin="0,4,0,4"/>
+            
+            <Grid Margin="0,4,0,0">
+                <TextBlock Text="Fan:" VerticalAlignment="Center"/>
+                <CheckBox Name="enableFanSpeed" Content="Enabled" Margin="55,0,0,0"/>
+            </Grid>
+            
+            <Grid Margin="0,4,0,0">
+                <TextBlock Text="Speed:" VerticalAlignment="Center"/>
+                <Slider Name="fanSpeed" Value="75" Margin="55,0,0,0"/>
             </Grid>
         </StackPanel>
     </Grid>

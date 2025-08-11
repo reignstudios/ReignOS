@@ -74,6 +74,8 @@ yay -S --noconfirm --needed rtl8814au-dkms-git
 yay -S --noconfirm --needed rtl88x2bu-dkms-git
 yay -S --noconfirm --needed rtl8821au-dkms-git
 
+yay -S --noconfirm --needed ryzenadj
+
 sudo systemctl stop acpid
 sudo systemctl disable acpid
 sudo pacman -R --noconfirm acpid

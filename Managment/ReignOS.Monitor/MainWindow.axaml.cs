@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using System.Threading;
@@ -10,27 +11,45 @@ public partial class MainWindow : Window
 {
     private Timer timer;
     private double cpu, gpu, ram, vram;
+    private int fan = -1;
+    private double lastFanSpeedValue;
     
     public MainWindow()
     {
         InitializeComponent();
         if (Design.IsDesignMode) return;
+        lastFanSpeedValue = fanSpeed.Value;
         
         // start monitor timer
         timer = new Timer(TimerCallback, null, 100, 5000);
+        Closing += OnClosing;
+    }
+
+    private void OnClosing(object? sender, WindowClosingEventArgs e)
+    {
+        ApplyFanSettings(false, 255);// disable manual fan control
     }
 
     private void TimerCallback(object? state)
     {
+        // get system status
         GetCPUStatus();
         GetGPUStatus();
         GetRAMStatus();
+        GetFanStatus();
+        
+        // update UI
         Dispatcher.UIThread.InvokeAsync(() =>
         {
             cpuPercentage.Value = cpu;
             gpuPercentage.Value = gpu;
             ramPercentage.Value = ram;
             vramPercentage.Value = vram;
+            if (fan >= 0) fanRPM.Text = $"RPM: {fan}";
+            else fanRPM.Text = "N/A";
+            
+            // apply fan speed
+            ApplyFanSpeed();
         });
     }
 
@@ -75,6 +94,50 @@ public partial class MainWindow : Window
         if (double.TryParse(result, out double value))
         {
             ram = value;
+        }
+    }
+
+    private void GetFanStatus()
+    {
+        const string hwPath = "/sys/devices/platform/oxp-platform/hwmon";
+        const string hwPath_rpm = hwPath + "/fan1_input";
+        if (Directory.Exists(hwPath))
+        {
+            foreach (string path in Directory.GetDirectories(hwPath))
+            {
+                if (!path.StartsWith("hwmon")) continue;
+                if (!File.Exists(hwPath_rpm)) continue;
+                string fanValue = File.ReadAllText(hwPath_rpm);
+                if (!int.TryParse(fanValue, out fan)) fan = -1;
+            }
+        }
+    }
+
+    private void ApplyFanSpeed()
+    {
+        if (enableFanSpeed.IsChecked != true) return;
+        if (lastFanSpeedValue != fanSpeed.Value)
+        {
+            lastFanSpeedValue = fanSpeed.Value;
+            byte hardwareFanValue = (byte)Math.Min((lastFanSpeedValue / 100) * 255, 255.0);
+            ApplyFanSettings(true, hardwareFanValue);
+        }
+    }
+
+    private static void ApplyFanSettings(bool enabled, byte speed)
+    {
+        const string hwPath = "/sys/devices/platform/oxp-platform/hwmon";
+        const string hwPath_enable = hwPath + "/pwm1_enable";
+        const string hwPath_percentage = hwPath + "/pwm1";
+        if (Directory.Exists(hwPath))
+        {
+            foreach (string path in Directory.GetDirectories(hwPath))
+            {
+                if (!path.StartsWith("hwmon")) continue;
+                if (!File.Exists(hwPath_enable) || !File.Exists(hwPath_percentage)) continue;
+                ProcessUtil.WriteAllTextAdmin(hwPath_enable, enabled ? "1" : "2");
+                if (enabled) ProcessUtil.WriteAllTextAdmin(hwPath_percentage, speed.ToString());
+            }
         }
     }
 }

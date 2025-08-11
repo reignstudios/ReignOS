@@ -121,6 +121,8 @@ static class PackageUpdates
         if (!PackageUtils.PackageExits("rtl8814au-dkms-git")) return true;
         if (!PackageUtils.PackageExits("rtl88x2bu-dkms-git")) return true;
         if (!PackageUtils.PackageExits("rtl8821au-dkms-git")) return true;
+        
+        if (!PackageUtils.PackageExits("ryzenadj")) return true;
 
         if (PackageUtils.PackageExits("acpid")) return true;
         
