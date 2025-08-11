@@ -159,8 +159,8 @@ if [[ "$KERNEL_USED" == "Cachy" ]]; then
   echo ""
   echo "ReignOS Checking Cachy-Kernel for updates..."
   sudo pacman --noconfirm -R linux-chimeraos # remove chimera kernel
-  yay --noconfirm --needed -R linux-bazzite-bin
-  yay --noconfirm -S linux-cachyos
+  yay --noconfirm -R linux-bazzite-bin
+  yay --noconfirm --needed -S linux-cachyos
 fi
 
 # update flatpaks (just run this first so they always get ran)
