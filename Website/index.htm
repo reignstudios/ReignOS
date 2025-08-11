@@ -91,32 +91,6 @@
         </ul>
 
         <div>
-            <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">Examples</h2>
-            <img src="Examples.jpg"
-                style="
-                width:512px; height:512px; display:block; object-fit:cover;
-
-                /* Bevel thickness */
-                --fade: 40px;
-
-                /* Four-side mask + intersection for 45° beveled corners */
-                -webkit-mask-image:
-                linear-gradient(to bottom, transparent 0, white var(--fade), white 100%),
-                linear-gradient(to left,   transparent 0, white var(--fade), white 100%),
-                linear-gradient(to top,    transparent 0, white var(--fade), white 100%),
-                linear-gradient(to right,  transparent 0, white var(--fade), white 100%);
-                -webkit-mask-composite: source-in, source-in, source-in;
-
-                mask-image:
-                linear-gradient(to bottom, transparent 0, white var(--fade), white 100%),
-                linear-gradient(to left,   transparent 0, white var(--fade), white 100%),
-                linear-gradient(to top,    transparent 0, white var(--fade), white 100%),
-                linear-gradient(to right,  transparent 0, white var(--fade), white 100%);
-                mask-composite: intersect;
-            "/>
-        </div>
-
-        <div>
             <h2 style="color: #aaa; padding: 20px 0px 0px 0px;">Known working hardware</h2>
             <ul style="color: #888;">
                 <li>Desktops, MiniPCs, Laptops etc</li>
@@ -201,20 +175,22 @@
                     <p style="padding-left: 0px; margin: 0;"></p>
                     <b>- Fix Audio</b><br>
                     <p style="padding-left: 20px; margin: 0;">
-                    * In Control-Center, use Bazzite or Chimera Kernel and click Apply<br>
+                    * In Control-Center, use Bazzite Kernel and click Apply<br>
 
                     <p style="padding-left: 0px; margin: 0;"></p>
                     <b>- Fix Default Display</b><br>
                     <p style="padding-left: 20px; margin: 0;">
-                    * In Control-Center, use Display page to "Enable" a specific display<br>
+                    * In Control-Center, use Display page to "Enable" a top display only<br>
 
                     <p style="padding-left: 0px; margin: 0;"></p>
                     <b>- Fix Touchscreens</b><br>
                     <p style="padding-left: 20px; margin: 0;">
                     * In Control-Center, use Bazzite Kernel and click Apply<br>
                     * In Control-Center, use InputPlumber and click Apply<br>
-                    * In KDE setup Touchscreens in settings to use correct display<br>
-                    * Now you can use KDE-G for a more console like experience as well<br>
+                    * In KDE, open Settings->Touchscreen and set these in Device list<br>
+                        - Set Device 1 "Target display" to "(0,0 1920*1080)"<br>
+                        - Set Device 2 "Target display" to "(468,1080 960*640)"<br>
+                        - Set Device 3 "Target display" to "Automatic"<br>
 
                     <p style="padding-left: 0px; margin: 0;"></p>
                     <b>- ReignOS Monitor app</b><br>
