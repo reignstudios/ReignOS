@@ -49,9 +49,14 @@ fi
 
 # start KDE with steam
 if [ "$REIGN_MONITOR" = "true" ]; then
-  REIGN_MONITOR_PATH=/home/gamer/ReignOS/Managment/ReignOS.Monitor/bin/Release/net8.0/linux-x64/publish/ReignOS.Monitor
-  EXIT_MONITOR="wmctrl -c ReignOS.Monitor"
-  kwin_wayland --lock --xwayland -- bash -c '"$1" & "$2" && "$3"' _ "$REIGN_MONITOR_PATH" "$STEAM_LAUNCH" "$EXIT_MONITOR" &
+  #REIGN_MONITOR_PATH=/home/gamer/ReignOS/Managment/ReignOS.Monitor/bin/Release/net8.0/linux-x64/publish/ReignOS.Monitor
+  #EXIT_MONITOR="wmctrl -c ReignOS.Monitor"
+  #kwin_wayland --lock --xwayland -- bash -c '"$1" & "$2" && "$3"' _ "$REIGN_MONITOR_PATH" "$STEAM_LAUNCH" "$EXIT_MONITOR" &
+  kwin_wayland --lock --xwayland -- bash -lc '
+    /home/gamer/ReignOS/Managment/ReignOS.Monitor/bin/Release/net8.0/linux-x64/publish/ReignOS.Monitor &
+    eval "$STEAM_LAUNCH"
+    wmctrl -c "ReignOS.Monitor"
+  '
 else
   kwin_wayland --lock --xwayland -- bash -c "$STEAM_LAUNCH" &
 fi
