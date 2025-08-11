@@ -205,7 +205,8 @@
 							<RadioButton Name="kernelArchCheckbox" Content="Arch" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 							<RadioButton Name="kernelChimeraCheckbox" Content="Chimera" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 							<RadioButton Name="kernelBazziteCheckbox" Content="Bazzite" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="kernelCachyCheckbox" Content="Cachy (Takes 30-60+ min, use AC pwr)" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="300"/>
+							<RadioButton Name="kernelCachyCheckbox" Content="Cachy" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="300"/>
+							<TextBlock Text="(Takes 30-60+ min, use AC pwr)" Margin="725,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="220" Foreground="Orange"/>
 						</Grid>
 					</Grid>
 					
