@@ -100,13 +100,15 @@ public partial class MainWindow : Window
     private void GetFanStatus()
     {
         const string hwPath = "/sys/devices/platform/oxp-platform/hwmon";
-        const string hwPath_rpm = hwPath + "/fan1_input";
         if (Directory.Exists(hwPath))
         {
             foreach (string path in Directory.GetDirectories(hwPath))
             {
                 if (!path.StartsWith("hwmon")) continue;
+                
+                string hwPath_rpm = path + "/fan1_input";
                 if (!File.Exists(hwPath_rpm)) continue;
+                
                 string fanValue = File.ReadAllText(hwPath_rpm);
                 if (!int.TryParse(fanValue, out fan)) fan = -1;
             }
@@ -127,14 +129,16 @@ public partial class MainWindow : Window
     private static void ApplyFanSettings(bool enabled, byte speed)
     {
         const string hwPath = "/sys/devices/platform/oxp-platform/hwmon";
-        const string hwPath_enable = hwPath + "/pwm1_enable";
-        const string hwPath_percentage = hwPath + "/pwm1";
         if (Directory.Exists(hwPath))
         {
             foreach (string path in Directory.GetDirectories(hwPath))
             {
                 if (!path.StartsWith("hwmon")) continue;
+                
+                string hwPath_enable = path + "/pwm1_enable";
+                string hwPath_percentage = path + "/pwm1";
                 if (!File.Exists(hwPath_enable) || !File.Exists(hwPath_percentage)) continue;
+                
                 ProcessUtil.WriteAllTextAdmin(hwPath_enable, enabled ? "1" : "2");
                 if (enabled) ProcessUtil.WriteAllTextAdmin(hwPath_percentage, speed.ToString());
             }
