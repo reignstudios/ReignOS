@@ -25,7 +25,7 @@ public partial class MainWindow : Window
 
         lastFanEnableValue = enableFanSpeed.IsChecked == true;
         lastFanSpeedValue = fanSpeed.Value;
-        ApplyFanSettings(false, 255);
+        ApplyFanSettings(lastFanEnableValue, (byte)Math.Min((lastFanSpeedValue / 100) * 255, 255.0));
         
         // start monitor timer
         timer = new Timer(TimerCallback, null, 100, 5000);
@@ -128,7 +128,7 @@ public partial class MainWindow : Window
             lastFanEnableValue = enableFanSpeed.IsChecked == true;
             lastFanSpeedValue = fanSpeed.Value;
             byte hardwareFanValue = (byte)Math.Min((lastFanSpeedValue / 100) * 255, 255.0);
-            ApplyFanSettings(true, hardwareFanValue);
+            ApplyFanSettings(lastFanEnableValue, hardwareFanValue);
         }
     }
 
