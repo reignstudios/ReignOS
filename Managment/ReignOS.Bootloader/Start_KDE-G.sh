@@ -27,22 +27,22 @@ done
 STEAM_LAUNCH=""
 if [ "$DISABLE_STEAM_DECK" = "true" ]; then
     if [ "$USE_MANGOHUB" = "true" ]; then
-        STEAM_LAUNCH="mangohud steam -bigpicture -no-cef-sandbox && wmctrl -c ReignOS.Monitor"
+        STEAM_LAUNCH="mangohud steam -bigpicture -no-cef-sandbox"
     else
         if [ "$DISABLE_STEAM_GPU" = "true" ]; then
-            STEAM_LAUNCH="env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -no-cef-sandbox && wmctrl -c ReignOS.Monitor"
+            STEAM_LAUNCH="env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -no-cef-sandbox"
         else
-            STEAM_LAUNCH="steam -bigpicture -no-cef-sandbox && wmctrl -c ReignOS.Monitor"
+            STEAM_LAUNCH="steam -bigpicture -no-cef-sandbox"
         fi
     fi
 else
     if [ "$USE_MANGOHUB" = "true" ]; then
-        STEAM_LAUNCH="mangohud steam -gamepadui -steamdeck -no-cef-sandbox && wmctrl -c ReignOS.Monitor"
+        STEAM_LAUNCH="mangohud steam -gamepadui -steamdeck -no-cef-sandbox"
     else
         if [ "$DISABLE_STEAM_GPU" = "true" ]; then
-            STEAM_LAUNCH="env MESA_GL_VERSION_OVERRIDE=1.3 steam -gamepadui -steamdeck -no-cef-sandbox && wmctrl -c ReignOS.Monitor"
+            STEAM_LAUNCH="env MESA_GL_VERSION_OVERRIDE=1.3 steam -gamepadui -steamdeck -no-cef-sandbox"
         else
-            STEAM_LAUNCH="steam -gamepadui -steamdeck -no-cef-sandbox && wmctrl -c ReignOS.Monitor"
+            STEAM_LAUNCH="steam -gamepadui -steamdeck -no-cef-sandbox"
         fi
     fi
 fi
@@ -50,7 +50,8 @@ fi
 # start KDE with steam
 if [ "$REIGN_MONITOR" = "true" ]; then
   REIGN_MONITOR_PATH=/home/gamer/ReignOS/Managment/ReignOS.Monitor/bin/Release/net8.0/linux-x64/publish/ReignOS.Monitor
-  kwin_wayland --lock --xwayland -- bash -c '"$1" & exec "$2"' _ "$REIGN_MONITOR_PATH" "$STEAM_LAUNCH" &
+  EXIT_MONITOR="wmctrl -c ReignOS.Monitor"
+  kwin_wayland --lock --xwayland -- bash -c '"$1" & "$2" && "$3"' _ "$REIGN_MONITOR_PATH" "$STEAM_LAUNCH" "$EXIT_MONITOR" &
 else
   kwin_wayland --lock --xwayland -- bash -c "$STEAM_LAUNCH" &
 fi
