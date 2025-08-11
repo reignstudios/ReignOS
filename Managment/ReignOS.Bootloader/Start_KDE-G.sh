@@ -55,7 +55,7 @@ done
 #else
   #kwin_wayland --lock --xwayland -- bash -c "$STEAM_LAUNCH" &
 #fi
-kwin_wayland --lock --xwayland -- /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_KDE-G_LaunchSteam.sh $@ &
+kwin_wayland --lock --xwayland -- bash -c "/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_KDE-G_LaunchSteam.sh $@" &
 KWIN_PID=$!
 
 # wait for steam to start
