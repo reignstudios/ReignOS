@@ -45,7 +45,7 @@
             
             <Grid Margin="0,4,0,0">
                 <TextBlock Text="Speed:" VerticalAlignment="Center"/>
-                <Slider Name="fanSpeed" Value="75" Margin="55,0,0,0"/>
+                <Slider Name="fanSpeed" Value="100" Margin="55,0,0,0"/>
             </Grid>
         </StackPanel>
     </Grid>

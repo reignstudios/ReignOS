@@ -13,14 +13,17 @@ public partial class MainWindow : Window
     private Timer timer;
     private double cpu, gpu, ram, vram;
     private int fan = -1;
-    private double lastFanSpeedValue = -1;
+
+    private bool lastFanEnableValue;
+    private double lastFanSpeedValue;
     
     public MainWindow()
     {
         InitializeComponent();
         if (Design.IsDesignMode) return;
         Closing += OnClosing;
-        
+
+        lastFanEnableValue = enableFanSpeed.IsChecked == true;
         lastFanSpeedValue = fanSpeed.Value;
         ApplyFanSettings(false, 255);
         
@@ -120,9 +123,9 @@ public partial class MainWindow : Window
 
     private void ApplyFanSpeed()
     {
-        if (enableFanSpeed.IsChecked != true) return;
-        if (lastFanSpeedValue != fanSpeed.Value)
+        if (lastFanEnableValue != enableFanSpeed.IsChecked || lastFanSpeedValue != fanSpeed.Value)
         {
+            lastFanEnableValue = enableFanSpeed.IsChecked == true;
             lastFanSpeedValue = fanSpeed.Value;
             byte hardwareFanValue = (byte)Math.Min((lastFanSpeedValue / 100) * 255, 255.0);
             ApplyFanSettings(true, hardwareFanValue);

@@ -68,6 +68,7 @@ done
 
 # tell ReignOS.Monitor to close
 wmctrl -c "ReignOS.Monitor"
+sleep 1
 
 # tell KDE to exit
 kill -15 $KWIN_PID 2>/dev/null || true
