@@ -55,6 +55,8 @@ else
     fi
 fi
 
+# Other options: --use-gl=desktop --disable-gpu-sandbox --enable-gpu-rasterization --ignore-gpu-blocklist --enable-zero-copy --enable-native-gpu-memory-buffers
+
 # -gamepadui (newer)
 # -tenfoot (older)
 # -bigpicture (oldest)

@@ -100,7 +100,8 @@ class DisplaySetting
 enum KernelSettingsCopy
 {
     Chimera,
-    Bazzite
+    Bazzite,
+    Cachy
 }
 
 public partial class MainView : UserControl
@@ -398,6 +399,7 @@ public partial class MainView : UserControl
                         if (parts[1] == "Arch") kernelArchCheckbox.IsChecked = true;
                         else if (parts[1] == "Chimera") kernelChimeraCheckbox.IsChecked = true;
                         else if (parts[1] == "Bazzite") kernelBazziteCheckbox.IsChecked = true;
+                        else if (parts[1] == "Cachy") kernelCachyCheckbox.IsChecked = true;
                     }
                     else if (parts[0] == "Rest")
                     {
@@ -552,6 +554,7 @@ public partial class MainView : UserControl
                 if (kernelArchCheckbox.IsChecked == true) writer.WriteLine("Kernel=Arch");
                 else if (kernelChimeraCheckbox.IsChecked == true) writer.WriteLine("Kernel=Chimera");
                 else if (kernelBazziteCheckbox.IsChecked == true) writer.WriteLine("Kernel=Bazzite");
+                else if (kernelCachyCheckbox.IsChecked == true) writer.WriteLine("Kernel=Cachy");
 
                 if (restSleepCheckbox.IsChecked == true) writer.WriteLine("Rest=Sleep");
                 else if (restHibernateCheckbox.IsChecked == true) writer.WriteLine("Rest=Hibernate");
@@ -1420,6 +1423,13 @@ public partial class MainView : UserControl
             ProcessUtil.WriteAllTextAdmin("/boot/ReignOS_Kernel.txt", "Bazzite");
             CopyKernelConf(KernelSettingsCopy.Bazzite);
         }
+        else if (kernelCachyCheckbox.IsChecked == true)
+        {
+            RemoveEntries(ref loader);
+            loader += "\ndefault cachy.conf";
+            ProcessUtil.WriteAllTextAdmin("/boot/ReignOS_Kernel.txt", "Cachy");
+            CopyKernelConf(KernelSettingsCopy.Cachy);
+        }
 
         ProcessUtil.WriteAllTextAdmin("/boot/loader/loader.conf", loader);
         SaveSettings();
@@ -1494,6 +1504,7 @@ public partial class MainView : UserControl
                     ProcessUtil.WriteAllTextAdmin(filename, text);
                     CopyKernelConf(KernelSettingsCopy.Chimera);
                     CopyKernelConf(KernelSettingsCopy.Bazzite);
+                    CopyKernelConf(KernelSettingsCopy.Cachy);
                 }
             }
         }
@@ -1577,6 +1588,7 @@ public partial class MainView : UserControl
                 ProcessUtil.WriteAllTextAdmin(filename, text);
                 CopyKernelConf(KernelSettingsCopy.Chimera);
                 CopyKernelConf(KernelSettingsCopy.Bazzite);
+                CopyKernelConf(KernelSettingsCopy.Cachy);
             }
         }
 
@@ -2282,6 +2294,7 @@ public partial class MainView : UserControl
         ProcessUtil.WriteAllTextAdmin("/boot/loader/entries/arch.conf", archConf);
         CopyKernelConf(KernelSettingsCopy.Chimera);
         CopyKernelConf(KernelSettingsCopy.Bazzite);
+        CopyKernelConf(KernelSettingsCopy.Cachy);
 
         // reboot
         if (kernel_snd_hda_intel_DisableSleep_Checkbox.IsChecked == true || kernel_snd_hda_intel_DisableHDMI_Checkbox.IsChecked == true)
@@ -2312,6 +2325,15 @@ public partial class MainView : UserControl
             string copyConf = File.ReadAllText(targetKernelConfig);
             copyConf = copyConf.Replace("linux /vmlinuz-linux", "linux vmlinuz-linux-bazzite");
             copyConf = copyConf.Replace("initrd /initramfs-linux.img", "initrd /initramfs-linux-bazzite.img");
+            ProcessUtil.WriteAllTextAdmin(targetKernelConfig, copyConf);
+        }
+        else if (target == KernelSettingsCopy.Cachy)
+        {
+            const string targetKernelConfig = "/boot/loader/entries/cachy.conf";
+            ProcessUtil.CopyFileAdmin("/boot/loader/entries/arch.conf", targetKernelConfig);
+            string copyConf = File.ReadAllText(targetKernelConfig);
+            copyConf = copyConf.Replace("linux /vmlinuz-linux", "linux vmlinuz-linux-cachyos");
+            copyConf = copyConf.Replace("initrd /initramfs-linux.img", "initrd /initramfs-linux-cachyos.img");
             ProcessUtil.WriteAllTextAdmin(targetKernelConfig, copyConf);
         }
     }
