@@ -657,9 +657,9 @@ public partial class MainView : UserControl
             {
                 if (partitionEXT4 == null) return false;
                 
-                const ulong size32GB = 32ul * 1024 * 1024 * 1024;
+                const ulong size48GB = 48ul * 1024 * 1024 * 1024;
                 bool validNameEXT4 = partitionEXT4.name == ext4PartitionName;
-                bool validSizeEXT4 = partitionEXT4.size >= size32GB;
+                bool validSizeEXT4 = partitionEXT4.size >= size48GB;
                 bool validFormatExt4 = partitionEXT4.fileSystem == "ext4";
                 if (!validNameEXT4 || !validSizeEXT4 || !validFormatExt4) return false;
             }
