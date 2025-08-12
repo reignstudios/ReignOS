@@ -237,6 +237,7 @@
 			
 			<StackPanel Margin="245,0,4,4" Height="42" VerticalAlignment="Bottom" Background="#000040" Orientation="Horizontal" FlowDirection="RightToLeft">
 				<Button Content="Check Updates" Background="OrangeRed" Margin="4,0,0,0" Click="CheckUpdatesButton_Click"/>
+				<Button Content="Fix Updates" Background="Blue" Margin="4,0,0,0" Click="FixUpdatesButton_Click"/>
 				<Button Content="Kernel" Margin="4,0,0,0" Click="KernelManagerButton_OnClick"/>
 				<Button Content="GPU" Margin="4,0,0,0" Click="GPUUtilsButton_OnClick"/>
 				<Button Content="Boot" Margin="4,0,0,0" Click="BootManagerButton_OnClick"/>

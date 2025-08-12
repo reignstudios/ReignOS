@@ -1183,10 +1183,16 @@ public partial class MainView : UserControl
     private void CheckUpdatesButton_Click(object sender, RoutedEventArgs e)
     {
         if (sender is int value) App.exitCode = value;
-        else App.exitCode = 17;// close Managment and launch CheckUpdates.sh
+        else App.exitCode = 17;// close Managment and check updates
         MainWindow.singleton.Close();
     }
-    
+
+    private void FixUpdatesButton_Click(object sender, RoutedEventArgs e)
+    {
+        App.exitCode = 14;// close Managment and fix updates
+        MainWindow.singleton.Close();
+    }
+
     private void ExitButton_Click(object sender, RoutedEventArgs e)
     {
         App.exitCode = 20;// close Managment and go to virtual terminal
