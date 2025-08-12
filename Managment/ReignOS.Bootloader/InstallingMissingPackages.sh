@@ -19,6 +19,7 @@ sudo pacman -S --noconfirm --needed jq
 sudo pacman -S --noconfirm --needed hwinfo
 sudo pacman -S --noconfirm --needed sysstat
 sudo pacman -S --noconfirm --needed rsync
+sudo pacman -S --noconfirm --needed reflector
 
 sudo pacman -S --noconfirm --needed wayland-utils
 sudo pacman -S --noconfirm --needed wlr-randr gamescope cage labwc weston

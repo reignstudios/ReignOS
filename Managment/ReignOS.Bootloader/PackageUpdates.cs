@@ -50,6 +50,7 @@ static class PackageUpdates
         if (!PackageUtils.PackageExits("hwinfo")) return true;
         if (!PackageUtils.PackageExits("sysstat")) return true;
         if (!PackageUtils.PackageExits("rsync")) return true;
+        if (!PackageUtils.PackageExits("reflector")) return true;
 
         if (!PackageUtils.PackageExits("wayland-utils")) return true;
         if (!PackageUtils.PackageExits("weston")) return true;
