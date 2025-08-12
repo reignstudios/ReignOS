@@ -46,14 +46,15 @@ if [ $exit_code -eq 14 ]; then
   echo ""
   echo "ReignOS (Fix updates)..."
 
-  sudo pacman -Sy
+  sudo pacman -Sy --noconfirm
   sudo timedatectl set-ntp true
+  sleep 1
   sudo hwclock --systohc
 
   COUNTRY=$(curl -s https://ipapi.co/country/)
   reflector --country $COUNTRY --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
-  sudo pacman -Sy archlinux-keyring
+  sudo pacman -Sy archlinux-keyring --noconfirm
   sudo pacman-key --init
   sudo pacman-key --populate archlinux
   sudo pacman-key --refresh-keys
