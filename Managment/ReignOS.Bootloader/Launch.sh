@@ -59,7 +59,7 @@ if [ $exit_code -eq 14 ]; then
   sudo pacman-key --populate archlinux
   sudo pacman-key --refresh-keys
   sudo pacman-key --updatedb
-  sudo pacman -Sy
+  sudo pacman -Sy --noconfirm
 
   ./Update.sh
   sudo reboot -f
