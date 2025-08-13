@@ -2,6 +2,9 @@
 
 echo $@ > /home/gamer/test.txt
 
+# convert args
+set -- $1
+
 # args
 USE_MANGOHUB=false
 DISABLE_STEAM_GPU=false
