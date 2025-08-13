@@ -1,9 +1,8 @@
 #!/bin/bash
 
-echo $@ > /home/gamer/test.txt
-
 # convert args
 set -- $1
+echo $@ > /home/gamer/test.txt
 
 # args
 USE_MANGOHUB=false
