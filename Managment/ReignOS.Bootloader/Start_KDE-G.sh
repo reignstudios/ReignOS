@@ -4,7 +4,8 @@ echo $@ > /home/gamer/test2.txt
 
 # start KDE
 #kwin_wayland --lock --xwayland -- bash -c "/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_KDE-G_LaunchSteam.sh $@" &
-kwin_wayland --lock --xwayland -- /bin/bash "/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_KDE-G_LaunchSteam.sh" "$@" &
+launch=(/bin/bash "/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_KDE-G_LaunchSteam.sh" "$@")
+kwin_wayland --lock --xwayland -- "${launch[@]}" &
 #kwin_wayland --lock --xwayland -- bash -lc '/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_KDE-G_LaunchSteam.sh "$@"' _ "$@" &
 KWIN_PID=$!
 
