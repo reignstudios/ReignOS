@@ -28,11 +28,14 @@ if [ "$REIGN_MONITOR" = "true" ]; then
   /home/gamer/ReignOS/Managment/ReignOS.Monitor/bin/Release/net8.0/linux-x64/publish/ReignOS.Monitor &
 fi
 
+# MangoHud config
+MANGOHUD_CONFIG="horizontal,position=top-center,hud_no_margin,horizontal_stretch,table_columns=100,cpu_power,gpu_power,throttling_status,battery,battery_watt,battery_time,battery_icon=0"
+
 # start steam
 STEAM_LAUNCH=""
 if [ "$DISABLE_STEAM_DECK" = "true" ]; then
     if [ "$USE_MANGOHUB" = "true" ]; then
-        MANGOHUD_CONFIG="horizontal,position=top-center,hud_no_margin,horizontal_stretch,table_columns=100" mangohud steam -bigpicture -no-cef-sandbox
+        mangohud steam -bigpicture -no-cef-sandbox
     else
         if [ "$DISABLE_STEAM_GPU" = "true" ]; then
             env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -no-cef-sandbox
@@ -42,7 +45,7 @@ if [ "$DISABLE_STEAM_DECK" = "true" ]; then
     fi
 else
     if [ "$USE_MANGOHUB" = "true" ]; then
-        MANGOHUD_CONFIG="horizontal,position=top-center,hud_no_margin,horizontal_stretch,table_columns=100" mangohud steam -gamepadui -steamdeck -no-cef-sandbox
+        mangohud steam -gamepadui -steamdeck -no-cef-sandbox
     else
         if [ "$DISABLE_STEAM_GPU" = "true" ]; then
             env MESA_GL_VERSION_OVERRIDE=1.3 steam -gamepadui -steamdeck -no-cef-sandbox
