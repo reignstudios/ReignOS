@@ -24,10 +24,10 @@ for arg in "$@"; do
 done
 
 # start monitor
-#if [ "$REIGN_MONITOR" = "true" ]; then
+if [ "$REIGN_MONITOR" = "true" ]; then
   /home/gamer/ReignOS/Managment/ReignOS.Monitor/bin/Release/net8.0/linux-x64/publish/ReignOS.Monitor &
   sleep 10
-#fi
+fi
 
 # start steam
 STEAM_LAUNCH=""
