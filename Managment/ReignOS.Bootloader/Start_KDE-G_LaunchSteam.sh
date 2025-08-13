@@ -26,7 +26,7 @@ done
 # start monitor
 if [ "$REIGN_MONITOR" = "true" ]; then
   exec /home/gamer/ReignOS/Managment/ReignOS.Monitor/bin/Release/net8.0/linux-x64/publish/ReignOS.Monitor &
-  sleep 2
+  sleep 10
 fi
 
 # start steam
