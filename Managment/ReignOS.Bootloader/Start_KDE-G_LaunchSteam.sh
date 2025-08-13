@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo $@ > /home/gamer/test.txt
+
 # args
 USE_MANGOHUB=false
 DISABLE_STEAM_GPU=false
