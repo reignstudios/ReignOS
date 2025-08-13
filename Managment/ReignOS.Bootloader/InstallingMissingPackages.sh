@@ -12,6 +12,7 @@ if [ ! -d "/home/gamer/yay" ]; then
 	git clone https://aur.archlinux.org/yay.git
 	cd /home/gamer/yay
 	makepkg -si --noconfirm
+	yay -Syy --noconfirm
 fi
 
 # add pacman packages
