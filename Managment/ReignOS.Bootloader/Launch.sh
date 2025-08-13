@@ -51,7 +51,7 @@ if [ $exit_code -eq 14 ]; then
   sleep 1
   sudo hwclock --systohc
 
-  COUNTRY=$(curl -s https://ipapi.co/country/)
+  COUNTRY=$(curl -s https://ifconfig.co/country-iso)
   reflector --country $COUNTRY --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
   sudo pacman -Sy archlinux-keyring --noconfirm

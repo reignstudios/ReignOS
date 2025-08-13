@@ -384,6 +384,9 @@ static class InstallUtil
         fileBuilder.AppendLine("    sleep infinity");
         fileBuilder.AppendLine("fi");
 
+        fileBuilder.AppendLine();// stop on any error
+        fileBuilder.AppendLine("set -e");
+
         fileBuilder.AppendLine();// update pacman
         fileBuilder.AppendLine("sudo pacman -Sy --noconfirm");
 
@@ -394,7 +397,7 @@ static class InstallUtil
         fileBuilder.AppendLine("timedatectl");// log time
 
         fileBuilder.AppendLine();// update mirror list to use newer versions
-        fileBuilder.AppendLine("COUNTRY=$(curl -s https://ipapi.co/country/)");
+        fileBuilder.AppendLine("COUNTRY=$(curl -s https://ifconfig.co/country-iso)");
         fileBuilder.AppendLine("sudo reflector --country $COUNTRY --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist");
 
         fileBuilder.AppendLine();// update keyring
