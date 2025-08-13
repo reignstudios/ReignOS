@@ -4,7 +4,10 @@ echo $@ > /home/gamer/test2.txt
 
 # start KDE
 #kwin_wayland --lock --xwayland -- bash -c "/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_KDE-G_LaunchSteam.sh $@" &
-kwin_wayland --lock --xwayland -- bash -c "/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_KDE-G_LaunchSteam.sh --use-mangohub --reign-monitor" &
+#kwin_wayland --lock --xwayland -- bash -c "/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_KDE-G_LaunchSteam.sh --use-mangohub --reign-monitor" &
+
+ARGS=$(printf ' %q' "$@") # flatten args
+kwin_wayland --lock --xwayland -- bash -c "/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_KDE-G_LaunchSteam.sh$ARGS" &
 
 #launch=(/bin/bash "/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_KDE-G_LaunchSteam.sh" "$@")
 #kwin_wayland --lock --xwayland -- "${launch[@]}" &
