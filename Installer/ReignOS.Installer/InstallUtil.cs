@@ -362,6 +362,8 @@ static class InstallUtil
         fileBuilder = new StringBuilder();
         fileBuilder.AppendLine("#!/bin/bash");
         fileBuilder.AppendLine("echo \"ReignOS: Running FirstRun post-install tasks...\"");
+        fileBuilder.AppendLine("echo \"NOTE: This will take some time, let it finish!\"");
+        fileBuilder.AppendLine("sleep 5");
         fileBuilder.AppendLine();// make sure we have network still or install needs to fail until it does
         fileBuilder.AppendLine("NetworkUp=false");
         fileBuilder.AppendLine("for i in $(seq 1 30); do");
@@ -381,6 +383,26 @@ static class InstallUtil
         fileBuilder.AppendLine("    echo \"Network is required for FirstRun to complete. FAILED!\"");
         fileBuilder.AppendLine("    sleep infinity");
         fileBuilder.AppendLine("fi");
+
+        fileBuilder.AppendLine();// update pacman
+        fileBuilder.AppendLine("sudo pacman -Sy --noconfirm");
+
+        fileBuilder.AppendLine();// update time
+        fileBuilder.AppendLine("sudo timedatectl set-ntp true");
+        fileBuilder.AppendLine("sudo hwclock --systohc");
+        fileBuilder.AppendLine("sleep 1");
+        fileBuilder.AppendLine("timedatectl");// log time
+
+        fileBuilder.AppendLine();// update mirror list to use newer versions
+        fileBuilder.AppendLine("COUNTRY=$(curl -s https://ipapi.co/country/)");
+        fileBuilder.AppendLine("sudo reflector --country $COUNTRY --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist");
+
+        fileBuilder.AppendLine();// update keyring
+        fileBuilder.AppendLine("sudo pacman -Sy archlinux-keyring --noconfirm");
+        fileBuilder.AppendLine("sudo pacman-key --init");
+        fileBuilder.AppendLine("sudo pacman-key --populate archlinux");
+        fileBuilder.AppendLine("sudo pacman-key --refresh-keys");
+        fileBuilder.AppendLine("sudo pacman-key --updatedb");
 
         fileBuilder.AppendLine();// install yay
         fileBuilder.AppendLine("echo \"Installing yay support...\"");
