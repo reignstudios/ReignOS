@@ -32,7 +32,7 @@ fi
 STEAM_LAUNCH=""
 if [ "$DISABLE_STEAM_DECK" = "true" ]; then
     if [ "$USE_MANGOHUB" = "true" ]; then
-        MANGOHUD_CONFIG="position=top-center,no_display=0" mangohud steam -bigpicture -no-cef-sandbox
+        MANGOHUD_CONFIG="horizontal,position=top-center,hud_no_margin,horizontal_stretch,table_columns=100" mangohud steam -bigpicture -no-cef-sandbox
     else
         if [ "$DISABLE_STEAM_GPU" = "true" ]; then
             env MESA_GL_VERSION_OVERRIDE=1.3 steam -bigpicture -no-cef-sandbox
@@ -42,7 +42,7 @@ if [ "$DISABLE_STEAM_DECK" = "true" ]; then
     fi
 else
     if [ "$USE_MANGOHUB" = "true" ]; then
-        MANGOHUD_CONFIG="position=top-center,no_display=0" mangohud steam -gamepadui -steamdeck -no-cef-sandbox
+        MANGOHUD_CONFIG="horizontal,position=top-center,hud_no_margin,horizontal_stretch,table_columns=100" mangohud steam -gamepadui -steamdeck -no-cef-sandbox
     else
         if [ "$DISABLE_STEAM_GPU" = "true" ]; then
             env MESA_GL_VERSION_OVERRIDE=1.3 steam -gamepadui -steamdeck -no-cef-sandbox
