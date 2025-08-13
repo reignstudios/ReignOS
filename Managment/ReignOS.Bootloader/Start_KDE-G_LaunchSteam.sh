@@ -32,7 +32,7 @@ fi
 STEAM_LAUNCH=""
 if [ "$DISABLE_STEAM_DECK" = "true" ]; then
     if [ "$USE_MANGOHUB" = "true" ]; then
-        MANGOHUD_CONFIG="horizontal,position=top-center,hud_no_margin,horizontal_stretch,table_columns=100,cpu_power,gpu_power,throttling_status,battery,battery_watt,battery_time,battery_icon=0" \
+        MANGOHUD_CONFIG="horizontal,position=top-center,hud_no_margin,horizontal_stretch,table_columns=100,cpu_power,gpu_power,cpu_temp,gpu_temp,battery" \
         mangohud steam -bigpicture -no-cef-sandbox
     else
         if [ "$DISABLE_STEAM_GPU" = "true" ]; then
@@ -43,7 +43,7 @@ if [ "$DISABLE_STEAM_DECK" = "true" ]; then
     fi
 else
     if [ "$USE_MANGOHUB" = "true" ]; then
-        MANGOHUD_CONFIG="horizontal,position=top-center,hud_no_margin,horizontal_stretch,table_columns=100,cpu_power,gpu_power,throttling_status,battery,battery_watt,battery_time,battery_icon=0" \
+        MANGOHUD_CONFIG="horizontal,position=top-center,hud_no_margin,horizontal_stretch,table_columns=100,cpu_power,gpu_power,cpu_temp,gpu_temp,battery" \
         mangohud steam -gamepadui -steamdeck -no-cef-sandbox
     else
         if [ "$DISABLE_STEAM_GPU" = "true" ]; then
