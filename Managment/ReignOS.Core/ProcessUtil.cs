@@ -24,6 +24,7 @@ public static class ProcessUtil
 
     public static string Run(string name, string args, out int exitCode, Dictionary<string,string> enviromentVars = null, bool wait = true, bool asAdmin = false, bool enterAdminPass = false, bool useBash = true, ProcessOutputDelegate standardOut = null, ProcessInputDelegate getStandardInput = null, string workingDir = null, bool log = true, bool verboseLog = false, bool disableStdRead = false, int killAfterSec = -1)
     {
+        if (!string.IsNullOrEmpty(name)) name = name.Trim();
         try
         {
             using (var process = new Process())
@@ -32,20 +33,20 @@ public static class ProcessUtil
                 {
                     process.StartInfo.FileName = "sudo";
                     string adminArg = enterAdminPass ? "-S -- " : "";
-                    if (useBash) process.StartInfo.Arguments = $"{adminArg}bash -c \"{name} {args}\"";
-                    else process.StartInfo.Arguments = $"{adminArg}{name} {args}";
+                    if (useBash) process.StartInfo.Arguments = $"{adminArg}bash -c \"{name} {args}\"".Trim();
+                    else process.StartInfo.Arguments = $"{adminArg}{name} {args}".Trim();
                 }
                 else
                 {
                     if (useBash)
                     {
                         process.StartInfo.FileName = "bash";
-                        process.StartInfo.Arguments = $"-c \"{name} {args}\"";
+                        process.StartInfo.Arguments = $"-c \"{name} {args}\"".Trim();
                     }
                     else
                     {
                         process.StartInfo.FileName = name;
-                        process.StartInfo.Arguments = args;
+                        process.StartInfo.Arguments = args.Trim();
                     }
                 }
 
