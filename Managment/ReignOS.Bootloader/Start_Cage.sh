@@ -29,7 +29,7 @@ fi
 unclutter -idle 3 &
 
 # MangoHud config
-MANGOHUD_CONFIG="horizontal,position=top-center,hud_no_margin,horizontal_stretch,table_columns=100,cpu_power,gpu_power,throttling_status,battery,battery_watt,battery_time,battery_icon=0"
+MANGOHUD=1 MANGOHUD_CONFIG="horizontal,position=top-center,hud_no_margin,horizontal_stretch,table_columns=100,cpu_power,gpu_power,throttling_status,battery,battery_watt,battery_time,battery_icon=0"
 
 # start steam
 if [ "$DISABLE_STEAM_DECK" = "true" ]; then
