@@ -25,7 +25,8 @@ done
 
 # start monitor
 if [ "$REIGN_MONITOR" = "true" ]; then
-  env MANGOHUD_CONFIG="" /home/gamer/ReignOS/Managment/ReignOS.Monitor/bin/Release/net8.0/linux-x64/publish/ReignOS.Monitor &
+  exec /home/gamer/ReignOS/Managment/ReignOS.Monitor/bin/Release/net8.0/linux-x64/publish/ReignOS.Monitor &
+  sleep 2
 fi
 
 # start steam
