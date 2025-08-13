@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # convert args
-set -- $1
+#set -- $1
 echo $@ > /home/gamer/test.txt
 
 # args
