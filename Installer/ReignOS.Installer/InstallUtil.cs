@@ -386,6 +386,10 @@ static class InstallUtil
         fileBuilder.AppendLine("    sleep infinity");
         fileBuilder.AppendLine("fi");
 
+        fileBuilder.AppendLine();// correct managment user
+        fileBuilder.AppendLine("sudo chown -R $USER /root/.nuget");
+        fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS");
+
         fileBuilder.AppendLine();// stop on any error
         fileBuilder.AppendLine("set -e");
 
@@ -484,16 +488,8 @@ static class InstallUtil
         else fileText = "";
         fileBuilder = new StringBuilder(fileText);
         fileBuilder.AppendLine();
-        fileBuilder.AppendLine("set -e");
-        fileBuilder.AppendLine("sudo chown -R $USER /root/.nuget");
-        fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS");
         fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS_Launch.sh");
         fileBuilder.AppendLine("chmod +x /home/gamer/ReignOS_Launch.sh");
-
-        fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/FirstRun.sh");
-        fileBuilder.AppendLine("chmod +x /home/gamer/FirstRun.sh");
-
-        fileBuilder.AppendLine("/home/gamer/FirstRun.sh");
         fileBuilder.AppendLine("/home/gamer/ReignOS_Launch.sh");
         File.WriteAllText(path, fileBuilder.ToString());
         UpdateProgress(30);
@@ -502,6 +498,10 @@ static class InstallUtil
         path = "/mnt/home/gamer/ReignOS_Launch.sh";
         fileBuilder = new StringBuilder();
         fileBuilder.AppendLine("#!/bin/bash");
+        fileBuilder.AppendLine("set -e");
+        fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/FirstRun.sh");
+        fileBuilder.AppendLine("chmod +x /home/gamer/FirstRun.sh");
+        fileBuilder.AppendLine("/home/gamer/FirstRun.sh");
         fileBuilder.AppendLine("chmod +x /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh");
         fileBuilder.AppendLine("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh --use-controlcenter");
         File.WriteAllText(path, fileBuilder.ToString());
