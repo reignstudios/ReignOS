@@ -184,7 +184,7 @@ fi
 if [ -e "/home/gamer/homebrew/plugins/HueSync" ]; then
     echo ""
     echo "ReignOS Checking HueSync for updates..."
-    sudo curl -L https://raw.githubusercontent.com/honjow/huesync/main/install.sh | sh
+    curl -L https://raw.githubusercontent.com/honjow/huesync/main/install.sh | sh
 fi
 
 # firmware

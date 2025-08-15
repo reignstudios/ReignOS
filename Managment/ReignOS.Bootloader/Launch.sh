@@ -245,6 +245,7 @@ if [ $exit_code -eq 62 ]; then
 
   echo ""
   echo "Installing DeckyTDP..."
+  sudo chmod -R +w "/home/gamer/homebrew/plugins/"
   curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
 
   sleep 2
@@ -289,6 +290,7 @@ fi
 if [ $exit_code -eq 71 ]; then
   echo ""
   echo "Installing HueSync..."
+  sudo chmod -R +w "/home/gamer/homebrew/plugins/"
   sudo curl -L https://raw.githubusercontent.com/honjow/huesync/main/install.sh | sh
 
   sleep 2
