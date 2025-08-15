@@ -33,6 +33,7 @@ else
 fi
 
 # start ControlCenter
+sleep 1
 ./ReignOS.ControlCenter $@
 exit_code=$?
 echo "EXIT_CODE: $exit_code"
