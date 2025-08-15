@@ -29,6 +29,8 @@ sudo pacman -S --noconfirm --needed xdg-desktop-portal xdg-desktop-portal-wlr xd
 
 sudo pacman -S --noconfirm --needed vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-layers
 
+sudo pacman -S --noconfirm --needed python hidapi python-hidapi libusb usbutils
+
 sudo pacman -S --noconfirm --needed alsa-firmware alsa-ucm-conf
 
 sudo pacman -Rdd --noconfirm jack2

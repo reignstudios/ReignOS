@@ -239,11 +239,11 @@ static class InstallUtil
         UpdateProgress(16);
         
         // install lib32-systemd
-        Run("pacman", "-S --noconfirm lib32-systemd");
+        Run("pacman", "-S --noconfirm --needed lib32-systemd");
         UpdateProgress(17);
         
         // install network support
-        Run("pacman", "-S --noconfirm networkmanager iwd iw iproute2 wireless_tools");
+        Run("pacman", "-S --noconfirm --needed networkmanager iwd iw iproute2 wireless_tools");
         path = "/mnt/etc/NetworkManager/";
         if (!Directory.Exists(path)) ProcessUtil.CreateDirectoryAdmin(path);
         path = Path.Combine(path, "NetworkManager.conf");
@@ -255,12 +255,12 @@ static class InstallUtil
         UpdateProgress(18);
 
         // install BT support
-        Run("pacman", "-S --noconfirm bluez bluez-utils");
+        Run("pacman", "-S --noconfirm --needed bluez bluez-utils");
         Run("systemctl", "enable bluetooth");
         UpdateProgress(19);
 
         // install thunderbold support (needed for eGPUs)
-        Run("pacman", "-S --noconfirm bolt");
+        Run("pacman", "-S --noconfirm --needed bolt");
         Run("systemctl", "enable bolt.service");
         UpdateProgress(19);
 
@@ -270,12 +270,12 @@ static class InstallUtil
         Run("echo", "'LANG=en_US.UTF-8' > /etc/locale.conf");
         Run("echo", "'en_US.UTF-8 UTF-8' > /etc/locale.gen");
         Run("locale-gen", "");
-        Run("pacman", "-S --noconfirm noto-fonts");
-        Run("pacman", "-S --noconfirm noto-fonts-cjk");
-        Run("pacman", "-S --noconfirm noto-fonts-extra");
-        Run("pacman", "-S --noconfirm noto-fonts-emoji");
-        Run("pacman", "-S --noconfirm ttf-dejavu");
-        Run("pacman", "-S --noconfirm ttf-liberation");
+        Run("pacman", "-S --noconfirm --needed noto-fonts");
+        Run("pacman", "-S --noconfirm --needed noto-fonts-cjk");
+        Run("pacman", "-S --noconfirm --needed noto-fonts-extra");
+        Run("pacman", "-S --noconfirm --needed noto-fonts-emoji");
+        Run("pacman", "-S --noconfirm --needed ttf-dejavu");
+        Run("pacman", "-S --noconfirm --needed ttf-liberation");
         Run("fc-cache", "-fv");
         UpdateProgress(20);
 
@@ -320,7 +320,7 @@ static class InstallUtil
         UpdateProgress(24);
 
         // install sudo
-        Run("pacman", "-S --noconfirm sudo");
+        Run("pacman", "-S --noconfirm --needed sudo");
         Run("pacman", "-Qs sudo");
         UpdateProgress(25);
         
@@ -421,35 +421,35 @@ static class InstallUtil
 
         fileBuilder.AppendLine();// install extra fonts
         fileBuilder.AppendLine("echo \"Installing extra fonts...\"");
-        fileBuilder.AppendLine("yay -S --noconfirm ttf-ms-fonts");
+        fileBuilder.AppendLine("yay -S --noconfirm --needed ttf-ms-fonts");
         fileBuilder.AppendLine("fc-cache -fv");
 
         fileBuilder.AppendLine();// install steamcmd
         fileBuilder.AppendLine("echo \"Installing steamcmd...\"");
-        fileBuilder.AppendLine("yay -S --noconfirm steamcmd");
+        fileBuilder.AppendLine("yay -S --noconfirm --needed steamcmd");
 
         fileBuilder.AppendLine();// install ProtonGE
         fileBuilder.AppendLine("echo \"Installing ProtonGE...\"");
-        fileBuilder.AppendLine("yay -S --noconfirm proton-ge-custom");
+        fileBuilder.AppendLine("yay -S --noconfirm --needed proton-ge-custom");
 
         fileBuilder.AppendLine();// install DeckyLoader
         fileBuilder.AppendLine("echo \"Installing DeckyLoader...\"");
-        fileBuilder.AppendLine("sudo pacman -S --noconfirm jq");
+        fileBuilder.AppendLine("sudo pacman -S --noconfirm --needed jq");
         fileBuilder.AppendLine("curl -L https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/install_release.sh | sh");
 
         fileBuilder.AppendLine();// install misc drivers
         fileBuilder.AppendLine("echo \"Installing Misc Drivers...\"");
-        fileBuilder.AppendLine("yay -S --noconfirm bcm20702a1-firmware");
+        fileBuilder.AppendLine("yay -S --noconfirm --needed bcm20702a1-firmware");
 
-        fileBuilder.AppendLine("yay -S --noconfirm ayaneo-platform-dkms-git");
-        fileBuilder.AppendLine("yay -S --noconfirm ayn-platform-dkms-git");
+        fileBuilder.AppendLine("yay -S --noconfirm --needed ayaneo-platform-dkms-git");
+        fileBuilder.AppendLine("yay -S --noconfirm --needed ayn-platform-dkms-git");
 
-        fileBuilder.AppendLine("yay -S --noconfirm rtl8812au-dkms-git");
-        fileBuilder.AppendLine("yay -S --noconfirm rtl8814au-dkms-git");
-        fileBuilder.AppendLine("yay -S --noconfirm rtl88x2bu-dkms-git");
-        fileBuilder.AppendLine("yay -S --noconfirm rtl8821au-dkms-git");
+        fileBuilder.AppendLine("yay -S --noconfirm --needed rtl8812au-dkms-git");
+        fileBuilder.AppendLine("yay -S --noconfirm --needed rtl8814au-dkms-git");
+        fileBuilder.AppendLine("yay -S --noconfirm --needed rtl88x2bu-dkms-git");
+        fileBuilder.AppendLine("yay -S --noconfirm --needed rtl8821au-dkms-git");
         
-        fileBuilder.AppendLine("yay -S --noconfirm ryzenadj");
+        fileBuilder.AppendLine("yay -S --noconfirm --needed ryzenadj");
 
         fileBuilder.AppendLine();// set volume to 100%
         fileBuilder.AppendLine("echo \"Setting volume to 100%...\"");
@@ -509,76 +509,77 @@ static class InstallUtil
         archRootMode = true;
 
         // install misc apps
-        Run("pacman", "-S --noconfirm nano evtest efibootmgr");
-        Run("pacman", "-S --noconfirm dmidecode hwinfo sysstat udev python");
-        Run("pacman", "-S --noconfirm rsync");
-        Run("pacman", "-S --noconfirm wget");
+        Run("pacman", "-S --noconfirm --needed nano evtest efibootmgr");
+        Run("pacman", "-S --noconfirm --needed dmidecode hwinfo sysstat udev curl");
+        Run("pacman", "-S --noconfirm --needed python hidapi python-hidapi libusb usbutils");
+        Run("pacman", "-S --noconfirm --needed rsync");
+        Run("pacman", "-S --noconfirm --needed wget");
         UpdateProgress(31);
 
         // install firmware update support
-        Run("pacman", "-S --noconfirm fwupd");
-        Run("pacman", "-S --noconfirm dkms");
+        Run("pacman", "-S --noconfirm --needed fwupd");
+        Run("pacman", "-S --noconfirm --needed dkms");
         UpdateProgress(32);
 
         // install wayland
-        Run("pacman", "-S --noconfirm xorg-server-xwayland wayland lib32-wayland wayland-protocols wayland-utils");
-        Run("pacman", "-S --noconfirm xorg-xev xbindkeys xorg-xinput xorg-xmodmap");
+        Run("pacman", "-S --noconfirm --needed xorg-server-xwayland wayland lib32-wayland wayland-protocols wayland-utils");
+        Run("pacman", "-S --noconfirm --needed xorg-xev xbindkeys xorg-xinput xorg-xmodmap");
         UpdateProgress(33);
 
         // install x11
-        Run("pacman", "-S --noconfirm xorg xorg-server xorg-xinit xf86-input-libinput xterm");
+        Run("pacman", "-S --noconfirm --needed xorg xorg-server xorg-xinit xf86-input-libinput xterm");
         UpdateProgress(34);
 
         // install wayland graphics drivers
-        Run("pacman", "-S --noconfirm mesa lib32-mesa");
-        Run("pacman", "-S --noconfirm libva-intel-driver intel-media-driver intel-ucode vulkan-intel lib32-vulkan-intel intel-gpu-tools");// Intel
-        Run("pacman", "-S --noconfirm libva-mesa-driver lib32-libva-mesa-driver amd-ucode vulkan-radeon lib32-vulkan-radeon radeontop");// AMD
-        Run("pacman", "-S --noconfirm vulkan-nouveau lib32-vulkan-nouveau");// Nvida
-        Run("pacman", "-S --noconfirm vulkan-icd-loader lib32-vulkan-icd-loader libglvnd lib32-libglvnd");
-        Run("pacman", "-S --noconfirm vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-layers");
-        Run("pacman", "-S --noconfirm egl-wayland");
-        Run("pacman", "-S --noconfirm eglexternalplatform");
+        Run("pacman", "-S --noconfirm --needed mesa lib32-mesa");
+        Run("pacman", "-S --noconfirm --needed libva-intel-driver intel-media-driver intel-ucode vulkan-intel lib32-vulkan-intel intel-gpu-tools");// Intel
+        Run("pacman", "-S --noconfirm --needed libva-mesa-driver lib32-libva-mesa-driver amd-ucode vulkan-radeon lib32-vulkan-radeon radeontop");// AMD
+        Run("pacman", "-S --noconfirm --needed vulkan-nouveau lib32-vulkan-nouveau");// Nvida
+        Run("pacman", "-S --noconfirm --needed vulkan-icd-loader lib32-vulkan-icd-loader libglvnd lib32-libglvnd");
+        Run("pacman", "-S --noconfirm --needed vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-layers");
+        Run("pacman", "-S --noconfirm --needed egl-wayland");
+        Run("pacman", "-S --noconfirm --needed eglexternalplatform");
         UpdateProgress(50);
         
         // codex / misc
-        Run("pacman", "-S --noconfirm vdpauinfo");
-        Run("pacman", "-S --noconfirm ffmpeg gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav");
-        Run("pacman", "-S --noconfirm libva libva-utils gstreamer-vaapi");
-        Run("pacman", "-S --noconfirm libvdpau-va-gl mesa-vdpau");
-        Run("pacman", "-S --noconfirm libdvdread libdvdnav libdvdcss libbluray");
+        Run("pacman", "-S --noconfirm --needed vdpauinfo");
+        Run("pacman", "-S --noconfirm --needed ffmpeg gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav");
+        Run("pacman", "-S --noconfirm --needed libva libva-utils gstreamer-vaapi");
+        Run("pacman", "-S --noconfirm --needed libvdpau-va-gl mesa-vdpau");
+        Run("pacman", "-S --noconfirm --needed libdvdread libdvdnav libdvdcss libbluray");
         UpdateProgress(54);
 
         // install x11 graphics drivers
-        Run("pacman", "-S --noconfirm xf86-video-intel xf86-video-amdgpu xf86-video-nouveau");
-        Run("pacman", "-S --noconfirm glxinfo");
+        Run("pacman", "-S --noconfirm --needed xf86-video-intel xf86-video-amdgpu xf86-video-nouveau");
+        Run("pacman", "-S --noconfirm --needed glxinfo");
         UpdateProgress(56);
 
         // install compositors
-        Run("pacman", "-S --noconfirm wlr-randr gamescope cage labwc weston");
-        Run("pacman", "-S --noconfirm openbox");
+        Run("pacman", "-S --noconfirm --needed wlr-randr gamescope cage labwc weston");
+        Run("pacman", "-S --noconfirm --needed openbox");
         UpdateProgress(57);
 
         // install desktop portal
-        Run("pacman", "-S --noconfirm xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-kde xdg-desktop-portal-gtk");
+        Run("pacman", "-S --noconfirm --needed xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-kde xdg-desktop-portal-gtk");
         UpdateProgress(58);
 
         // install audio
-        Run("pacman", "-S --noconfirm alsa-firmware alsa-utils alsa-plugins alsa-ucm-conf");
-        Run("pacman", "-S --noconfirm sof-firmware");
+        Run("pacman", "-S --noconfirm --needed alsa-firmware alsa-utils alsa-plugins alsa-ucm-conf");
+        Run("pacman", "-S --noconfirm --needed sof-firmware");
         using (new FailIfError(false)) Run("pacman", "-Rdd --noconfirm jack2");// force remove jack2 let pipewire-jack install instead (installed from ffmpeg)
-        Run("pacman", "-S --noconfirm pipewire pipewire-pulse pipewire-alsa pipewire-jack wireplumber");
+        Run("pacman", "-S --noconfirm --needed pipewire pipewire-pulse pipewire-alsa pipewire-jack wireplumber");
         Run("systemctl", "--user enable pipewire pipewire-pulse wireplumber");
         Run("systemctl", "--user enable pipewire.socket pipewire.service pipewire-pulse.socket pipewire-pulse.service");
         UpdateProgress(60);
 
         // install power
-        Run("pacman", "-S --noconfirm acpi powertop power-profiles-daemon");
-        Run("pacman", "-S --noconfirm python-gobject");
+        Run("pacman", "-S --noconfirm --needed acpi powertop power-profiles-daemon");
+        Run("pacman", "-S --noconfirm --needed python-gobject");
         Run("systemctl", "enable power-profiles-daemon");
         UpdateProgress(61);
 
         // install auto-mount drives
-        Run("pacman", "-S --noconfirm udiskie udisks2");
+        Run("pacman", "-S --noconfirm --needed udiskie udisks2");
         string path = "/mnt/etc/udev/rules.d/";
         if (!Directory.Exists(path)) ProcessUtil.CreateDirectoryAdmin(path);
         path = Path.Combine(path, "99-automount.rules");
@@ -594,20 +595,20 @@ static class InstallUtil
         UpdateProgress(62);
 
         // install compiler tools
-        Run("pacman", "-S --noconfirm base-devel dotnet-sdk-8.0 git git-lfs");
+        Run("pacman", "-S --noconfirm --needed base-devel dotnet-sdk-8.0 git git-lfs");
         UpdateProgress(65);
 
         // install steam
-        Run("pacman", "-S --noconfirm libxcomposite lib32-libxcomposite libxrandr lib32-libxrandr libgcrypt lib32-libgcrypt lib32-pipewire libpulse lib32-libpulse nss lib32-nss glib2 lib32-glib2");
-        Run("pacman", "-S --noconfirm gtk2 lib32-gtk2 gtk3 lib32-gtk3 gtk4");
-        Run("pacman", "-S --noconfirm libxss lib32-libxss libva lib32-libva libvdpau lib32-libvdpau");
-        Run("pacman", "-S --noconfirm gnutls lib32-gnutls openal lib32-openal sqlite lib32-sqlite libcurl-compat lib32-libcurl-compat");
-        Run("pacman", "-S --noconfirm mangohud lib32-mangohud gamemode lib32-gamemode");
-        Run("pacman", "-S --noconfirm glibc lib32-glibc");// needed by cef
-        Run("pacman", "-S --noconfirm fontconfig lib32-fontconfig");// needed for fonts
-        Run("pacman", "-S --noconfirm vulkan-dzn vulkan-gfxstream vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio");// all steam options
-        Run("pacman", "-S --noconfirm lib32-vulkan-dzn lib32-vulkan-gfxstream lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio");// all steam options
-        Run("pacman", "-S --noconfirm steam");//steam-native-runtime (use Arch libs)
+        Run("pacman", "-S --noconfirm --needed libxcomposite lib32-libxcomposite libxrandr lib32-libxrandr libgcrypt lib32-libgcrypt lib32-pipewire libpulse lib32-libpulse nss lib32-nss glib2 lib32-glib2");
+        Run("pacman", "-S --noconfirm --needed gtk2 lib32-gtk2 gtk3 lib32-gtk3 gtk4");
+        Run("pacman", "-S --noconfirm --needed libxss lib32-libxss libva lib32-libva libvdpau lib32-libvdpau");
+        Run("pacman", "-S --noconfirm --needed gnutls lib32-gnutls openal lib32-openal sqlite lib32-sqlite libcurl-compat lib32-libcurl-compat");
+        Run("pacman", "-S --noconfirm --needed mangohud lib32-mangohud gamemode lib32-gamemode");
+        Run("pacman", "-S --noconfirm --needed glibc lib32-glibc");// needed by cef
+        Run("pacman", "-S --noconfirm --needed fontconfig lib32-fontconfig");// needed for fonts
+        Run("pacman", "-S --noconfirm --needed vulkan-dzn vulkan-gfxstream vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio");// all steam options
+        Run("pacman", "-S --noconfirm --needed lib32-vulkan-dzn lib32-vulkan-gfxstream lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio");// all steam options
+        Run("pacman", "-S --noconfirm --needed steam");//steam-native-runtime (use Arch libs)
         UpdateProgress(80);
 
         using (new FailIfError(false))
@@ -626,28 +627,28 @@ static class InstallUtil
         }
 
         // install wayland mouse util
-        Run("pacman", "-S --noconfirm unclutter");
+        Run("pacman", "-S --noconfirm --needed unclutter");
         UpdateProgress(83);
 
         // install flatpak
-        Run("pacman", "-S --noconfirm flatpak");
+        Run("pacman", "-S --noconfirm --needed flatpak");
         UpdateProgress(84);
 
         // install kde
-        Run("pacman", "-S --noconfirm zip unzip gzip bzip2 7zip xz");
-        Run("pacman", "-S --noconfirm plasma konsole dolphin kate ark exfatprogs dosfstools partitionmanager");
-        Run("pacman", "-S --noconfirm btrfs-progs ntfs-3g");
-        Run("pacman", "-S --noconfirm maliit-keyboard");
-        Run("pacman", "-S --noconfirm qt5-wayland qt6-wayland");
-        Run("pacman", "-S --noconfirm wmctrl");
+        Run("pacman", "-S --noconfirm --needed zip unzip gzip bzip2 7zip xz");
+        Run("pacman", "-S --noconfirm --needed plasma konsole dolphin kate ark exfatprogs dosfstools partitionmanager");
+        Run("pacman", "-S --noconfirm --needed btrfs-progs ntfs-3g");
+        Run("pacman", "-S --noconfirm --needed maliit-keyboard");
+        Run("pacman", "-S --noconfirm --needed qt5-wayland qt6-wayland");
+        Run("pacman", "-S --noconfirm --needed wmctrl");
         UpdateProgress(85);
 
         // install gparted
-        Run("pacman", "-S --noconfirm gparted");
+        Run("pacman", "-S --noconfirm --needed gparted");
         UpdateProgress(86);
 
         // install linux-tools
-        Run("pacman", "-S --noconfirm linux-tools");
+        Run("pacman", "-S --noconfirm --needed linux-tools");
         UpdateProgress(87);
     }
     

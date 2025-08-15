@@ -68,6 +68,12 @@ static class PackageUpdates
         if (!PackageUtils.PackageExits("vulkan-mesa-layers")) return true;
         if (!PackageUtils.PackageExits("lib32-vulkan-mesa-layers")) return true;
 
+        if (!PackageUtils.PackageExits("python")) return true;
+        if (!PackageUtils.PackageExits("hidapi")) return true;
+        if (!PackageUtils.PackageExits("python-hidapi")) return true;
+        if (!PackageUtils.PackageExits("libusb")) return true;
+        if (!PackageUtils.PackageExits("usbutils")) return true;
+
         if (!PackageUtils.PackageExits("alsa-firmware")) return true;
         if (!PackageUtils.PackageExits("alsa-ucm-conf")) return true;
 
