@@ -514,6 +514,7 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm --needed python hidapi python-hidapi libusb usbutils");
         Run("pacman", "-S --noconfirm --needed rsync");
         Run("pacman", "-S --noconfirm --needed wget");
+        Run("pacman", "-S --noconfirm --needed reflector");
         UpdateProgress(31);
 
         // install firmware update support
