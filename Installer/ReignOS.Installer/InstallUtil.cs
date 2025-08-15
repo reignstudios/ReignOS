@@ -353,9 +353,11 @@ static class InstallUtil
         path = "/mnt/home/gamer/FirstRun.sh";
         fileBuilder = new StringBuilder();
         fileBuilder.AppendLine("#!/bin/bash");
+        fileBuilder.AppendLine("set -e");
         fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/FirstRun_Invoke.sh");
         fileBuilder.AppendLine("chmod +x /home/gamer/FirstRun_Invoke.sh");
         fileBuilder.AppendLine("/home/gamer/FirstRun_Invoke.sh");
+        fileBuilder.AppendLine("reboot");
         File.WriteAllText(path, fileBuilder.ToString());
 
         path = "/mnt/home/gamer/FirstRun_Invoke.sh";// create extra first-run backup of tasks in case user needs to run again
@@ -409,11 +411,13 @@ static class InstallUtil
 
         fileBuilder.AppendLine();// install yay
         fileBuilder.AppendLine("echo \"Installing yay support...\"");
-        fileBuilder.AppendLine("cd /home/gamer");
-        fileBuilder.AppendLine("git clone https://aur.archlinux.org/yay.git");
-        fileBuilder.AppendLine("cd /home/gamer/yay");
-        fileBuilder.AppendLine("makepkg -si --noconfirm");
-        fileBuilder.AppendLine("yay -Syy --noconfirm");
+        fileBuilder.AppendLine("if [ ! -d \"/home/gamer/yay\" ]; then");
+        fileBuilder.AppendLine("    cd /home/gamer");
+        fileBuilder.AppendLine("    git clone https://aur.archlinux.org/yay.git");
+        fileBuilder.AppendLine("    cd /home/gamer/yay");
+        fileBuilder.AppendLine("    makepkg -si --noconfirm");
+        fileBuilder.AppendLine("    yay -Syy --noconfirm");
+        fileBuilder.AppendLine("fi");
 
         fileBuilder.AppendLine();// install MUX support
         fileBuilder.AppendLine("echo \"Installing NUX support...\"");
@@ -451,6 +455,9 @@ static class InstallUtil
         
         fileBuilder.AppendLine("yay -S --noconfirm --needed ryzenadj");
 
+        fileBuilder.AppendLine();// disable stop on any error
+        fileBuilder.AppendLine("set +e");
+
         fileBuilder.AppendLine();// set volume to 100%
         fileBuilder.AppendLine("echo \"Setting volume to 100%...\"");
         fileBuilder.AppendLine("pactl set-sink-volume @DEFAULT_SINK@ 100%");
@@ -460,7 +467,7 @@ static class InstallUtil
         fileBuilder.AppendLine("git lfs install");
 
         fileBuilder.AppendLine();// disable FirstRun
-        fileBuilder.AppendLine("echo \"rebooting...\"");
+        fileBuilder.AppendLine("echo \"disable FirstRun...\"");
         fileBuilder.AppendLine("echo -n > /home/gamer/FirstRun.sh");
 
         fileBuilder.AppendLine();// run main updates scripts at least once
@@ -468,10 +475,7 @@ static class InstallUtil
         fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Update.sh");
         fileBuilder.AppendLine("chmod +x /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Update.sh");
         fileBuilder.AppendLine("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Update.sh");
-
-        // finish
         fileBuilder.AppendLine("reboot");
-        File.WriteAllText(path, fileBuilder.ToString());
         UpdateProgress(29);
 
         // auto invoke launch after login
@@ -480,6 +484,7 @@ static class InstallUtil
         else fileText = "";
         fileBuilder = new StringBuilder(fileText);
         fileBuilder.AppendLine();
+        fileBuilder.AppendLine("set -e");
         fileBuilder.AppendLine("sudo chown -R $USER /root/.nuget");
         fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS");
         fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS_Launch.sh");
