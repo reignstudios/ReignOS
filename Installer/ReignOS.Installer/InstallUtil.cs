@@ -437,7 +437,7 @@ static class InstallUtil
 
         fileBuilder.AppendLine();// install MUX support
         fileBuilder.AppendLine("echo \"Installing NUX support...\"");
-        fileBuilder.AppendLine("yay -S --noconfirm supergfxctl");
+        fileBuilder.AppendLine("yay -S --noconfirm --needed supergfxctl");
 
         fileBuilder.AppendLine();// install extra fonts
         fileBuilder.AppendLine("echo \"Installing extra fonts...\"");
