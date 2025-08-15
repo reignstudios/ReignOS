@@ -390,28 +390,39 @@ static class InstallUtil
         fileBuilder.AppendLine("sudo chown -R $USER /root/.nuget");
         fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS");
 
-        fileBuilder.AppendLine();// stop on any error
-        fileBuilder.AppendLine("set -e");
-
-        fileBuilder.AppendLine();// update pacman
-        fileBuilder.AppendLine("sudo pacman -Sy --noconfirm");
-
         fileBuilder.AppendLine();// update time
+        fileBuilder.AppendLine("echo 'sync time...'");
         fileBuilder.AppendLine("sudo timedatectl set-ntp true");
         fileBuilder.AppendLine("sudo hwclock --systohc");
         fileBuilder.AppendLine("sleep 1");
         fileBuilder.AppendLine("timedatectl");// log time
+        fileBuilder.AppendLine("sleep 1");
+
+        /*fileBuilder.AppendLine();// refresh pacman
+        fileBuilder.AppendLine("echo 'refresh pacman...'");
+        fileBuilder.AppendLine("sudo pacman -Sy --noconfirm");
 
         fileBuilder.AppendLine();// update mirror list to use newer versions
+        fileBuilder.AppendLine("echo 'refresh mirror list...'");
         fileBuilder.AppendLine("COUNTRY=$(curl -s https://ifconfig.co/country-iso)");
         fileBuilder.AppendLine("sudo reflector --country $COUNTRY --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist");
+        fileBuilder.AppendLine("sleep 5");
 
         fileBuilder.AppendLine();// update keyring
+        fileBuilder.AppendLine("echo 'refresh keyring...'");
         fileBuilder.AppendLine("sudo pacman -Sy archlinux-keyring --noconfirm");
         fileBuilder.AppendLine("sudo pacman-key --init");
         fileBuilder.AppendLine("sudo pacman-key --populate archlinux");
         fileBuilder.AppendLine("sudo pacman-key --refresh-keys");
         fileBuilder.AppendLine("sudo pacman-key --updatedb");
+        fileBuilder.AppendLine("sleep 5");*/
+
+        fileBuilder.AppendLine();// update pacman
+        fileBuilder.AppendLine("sudo pacman -Syu --noconfirm");
+        fileBuilder.AppendLine("sleep 1");
+
+        fileBuilder.AppendLine();// stop on any error
+        fileBuilder.AppendLine("set -e");
 
         fileBuilder.AppendLine();// install yay
         fileBuilder.AppendLine("echo \"Installing yay support...\"");
@@ -422,6 +433,7 @@ static class InstallUtil
         fileBuilder.AppendLine("    makepkg -si --noconfirm");
         fileBuilder.AppendLine("    yay -Syy --noconfirm");
         fileBuilder.AppendLine("fi");
+        fileBuilder.AppendLine("sleep 5");
 
         fileBuilder.AppendLine();// install MUX support
         fileBuilder.AppendLine("echo \"Installing NUX support...\"");
