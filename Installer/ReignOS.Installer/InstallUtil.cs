@@ -417,6 +417,10 @@ static class InstallUtil
         fileBuilder.AppendLine("sudo pacman -Syu --noconfirm");
         fileBuilder.AppendLine("sleep 1");
 
+        fileBuilder.AppendLine();// make sure git-lfs is hooked up
+        fileBuilder.AppendLine("echo \"Hook up git-lfs...\"");
+        fileBuilder.AppendLine("git lfs install");
+
         fileBuilder.AppendLine();// stop on any error
         fileBuilder.AppendLine("set -e");
 
@@ -473,10 +477,6 @@ static class InstallUtil
         fileBuilder.AppendLine();// set volume to 100%
         fileBuilder.AppendLine("echo \"Setting volume to 100%...\"");
         fileBuilder.AppendLine("pactl set-sink-volume @DEFAULT_SINK@ 100%");
-        
-        fileBuilder.AppendLine();// make sure git-lfs is hooked up
-        fileBuilder.AppendLine("echo \"Hook up git-lfs...\"");
-        fileBuilder.AppendLine("git lfs install");
 
         fileBuilder.AppendLine();// disable FirstRun
         fileBuilder.AppendLine("echo \"disable FirstRun...\"");
