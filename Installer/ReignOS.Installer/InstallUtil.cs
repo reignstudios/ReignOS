@@ -480,20 +480,9 @@ static class InstallUtil
         fileBuilder.AppendLine("chmod +x /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Update.sh");
         fileBuilder.AppendLine("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Update.sh");
         fileBuilder.AppendLine("reboot");
+        File.WriteAllText(path, fileBuilder.ToString());
         UpdateProgress(29);
 
-        // auto invoke launch after login
-        path = "/mnt/home/gamer/.bash_profile";
-        if (File.Exists(path)) fileText = File.ReadAllText(path);
-        else fileText = "";
-        fileBuilder = new StringBuilder(fileText);
-        fileBuilder.AppendLine();
-        fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS_Launch.sh");
-        fileBuilder.AppendLine("chmod +x /home/gamer/ReignOS_Launch.sh");
-        fileBuilder.AppendLine("/home/gamer/ReignOS_Launch.sh");
-        File.WriteAllText(path, fileBuilder.ToString());
-        UpdateProgress(30);
-        
         // add login launch script
         path = "/mnt/home/gamer/ReignOS_Launch.sh";
         fileBuilder = new StringBuilder();
@@ -506,6 +495,18 @@ static class InstallUtil
         fileBuilder.AppendLine("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh --use-controlcenter");
         File.WriteAllText(path, fileBuilder.ToString());
         UpdateProgress(30);
+
+        // auto invoke launch after login
+        path = "/mnt/home/gamer/.bash_profile";
+        if (File.Exists(path)) fileText = File.ReadAllText(path);
+        else fileText = "";
+        fileBuilder = new StringBuilder(fileText);
+        fileBuilder.AppendLine();
+        fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS_Launch.sh");
+        fileBuilder.AppendLine("chmod +x /home/gamer/ReignOS_Launch.sh");
+        fileBuilder.AppendLine("/home/gamer/ReignOS_Launch.sh");
+        File.WriteAllText(path, fileBuilder.ToString());
+        UpdateProgress(31);
     }
     
     private static void InstallArchPackages()
@@ -520,21 +521,21 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm --needed rsync");
         Run("pacman", "-S --noconfirm --needed wget");
         Run("pacman", "-S --noconfirm --needed reflector");
-        UpdateProgress(31);
+        UpdateProgress(32);
 
         // install firmware update support
         Run("pacman", "-S --noconfirm --needed fwupd");
         Run("pacman", "-S --noconfirm --needed dkms");
-        UpdateProgress(32);
+        UpdateProgress(33);
 
         // install wayland
         Run("pacman", "-S --noconfirm --needed xorg-server-xwayland wayland lib32-wayland wayland-protocols wayland-utils");
         Run("pacman", "-S --noconfirm --needed xorg-xev xbindkeys xorg-xinput xorg-xmodmap");
-        UpdateProgress(33);
+        UpdateProgress(34);
 
         // install x11
         Run("pacman", "-S --noconfirm --needed xorg xorg-server xorg-xinit xf86-input-libinput xterm");
-        UpdateProgress(34);
+        UpdateProgress(35);
 
         // install wayland graphics drivers
         Run("pacman", "-S --noconfirm --needed mesa lib32-mesa");
@@ -545,7 +546,7 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm --needed vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-layers");
         Run("pacman", "-S --noconfirm --needed egl-wayland");
         Run("pacman", "-S --noconfirm --needed eglexternalplatform");
-        UpdateProgress(50);
+        UpdateProgress(40);
         
         // codex / misc
         Run("pacman", "-S --noconfirm --needed vdpauinfo");
