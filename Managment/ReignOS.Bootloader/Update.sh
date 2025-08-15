@@ -177,6 +177,7 @@ curl -L https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/dow
 if [ -e "/home/gamer/homebrew/plugins/SimpleDeckyTDP" ]; then
     echo ""
     echo "ReignOS Checking DeckyTDP for updates..."
+    sudo chmod -R +w "/home/gamer/homebrew/plugins/"
     curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
 fi
 
@@ -184,6 +185,7 @@ fi
 if [ -e "/home/gamer/homebrew/plugins/HueSync" ]; then
     echo ""
     echo "ReignOS Checking HueSync for updates..."
+    sudo chmod -R +w "/home/gamer/homebrew/plugins/"
     curl -L https://raw.githubusercontent.com/honjow/huesync/main/install.sh | sh
 fi
 
