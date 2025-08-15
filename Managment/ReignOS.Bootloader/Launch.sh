@@ -289,7 +289,7 @@ fi
 if [ $exit_code -eq 71 ]; then
   echo ""
   echo "Installing HueSync..."
-  curl -L https://raw.githubusercontent.com/honjow/huesync/main/install.sh | sh
+  sudo curl -L https://raw.githubusercontent.com/honjow/huesync/main/install.sh | sh
 
   sleep 2
   sudo reboot -f
