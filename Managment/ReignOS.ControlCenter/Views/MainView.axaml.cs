@@ -390,6 +390,11 @@ public partial class MainView : UserControl
                         else if (parts[1] == "DeckyTDP") powerDeckyTDPCheckbox.IsChecked = true;
                         else if (parts[1] == "Disabled") powerManagementDisabledCheckbox.IsChecked = true;
                     }
+                    else if (parts[0] == "RGBManager")
+                    {
+                        powerButton.IsVisible = false;
+                        if (parts[1] == "HueSync") rgbHueSyncCheckbox.IsChecked = true;
+                    }
                     else if (parts[0] == "PowerPercentage")
                     {
                         if (int.TryParse(parts[1], out int value)) powerSlider.Value = value;
@@ -546,6 +551,9 @@ public partial class MainView : UserControl
                 else if (powerStationCheckbox.IsChecked == true) writer.WriteLine("PowerManager=PowerStation");
                 else if (powerDeckyTDPCheckbox.IsChecked == true) writer.WriteLine("PowerManager=DeckyTDP");
                 else if (powerManagementDisabledCheckbox.IsChecked == true) writer.WriteLine("PowerManager=Disabled");
+
+                if (rgbHueSyncCheckbox.IsChecked == true) writer.WriteLine("RGBManager=HueSync");
+                else writer.WriteLine("RGBManager=Disabled");
 
                 writer.WriteLine($"PowerPercentage={(int)powerSlider.Value}");
                 if (powerIntelTurboBoostCheckbox.IsChecked == true) writer.WriteLine("PowerIntelTurboBoost=True");
@@ -1383,7 +1391,7 @@ public partial class MainView : UserControl
         MainWindow.singleton.Close();
     }
 
-    private void PowerControlApplyButton_Click(object sender, RoutedEventArgs e)
+    private void PowerManagerApplyButton_Click(object sender, RoutedEventArgs e)
     {
         // apply settings
         SaveSettings();
@@ -1391,6 +1399,15 @@ public partial class MainView : UserControl
         else if (powerStationCheckbox.IsChecked == true) App.exitCode = 61;
         else if (powerDeckyTDPCheckbox.IsChecked == true) App.exitCode = 62;
         else if (powerManagementDisabledCheckbox.IsChecked == true) App.exitCode = 63;
+        MainWindow.singleton.Close();
+    }
+
+    private void RBGManagerApplyButton_Click(object sender, RoutedEventArgs e)
+    {
+        // apply settings
+        SaveSettings();
+        if (rgbDisabledCheckbox.IsChecked == true) App.exitCode = 70;
+        else if (rgbHueSyncCheckbox.IsChecked == true) App.exitCode = 71;
         MainWindow.singleton.Close();
     }
 

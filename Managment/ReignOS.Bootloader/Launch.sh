@@ -245,7 +245,6 @@ if [ $exit_code -eq 62 ]; then
 
   echo ""
   echo "Installing DeckyTDP..."
-  sudo pacman -S --noconfirm --needed 7zip
   curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
 
   sleep 2
@@ -270,6 +269,27 @@ if [ $exit_code -eq 63 ]; then
   echo "Uninstalling DeckyTDP..."
   sudo rm -rf /home/gamer/homebrew/plugins/SimpleDeckyTDP
   sudo systemctl restart plugin_loader.service
+
+  sleep 2
+  sudo reboot -f
+  exit 0
+fi
+
+# manage RGB Manager
+if [ $exit_code -eq 70 ]; then
+  echo ""
+  echo "Uninstalling HueSync..."
+  sudo rm -rf /home/gamer/homebrew/plugins/HueSync
+
+  sleep 2
+  sudo reboot -f
+  exit 0
+fi
+
+if [ $exit_code -eq 71 ]; then
+  echo ""
+  echo "Installing HueSync..."
+  curl -L https://raw.githubusercontent.com/honjow/huesync/main/install.sh | sh
 
   sleep 2
   sudo reboot -f

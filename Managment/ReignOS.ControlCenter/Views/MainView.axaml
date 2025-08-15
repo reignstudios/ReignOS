@@ -190,11 +190,20 @@
 					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>
 							<TextBlock Text="Power Manager" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="PowerControlApplyButton_Click"/>
+							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="PowerManagerApplyButton_Click"/>
 							<RadioButton Name="powerProfilesCheckbox" Content="Power Profiles" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 							<RadioButton Name="powerDeckyTDPCheckbox" Content="DeckyTDP" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 							<RadioButton Name="powerStationCheckbox" Content="Power Station" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 							<RadioButton Name="powerManagementDisabledCheckbox" Content="Disable" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+						</Grid>
+					</Grid>
+
+					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
+						<Grid>
+							<TextBlock Text="RGB Manager" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RBGManagerApplyButton_Click"/>
+							<RadioButton Name="rgbDisabledCheckbox" Content="Disabled" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<RadioButton Name="rgbHueSyncCheckbox" Content="HueSync" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						</Grid>
 					</Grid>
 

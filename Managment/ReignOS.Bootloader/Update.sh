@@ -180,6 +180,13 @@ if [ -e "/home/gamer/homebrew/plugins/SimpleDeckyTDP" ]; then
     curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
 fi
 
+# update HueSync if it exists
+if [ -e "/home/gamer/homebrew/plugins/HueSync" ]; then
+    echo ""
+    echo "ReignOS Checking HueSync for updates..."
+    curl -L https://raw.githubusercontent.com/honjow/huesync/main/install.sh | sh
+fi
+
 # firmware
 echo ""
 echo "ReignOS Updating fwupdmgr firmware..."
