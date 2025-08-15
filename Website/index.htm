@@ -413,7 +413,7 @@
                     * sudo timedatectl set-ntp true<br>
                     * sudo hwclock --systohc<br>
                     * COUNTRY=$(curl -s https://ifconfig.co/country-iso)<br>
-                    * sudo reflector --country $COUNTRY --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist<br>
+                    * sudo reflector --country $COUNTRY --latest 50 --protocol https --sort rate --save /etc/pacman.d/mirrorlist<br>
                     * sudo pacman -Sy archlinux-keyring<br>
                     * sudo pacman-key --init<br>
                     * sudo pacman-key --populate archlinux<br>

@@ -157,8 +157,8 @@ static class InstallUtil
             Run("timedatectl", "");// log time
 
             // update mirror list to use newer versions
-            string countryCode = ProcessUtil.Run("curl", "-s https://ipapi.co/country/", useBash:true).Trim();
-            ProcessUtil.Run("reflector", $"--country {countryCode} --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist", useBash: true, asAdmin: true);
+            string countryCode = ProcessUtil.Run("curl", "-s https://ifconfig.co/country-iso", useBash:true).Trim();
+            ProcessUtil.Run("reflector", $"--country {countryCode} --latest 50 --protocol https --sort rate --save /etc/pacman.d/mirrorlist", useBash: true, asAdmin: true);
 
             // update keyring
             Run("pacman", "-Sy archlinux-keyring --noconfirm");
@@ -398,17 +398,13 @@ static class InstallUtil
         fileBuilder.AppendLine("timedatectl");// log time
         fileBuilder.AppendLine("sleep 1");
 
-        /*fileBuilder.AppendLine();// refresh pacman
-        fileBuilder.AppendLine("echo 'refresh pacman...'");
-        fileBuilder.AppendLine("sudo pacman -Sy --noconfirm");
-
         fileBuilder.AppendLine();// update mirror list to use newer versions
         fileBuilder.AppendLine("echo 'refresh mirror list...'");
         fileBuilder.AppendLine("COUNTRY=$(curl -s https://ifconfig.co/country-iso)");
-        fileBuilder.AppendLine("sudo reflector --country $COUNTRY --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist");
+        fileBuilder.AppendLine("sudo reflector --country $COUNTRY --latest 50 --protocol https --sort rate --save /etc/pacman.d/mirrorlist");
         fileBuilder.AppendLine("sleep 5");
 
-        fileBuilder.AppendLine();// update keyring
+        /*fileBuilder.AppendLine();// update keyring
         fileBuilder.AppendLine("echo 'refresh keyring...'");
         fileBuilder.AppendLine("sudo pacman -Sy archlinux-keyring --noconfirm");
         fileBuilder.AppendLine("sudo pacman-key --init");
