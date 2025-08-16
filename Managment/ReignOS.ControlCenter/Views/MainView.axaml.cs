@@ -1733,12 +1733,19 @@ public partial class MainView : UserControl
             if (line.Contains("-------") || line.Contains("Network name")) return;
             try
             {
-                var match = Regex.Match(line, @"\s*(\S*)\s*psk");
+                // connected line
+                var match = Regex.Match(line, @"\s*>\s*(\S*)\s*(\S*)\s*");
                 if (match.Success)
                 {
-                    string value = match.Groups[1].Value;
-                    if (line.Contains(">")) ssids.Add(value + " (Connected)");
-                    else ssids.Add(value);
+                    ssids.Add($"'{match.Groups[1].Value}' [{match.Groups[1].Value}] (Connected)");
+                }
+                else
+                {
+                    match = Regex.Match(line, @"\s*(\S*)\s*(\S*)\s*");
+                    if (match.Success)
+                    {
+                        ssids.Add($"'{match.Groups[1].Value}' [{match.Groups[1].Value}]");
+                    }
                 }
             }
             catch (Exception e)
