@@ -60,7 +60,7 @@ yay -S --noconfirm --needed ttf-ms-fonts
 fc-cache -fv
 
 yay -S --noconfirm --needed steamcmd
-yay -S --noconfirm --needed proton-ge-custom
+yay -S --noconfirm --needed proton-ge-custom-bin
 
 sudo pacman -S --noconfirm --needed dkms
 sudo pacman -S --noconfirm --needed fwupd

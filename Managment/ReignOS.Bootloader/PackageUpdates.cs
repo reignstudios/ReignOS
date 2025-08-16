@@ -111,7 +111,7 @@ static class PackageUpdates
         if (!PackageUtils.PackageExits("supergfxctl")) return true;
         if (!PackageUtils.PackageExits("ttf-ms-fonts")) return true;
         if (!PackageUtils.PackageExits("steamcmd")) return true;
-        if (!PackageUtils.PackageExits("proton-ge-custom")) return true;
+        if (!PackageUtils.PackageExits("proton-ge-custom-bin")) return true;
 
         if (!PackageUtils.PackageExits("dkms")) return true;
         if (!PackageUtils.PackageExits("fwupd")) return true;

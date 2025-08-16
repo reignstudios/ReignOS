@@ -450,7 +450,7 @@ static class InstallUtil
 
         fileBuilder.AppendLine();// install ProtonGE
         fileBuilder.AppendLine("echo \"Installing ProtonGE...\"");
-        fileBuilder.AppendLine("yay -S --noconfirm --needed proton-ge-custom");
+        fileBuilder.AppendLine("yay -S --noconfirm --needed proton-ge-custom-bin");
 
         fileBuilder.AppendLine();// install DeckyLoader
         fileBuilder.AppendLine("echo \"Installing DeckyLoader...\"");
