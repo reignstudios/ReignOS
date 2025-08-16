@@ -110,7 +110,7 @@ static class InstallUtil
         ProcessUtil.KillHard("arch-chroot", true, out _);
         try
         {
-            if (refreshIntegrity) RefreshingInstallerIntegrity();
+            RefreshingInstallerIntegrity(refreshIntegrity);
             InstallBaseArch();
             InstallArchPackages();
             InstallReignOSRepo();
@@ -134,7 +134,7 @@ static class InstallUtil
         ProcessUtil.ProcessOutput -= Views.MainView.ProcessOutput;
     }
 
-    private static void RefreshingInstallerIntegrity()
+    private static void RefreshingInstallerIntegrity(bool fullRefresh)
     {
         progressTask = "Refreshing Integrity (can take 10-15 min, please wait)...";
         UpdateProgress(0);
@@ -147,9 +147,6 @@ static class InstallUtil
 
         using (new FailIfError(false))
         {
-            // update pacman
-            Run("pacman", "-Sy --noconfirm");
-
             // update time
             Run("timedatectl", "set-ntp true");
             Run("hwclock", "--systohc");
@@ -161,11 +158,14 @@ static class InstallUtil
             ProcessUtil.Run("reflector", $"--country {countryCode} --latest 50 --protocol https --sort rate --save /etc/pacman.d/mirrorlist", useBash: true, asAdmin: true);
 
             // update keyring
-            Run("pacman", "-Sy archlinux-keyring --noconfirm");
-            Run("pacman-key", "--init", standardOut: standardOut);
-            Run("pacman-key", "--populate archlinux", standardOut:standardOut);
-            Run("pacman-key", "--refresh-keys", standardOut: standardOut);
-            Run("pacman-key", "--updatedb", standardOut: standardOut);
+            if (fullRefresh)
+            {
+                Run("pacman", "-Sy archlinux-keyring --noconfirm");
+                Run("pacman-key", "--init", standardOut: standardOut);
+                Run("pacman-key", "--populate archlinux", standardOut:standardOut);
+                Run("pacman-key", "--refresh-keys", standardOut: standardOut);
+                Run("pacman-key", "--updatedb", standardOut: standardOut);
+            }
         }
     }
 
@@ -174,15 +174,9 @@ static class InstallUtil
         progressTask = "Installing base...";
         UpdateProgress(0);
 
-        // basic pacman & time refresh
+        // setup for install
         using (new FailIfError(false))
         {
-            Run("pacman", "-Sy --noconfirm");
-            Run("timedatectl", "set-ntp true");
-            Run("hwclock", "--systohc");
-            Thread.Sleep(1000);
-            Run("timedatectl", "");// log time
-
             // unmount conflicting mounts
             Run("umount", "-R /var/cache/pacman/pkg");
             Run("umount", "-R /root/.nuget");
