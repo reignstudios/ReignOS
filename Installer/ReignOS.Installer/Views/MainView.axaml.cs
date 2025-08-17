@@ -408,19 +408,59 @@ public partial class MainView : UserControl
         Log.WriteLine("wlanDevice: " + wlanDevice);
         
         // get SSID
+        int networkNameIndex = 0, securityIndex = 0, signalIndex = 0;
         var ssids = new List<string>();
         void ssidOut(string line)
         {
-            if (line.Contains("-------") || line.Contains("Network name")) return;
+            if (string.IsNullOrWhiteSpace(line) || line.Contains("-------") || line.Contains("Available networks")) return;
             try
             {
-                var match = Regex.Match(line, @"\s*(\S*)\s*psk");
+                string lineClipped;
+                
+                // get index values
+                if (line.Contains("Network name"))
+                {
+                    lineClipped = line.Replace("[0m[1;90m", "");
+                    networkNameIndex = lineClipped.IndexOf("Network name");
+                    securityIndex = lineClipped.IndexOf("Security");
+                    signalIndex = lineClipped.IndexOf("Signal");
+                    return;
+                }
+                
+                // seperate line sections
+                lineClipped = line.Replace("[0m", "");
+                string networkNameSection = lineClipped.Substring(networkNameIndex, securityIndex - networkNameIndex);
+                string securitySection = lineClipped.Substring(securityIndex, signalIndex - securityIndex);
+                string signalSection = lineClipped.Substring(signalIndex, lineClipped.Length - signalIndex);
+                
+                // get network name
+                bool isConnected = false;
+                string networkName = "!ERROR!";
+                var match = Regex.Match(networkNameSection, @"\s*>\s*(\S*)");
                 if (match.Success)
                 {
-                    string value = match.Groups[1].Value;
-                    if (line.Contains(">")) ssids.Add(value + " (Connected)");
-                    else ssids.Add(value);
+                    isConnected = true;
+                    networkName = match.Groups[1].Value;
                 }
+                else
+                {
+                    networkName = networkNameSection.TrimEnd();
+                }
+                
+                // get network security
+                string networkSecurity = securitySection.TrimEnd();
+                
+                // get network security
+                string signal = signalSection.TrimEnd();
+                if (signal.Contains("[1;90m")) signal = signal.Substring(0, signal.IndexOf("[1;90m") - 1);
+                if (signal.Length == 1) signal = "Weak";
+                else if (signal.Length == 2) signal = "Low";
+                else if (signal.Length == 3) signal = "Med";
+                else if (signal.Length == 4) signal = "High";
+
+                // add entry
+                string connectedTag = isConnected ? " (Connected)" : "";
+                ssids.Add($"{networkName} [{networkSecurity}] <Signal {signal}>{connectedTag}");
             }
             catch (Exception e)
             {
