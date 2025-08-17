@@ -1763,7 +1763,8 @@ public partial class MainView : UserControl
                 }
                 else
                 {
-                    networkName = networkNameSection.TrimEnd();
+                    match = Regex.Match(networkNameSection, @"\s*(\S*)");
+                    if (match.Success) networkName = match.Groups[1].Value;
                 }
                 
                 // get network security
