@@ -150,11 +150,19 @@ internal class Program
         FileUtils.InstallScript(Path.Combine(srcPath, "org.reignos.update.policy"), Path.Combine(dstPath, "org.reignos.update.policy"));
 
         // install extra gamescope display configs
-        srcPath = Path.Combine(processPath, "Gamescope");
         dstPath = "/usr/share/gamescope/scripts/00-gamescope/displays/";
+        srcPath = Path.Combine(processPath, "Gamescope");// custom
         FileUtils.SafeCopy(Path.Combine(srcPath, "YHB-YHB02P25.lua"), Path.Combine(dstPath, "YHB-YHB02P25.lua"));
         FileUtils.SafeCopy(Path.Combine(srcPath, "ZDZ-ZDZ0501.lua"), Path.Combine(dstPath, "ZDZ-ZDZ0501.lua"));
         FileUtils.SafeCopy(Path.Combine(srcPath, "AYA-AYAOLED_FHD.lua"), Path.Combine(dstPath, "AYA-AYAOLED_FHD.lua"));
+        srcPath = Path.Combine(processPath, "Gamescope/Official");// official
+        FileUtils.SafeCopy(Path.Combine(srcPath, "asus.rogally.lcd.lua"), Path.Combine(dstPath, "asus.rogally.lcd.lua"));
+        FileUtils.SafeCopy(Path.Combine(srcPath, "deckhd.steamdeck.deckhd-lcd.lua"), Path.Combine(dstPath, "deckhd.steamdeck.deckhd-lcd.lua"));
+        FileUtils.SafeCopy(Path.Combine(srcPath, "gpd.win4.lcd.lua"), Path.Combine(dstPath, "gpd.win4.lcd.lua"));
+        FileUtils.SafeCopy(Path.Combine(srcPath, "lenovo.legiongo.lcd.lua"), Path.Combine(dstPath, "lenovo.legiongo.lcd.lua"));
+        FileUtils.SafeCopy(Path.Combine(srcPath, "lenovo.legiongos.lcd.lua"), Path.Combine(dstPath, "lenovo.legiongos.lcd.lua"));
+        FileUtils.SafeCopy(Path.Combine(srcPath, "valve.steamdeck.lcd.lua"), Path.Combine(dstPath, "valve.steamdeck.lcd.lua"));
+        FileUtils.SafeCopy(Path.Combine(srcPath, "valve.steamdeck.oled.lua"), Path.Combine(dstPath, "valve.steamdeck.oled.lua"));
 
         // install missing firmware
         if (AudioPatches.InstallFirmware_aw87559())
