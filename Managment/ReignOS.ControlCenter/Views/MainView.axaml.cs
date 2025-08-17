@@ -104,6 +104,20 @@ enum KernelSettingsCopy
     Cachy
 }
 
+class SSID
+{
+    public string name;
+    public string desc;
+    public bool connected;
+
+    public SSID(string name, string desc, bool connected)
+    {
+        this.name = name;
+        this.desc = desc;
+        this.connected = connected;
+    }
+}
+
 public partial class MainView : UserControl
 {
     private const string launchFile = "/home/gamer/ReignOS_Launch.sh";
@@ -1728,7 +1742,7 @@ public partial class MainView : UserControl
         
         // get SSID
         int networkNameIndex = 0, securityIndex = 0, signalIndex = 0;
-        var ssids = new List<string>();
+        var ssids = new List<SSID>();
         void ssidOut(string line)
         {
             if (string.IsNullOrWhiteSpace(line) || line.Contains("-------") || line.Contains("Available networks")) return;
@@ -1780,7 +1794,7 @@ public partial class MainView : UserControl
 
                 // add entry
                 string connectedTag = isConnected ? " (Connected)" : "";
-                ssids.Add($"{networkName} [{networkSecurity}] <Signal {signal}>{connectedTag}");
+                ssids.Add(new SSID(networkName, $"{networkName} [{networkSecurity}] <Signal {signal}>{connectedTag}", isConnected));
             }
             catch (Exception e)
             {
@@ -1791,7 +1805,7 @@ public partial class MainView : UserControl
         ProcessUtil.Run("iwctl", $"station {wlanDevice} scan", useBash:false);
         ProcessUtil.Run("iwctl", $"station {wlanDevice} get-networks", standardOut:ssidOut, useBash:false);
         connectionListBox.Items.Clear();
-        foreach (var ssid in ssids) connectionListBox.Items.Add(new ListBoxItem { Content = ssid });
+        foreach (var ssid in ssids) connectionListBox.Items.Add(new ListBoxItem { Content = ssid.desc, Tag = ssid });
     }
     
     // NOTE: forget network for debugger: iwctl known-networks <SSID> forget
@@ -1800,9 +1814,9 @@ public partial class MainView : UserControl
         if (connectionListBox.SelectedIndex < 0 || wlanDevice == null) return;
 
         var item = (ListBoxItem)connectionListBox.Items[connectionListBox.SelectedIndex];
-        var ssid = (string)item.Content;
+        var ssid = (SSID)item.Tag;
         ProcessUtil.KillHard("iwctl", true, out _);// make sure any failed processes are not open
-        ProcessUtil.Run("iwctl", $"--passphrase '{networkPasswordText.Text}' station {wlanDevice} connect '{ssid}'", useBash:true);
+        ProcessUtil.Run("iwctl", $"--passphrase '{networkPasswordText.Text}' station {wlanDevice} connect '{ssid.name}'", useBash:true);
         string result = ProcessUtil.Run("iwctl", $"station {wlanDevice} show", useBash:false);
         Log.WriteLine(result);
     }
