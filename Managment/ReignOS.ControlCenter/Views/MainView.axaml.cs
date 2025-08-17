@@ -1747,7 +1747,7 @@ public partial class MainView : UserControl
                 }
                 
                 // seperate line sections
-                lineClipped = line.Replace("[0m", "");
+                lineClipped = line.Replace("[0m", "").Replace("[1;90m", "");
                 string networkNameSection = lineClipped.Substring(networkNameIndex, securityIndex - networkNameIndex);
                 string securitySection = lineClipped.Substring(securityIndex, signalIndex - securityIndex);
                 string signalSection = lineClipped.Substring(signalIndex, lineClipped.Length - signalIndex);
@@ -1755,7 +1755,7 @@ public partial class MainView : UserControl
                 // get network name
                 bool isConnected = false;
                 string networkName = "!ERROR!";
-                var match = Regex.Match(networkNameSection, @"\s*>\s*(\S*)");
+                var match = Regex.Match(lineClipped, @"\s*>\s*(\S*)");
                 if (match.Success)
                 {
                     isConnected = true;
