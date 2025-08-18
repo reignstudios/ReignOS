@@ -2767,6 +2767,153 @@ public partial class MainView : UserControl
             Log.WriteLine(ex);
         }
     }
+
+    private void DisplayApplyGamescopeConfButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        const string gamescopePath = "/usr/share/gamescope/scripts/00-gamescope/displays/";
+        const string displayPath = "/sys/class/drm/";
+        if (!Directory.Exists(gamescopePath) || !Directory.Exists(displayPath)) return;
+        
+        // for each display with edid
+        foreach (string directory in Directory.GetDirectories(displayPath))
+        {
+            string edidPath = Path.Combine(directory, "edid");
+            if (!File.Exists(edidPath)) continue;
+
+            // parse edid desc
+            string eotf = "gamescope.eotf.gamma22";
+            string max_content_light_level = null;
+            string max_frame_average_luminance = null;
+            string min_content_light_level = null;
+            string vendor = null;
+            string model = null;
+            var timings = new List<string>();
+            string edidDesc = ProcessUtil.Run("cat", $"{edidPath} | edid-decode", useBash: true);
+            if (string.IsNullOrEmpty(edidDesc) || edidDesc.Length < 100) continue;
+            var lines = edidDesc.Split('\n');
+            bool eotfMode = false;
+            bool timingsMode = false;
+            foreach (string line in lines)
+            {
+                if (eotfMode)
+                {
+                    if (line.Contains("Supported static metadata descriptors:"))
+                    {
+                        eotfMode = false;
+                    }
+                    else
+                    {
+                        var match = Regex.Match(line, @"SMPTE (.*)");
+                        if (match.Success) eotf = $"gamescope.eotf.{match.Groups[1].Value}";
+                    }
+                }
+                else if (timingsMode)
+                {
+                    if (line.Contains("Checksum:") || line.Contains("Display Range Limits:"))
+                    {
+                        timingsMode = false;
+                    }
+                    else
+                    {
+                        var match = Regex.Match(line, @"DTD\s+\d+:\s+\d+x\d+\s+(\d+(\.\d*))\s+Hz");
+                        if (match.Success) timings.Add(match.Groups[1].Value);
+                    }
+                }
+                else if (line.Contains("Electro optical transfer functions:"))
+                {
+                    eotfMode = true;
+                }
+                else if (line.Contains("Detailed Timing Descriptors:"))
+                {
+                    timingsMode = true;
+                }
+                else if (line.Contains("Desired content max luminance:"))
+                {
+                    var match = Regex.Match(line, @"Desired content max luminance: \d* \((\d+(\.\d*)).*\)");
+                    if (match.Success) max_content_light_level =  match.Groups[1].Value;
+                }
+                else if (line.Contains("Desired content max frame-average luminance:"))
+                {
+                    var match = Regex.Match(line, @"Desired content max frame-average luminance: \d* \((\d+(\.\d*)).*\)");
+                    if (match.Success) max_frame_average_luminance =  match.Groups[1].Value;
+                }
+                else if (line.Contains("Desired content min luminance:"))
+                {
+                    var match = Regex.Match(line, @"Desired content min luminance: \d* \((\d+(\.\d*)).*\)");
+                    if (match.Success) min_content_light_level =  match.Groups[1].Value;
+                }
+                else if (line.Contains("Manufacturer: "))
+                {
+                    var match = Regex.Match(line, @"Manufacturer: (.*)");
+                    if (match.Success) vendor =  match.Groups[1].Value;
+                }
+                else if (line.Contains("Display Product Name: "))
+                {
+                    var match = Regex.Match(line, @"Display Product Name: '(.*)'");
+                    if (match.Success) model =  match.Groups[1].Value;
+                }
+            }
+            
+            // generate timeing hashset
+            var timingsHashset = new HashSet<int>();
+            foreach (var timing in timings)
+            {
+                if (double.TryParse(timing, out double value))
+                {
+                    value = Math.Round(value);
+                    timingsHashset.Add((int)value);
+                }
+            }
+            var timingsSorted = timingsHashset.ToList();
+            timingsSorted.Sort();
+            
+            // format timings
+            string timingsFormated = "";
+            int timingIndex = 0;
+            foreach (var timing in timingsSorted)
+            {
+                timingsFormated += timing;
+                timingIndex++;
+                if (timingIndex != timingsSorted.Count) timingsFormated += ", ";
+            }
+            
+            // save gamescope conf
+            if (vendor != null && model != null)
+            {
+                string confPath;
+                #if DEBUG
+                confPath = "/home/gamer/Dev/ReignOS/Managment/ReignOS.Service/bin/Debug/net8.0/Gamescope/ReignOS.Custom.lua";
+                #else
+                confPath = "/home/gamer/ReignOS/Managment/ReignOS.Service/bin/Debug/net8.0/linux-x64/publish/Gamescope/ReignOS.Custom.lua";
+                #endif
+                string conf = File.ReadAllText(confPath);
+                conf = conf.Replace("-- ReignOS Custom Settings for: ", $"-- ReignOS Custom Settings for: Manufacturer='{vendor}' Display Product Name='{model}'");
+                conf = conf.Replace("local panel_id = \"?\"", $"local panel_id = \"S{vendor}_{model}_display\"");
+                conf = conf.Replace("local panel_name = \"?\"", $"local panel_name = \"{vendor} {model} Display\"");
+                conf = conf.Replace("  { vendor = \"?\", model = \"?\" },", $"  {{ vendor = \"{vendor}\", model = \"{model}\" }},");
+                conf = conf.Replace("local panel_refresh_rates = { ? }", $"local panel_refresh_rates = {{ {timingsFormated} }}");
+                conf = conf.Replace("   eotf = ?,", $"   eotf = {eotf},");
+                conf = conf.Replace("   max_content_light_level = ?,", $"   max_content_light_level = {max_content_light_level},");
+                conf = conf.Replace("   max_frame_average_luminance = ?,", $"   max_frame_average_luminance = {max_frame_average_luminance},");
+                conf = conf.Replace("   min_content_light_level = ?", $"   min_content_light_level = {min_content_light_level}");
+                ProcessUtil.WriteAllTextAdmin(Path.Combine(gamescopePath, $"ReignOS.{vendor}_{model}.lua"), conf);
+            }
+        }
+    }
+    
+    private void DisplayDeleteGamescopeConfButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        const string gamescopePath = "/usr/share/gamescope/scripts/00-gamescope/displays/";
+        if (!Directory.Exists(gamescopePath)) return;
+        foreach (string file in Directory.GetFiles(gamescopePath))
+        {
+            string name = Path.GetFileName(file);
+            if (name.StartsWith("ReignOS."))
+            {
+                ProcessUtil.DeleteFileAdmin(file);
+            }
+        }
+    }
     
     private void PowerManagerButton_OnClick(object sender, RoutedEventArgs e)
     {

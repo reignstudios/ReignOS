@@ -1,21 +1,21 @@
--- OneXPlayer OneXFly F1 Pro
+-- ReignOS Custom Settings for: 
 
-local panel_id = "yhb_fhd_oled"
-local panel_name = "YHB FHD OLED Panel"
+local panel_id = "?"
+local panel_name = "?"
 
 local panel_models = {
-  { vendor = "YHB", model = "YHB02P25" },
+  { vendor = "?", model = "?" },
 }
 
-local panel_refresh_rates = { 60, 144 }
+local panel_refresh_rates = { ? }
 
 local panel_hdr = {
    supported = true,
    force_enabled = true,
-   eotf = gamescope.eotf.ST2084,
-   max_content_light_level = 687.448,
-   max_frame_average_luminance = 400,
-   min_content_light_level = 0.005
+   eotf = ?,
+   max_content_light_level = ?,
+   max_frame_average_luminance = ?,
+   min_content_light_level = ?
 }
 
 

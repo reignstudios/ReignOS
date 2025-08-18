@@ -27,6 +27,9 @@
       <None Update="Firmware\Bazzite\awinic\aw87xxx_acf_orangepi.bin">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Gamescope\ReignOS.Custom.lua">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
       <None Update="Gamescope\AYA-AYAOLED_FHD.lua">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>

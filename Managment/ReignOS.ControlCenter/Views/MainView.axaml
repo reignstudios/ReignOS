@@ -368,8 +368,21 @@
 					<RadioButton Name="displayRot_Flip" Content="Flip 180" Margin="750,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="DisplayRotButton_OnClick"/>
 				</Grid>
 				
-				<Button Content="Apply Global Brightness" Margin="4,0,0,60" HorizontalAlignment="Left" VerticalAlignment="Bottom" Click="DisplayApplyBrightnessButton_OnClick"/>
-				<Slider Name="displayBrightnessSlider" Width="200" Margin="4" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+				<TextBlock Text="System Brightness" Margin="4,0,0,80" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+				<Border BorderThickness="4" Margin="4" Width="370" Height="70" BorderBrush="Gray" Padding="4" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+					<Grid>
+						<Button Content="Apply Brightness" Margin="220,0,0,10" HorizontalAlignment="Left" VerticalAlignment="Bottom" Click="DisplayApplyBrightnessButton_OnClick" Background="Blue"/>
+						<Slider Name="displayBrightnessSlider" Width="200" Margin="4,4,0,4" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+					</Grid>
+				</Border>
+				
+				<TextBlock Text="Gamescope Config" Margin="380,0,0,80" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+				<Border BorderThickness="4" Margin="380,0,0,4" Width="180" Height="70" BorderBrush="Gray" Padding="4" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+					<Grid>
+						<Button Content="Generate" Margin="0,0,0,10" VerticalAlignment="Bottom" Click="DisplayApplyGamescopeConfButton_OnClick" Background="DarkGreen"/>
+						<Button Content="Delete" Margin="100,0,0,10" VerticalAlignment="Bottom" Click="DisplayDeleteGamescopeConfButton_OnClick" Background="OrangeRed"/>
+					</Grid>
+				</Border>
 			</Grid>
 		</Grid>
 		
