@@ -3,7 +3,7 @@
 # remove old packages
 # nothing yet...
 
-# update pacamn
+# run updates first
 cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/
 chmod +x ./Update.sh
 ./Update.sh
