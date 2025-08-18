@@ -30,27 +30,6 @@
       <None Update="Gamescope\AYA-AYAOLED_FHD.lua">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="Gamescope\Official\asus.rogally.lcd.lua">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Gamescope\Official\deckhd.steamdeck.deckhd-lcd.lua">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Gamescope\Official\gpd.win4.lcd.lua">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Gamescope\Official\lenovo.legiongo.lcd.lua">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Gamescope\Official\lenovo.legiongos.lcd.lua">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Gamescope\Official\valve.steamdeck.lcd.lua">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Gamescope\Official\valve.steamdeck.oled.lua">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
       <None Update="Gamescope\YHB-YHB02P25.lua">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>

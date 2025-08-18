@@ -3,8 +3,10 @@
 # remove old packages
 # nothing yet...
 
-# add core pacman packages
-sudo pacman -S --noconfirm --needed linux-headers linux-tools
+# update pacamn
+cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/
+chmod +x ./Update.sh
+./Update.sh
 
 # make sure yay installed
 if [ ! -d "/home/gamer/yay" ]; then
@@ -14,6 +16,9 @@ if [ ! -d "/home/gamer/yay" ]; then
 	makepkg -si --noconfirm
 	yay -Syy --noconfirm
 fi
+
+# add core pacman packages
+sudo pacman -S --noconfirm --needed linux-headers linux-tools
 
 # add pacman packages
 sudo pacman -S --noconfirm --needed jq
