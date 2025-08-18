@@ -394,19 +394,29 @@ public partial class MainView : UserControl
                     }
                     else if (parts[0] == "PowerManager")
                     {
-                        powerButton.IsVisible = false;
                         if (parts[1] == "PowerProfiles")
                         {
                             powerProfilesCheckbox.IsChecked = true;
                             powerButton.IsVisible = true;
                         }
-                        else if (parts[1] == "PowerStation") powerStationCheckbox.IsChecked = true;
-                        else if (parts[1] == "DeckyTDP") powerDeckyTDPCheckbox.IsChecked = true;
-                        else if (parts[1] == "Disabled") powerManagementDisabledCheckbox.IsChecked = true;
+                        else if (parts[1] == "PowerStation")
+                        {
+                            powerStationCheckbox.IsChecked = true;
+                            powerButton.IsVisible = false;
+                        }
+                        else if (parts[1] == "DeckyTDP")
+                        {
+                            powerDeckyTDPCheckbox.IsChecked = true;
+                            powerButton.IsVisible = false;
+                        }
+                        else if (parts[1] == "Disabled")
+                        {
+                            powerManagementDisabledCheckbox.IsChecked = true;
+                            powerButton.IsVisible = false;
+                        }
                     }
                     else if (parts[0] == "RGBManager")
                     {
-                        powerButton.IsVisible = false;
                         if (parts[1] == "HueSync") rgbHueSyncCheckbox.IsChecked = true;
                     }
                     else if (parts[0] == "PowerPercentage")
