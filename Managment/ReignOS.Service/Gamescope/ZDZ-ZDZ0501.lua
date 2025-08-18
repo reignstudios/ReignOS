@@ -7,15 +7,15 @@ local panel_models = {
   { vendor = "ZDZ", model = "ZDZ0501" },
 }
 
-local panel_refresh_rates = { 120, 144 }
+local panel_refresh_rates = { 120 }
 
 local panel_hdr = {
    supported = true,
    force_enabled = true,
    eotf = gamescope.eotf.ST2084,
-   max_content_light_level = 687.448,
+   max_content_light_level = 993.486,
    max_frame_average_luminance = 400,
-   min_content_light_level = 0.005
+   min_content_light_level = 0.007
 }
 
 
