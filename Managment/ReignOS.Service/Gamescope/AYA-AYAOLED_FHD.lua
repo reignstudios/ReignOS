@@ -7,7 +7,7 @@ local panel_models = {
   { vendor = "AYA", model = "AYAOLED_FHD" },
 }
 
-local panel_refresh_rates = { 60, 120, 144 }
+local panel_refresh_rates = { 60, 90, 120, 144 }
 
 local panel_hdr = {
    supported = true,
