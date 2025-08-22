@@ -89,6 +89,7 @@ internal class Program
         foreach (string arg in args)
         {
             if (arg == "--input-inputplumber") inputMode = InputMode.InputPlumber;
+            else if (arg == "--input-hhd") inputMode = InputMode.HHD;
             else if (arg == "--input-disable") inputMode = InputMode.Disabled;
         }
         

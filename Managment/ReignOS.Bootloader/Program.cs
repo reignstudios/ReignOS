@@ -109,6 +109,7 @@ internal class Program
 
             else if (arg == "--input-reignos") inputMode = InputMode.ReignOS;
             else if (arg == "--input-inputplumber") inputMode = InputMode.InputPlumber;
+            else if (arg == "--input-hhd") inputMode = InputMode.HHD;
             else if (arg == "--input-disable") inputMode = InputMode.Disabled;
             
             else if (arg.StartsWith("--display-name="))
@@ -198,6 +199,7 @@ internal class Program
             switch (inputMode)
             {
                 case InputMode.InputPlumber: inputArg = " --input-inputplumber"; break;
+                case InputMode.HHD: inputArg = " --input-hhd"; break;
                 case InputMode.Disabled: inputArg = " --input-disable"; break;
                 default: inputArg = " --input-reignos"; break;
             }

@@ -13,5 +13,6 @@ public enum InputMode
 {
     ReignOS,
     InputPlumber,
+    HHD,
     Disabled
 }
