@@ -143,6 +143,8 @@ if [ $exit_code -eq 50 ]; then
   echo "Uninstalling HHD..."
   systemctl --user stop hhd-user
   systemctl --user disable hhd-user
+  sudo systemctl stop hhd@$(whoami)
+  sudo systemctl disable hhd@$(whoami)
   yay -R --noconfirm hhd-user
   yay -R --noconfirm hhd
   
@@ -156,6 +158,8 @@ if [ $exit_code -eq 51 ]; then
   echo "Uninstalling HHD..."
   systemctl --user stop hhd-user
   systemctl --user disable hhd-user
+  sudo systemctl stop hhd@$(whoami)
+  sudo systemctl disable hhd@$(whoami)
   yay -R --noconfirm hhd-user
   yay -R --noconfirm hhd
   
@@ -178,6 +182,7 @@ if [ $exit_code -eq 52 ]; then
   echo "Installing HHD..."
   yay -S --noconfirm hhd hhd-user
   systemctl --user enable hhd-user
+  sudo systemctl enable hhd@$(whoami)
   sleep 2
   sudo reboot -f
   exit 0
