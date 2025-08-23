@@ -504,9 +504,11 @@ static class InstallUtil
         else fileText = "";
         fileBuilder = new StringBuilder(fileText);
         fileBuilder.AppendLine();
-        fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS_Launch.sh");
-        fileBuilder.AppendLine("chmod +x /home/gamer/ReignOS_Launch.sh");
-        fileBuilder.AppendLine("/home/gamer/ReignOS_Launch.sh");
+        fileBuilder.AppendLine("if [[ \"$(tty)\" == \"/dev/tty1\" && -n \"$XDG_VTNR\" && \"$XDG_VTNR\" -eq 1 ]]; then");
+        fileBuilder.AppendLine("    sudo chown -R $USER /home/gamer/ReignOS_Launch.sh");
+        fileBuilder.AppendLine("    chmod +x /home/gamer/ReignOS_Launch.sh");
+        fileBuilder.AppendLine("    /home/gamer/ReignOS_Launch.sh");
+        fileBuilder.AppendLine("fi");
         File.WriteAllText(path, fileBuilder.ToString());
         UpdateProgress(31);
     }
@@ -586,6 +588,10 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm --needed python-gobject");
         Run("systemctl", "enable power-profiles-daemon");
         UpdateProgress(61);
+
+        // install ssh
+        Run("pacman", "-S --noconfirm --needed net-tools openssh");
+        Run("systemctl", "enable sshd");
 
         // install auto-mount drives
         Run("pacman", "-S --noconfirm --needed udiskie udisks2");

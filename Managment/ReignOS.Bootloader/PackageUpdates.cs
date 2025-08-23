@@ -31,7 +31,8 @@ static class PackageUpdates
         //AddLaunchScript();
         //FixOSName();
         IgnorePackages();
-        
+        ReconfigureAutoLogin();
+
         // check bad configs (do them all at once then reboot)
         bool badConfig = false;
         if (CheckBadHostname()) badConfig = true;
@@ -107,6 +108,9 @@ static class PackageUpdates
         if (!PackageUtils.PackageExits("7zip")) return true;
         if (!PackageUtils.PackageExits("xz")) return true;
 
+        if (!PackageUtils.PackageExits("openssh")) return true;
+        if (!PackageUtils.PackageExits("net-tools")) return true;
+
         if (!PackageUtils.PackageExits("yay")) return true;
         if (!PackageUtils.PackageExits("supergfxctl")) return true;
         if (!PackageUtils.PackageExits("ttf-ms-fonts")) return true;
@@ -162,6 +166,25 @@ static class PackageUpdates
                 }
             }
             ProcessUtil.WriteAllTextAdmin(pacmanConf, text);
+        }
+        catch (Exception e)
+        {
+            Log.WriteLine(e);
+        }
+    }
+
+    private static void ReconfigureAutoLogin()
+    {
+        try
+        {
+            const string bashProfile = "/home/gamer/.bash_profile";
+            string text = File.ReadAllText(bashProfile);
+            if (!text.Contains("if [[ \"$(tty)\" == \"/dev/tty1\" && -n \"$XDG_VTNR\" && \"$XDG_VTNR\" -eq 1 ]]; then"))
+            {
+                text = text.Replace("[[ -f ~/.bashrc ]] && . ~/.bashrc", "[[ -f ~/.bashrc ]] && . ~/.bashrc\n\nif [[ \"$(tty)\" == \"/dev/tty1\" && -n \"$XDG_VTNR\" && \"$XDG_VTNR\" -eq 1 ]]; then");
+                text = text.Replace("/home/gamer/ReignOS_Launch.sh", "/home/gamer/ReignOS_Launch.sh\n\nfi");
+            }
+            File.WriteAllText(bashProfile, text);
         }
         catch (Exception e)
         {

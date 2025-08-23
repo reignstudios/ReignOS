@@ -59,6 +59,9 @@ sudo pacman -S --noconfirm --needed gparted
 sudo pacman -S --noconfirm --needed flatpak
 sudo pacman -S --noconfirm --needed zip unzip gzip bzip2 7zip xz
 
+sudo pacman -S --noconfirm --needed net-tools openssh
+sudo systemctl enable sshd
+
 yay -S --noconfirm --needed supergfxctl
 
 yay -S --noconfirm --needed ttf-ms-fonts
