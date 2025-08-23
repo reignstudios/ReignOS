@@ -182,7 +182,7 @@ static class PackageUpdates
             if (!text.Contains("if [[ \"$(tty)\" == \"/dev/tty1\" && -n \"$XDG_VTNR\" && \"$XDG_VTNR\" -eq 1 ]]; then"))
             {
                 text = text.Replace("[[ -f ~/.bashrc ]] && . ~/.bashrc", "[[ -f ~/.bashrc ]] && . ~/.bashrc\n\nif [[ \"$(tty)\" == \"/dev/tty1\" && -n \"$XDG_VTNR\" && \"$XDG_VTNR\" -eq 1 ]]; then");
-                text = text + "\n\nfi";
+                text = text + "\nfi";
             }
             File.WriteAllText(bashProfile, text);
         }
