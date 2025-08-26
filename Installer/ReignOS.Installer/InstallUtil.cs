@@ -164,8 +164,8 @@ static class InstallUtil
             Run("timedatectl", "");// log time
 
             // update mirror list to use newer versions
-            string countryCode = ProcessUtil.Run("curl", "-s https://ifconfig.co/country-iso", useBash:true).Trim();
-            ProcessUtil.Run("reflector", $"--country {countryCode} --latest 50 --protocol https --sort rate --save /etc/pacman.d/mirrorlist", useBash: true, asAdmin: true);
+            string countryCode = ProcessUtil.Run("curl", "-s https://ifconfig.co/country-iso", useBash:false).Trim();
+            ProcessUtil.Run("reflector", $"--country {countryCode} --latest 50 --protocol https --sort rate --save /etc/pacman.d/mirrorlist", useBash: false, asAdmin: true);
             Run("pacman", "-Syyu --noconfirm");// always run after reflector
 
             // update keyring
