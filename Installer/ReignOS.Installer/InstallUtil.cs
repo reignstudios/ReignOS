@@ -368,6 +368,27 @@ static class InstallUtil
         fileBuilder.AppendLine("echo \"NOTE: This will take some time, let it finish!\"");
         fileBuilder.AppendLine("sleep 5");
 
+        fileBuilder.AppendLine();// add retry install methods
+        fileBuilder.AppendLine("pacman_retry() {");
+        fileBuilder.AppendLine("    local tries=5");
+        fileBuilder.AppendLine("    for ((i=1; i<=tries; i++)); do");
+        fileBuilder.AppendLine("        sudo pacman --noconfirm --needed \"$@\" && return 0");
+        fileBuilder.AppendLine("        echo \"Retry $i/$tries failed... retrying in 5s\"");
+        fileBuilder.AppendLine("        sleep 5");
+        fileBuilder.AppendLine("    done");
+        fileBuilder.AppendLine("    return 1");
+        fileBuilder.AppendLine("}");
+        fileBuilder.AppendLine();
+        fileBuilder.AppendLine("yay_retry() {");
+        fileBuilder.AppendLine("    local tries=5");
+        fileBuilder.AppendLine("    for ((i=1; i<=tries; i++)); do");
+        fileBuilder.AppendLine("        yay --noconfirm --needed \"$@\" && return 0");
+        fileBuilder.AppendLine("        echo \"Retry $i/$tries failed... retrying in 5s\"");
+        fileBuilder.AppendLine("        sleep 5");
+        fileBuilder.AppendLine("    done");
+        fileBuilder.AppendLine("    return 1");
+        fileBuilder.AppendLine("}");
+
         fileBuilder.AppendLine();// make sure we have network still or install needs to fail until it does
         fileBuilder.AppendLine("NetworkUp=false");
         fileBuilder.AppendLine("for i in $(seq 1 30); do");
@@ -445,39 +466,39 @@ static class InstallUtil
 
         fileBuilder.AppendLine();// install MUX support
         fileBuilder.AppendLine("echo \"Installing NUX support...\"");
-        fileBuilder.AppendLine("yay -S --noconfirm --needed supergfxctl");
+        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed supergfxctl");
 
         fileBuilder.AppendLine();// install extra fonts
         fileBuilder.AppendLine("echo \"Installing extra fonts...\"");
-        fileBuilder.AppendLine("yay -S --noconfirm --needed ttf-ms-fonts");
+        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed ttf-ms-fonts");
         fileBuilder.AppendLine("fc-cache -fv");
 
         fileBuilder.AppendLine();// install steamcmd
         fileBuilder.AppendLine("echo \"Installing steamcmd...\"");
-        fileBuilder.AppendLine("yay -S --noconfirm --needed steamcmd");
+        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed steamcmd");
 
         fileBuilder.AppendLine();// install ProtonGE
         fileBuilder.AppendLine("echo \"Installing ProtonGE...\"");
-        fileBuilder.AppendLine("yay -S --noconfirm --needed proton-ge-custom-bin");
+        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed proton-ge-custom-bin");
 
         fileBuilder.AppendLine();// install DeckyLoader
         fileBuilder.AppendLine("echo \"Installing DeckyLoader...\"");
-        fileBuilder.AppendLine("sudo pacman -S --noconfirm --needed jq");
+        fileBuilder.AppendLine("sudo pacman_retry -S --noconfirm --needed jq");
         fileBuilder.AppendLine("curl -L https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/install_release.sh | sh");
 
         fileBuilder.AppendLine();// install misc drivers
         fileBuilder.AppendLine("echo \"Installing Misc Drivers...\"");
-        fileBuilder.AppendLine("yay -S --noconfirm --needed bcm20702a1-firmware");
+        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed bcm20702a1-firmware");
 
-        fileBuilder.AppendLine("yay -S --noconfirm --needed ayaneo-platform-dkms-git");
-        fileBuilder.AppendLine("yay -S --noconfirm --needed ayn-platform-dkms-git");
+        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed ayaneo-platform-dkms-git");
+        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed ayn-platform-dkms-git");
 
-        fileBuilder.AppendLine("yay -S --noconfirm --needed rtl8812au-dkms-git");
-        fileBuilder.AppendLine("yay -S --noconfirm --needed rtl8814au-dkms-git");
-        fileBuilder.AppendLine("yay -S --noconfirm --needed rtl88x2bu-dkms-git");
-        fileBuilder.AppendLine("yay -S --noconfirm --needed rtl8821au-dkms-git");
+        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed rtl8812au-dkms-git");
+        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed rtl8814au-dkms-git");
+        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed rtl88x2bu-dkms-git");
+        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed rtl8821au-dkms-git");
         
-        fileBuilder.AppendLine("yay -S --noconfirm --needed ryzenadj");
+        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed ryzenadj");
 
         fileBuilder.AppendLine();// disable stop on any error
         fileBuilder.AppendLine("set +e");
