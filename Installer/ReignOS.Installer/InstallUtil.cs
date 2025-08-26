@@ -485,7 +485,7 @@ static class InstallUtil
 
         fileBuilder.AppendLine();// install DeckyLoader
         fileBuilder.AppendLine("echo \"Installing DeckyLoader...\"");
-        fileBuilder.AppendLine("sudo pacman_retry -S --noconfirm --needed jq");
+        fileBuilder.AppendLine("pacman_retry -S --noconfirm --needed jq");
         fileBuilder.AppendLine("curl -L https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/install_release.sh | sh");
 
         fileBuilder.AppendLine();// install misc drivers
