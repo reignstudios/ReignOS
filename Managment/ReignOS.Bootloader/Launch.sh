@@ -53,6 +53,7 @@ if [ $exit_code -eq 14 ]; then
 
   COUNTRY=$(curl -s https://ifconfig.co/country-iso)
   reflector --country $COUNTRY --latest 50 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+  sudo pacman -Syyu --noconfirm
 
   sudo pacman -Sy archlinux-keyring --noconfirm
   sudo pacman-key --init
@@ -60,6 +61,7 @@ if [ $exit_code -eq 14 ]; then
   sudo pacman-key --refresh-keys
   sudo pacman-key --updatedb
   sudo pacman -Sy --noconfirm
+  yay -Syu --noconfirm
 
   ./Update.sh
   sudo reboot -f
