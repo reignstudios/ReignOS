@@ -424,6 +424,7 @@ static class InstallUtil
         fileBuilder.AppendLine();// update mirror list to use newer versions
         fileBuilder.AppendLine("echo 'refresh mirror list...'");
         fileBuilder.AppendLine("COUNTRY=$(curl -s https://ifconfig.co/country-iso)");
+        fileBuilder.AppendLine("echo 'Country = $COUNTRY'");
         fileBuilder.AppendLine("sudo reflector --country $COUNTRY --latest 50 --protocol https --sort rate --save /etc/pacman.d/mirrorlist");
         fileBuilder.AppendLine("sleep 1");
 
@@ -454,7 +455,6 @@ static class InstallUtil
         fileBuilder.AppendLine("    git clone https://aur.archlinux.org/yay.git");
         fileBuilder.AppendLine("    cd /home/gamer/yay");
         fileBuilder.AppendLine("    makepkg -si --noconfirm");
-        fileBuilder.AppendLine("    yay -Syy --noconfirm");
         fileBuilder.AppendLine("fi");
         fileBuilder.AppendLine("sleep 1");
 
