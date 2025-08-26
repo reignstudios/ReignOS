@@ -430,12 +430,14 @@
                     * sudo hwclock --systohc<br>
                     * COUNTRY=$(curl -s https://ifconfig.co/country-iso)<br>
                     * sudo reflector --country $COUNTRY --latest 50 --protocol https --sort rate --save /etc/pacman.d/mirrorlist<br>
+                    * sudo pacman -Syyu
                     * sudo pacman -Sy archlinux-keyring<br>
                     * sudo pacman-key --init<br>
                     * sudo pacman-key --populate archlinux<br>
                     * sudo pacman-key --refresh-keys<br>
                     * sudo pacman-key --updatedb<br>
                     * sudo pacman -Sy<br>
+                    * yay -Syu
                     * reboot<br>
                 </li>
                 <li>

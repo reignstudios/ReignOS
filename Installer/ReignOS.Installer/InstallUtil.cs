@@ -87,7 +87,17 @@ static class InstallUtil
         }
         else
         {
-            ProcessUtil.Run("arch-chroot", $"/mnt bash -c \\\"{name} {args}\\\"", asAdmin:true, enterAdminPass:false, standardOut:standardOut, getStandardInput:getStandardInput, workingDir:workingDir, verboseLog:true);
+            const int retryMax = 5;
+            int retryCount = 0;
+            while (retryCount < retryMax)
+            {
+                ProcessUtil.Run("arch-chroot", $"/mnt bash -c \\\"{name} {args}\\\"", asAdmin:true, enterAdminPass:false, standardOut:standardOut, getStandardInput:getStandardInput, workingDir:workingDir, verboseLog:true);
+                if (!cancel) break;// if it didn't cancel its success
+
+                retryCount++;
+                Log.WriteLine($"Attempt failed {retryCount} of {retryMax}. Retry in 5 seconds...");
+                Thread.Sleep(5);
+            }
         }
     }
     
@@ -156,6 +166,7 @@ static class InstallUtil
             // update mirror list to use newer versions
             string countryCode = ProcessUtil.Run("curl", "-s https://ifconfig.co/country-iso", useBash:true).Trim();
             ProcessUtil.Run("reflector", $"--country {countryCode} --latest 50 --protocol https --sort rate --save /etc/pacman.d/mirrorlist", useBash: true, asAdmin: true);
+            Run("pacman", "-Syyu --noconfirm");// always run after reflector
 
             // update keyring
             if (fullRefresh)
@@ -183,10 +194,6 @@ static class InstallUtil
             Run("umount", "-R /mnt/boot");
             Run("umount", "-R /mnt");
             UpdateProgress(1);
-
-            // sync pacman db
-            Run("pacman", "-Sy --noconfirm");
-            UpdateProgress(2);
 
             // init pacman keyring
             static void standardOut(string line)
@@ -360,6 +367,7 @@ static class InstallUtil
         fileBuilder.AppendLine("echo \"ReignOS: Running FirstRun post-install tasks...\"");
         fileBuilder.AppendLine("echo \"NOTE: This will take some time, let it finish!\"");
         fileBuilder.AppendLine("sleep 5");
+
         fileBuilder.AppendLine();// make sure we have network still or install needs to fail until it does
         fileBuilder.AppendLine("NetworkUp=false");
         fileBuilder.AppendLine("for i in $(seq 1 30); do");
@@ -396,7 +404,7 @@ static class InstallUtil
         fileBuilder.AppendLine("echo 'refresh mirror list...'");
         fileBuilder.AppendLine("COUNTRY=$(curl -s https://ifconfig.co/country-iso)");
         fileBuilder.AppendLine("sudo reflector --country $COUNTRY --latest 50 --protocol https --sort rate --save /etc/pacman.d/mirrorlist");
-        fileBuilder.AppendLine("sleep 5");
+        fileBuilder.AppendLine("sleep 1");
 
         /*fileBuilder.AppendLine();// update keyring
         fileBuilder.AppendLine("echo 'refresh keyring...'");
@@ -408,7 +416,7 @@ static class InstallUtil
         fileBuilder.AppendLine("sleep 5");*/
 
         fileBuilder.AppendLine();// update pacman
-        fileBuilder.AppendLine("sudo pacman -Syu --noconfirm");
+        fileBuilder.AppendLine("sudo pacman -Syyu --noconfirm");
         fileBuilder.AppendLine("sleep 1");
 
         fileBuilder.AppendLine();// make sure git-lfs is hooked up
@@ -427,7 +435,13 @@ static class InstallUtil
         fileBuilder.AppendLine("    makepkg -si --noconfirm");
         fileBuilder.AppendLine("    yay -Syy --noconfirm");
         fileBuilder.AppendLine("fi");
-        fileBuilder.AppendLine("sleep 5");
+        fileBuilder.AppendLine("sleep 1");
+
+        fileBuilder.AppendLine();// update yay
+        fileBuilder.AppendLine("set +e");// disable errors
+        fileBuilder.AppendLine("yay -Syu --noconfirm");
+        fileBuilder.AppendLine("set -e");// enabled errors
+        fileBuilder.AppendLine("sleep 1");
 
         fileBuilder.AppendLine();// install MUX support
         fileBuilder.AppendLine("echo \"Installing NUX support...\"");
