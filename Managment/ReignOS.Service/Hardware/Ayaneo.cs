@@ -199,6 +199,7 @@ namespace ReignOS.Service.Hardware
             // power off hardware
             if (File.Exists(magicModulePowerPath))
             {
+                Thread.Sleep(3000);
                 ProcessUtil.WriteAllTextAdmin(magicModulePowerPath, "off");
             }
 
