@@ -236,36 +236,6 @@ namespace ReignOS.Service.Hardware
                     var data = new byte[256];
                     int i;
 
-                    // set xpad mode
-                    Thread.Sleep(500);
-                    i = 0;
-                    Array.Clear(data);
-                    data[i++] = 0x00;
-                    data[i++] = 0x00;
-                    data[i++] = 0x00;
-                    data[i++] = 0x0a;
-                    data[i++] = 0x01;
-                    WriteDeviceData(device, data);
-                }
-            }
-            
-            // reset hardware
-            if (File.Exists(magicModulePowerPath) && File.Exists(magicModuleStatePath))
-            {
-                Thread.Sleep(2000);
-                ProcessUtil.WriteAllTextAdmin(magicModulePowerPath, "off");
-                Thread.Sleep(2000);
-                ProcessUtil.WriteAllTextAdmin(magicModulePowerPath, "on");
-            }
-            
-            // init hid device
-            using (var device = new HidDevice())
-            {
-                if (device.Init(7247, 2, false, physicalLocation: "input2", physicalLocationIsContains: true) || device.handles.Count >= 1)
-                {
-                    var data = new byte[256];
-                    int i;
-
                     // Ayaneo opens app (device init)
                     i = 0;
                     Array.Clear(data);
@@ -308,7 +278,27 @@ namespace ReignOS.Service.Hardware
                     data[i++] = 0x64;
                     data[i++] = 0x64;
                     WriteDeviceData(device, data);
+
+                    // set xpad mode
+                    Thread.Sleep(500);
+                    i = 0;
+                    Array.Clear(data);
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x0a;
+                    data[i++] = 0x01;
+                    WriteDeviceData(device, data);
                 }
+            }
+            
+            // reset hardware
+            if (File.Exists(magicModulePowerPath) && File.Exists(magicModuleStatePath))
+            {
+                Thread.Sleep(2000);
+                ProcessUtil.WriteAllTextAdmin(magicModulePowerPath, "off");
+                Thread.Sleep(2000);
+                ProcessUtil.WriteAllTextAdmin(magicModulePowerPath, "on");
             }
 
             // finished
