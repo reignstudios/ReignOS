@@ -25,7 +25,7 @@ namespace ReignOS.Service.Hardware
                 Program.hardwareType == HardwareType.Ayaneo3 ||
                 Program.hardwareType == HardwareType.AyaneoPro ||
                 Program.hardwareType == HardwareType.AyaneoPlus ||
-                Program.hardwareType == HardwareType.AyaneoFlipDS ||
+                Program.hardwareType == HardwareType.AyaneoFlipDS || Program.hardwareType == HardwareType.AyaneoFlipDS_1S ||
                 Program.hardwareType == HardwareType.AyaneoSlide;
 
             if (Program.hardwareType == HardwareType.Ayaneo1 || Program.hardwareType == HardwareType.AyaneoPro)
@@ -88,7 +88,7 @@ namespace ReignOS.Service.Hardware
                 }
             }
 
-            if (Program.hardwareType == HardwareType.Ayaneo3 || Program.hardwareType == HardwareType.Ayaneo)
+            if (Program.hardwareType == HardwareType.Ayaneo3 || Program.hardwareType == HardwareType.AyaneoFlipDS_1S || Program.hardwareType == HardwareType.Ayaneo)
             {
                 if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_F23, true)))
                 {
@@ -122,7 +122,7 @@ namespace ReignOS.Service.Hardware
                 Program.hardwareType == HardwareType.Ayaneo2 ||
                 Program.hardwareType == HardwareType.AyaneoPro ||
                 Program.hardwareType == HardwareType.AyaneoPlus ||
-                Program.hardwareType == HardwareType.AyaneoFlipDS ||
+                Program.hardwareType == HardwareType.AyaneoFlipDS || Program.hardwareType == HardwareType.AyaneoFlipDS_1S ||
                 Program.hardwareType == HardwareType.AyaneoSlide ||
                 Program.hardwareType == HardwareType.Ayaneo
             )
@@ -140,61 +140,63 @@ namespace ReignOS.Service.Hardware
             if (Program.hardwareType != HardwareType.Ayaneo3) return;
 
             // init hid device
-            using var device = new HidDevice();
-            if (!device.Init(7247, 2, false, physicalLocation:"input2", physicalLocationIsContains:true) || device.handles.Count == 0) return;
-            var data = new byte[256];
-            int i;
+            using (var device = new HidDevice())
+            {
+                if (!device.Init(7247, 2, false, physicalLocation:"input2", physicalLocationIsContains:true) || device.handles.Count == 0) return;
+                var data = new byte[256];
+                int i;
 
-            // popout commands
-            i = 0;
-            Array.Clear(data);
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x05;
-            WriteDeviceData(device, data);
+                // popout commands
+                i = 0;
+                Array.Clear(data);
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x05;
+                WriteDeviceData(device, data);
 
-            i = 0;
-            Array.Clear(data);
-            data[i++] = 0xb3;
-            data[i++] = 0x07;
-            data[i++] = 0x21;
-            data[i++] = 0x09;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x03;
-            data[i++] = 0xff;
-            data[i++] = 0xff;
-            data[i++] = 0xff;
-            data[i++] = 0x03;
-            data[i++] = 0xff;
-            data[i++] = 0xff;
-            data[i++] = 0xff;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x77;
-            data[i++] = 0x00;
-            data[i++] = 0x33;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x01;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x00;
-            data[i++] = 0x40;
-            data[i++] = 0x64;
-            data[i++] = 0x64;
-            WriteDeviceData(device, data);
+                i = 0;
+                Array.Clear(data);
+                data[i++] = 0xb3;
+                data[i++] = 0x07;
+                data[i++] = 0x21;
+                data[i++] = 0x09;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x03;
+                data[i++] = 0xff;
+                data[i++] = 0xff;
+                data[i++] = 0xff;
+                data[i++] = 0x03;
+                data[i++] = 0xff;
+                data[i++] = 0xff;
+                data[i++] = 0xff;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x77;
+                data[i++] = 0x00;
+                data[i++] = 0x33;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x01;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x00;
+                data[i++] = 0x40;
+                data[i++] = 0x64;
+                data[i++] = 0x64;
+                WriteDeviceData(device, data);
+            }
             
             // power off hardware
             if (File.Exists(magicModulePowerPath))
@@ -218,18 +220,6 @@ namespace ReignOS.Service.Hardware
                 if (!device.Init(7247, 2, false, physicalLocation: "input2", physicalLocationIsContains: true) || device.handles.Count == 0) return;
                 var data = new byte[256];
                 int i;
-                
-                // power on hardware
-                if (File.Exists(magicModulePowerPath) && File.Exists(magicModuleStatePath))
-                {
-                    string result = File.ReadAllText(magicModuleStatePath).Trim();
-                    Log.WriteLine($"MagicModule state: {result}");
-                    if (result != "both") return;
-                    
-                    ProcessUtil.WriteAllTextAdmin(magicModulePowerPath, "on");
-                    Thread.Sleep(1000);
-                    reboot = false;
-                }
 
                 // Ayaneo opens app (device init)
                 i = 0;
@@ -284,6 +274,18 @@ namespace ReignOS.Service.Hardware
                 data[i++] = 0x0a;
                 data[i++] = 0x01;
                 WriteDeviceData(device, data);
+            }
+            
+            // power on hardware
+            if (File.Exists(magicModulePowerPath) && File.Exists(magicModuleStatePath))
+            {
+                Thread.Sleep(1000);
+                string result = File.ReadAllText(magicModuleStatePath).Trim();
+                Log.WriteLine($"MagicModule state: {result}");
+                if (result != "both") return;
+
+                ProcessUtil.WriteAllTextAdmin(magicModulePowerPath, "on");
+                reboot = false;
             }
 
             // finished
