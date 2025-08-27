@@ -223,7 +223,7 @@ namespace ReignOS.Service.Hardware
 
                 ProcessUtil.WriteAllTextAdmin(magicModulePowerPath, "on");
                 reboot = false;
-                Thread.Sleep(1000);
+                Thread.Sleep(3000);
             }
 
             // init hid device
@@ -286,6 +286,15 @@ namespace ReignOS.Service.Hardware
                 data[i++] = 0x0a;
                 data[i++] = 0x01;
                 WriteDeviceData(device, data);
+            }
+            
+            // reset hardware
+            if (File.Exists(magicModulePowerPath) && File.Exists(magicModuleStatePath))
+            {
+                Thread.Sleep(3000);
+                ProcessUtil.WriteAllTextAdmin(magicModulePowerPath, "off");
+                Thread.Sleep(3000);
+                ProcessUtil.WriteAllTextAdmin(magicModulePowerPath, "on");
             }
 
             // finished
