@@ -220,13 +220,11 @@ namespace ReignOS.Service.Hardware
                 int i;
                 
                 // power on hardware
-                if (File.Exists(magicModulePowerPath))
+                if (File.Exists(magicModulePowerPath) && File.Exists(magicModuleStatePath))
                 {
-                    if (File.Exists(magicModuleStatePath))
-                    {
-                        string result = File.ReadAllText(magicModuleStatePath).Trim();
-                        if (result != "both") return;
-                    }
+                    string result = File.ReadAllText(magicModuleStatePath).Trim();
+                    Log.WriteLine($"MagicModule state: {result}");
+                    if (result != "both") return;
                     
                     ProcessUtil.WriteAllTextAdmin(magicModulePowerPath, "on");
                     Thread.Sleep(1000);
