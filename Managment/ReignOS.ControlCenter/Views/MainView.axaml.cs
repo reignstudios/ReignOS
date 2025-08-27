@@ -409,6 +409,11 @@ public partial class MainView : UserControl
                             powerDeckyTDPCheckbox.IsChecked = true;
                             powerButton.IsVisible = false;
                         }
+                        else if (parts[1] == "Adjustor")
+                        {
+                            hhdAdjustorCheckbox.IsChecked = true;
+                            powerButton.IsVisible = false;
+                        }
                         else if (parts[1] == "Disabled")
                         {
                             powerManagementDisabledCheckbox.IsChecked = true;
@@ -574,6 +579,7 @@ public partial class MainView : UserControl
                 if (powerProfilesCheckbox.IsChecked == true) writer.WriteLine("PowerManager=PowerProfiles");
                 else if (powerStationCheckbox.IsChecked == true) writer.WriteLine("PowerManager=PowerStation");
                 else if (powerDeckyTDPCheckbox.IsChecked == true) writer.WriteLine("PowerManager=DeckyTDP");
+                else if (hhdAdjustorCheckbox.IsChecked == true) writer.WriteLine("PowerManager=Adjustor");
                 else if (powerManagementDisabledCheckbox.IsChecked == true) writer.WriteLine("PowerManager=Disabled");
 
                 if (rgbHueSyncCheckbox.IsChecked == true) writer.WriteLine("RGBManager=HueSync");
@@ -1422,7 +1428,8 @@ public partial class MainView : UserControl
         if (powerProfilesCheckbox.IsChecked == true) App.exitCode = 60;
         else if (powerStationCheckbox.IsChecked == true) App.exitCode = 61;
         else if (powerDeckyTDPCheckbox.IsChecked == true) App.exitCode = 62;
-        else if (powerManagementDisabledCheckbox.IsChecked == true) App.exitCode = 63;
+        else if (hhdAdjustorCheckbox.IsChecked == true) App.exitCode = 63;
+        else if (powerManagementDisabledCheckbox.IsChecked == true) App.exitCode = 64;
         MainWindow.singleton.Close();
     }
 

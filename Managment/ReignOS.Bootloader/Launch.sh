@@ -206,6 +206,10 @@ if [ $exit_code -eq 60 ]; then
   echo "Uninstalling DeckyTDP..."
   sudo rm -rf /home/gamer/homebrew/plugins/SimpleDeckyTDP
   sudo systemctl restart plugin_loader.service
+  
+  echo ""
+  echo "Uninstalling HHD Adjustor..."
+  yay -R --noconfirm adjustor
 
   echo ""
   echo "Installing PowerProfiles..."
@@ -229,6 +233,10 @@ if [ $exit_code -eq 61 ]; then
   echo "Uninstalling DeckyTDP..."
   sudo rm -rf /home/gamer/homebrew/plugins/SimpleDeckyTDP
   sudo systemctl restart plugin_loader.service
+  
+  echo ""
+  echo "Uninstalling HHD Adjustor..."
+  yay -R --noconfirm adjustor
 
   echo ""
   echo "Installing PowerStation..."
@@ -253,6 +261,10 @@ if [ $exit_code -eq 62 ]; then
   sudo systemctl stop powerstation
   sudo systemctl disable powerstation
   yay -R --noconfirm powerstation-bin
+  
+  echo ""
+  echo "Uninstalling HHD Adjustor..."
+  yay -R --noconfirm adjustor
 
   echo ""
   echo "Installing DeckyTDP..."
@@ -276,11 +288,42 @@ if [ $exit_code -eq 63 ]; then
   sudo systemctl stop powerstation
   sudo systemctl disable powerstation
   yay -R --noconfirm powerstation-bin
+  
+  echo ""
+  echo "Uninstalling DeckyTDP..."
+  sudo rm -rf /home/gamer/homebrew/plugins/SimpleDeckyTDP
+  sudo systemctl restart plugin_loader.service
+  
+  echo ""
+  echo "Installing HHD Adjustor..."
+  yay -S --noconfirm adjustor
+
+  sleep 2
+  sudo reboot -f
+  exit 0
+fi
+
+if [ $exit_code -eq 64 ]; then
+  echo ""
+  echo "Uninstalling PowerProfiles..."
+  sudo systemctl stop power-profiles-daemon
+  sudo systemctl disable power-profiles-daemon
+  sudo pacman -R --noconfirm power-profiles-daemon
+
+  echo ""
+  echo "Uninstalling PowerStation..."
+  sudo systemctl stop powerstation
+  sudo systemctl disable powerstation
+  yay -R --noconfirm powerstation-bin
 
   echo ""
   echo "Uninstalling DeckyTDP..."
   sudo rm -rf /home/gamer/homebrew/plugins/SimpleDeckyTDP
   sudo systemctl restart plugin_loader.service
+  
+  echo ""
+  echo "Uninstalling HHD Adjustor..."
+  yay -R --noconfirm adjustor
 
   sleep 2
   sudo reboot -f
