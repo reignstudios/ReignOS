@@ -212,9 +212,21 @@ namespace ReignOS.Service.Hardware
         {
             Log.WriteLine("MagicModule_PoppedIn...");
             if (Program.hardwareType != HardwareType.Ayaneo3) return;
+            
+            // power on hardware
+            bool reboot = true;
+            if (File.Exists(magicModulePowerPath) && File.Exists(magicModuleStatePath))
+            {
+                string result = File.ReadAllText(magicModuleStatePath).Trim();
+                Log.WriteLine($"MagicModule state: {result}");
+                if (result != "both") return;
+
+                ProcessUtil.WriteAllTextAdmin(magicModulePowerPath, "on");
+                reboot = false;
+                Thread.Sleep(1000);
+            }
 
             // init hid device
-            bool reboot = true;
             using (var device = new HidDevice())
             {
                 if (!device.Init(7247, 2, false, physicalLocation: "input2", physicalLocationIsContains: true) || device.handles.Count == 0) return;
@@ -274,18 +286,6 @@ namespace ReignOS.Service.Hardware
                 data[i++] = 0x0a;
                 data[i++] = 0x01;
                 WriteDeviceData(device, data);
-            }
-            
-            // power on hardware
-            if (File.Exists(magicModulePowerPath) && File.Exists(magicModuleStatePath))
-            {
-                Thread.Sleep(1000);
-                string result = File.ReadAllText(magicModuleStatePath).Trim();
-                Log.WriteLine($"MagicModule state: {result}");
-                if (result != "both") return;
-
-                ProcessUtil.WriteAllTextAdmin(magicModulePowerPath, "on");
-                reboot = false;
             }
 
             // finished
