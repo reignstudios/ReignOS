@@ -13,6 +13,8 @@ namespace ReignOS.Service.Hardware
     public static class Ayaneo
     {
         public static bool isEnabled;
+        private const string magicModulePowerPath = "/sys/class/firmware-attributes/ayaneo-ec/attributes/controller_power/current_value";
+        private const string magicModuleStatePath = "/sys/class/firmware-attributes/ayaneo-ec/attributes/controller_modules/current_value";
 
         public static void Configure()
         {
@@ -193,6 +195,12 @@ namespace ReignOS.Service.Hardware
             data[i++] = 0x64;
             data[i++] = 0x64;
             WriteDeviceData(device, data);
+            
+            // power off hardware
+            if (File.Exists(magicModulePowerPath))
+            {
+                ProcessUtil.WriteAllTextAdmin(magicModulePowerPath, "off");
+            }
 
             Log.WriteLine("MagicModule_PopOut: Done!");
         }
@@ -203,11 +211,26 @@ namespace ReignOS.Service.Hardware
             if (Program.hardwareType != HardwareType.Ayaneo3) return;
 
             // init hid device
+            bool reboot = true;
             using (var device = new HidDevice())
             {
                 if (!device.Init(7247, 2, false, physicalLocation: "input2", physicalLocationIsContains: true) || device.handles.Count == 0) return;
                 var data = new byte[256];
                 int i;
+                
+                // power on hardware
+                if (File.Exists(magicModulePowerPath))
+                {
+                    if (File.Exists(magicModuleStatePath))
+                    {
+                        string result = File.ReadAllText(magicModuleStatePath).Trim();
+                        if (result != "both") return;
+                    }
+                    
+                    ProcessUtil.WriteAllTextAdmin(magicModulePowerPath, "on");
+                    Thread.Sleep(1000);
+                    reboot = false;
+                }
 
                 // Ayaneo opens app (device init)
                 i = 0;
@@ -268,8 +291,11 @@ namespace ReignOS.Service.Hardware
             Log.WriteLine("MagicModule_PoppedIn: Done!");
 
             // power off
-            Thread.Sleep(500);
-            ProcessUtil.Run("poweroff", "-f", useBash:false);
+            if (reboot)
+            {
+                Thread.Sleep(500);
+                ProcessUtil.Run("poweroff", "-f", useBash: false);
+            }
         }
 
         /*private static void WriteQuePattern(HidDevice device, byte[] data)

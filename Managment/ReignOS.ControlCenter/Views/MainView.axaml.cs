@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -146,6 +147,9 @@ public partial class MainView : UserControl
 
     private bool hibernatePowerButton;
     
+    private const string magicModulePowerPath = "/sys/class/firmware-attributes/ayaneo-ec/attributes/controller_power/current_value";
+    private const string magicModuleStatePath = "/sys/class/firmware-attributes/ayaneo-ec/attributes/controller_modules/current_value";
+    
     public MainView()
     {
         InitializeComponent();
@@ -174,6 +178,7 @@ public partial class MainView : UserControl
 
         // enable Ayaneo3 options
         ayaneoModulePopGrid.IsVisible = Program.ayaneoModules;
+        ayaneoModuleNote.IsVisible = !(File.Exists(magicModulePowerPath) && File.Exists(magicModuleStatePath));
     }
 
     private void RefreshGPUs()
