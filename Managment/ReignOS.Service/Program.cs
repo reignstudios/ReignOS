@@ -99,12 +99,12 @@ internal class Program
         // detect system hardware
         try
         {
-            string vendorName = ProcessUtil.Run("dmidecode", "-s system-manufacturer", out _).Trim();
+            string vendorName = ProcessUtil.Run("dmidecode", "-s system-manufacturer").Trim();
             Log.WriteLine("Hardware Vendor: " + vendorName);
             if (vendorName.StartsWith("AYANEO") || vendorName.StartsWith("AYADEVICE")) hardwareType = HardwareType.Ayaneo;
             else if (vendorName.StartsWith("AOKZOE")) hardwareType = HardwareType.AOKZOE;
 
-            string productName = ProcessUtil.Run("dmidecode", "-s system-product-name", out _).Trim();
+            string productName = ProcessUtil.Run("dmidecode", "-s system-product-name").Trim();
             Log.WriteLine("Hardware Product: " + productName);
             if (productName.StartsWith("Claw ")) hardwareType = HardwareType.MSI_Claw;
             else if (productName.StartsWith("ROG Ally")) hardwareType = HardwareType.RogAlly;
