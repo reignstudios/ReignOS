@@ -142,60 +142,62 @@ namespace ReignOS.Service.Hardware
             // init hid device
             using (var device = new HidDevice())
             {
-                if (!device.Init(7247, 2, false, physicalLocation:"input2", physicalLocationIsContains:true) || device.handles.Count == 0) return;
-                var data = new byte[256];
-                int i;
+                if (device.Init(7247, 2, false, physicalLocation:"input2", physicalLocationIsContains:true) || device.handles.Count >= 1)
+                {
+                    var data = new byte[256];
+                    int i;
 
-                // popout commands
-                i = 0;
-                Array.Clear(data);
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x05;
-                WriteDeviceData(device, data);
+                    // popout commands
+                    i = 0;
+                    Array.Clear(data);
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x05;
+                    WriteDeviceData(device, data);
 
-                i = 0;
-                Array.Clear(data);
-                data[i++] = 0xb3;
-                data[i++] = 0x07;
-                data[i++] = 0x21;
-                data[i++] = 0x09;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x03;
-                data[i++] = 0xff;
-                data[i++] = 0xff;
-                data[i++] = 0xff;
-                data[i++] = 0x03;
-                data[i++] = 0xff;
-                data[i++] = 0xff;
-                data[i++] = 0xff;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x77;
-                data[i++] = 0x00;
-                data[i++] = 0x33;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x01;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x40;
-                data[i++] = 0x64;
-                data[i++] = 0x64;
-                WriteDeviceData(device, data);
+                    i = 0;
+                    Array.Clear(data);
+                    data[i++] = 0xb3;
+                    data[i++] = 0x07;
+                    data[i++] = 0x21;
+                    data[i++] = 0x09;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x03;
+                    data[i++] = 0xff;
+                    data[i++] = 0xff;
+                    data[i++] = 0xff;
+                    data[i++] = 0x03;
+                    data[i++] = 0xff;
+                    data[i++] = 0xff;
+                    data[i++] = 0xff;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x77;
+                    data[i++] = 0x00;
+                    data[i++] = 0x33;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x01;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x40;
+                    data[i++] = 0x64;
+                    data[i++] = 0x64;
+                    WriteDeviceData(device, data);
+                }
             }
             
             // power off hardware
@@ -229,63 +231,65 @@ namespace ReignOS.Service.Hardware
             // init hid device
             using (var device = new HidDevice())
             {
-                if (!device.Init(7247, 2, false, physicalLocation: "input2", physicalLocationIsContains: true) || device.handles.Count == 0) return;
-                var data = new byte[256];
-                int i;
+                if (device.Init(7247, 2, false, physicalLocation: "input2", physicalLocationIsContains: true) || device.handles.Count >= 1)
+                {
+                    var data = new byte[256];
+                    int i;
 
-                // Ayaneo opens app (device init)
-                i = 0;
-                Array.Clear(data);
-                data[i++] = 0xc4;
-                data[i++] = 0x07;
-                data[i++] = 0x21;
-                data[i++] = 0x09;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x03;
-                data[i++] = 0xff;
-                data[i++] = 0xff;
-                data[i++] = 0xff;
-                data[i++] = 0x03;
-                data[i++] = 0xff;
-                data[i++] = 0xff;
-                data[i++] = 0xff;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x88;
-                data[i++] = 0x00;
-                data[i++] = 0x33;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x01;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x40;
-                data[i++] = 0x64;
-                data[i++] = 0x64;
-                WriteDeviceData(device, data);
+                    // Ayaneo opens app (device init)
+                    i = 0;
+                    Array.Clear(data);
+                    data[i++] = 0xc4;
+                    data[i++] = 0x07;
+                    data[i++] = 0x21;
+                    data[i++] = 0x09;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x03;
+                    data[i++] = 0xff;
+                    data[i++] = 0xff;
+                    data[i++] = 0xff;
+                    data[i++] = 0x03;
+                    data[i++] = 0xff;
+                    data[i++] = 0xff;
+                    data[i++] = 0xff;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x88;
+                    data[i++] = 0x00;
+                    data[i++] = 0x33;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x01;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x40;
+                    data[i++] = 0x64;
+                    data[i++] = 0x64;
+                    WriteDeviceData(device, data);
 
-                // set xpad mode
-                Thread.Sleep(500);
-                i = 0;
-                Array.Clear(data);
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x00;
-                data[i++] = 0x0a;
-                data[i++] = 0x01;
-                WriteDeviceData(device, data);
+                    // set xpad mode
+                    Thread.Sleep(500);
+                    i = 0;
+                    Array.Clear(data);
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x00;
+                    data[i++] = 0x0a;
+                    data[i++] = 0x01;
+                    WriteDeviceData(device, data);
+                }
             }
             
             // reset hardware
