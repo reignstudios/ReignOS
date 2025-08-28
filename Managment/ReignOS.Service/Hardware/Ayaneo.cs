@@ -287,7 +287,7 @@ namespace ReignOS.Service.Hardware
                     data[i++] = 0x00;
                     data[i++] = 0x00;
                     data[i++] = 0x0a;
-                    data[i++] = 0x01;
+                    data[i++] = 0x02;// 0x01 = XInput, 0x02 = Custom (aka XInput + extra buttons)
                     WriteDeviceData(device, data);
                 }
             }
