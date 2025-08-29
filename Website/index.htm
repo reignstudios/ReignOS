@@ -136,6 +136,7 @@
                 <li>You can always return to Control-Center by exiting Steam (Switch to Desktop in Gamescope) or Logging out of KDE</li>
                 <li>Look at "GPU Troubleshooting" if Control-Center is not launching (changing its compositor can resolve issue)</li>
                 <li>If you want Steams performance overlay functionality, enable MangeHud in Control-Center</li>
+                <li>If you use HHD TDP control, you may need to use the Bazzite kernel as well</li>
                 <li>NOTE: Some Intel or Nvidia hardware can be more stable with Weston/Cage vs Gamescope (Like MSI-Claw devices)</li>
                 <li>NOTE: Some older/slower hardware is more stable/faster with X11 (like Intel Atom)</li>
                 <li>NOTE: ReignOS allows volume up to 150% but Steams volume interface caps at 100% visually</li>
@@ -205,6 +206,13 @@
                     * Click "Add Property" and add "Fullscreen" and make it "Apply initially" to "Yes"<br>
                 </li>
                 <li>
+                    <b><u>Ayaneo 3</u></b><br>
+                    <b>- Magic Modules</b><br>
+                    <p style="padding-left: 20px; margin: 0;">
+                    * Control Center allows you to eject these with any kernel but Bazzite kernel recomended<br>
+                    * HHD TDP may require Bazzite kernel to work<br>
+                </li>
+                <li>
                     <b><u>General Ayaneo Devices</u></b><br>
                     <b>- Enable sleep support</b><br>
                     <p style="padding-left: 20px; margin: 0;">
@@ -223,7 +231,7 @@
                     <p style="padding-left: 0px; margin: 0;"></p>
                     <b>- Spamming audio alert in KDE</b><br>
                     <p style="padding-left: 20px; margin: 0;">
-                    * Use Control-Center to switch to InputPlumber<br>
+                    * Use Control-Center to switch to InputPlumber or HHD<br>
                 </li>
                 <li>
                     <b><u>Rog Ally</u></b><br>
