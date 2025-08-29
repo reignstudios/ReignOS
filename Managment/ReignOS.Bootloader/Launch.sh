@@ -5,9 +5,6 @@ cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64
 ./ReignOS.Bootloader $@
 exit_code=$?
 
-# stop on errors after this point
-set -e
-
 # install kde min
 if [ $exit_code -eq 10 ]; then
   echo ""
@@ -49,7 +46,6 @@ if [ $exit_code -eq 14 ]; then
   echo ""
   echo "ReignOS (Fix updates)..."
 
-  set +e # disable errors
   sudo pacman -Sy --noconfirm
   sudo timedatectl set-ntp true
   sleep 1
@@ -75,7 +71,6 @@ fi
 if [ $exit_code -eq 17 ]; then
   echo ""
   echo "ReignOS (Check for updates)..."
-  set +e # disable errors
   ./Update.sh
   loginctl terminate-user gamer
   exit 0
@@ -84,7 +79,6 @@ fi
 if [ $exit_code -eq 18 ]; then
   echo ""
   echo "ReignOS (Check for updates and reboot)..."
-  set +e # disable errors
   ./Update.sh
   sudo reboot -f
   exit 0
