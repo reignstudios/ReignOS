@@ -32,6 +32,7 @@ static class PackageUpdates
         //FixOSName();
         IgnorePackages();
         ReconfigureAutoLogin();
+        AddPermissions();
 
         // check bad configs (do them all at once then reboot)
         bool badConfig = false;
@@ -185,6 +186,24 @@ static class PackageUpdates
                 text = text + "\nfi";
             }
             File.WriteAllText(bashProfile, text);
+        }
+        catch (Exception e)
+        {
+            Log.WriteLine(e);
+        }
+    }
+
+    private static void AddPermissions()
+    {
+        //Run("usermod", "-aG wheel,audio,video,storage gamer");
+        //Run("usermod", "-aG wheel,audio,video,storage,input,games,gamemode gamer");
+        try
+        {
+            string result = ProcessUtil.Run("id", "-nG", useBash: false);
+            if (!result.Contains(" input") || !result.Contains(" games") || !result.Contains(" gamemode"))
+            {
+                ProcessUtil.Run("usermod", "-aG wheel,audio,video,storage,input,games,gamemode gamer", useBash: true, asAdmin: true);// set user permissions
+            }
         }
         catch (Exception e)
         {

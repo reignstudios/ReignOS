@@ -324,7 +324,7 @@ static class InstallUtil
         // configure gamer user
         Run("useradd", "-m -G users -s /bin/bash gamer");
         Run("echo", "'gamer:gamer' | chpasswd");
-        Run("usermod", "-aG wheel,audio,video,storage gamer");
+        Run("usermod", "-aG wheel,audio,video,storage,input,games,gamemode gamer");
         UpdateProgress(26);
 
         // make gamer user a sudo user without needing pass

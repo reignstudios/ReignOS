@@ -3225,14 +3225,14 @@ public partial class MainView : UserControl
 
     private void RefreshUserPage()
     {
-        string result = ProcessUtil.Run("awk -F: '$3 >= 1000 {print $1}' /etc/passwd", "", useBash: true);
+        string result = ProcessUtil.Run("awk", "-F: '$3 >= 1000 {print $1}' /etc/passwd", useBash: true);
         var lines = result.Split('\n');
         usersListBox.Items.Clear();
         allUsernames = new List<string>();
         foreach (string line in lines)
         {
             string lineTrim = line.Trim();
-            if (lineTrim == "nobody") continue;
+            if (lineTrim == "nobody" || lineTrim == "gamer") continue;
             
             var item = new ListBoxItem();
             item.Content = lineTrim;
@@ -3262,13 +3262,28 @@ public partial class MainView : UserControl
         }
 
         // create user
+        ProcessUtil.Run("useradd", $"-m -G wheel -s /bin/bash {usernameTrim}", useBash: true, asAdmin: true);// create user
+
+        void getStandardInput(StreamWriter writer)
+        {
+            writer.WriteLine(customPassTextBox.Text.Trim());
+            writer.Flush();
+        }
+        ProcessUtil.Run("passwd", usernameTrim, useBash: true, asAdmin: true, getStandardInput:getStandardInput);// set user pass
         
+        ProcessUtil.Run("usermod", $"-aG wheel,audio,video,storage,input,games,gamemode {usernameTrim}", useBash: true, asAdmin: true);// set user permissions
+        
+        // finish
         RefreshUserPage();
     }
     
     private void UserManagerDeleteButton_OnClick(object sender, RoutedEventArgs e)
     {
+        if (usersListBox.SelectedIndex < 0) return;
         
+        var item = (ListBoxItem)usersListBox.Items[usersListBox.SelectedIndex];
+        var username = (string)item.Content;
+        ProcessUtil.Run("userdel", $"-r {username}", useBash: true, asAdmin: true);// delete user and user folder
     }
     
     private void UserManagerStartUserButton_OnClick(object sender, RoutedEventArgs e)
