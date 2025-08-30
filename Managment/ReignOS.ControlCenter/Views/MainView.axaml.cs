@@ -142,6 +142,8 @@ public partial class MainView : UserControl
     
     private List<DisplaySetting> displaySettings = new();
 
+    private List<string> allUsernames;
+
     private string kernelArchConf, kernelArchConf_Options;
     private int kernelIntelMaxCState, kernelAMDMaxCState;
 
@@ -3221,25 +3223,47 @@ public partial class MainView : UserControl
         RefreshUserPage();
     }
 
-    private void UserListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        
-    }
-
     private void RefreshUserPage()
     {
         string result = ProcessUtil.Run("awk -F: '$3 >= 1000 {print $1}' /etc/passwd", "", useBash: true);
         var lines = result.Split('\n');
+        usersListBox.Items.Clear();
+        allUsernames = new List<string>();
         foreach (string line in lines)
         {
             string lineTrim = line.Trim();
             if (lineTrim == "nobody") continue;
+            
+            var item = new ListBoxItem();
+            item.Content = lineTrim;
+            usersListBox.Items.Add(item);
+            allUsernames.Add(lineTrim);
         }
+    }
+    
+    private void UserListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (usersListBox.SelectedIndex < 0) return;
+        
+        var item = (ListBoxItem)usersListBox.Items[usersListBox.SelectedIndex];
+        var username = (string)item.Content;
+        customUserTextBox.Text = username;
+        customPassTextBox.Text = "";
     }
 
     private void UserManagerCreateButton_OnClick(object sender, RoutedEventArgs e)
     {
+        string usernameTrim = customUserTextBox.Text.Trim();
         
+        // make sure username doesn't already exist
+        foreach (var username in allUsernames)
+        {
+            if (usernameTrim == username) return;
+        }
+
+        // create user
+        
+        RefreshUserPage();
     }
     
     private void UserManagerDeleteButton_OnClick(object sender, RoutedEventArgs e)

@@ -37,6 +37,8 @@ namespace ReignOS.Service.Hardware
                 bool needsReboot = false;
                 if (ForceAcpiStrict("/boot/loader/entries/arch.conf")) needsReboot = true;
                 if (ForceAcpiStrict("/boot/loader/entries/chimera.conf")) needsReboot = true;
+                if (ForceAcpiStrict("/boot/loader/entries/bazzite.conf")) needsReboot = true;
+                if (ForceAcpiStrict("/boot/loader/entries/cachy.conf")) needsReboot = true;
                 if (needsReboot) Program.isRebootMode = true; 
             }
         }

@@ -449,7 +449,7 @@ static class InstallUtil
         fileBuilder.AppendLine("echo \"Installing yay support...\"");
         fileBuilder.AppendLine("if [ ! -d \"/home/gamer/yay\" ]; then");
         fileBuilder.AppendLine("    cd /home/gamer");
-        fileBuilder.AppendLine("echo 'Running: git clone https://aur.archlinux.org/yay.git'");
+        fileBuilder.AppendLine("    echo 'Running: git clone https://aur.archlinux.org/yay.git'");
         fileBuilder.AppendLine("    git clone https://aur.archlinux.org/yay.git");
         fileBuilder.AppendLine("    cd /home/gamer/yay");
         fileBuilder.AppendLine("    makepkg -si --noconfirm");
