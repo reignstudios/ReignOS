@@ -81,12 +81,11 @@ static class InstallUtil
     {
         if (cancel) throw new Exception("Install Cancelled");
 
-        static void standardOut_Callback(string line)
-        {
-            // do nothing: just used to keep output read
-        }
+        // always stream read output to avoid stdio locking up process
+        static void standardOut_Callback(string line) {/* do nothing: just used to keep output read */}
         if (standardOut == null) standardOut = standardOut_Callback;
 
+        // invoke process
         if (!archRootMode)
         {
             ProcessUtil.Run(name, args, asAdmin:true, enterAdminPass:false, standardOut:standardOut, getStandardInput:getStandardInput, workingDir:workingDir, verboseLog:true);
@@ -421,8 +420,8 @@ static class InstallUtil
         fileBuilder.AppendLine();// update mirror list to use newer versions
         fileBuilder.AppendLine("echo 'refresh mirror list...'");
         fileBuilder.AppendLine("COUNTRY=$(curl -s https://ifconfig.co/country-iso)");
-        fileBuilder.AppendLine("echo 'Country = $COUNTRY'");
-        fileBuilder.AppendLine("echo 'Running: sudo reflector --country $COUNTRY --latest 50 --protocol https --sort rate --save /etc/pacman.d/mirrorlist'");
+        fileBuilder.AppendLine("echo \"Country = $COUNTRY\"");
+        fileBuilder.AppendLine("echo \"Running: sudo reflector --country $COUNTRY --latest 50 --protocol https --sort rate --save /etc/pacman.d/mirrorlist\"");
         fileBuilder.AppendLine("sudo reflector --country $COUNTRY --latest 50 --protocol https --sort rate --save /etc/pacman.d/mirrorlist");
         fileBuilder.AppendLine("sleep 1");
 
