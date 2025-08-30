@@ -496,7 +496,8 @@
 				<Button Content="Delete User" Background="#803000" Click="UserManagerDeleteButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="120,50,0,0"/>
 				<TextBox Name="customUserTextBox" Watermark="Username" Width="200" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,100,0,0"/>
 				<TextBox Name="customPassTextBox" Watermark="Password" Width="200" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,150,0,0" PasswordChar="*"/>
-				<Button Content="Start User in KDE" Background="#003080" Click="UserManagerStartUserButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,200,0,0"/>
+				<TextBox Name="customPassConfirmTextBox" Watermark="Confirm Password" Width="200" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="220,150,0,0" PasswordChar="*"/>
+				<!-- <Button Content="Start User in KDE" Background="#003080" Click="UserManagerStartUserButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,200,0,0"/> -->
 			</Grid>
 		</Grid>
 

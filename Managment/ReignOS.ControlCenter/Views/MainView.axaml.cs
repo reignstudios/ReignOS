@@ -3232,12 +3232,12 @@ public partial class MainView : UserControl
         foreach (string line in lines)
         {
             string lineTrim = line.Trim();
+            allUsernames.Add(lineTrim);
             if (lineTrim == "nobody" || lineTrim == "gamer") continue;
             
             var item = new ListBoxItem();
             item.Content = lineTrim;
             usersListBox.Items.Add(item);
-            allUsernames.Add(lineTrim);
         }
     }
     
@@ -3249,10 +3249,15 @@ public partial class MainView : UserControl
         var username = (string)item.Content;
         customUserTextBox.Text = username;
         customPassTextBox.Text = "";
+        customPassConfirmTextBox.Text = "";
     }
 
     private void UserManagerCreateButton_OnClick(object sender, RoutedEventArgs e)
     {
+        string passTrim = customPassTextBox.Text.Trim();
+        string passConfirmTrim = customPassConfirmTextBox.Text.Trim();
+        if (passTrim != passConfirmTrim) return;
+        
         string usernameTrim = customUserTextBox.Text.Trim();
         
         // make sure username doesn't already exist
@@ -3263,14 +3268,15 @@ public partial class MainView : UserControl
 
         // create user
         ProcessUtil.Run("useradd", $"-m -G wheel -s /bin/bash {usernameTrim}", useBash: true, asAdmin: true);// create user
-
         void getStandardInput(StreamWriter writer)
         {
-            writer.WriteLine(customPassTextBox.Text.Trim());
+            writer.WriteLine(passTrim);// password enter
             writer.Flush();
+            writer.WriteLine(passTrim);// password re-enter
+            writer.Flush();
+            writer.Close();
         }
         ProcessUtil.Run("passwd", usernameTrim, useBash: true, asAdmin: true, getStandardInput:getStandardInput);// set user pass
-        
         ProcessUtil.Run("usermod", $"-aG wheel,audio,video,storage,input,games,gamemode {usernameTrim}", useBash: true, asAdmin: true);// set user permissions
         
         // finish
@@ -3284,10 +3290,11 @@ public partial class MainView : UserControl
         var item = (ListBoxItem)usersListBox.Items[usersListBox.SelectedIndex];
         var username = (string)item.Content;
         ProcessUtil.Run("userdel", $"-r {username}", useBash: true, asAdmin: true);// delete user and user folder
+        RefreshUserPage();
     }
     
-    private void UserManagerStartUserButton_OnClick(object sender, RoutedEventArgs e)
+    /*private void UserManagerStartUserButton_OnClick(object sender, RoutedEventArgs e)
     {
-        
-    }
+        ProcessUtil.Run("openvt", "-f -s -w -c 4 -- bash -c 'labwc'", useBash: true, asAdmin: true);// this just doesn't seem to work to launch compositor in a good way
+    }*/
 }
