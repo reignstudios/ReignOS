@@ -2097,7 +2097,7 @@ public partial class MainView : UserControl
         var item = (ListBoxItem)driveListBox.Items[driveListBox.SelectedIndex];
         var drive = (Drive)item.Tag;
 
-        // fix permissions are uDisk mount points
+        // fix permissions on uDisk mount points
         string result = ProcessUtil.Run("udisksctl", "dump | grep -i mountpoints", useBash:true, verboseLog: true);
         var lines = result.Split('\n');
         foreach (var line in lines)
@@ -3201,5 +3201,54 @@ public partial class MainView : UserControl
         SaveSettings();
         App.exitCode = 0;
         MainWindow.singleton.Close();
+    }
+
+    private void UserManagerButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        mainGrid.IsVisible = false;
+        userManagerGrid.IsVisible = true;
+        RefreshUserPage();
+    }
+    
+    private void UserManagerBackButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        mainGrid.IsVisible = true;
+        userManagerGrid.IsVisible = false;
+    }
+    
+    private void RefreshUserButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        RefreshUserPage();
+    }
+
+    private void UserListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        
+    }
+
+    private void RefreshUserPage()
+    {
+        string result = ProcessUtil.Run("awk -F: '$3 >= 1000 {print $1}' /etc/passwd", "", useBash: true);
+        var lines = result.Split('\n');
+        foreach (string line in lines)
+        {
+            string lineTrim = line.Trim();
+            if (lineTrim == "nobody") continue;
+        }
+    }
+
+    private void UserManagerCreateButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        
+    }
+    
+    private void UserManagerDeleteButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        
+    }
+    
+    private void UserManagerStartUserButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        
     }
 }
