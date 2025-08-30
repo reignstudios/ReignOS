@@ -81,6 +81,12 @@ static class InstallUtil
     {
         if (cancel) throw new Exception("Install Cancelled");
 
+        static void standardOut_Callback(string line)
+        {
+            // do nothing: just used to keep output read
+        }
+        if (standardOut == null) standardOut = standardOut_Callback;
+
         if (!archRootMode)
         {
             ProcessUtil.Run(name, args, asAdmin:true, enterAdminPass:false, standardOut:standardOut, getStandardInput:getStandardInput, workingDir:workingDir, verboseLog:true);
@@ -150,11 +156,6 @@ static class InstallUtil
         UpdateProgress(0);
         archRootMode = false;
 
-        static void standardOut(string line)
-        {
-            // do nothing: just used to keep output read
-        }
-
         using (new FailIfError(false))
         {
             // update time
@@ -172,10 +173,10 @@ static class InstallUtil
             if (fullRefresh)
             {
                 Run("pacman", "-Sy archlinux-keyring --noconfirm");
-                Run("pacman-key", "--init", standardOut: standardOut);
-                Run("pacman-key", "--populate archlinux", standardOut:standardOut);
-                Run("pacman-key", "--refresh-keys", standardOut: standardOut);
-                Run("pacman-key", "--updatedb", standardOut: standardOut);
+                Run("pacman-key", "--init");
+                Run("pacman-key", "--populate archlinux");
+                Run("pacman-key", "--refresh-keys");
+                Run("pacman-key", "--updatedb");
             }
         }
     }
@@ -196,11 +197,7 @@ static class InstallUtil
             UpdateProgress(1);
 
             // init pacman keyring
-            static void standardOut(string line)
-            {
-                // do nothing: just used to keep output read
-            }
-            Run("pacman-key", "--init", standardOut: standardOut);
+            Run("pacman-key", "--init");
         }
 
         // make sure we re-format drives before installing
