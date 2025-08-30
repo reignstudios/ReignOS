@@ -102,14 +102,6 @@ namespace ReignOS.Service.Hardware
                     VirtualGamepad.Write_TriggerRightSteamMenu();
                 }
             }
-            
-            if (Program.hardwareType == HardwareType.Ayaneo3)
-            {
-                if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTMETA, true)))
-                {
-                    VirtualGamepad.Write_TriggerRightSteamMenu();
-                }
-            }
 
             if (Program.hardwareType == HardwareType.AyaneoPro || Program.hardwareType == HardwareType.Ayaneo)
             {
