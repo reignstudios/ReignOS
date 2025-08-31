@@ -8,6 +8,7 @@
 	<Grid>
 		<Grid Name="mainGrid" IsVisible="True">
 			<Button Content="Exit to Terminal" Margin="4" Click="ExitButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+			<Button Content="Email Logs" Margin="4,45,0,0" Background="DarkBlue" Click="EmailLogsButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 			<TextBlock Text="Remember to check updates!" Foreground="OrangeRed" Margin="4,74,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 			<TextBlock Name="isConnectedText" Text="Network Status" Margin="8" HorizontalAlignment="Right" VerticalAlignment="Top"/>
 			<TextBlock Name="versionText" Text="Version: x.x.x" Foreground="Gray" Margin="0,32,8,0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
@@ -248,6 +249,7 @@
 			<StackPanel Margin="245,0,4,4" Height="42" VerticalAlignment="Bottom" Background="#000040" Orientation="Horizontal" FlowDirection="RightToLeft">
 				<Button Content="Check Updates" Background="OrangeRed" Margin="4,0,0,0" Click="CheckUpdatesButton_Click"/>
 				<Button Content="Fix Updates" Background="Blue" Margin="4,0,0,0" Click="FixUpdatesButton_Click"/>
+				<Button Content="Users" Margin="4,0,0,0" Click="UserManagerButton_OnClick"/>
 				<Button Content="Kernel" Margin="4,0,0,0" Click="KernelManagerButton_OnClick"/>
 				<Button Content="GPU" Margin="4,0,0,0" Click="GPUUtilsButton_OnClick"/>
 				<Button Content="Boot" Margin="4,0,0,0" Click="BootManagerButton_OnClick"/>
@@ -256,7 +258,6 @@
 				<Button Content="Display" Margin="4,0,0,0" Click="DisplayManagerButton_OnClick"/>
 				<Button Content="Audio" Margin="4,0,0,0" Click="AudioManagerButton_OnClick"/>
 				<Button Name="powerButton" Content="Power" Margin="4,0,0,0" Click="PowerManagerButton_OnClick"/>
-				<Button Content="Users" Margin="4,0,0,0" Click="UserManagerButton_OnClick" Background="DarkGreen"/>
 			</StackPanel>
 		</Grid>
 		
@@ -500,11 +501,25 @@
 				<!-- <Button Content="Start User in KDE" Background="#003080" Click="UserManagerStartUserButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,200,0,0"/> -->
 			</Grid>
 		</Grid>
+		
+		<Grid Name="emailGrid" Background="#BB000000" IsVisible="False">
+			<Border BorderThickness="4"  BorderBrush="White" Width="512" Height="256">
+				<Grid Background="#333333">
+					<StackPanel Margin="0,0,0,40">
+					<TextBox Name="emailFromNameText" Watermark="From Name" Margin="2"/>
+					<TextBox Name="emailToAddressText" Watermark="To Address" Margin="2"/>
+					<TextBlock Name="emailSendingText" Text="Sending..." FontSize="32" HorizontalAlignment="Center"/>
+					</StackPanel>
+					<Button Name="emailSendButton" Content="Send" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4" Click="EmailSendButton_Click"/>
+					<Button Name="emailCancelButton" Content="Cancel" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4" Click="EmailCancelButton_Click"/>
+				</Grid>
+			</Border>
+		</Grid>
 
 		<Grid Name="messageBoxGrid" Background="#BB000000" IsVisible="False">
 			<Border BorderThickness="4"  BorderBrush="White" Width="512" Height="256">
 				<Grid Background="#333333">
-					<TextBlock Name="msgBoxText" Margin="4,0,0,40"/>
+					<TextBlock Name="msgBoxText" TextWrapping="Wrap" Margin="4,0,0,40"/>
 					<Button Name="msgBoxOption1" Content="Option1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4" Click="MessageBoxButton_OnClick"/>
 					<Button Name="msgBoxOption2" Content="Option2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="4,0,80,4" Click="MessageBoxButton_OnClick"/>
 					<Button Name="msgBoxCancel" Content="Cancel" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="4" Click="MessageBoxButton_OnClick"/>

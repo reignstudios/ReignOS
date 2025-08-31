@@ -1101,12 +1101,13 @@ public partial class MainView : UserControl
 
     private delegate void MessageBoxDelegate(MessageBoxOption option);
     private MessageBoxDelegate messageBoxCallback;
-    private void MessageBoxShow(string message, string optionText1, string optionText2, MessageBoxDelegate callback)
+    private void MessageBoxShow(string message, string optionText1, string optionText2, bool cancel, MessageBoxDelegate callback)
     {
         msgBoxText.Text = message;
         msgBoxOption1.Content = optionText1;
         msgBoxOption2.Content = optionText2;
         msgBoxOption2.IsVisible = optionText2 != null;
+        msgBoxCancel.IsVisible = cancel;
         messageBoxCallback = callback;
         messageBoxGrid.IsVisible = true;
     }
@@ -1173,7 +1174,7 @@ public partial class MainView : UserControl
 
         if (!PackageExits("konsole"))
         {
-            MessageBoxShow("This will install KDE.\nYou have two options, full or minimal\n\n* Full installs all KDE apps\n* Minimal installs only whats needed.", "Minimal", "Full", MsgBoxCallback);
+            MessageBoxShow("This will install KDE.\nYou have two options, full or minimal\n\n* Full installs all KDE apps\n* Minimal installs only whats needed.", "Minimal", "Full", true, MsgBoxCallback);
             return false;
         }
         
@@ -1242,6 +1243,54 @@ public partial class MainView : UserControl
     {
         App.exitCode = 20;// close Managment and go to virtual terminal
         MainWindow.singleton.Close();
+    }
+    
+    private void EmailLogsButton_Click(object sender, RoutedEventArgs e)
+    {
+        emailGrid.IsVisible = true;
+        emailFromNameText.IsEnabled = true;
+        emailToAddressText.IsEnabled = true;
+        emailSendButton.IsEnabled = true;
+        emailCancelButton.IsEnabled = true;
+        emailSendingText.IsVisible = false;
+    }
+
+    private void EmailSendButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(emailFromNameText.Text) || string.IsNullOrWhiteSpace(emailToAddressText.Text)) return;
+        
+        void EmailSendCallback(bool success, string message)
+        {
+            Log.WriteLine($"Email Send Finished: Success:{success} Message:'{message}'");
+            emailGrid.IsVisible = false;
+            if (success) MessageBoxShow("Success!", "Ok", null, false, null);
+            else MessageBoxShow("Failed: " + message, "Ok", null, false, null);
+        }
+
+        string from = emailFromNameText.Text.Trim();
+        string toAddress = emailToAddressText.Text.Trim();
+        
+        string unameID = ProcessUtil.Run("uname", "-n", useBash:false).Trim();
+        string vendorName = ProcessUtil.Run("dmidecode", "-s system-manufacturer", asAdmin:true).Trim();
+        string productName = ProcessUtil.Run("dmidecode", "-s system-product-name", asAdmin:true).Trim();
+        string body = $"Sent Date UTC: {DateTime.UtcNow}\nDevice: Ven='{vendorName}' Prod='{productName}'\nUserName='{unameID}'";
+
+        var attachments = new List<string>();
+        if (File.Exists("/home/gamer/ReignOS_Ext/ReignOS.Bootloader.log")) attachments.Add("/home/gamer/ReignOS_Ext/ReignOS.Bootloader.log");
+        if (File.Exists("/home/gamer/ReignOS_Ext/ReignOS.Service.log")) attachments.Add("/home/gamer/ReignOS_Ext/ReignOS.Service.log");
+        if (File.Exists("/home/gamer/ReignOS_Ext/ReignOS.ControlCenter.log")) attachments.Add("/home/gamer/ReignOS_Ext/ReignOS.ControlCenter.log");
+
+        emailFromNameText.IsEnabled = false;
+        emailToAddressText.IsEnabled = false;
+        emailSendButton.IsEnabled = false;
+        emailCancelButton.IsEnabled = false;
+        emailSendingText.IsVisible = true;
+        EmailUtils.SendEmail(from, "MS_Qb1G8I@test-dnvo4d90k76g5r86.mlsender.net", "mssp.skomTDc.x2p0347w19ylzdrn.PZKSda7", "ReignOS", toAddress, $"ReignOS: {from}", body, EmailSendCallback, attachments.ToArray());
+    }
+    
+    private void EmailCancelButton_Click(object sender, RoutedEventArgs e)
+    {
+        emailGrid.IsVisible = false;
     }
 
     private void BootApplyButton_OnClick(object sender, RoutedEventArgs e)
