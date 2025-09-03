@@ -19,63 +19,63 @@
 
 			<ScrollViewer Height="145" VerticalAlignment="Top" Margin="4,95,0,0" Background="#202020" HorizontalScrollBarVisibility="Auto">
 				<StackPanel Orientation="Horizontal">
-					<Button Click="GamescopeButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#006000">
+					<Button Click="GamescopeButton_OnClick" ToolTip.Tip="Launches Steam in Game Mode" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#006000">
 						<Grid Margin="0">
 							<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
 							<TextBlock Text="Gamescope" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
 						</Grid>
 					</Button>
 				
-					<Button Click="WestonButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#006000">
+					<Button Click="WestonButton_OnClick" ToolTip.Tip="Launches Steam in Game Mode" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#006000">
 						<Grid Margin="0">
 							<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
 							<TextBlock Text="Weston" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
 						</Grid>
 					</Button>
 
-					<Button Click="WestonWindowedButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#603000">
+					<Button Click="WestonWindowedButton_OnClick" ToolTip.Tip="Launches Steam in Windowed Mode" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#603000">
 						<Grid Margin="0">
 							<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
 							<TextBlock Text="Weston-W" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
 						</Grid>
 					</Button>
 
-					<Button Click="CageButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#006000">
+					<Button Click="CageButton_OnClick" HorizontalAlignment="Left" ToolTip.Tip="Launches Steam in Game Mode" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#006000">
 						<Grid Margin="0">
 							<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
 							<TextBlock Text="Cage" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
 						</Grid>
 					</Button>
 
-					<Button Click="LabwcButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#603000">
+					<Button Click="LabwcButton_OnClick" ToolTip.Tip="Launches Steam in Windowed Mode" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#603000">
 						<Grid Margin="0">
 							<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
 							<TextBlock Text="Labwc" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
 						</Grid>
 					</Button>
 			
-					<Button Click="KDEButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#000060">
+					<Button Click="KDEButton_OnClick" ToolTip.Tip="Launches KDE Desktop with Wayland" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#000060">
 						<Grid Margin="0">
 							<Image Source="avares://ReignOS.ControlCenter/Assets/kde.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,20"/>
 							<TextBlock Text="KDE" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
 						</Grid>
 					</Button>
 				
-					<Button Click="KDEX11Button_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#000030">
+					<Button Click="KDEX11Button_OnClick" ToolTip.Tip="Launches KDE Desktop with X11" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#000030">
 						<Grid Margin="0">
 							<Image Source="avares://ReignOS.ControlCenter/Assets/kde.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,20"/>
 							<TextBlock Text="KDE X11" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
 						</Grid>
 					</Button>
 					
-					<Button Click="KDEGButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#006060">
+					<Button Click="KDEGButton_OnClick" ToolTip.Tip="Launches KDE with Steam in Game Mode" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#006060">
 						<Grid Margin="0">
 							<Image Source="avares://ReignOS.ControlCenter/Assets/kde.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,20"/>
 							<TextBlock Text="KDE-G" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
 						</Grid>
 					</Button>
 					
-					<Button Click="X11Button_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#606000">
+					<Button Click="X11Button_OnClick" ToolTip.Tip="Launches Steam in Game Mode" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="128" Height="128" Background="#606000">
 						<Grid Margin="0">
 							<Image Source="avares://ReignOS.ControlCenter/Assets/steam_black.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10"/>
 							<TextBlock Text="X11" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"/>
@@ -88,7 +88,7 @@
 				<StackPanel Orientation="Vertical">
 					<Grid Name="ayaneoModulePopGrid" Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>
-							<TextBlock Text="Ayaneo Modules" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+							<TextBlock Text="Ayaneo Modules" ToolTip.Tip="Used to eject or register new modules" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Pop Out" Width="128" HorizontalContentAlignment="Center" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="AyaneoModules_PopOut_Button_OnClick"/>
 							<Button Content="Popped In" Width="128" HorizontalContentAlignment="Center" Margin="260,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="AyaneoModules_PoppedIn_Button_OnClick"/>
 							<TextBlock Name="ayaneoModuleNote" Text="NOTE: Popped-In will power-off device (then let sit for 10 sec without AC power)" Width="540" Foreground="Orange" Margin="400,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
@@ -97,7 +97,7 @@
 
 					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>
-							<TextBlock Text="Default Boot" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+							<TextBlock Text="Default Boot" ToolTip.Tip="When mode opens when system is powered on" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="BootApplyButton_OnClick"/>
 							<RadioButton Name="boot_ControlCenter" Content="Control Center" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 							<RadioButton Name="boot_Gamescope" Content="Gamescope" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
@@ -123,26 +123,26 @@
 
 					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>
-							<TextBlock Text="AMD Drivers" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+							<TextBlock Text="AMD Drivers" ToolTip.Tip="Most hardware should use RADV (default)" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="AMDApplyButton_OnClick"/>
-							<RadioButton Name="amd_Mesa" Content="RADV" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<RadioButton Name="amd_Mesa" Content="RADV" ToolTip.Tip="Mesa driver" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 							<RadioButton Name="amd_VLK" Content="AMDVLK" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="amd_Proprietary" Content="Proprietary" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<RadioButton Name="amd_Proprietary" Content="Proprietary" ToolTip.Tip="AMD Pro driver" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						</Grid>
 					</Grid>
 				
 					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>
-							<TextBlock Text="Nvidia Drivers" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+							<TextBlock Text="Nvidia Drivers" ToolTip.Tip="Most hardware should use Proprietary unless legacy hardware" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="NvidiaApplyButton_OnClick"/>
-							<RadioButton Name="nvidia_Nouveau" Content="Nouveau" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<RadioButton Name="nvidia_Nouveau" Content="Nouveau" ToolTip.Tip="Mesa driver" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 							<RadioButton Name="nvidia_Proprietary" Content="Proprietary" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						</Grid>
 					</Grid>
 
 					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>
-							<TextBlock Text="Prime GPU" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+							<TextBlock Text="Prime GPU" ToolTip.Tip="Force system to use a specific GPU" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="PrimeGPUApplyButton_Click"/>
 							<RadioButton Name="gpuButton0" Content="Unset" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 							<RadioButton Name="gpuButton1" Content="GPU 1" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
@@ -155,7 +155,7 @@
 
 					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>
-							<TextBlock Text="GPU MUX" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+							<TextBlock Text="Hybrid GPU" ToolTip.Tip="Enables GPU MUX support" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="GPUMUXApplyButton_Click"/>
 							<CheckBox Name="muxButton0" Content="Enabled" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 							<RadioButton Name="muxButton1" Content="MUX 1" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
@@ -169,17 +169,17 @@
 						<Grid>
 							<TextBlock Text="Other Settings" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="OtherSettingsApplyButton_Click"/>
-							<CheckBox Name="mangohubCheckbox" Content="MangoHub" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<CheckBox Name="vrrCheckbox" Content="VRR" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<CheckBox Name="hdrCheckbox" Content="HDR" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<CheckBox Name="disableSteamGPUCheckbox" Content="Disable Steam GPU" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="170"/>
-							<CheckBox Name="disableSteamDeckCheckbox" Content="Disable SteamDeck Mode" Margin="850,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="200"/>
+							<CheckBox Name="vrrCheckbox" Content="VRR" Margin="200,0" ToolTip.Tip="Applys to Gamescope, Weston and Cage" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<CheckBox Name="hdrCheckbox" Content="HDR" Margin="350,0" ToolTip.Tip="Applys to Gamescope" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<CheckBox Name="mangohubCheckbox" Content="Steam Overlay" ToolTip.Tip="MangoHud performance overlay" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<CheckBox Name="disableSteamGPUCheckbox" Content="Disable Steam GPU" ToolTip.Tip="Run Steam in software mode" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="170"/>
+							<CheckBox Name="disableSteamDeckCheckbox" Content="Disable SteamDeck Mode" ToolTip.Tip="Run Steam in BigPicture mode" Margin="850,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="200"/>
 						</Grid>
 					</Grid>
 
 					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>
-							<TextBlock Text="Input Control" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+							<TextBlock Text="Input Control" ToolTip.Tip="Manages Steams menu buttons or other gamepad features" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="MenuInputApplyButton_Click"/>
 							<RadioButton Name="reignOSInputCheckbox" Content="ReignOS" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 							<RadioButton Name="inputPlumberInputCheckbox" Content="InputPlumber" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
@@ -190,7 +190,7 @@
 					
 					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>
-							<TextBlock Text="Power Manager" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+							<TextBlock Text="Power Manager" ToolTip.Tip="Manages system power usage, TDP or clocks etc" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="PowerManagerApplyButton_Click"/>
 							<RadioButton Name="powerProfilesCheckbox" Content="Power Profiles" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 							<RadioButton Name="powerDeckyTDPCheckbox" Content="DeckyTDP" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
@@ -202,7 +202,7 @@
 
 					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>
-							<TextBlock Text="RGB Manager" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+							<TextBlock Text="RGB Manager" ToolTip.Tip="Manages system LEDs (NOTE: HHD may be used as well)" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RBGManagerApplyButton_Click"/>
 							<RadioButton Name="rgbDisabledCheckbox" Content="Disabled" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 							<RadioButton Name="rgbHueSyncCheckbox" Content="HueSync" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
@@ -211,7 +211,7 @@
 
 					<Grid Margin="8,8,8,4" Background="#444444" Height="40" IsVisible="True">
 						<Grid>
-							<TextBlock Text="Kernel" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+							<TextBlock Text="Kernel" ToolTip.Tip="Kernels may offer pros/cons on different hardware" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="KernelApplyButton_Click"/>
 							<RadioButton Name="kernelArchCheckbox" Content="Arch" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 							<RadioButton Name="kernelChimeraCheckbox" Content="Chimera" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
@@ -223,7 +223,7 @@
 					
 					<Grid Margin="8,8,8,4" Background="#444444" Height="40" IsVisible="True">
 						<Grid>
-							<TextBlock Text="Rest Mode" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+							<TextBlock Text="Rest Mode" ToolTip.Tip="Effects Steam Sleep menu and Power Button action etc" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RestApplyButton_Click"/>
 							<RadioButton Name="restSleepCheckbox" Content="Sleep" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 							<RadioButton Name="restHibernateCheckbox" Content="Hibernate" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
@@ -232,7 +232,7 @@
 
 					<Grid Margin="8,8,8,4" Background="#444444" Height="40" IsVisible="True">
 						<Grid>
-							<TextBlock Text="ReignOS.Monitor" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+							<TextBlock Text="ReignOS.Monitor" ToolTip.Tip="Launches a system monitor app ideal for dual-screen devices" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="ReignMonitorApplyButton_Click"/>
 							<CheckBox Name="reignMonitorCheckbox" Content="Enable" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 						</Grid>
@@ -247,21 +247,21 @@
 			</StackPanel>
 			
 			<StackPanel Margin="245,0,4,4" Height="42" VerticalAlignment="Bottom" Background="#000040" Orientation="Horizontal" FlowDirection="RightToLeft">
-				<Button Content="Check Updates" Background="OrangeRed" Margin="4,0,0,0" Click="CheckUpdatesButton_Click"/>
-				<Button Content="Fix Updates" Background="Blue" Margin="4,0,0,0" Click="FixUpdatesButton_Click"/>
-				<Button Content="Users" Margin="4,0,0,0" Click="UserManagerButton_OnClick"/>
-				<Button Content="Kernel" Margin="4,0,0,0" Click="KernelManagerButton_OnClick"/>
-				<Button Content="GPU" Margin="4,0,0,0" Click="GPUUtilsButton_OnClick"/>
-				<Button Content="Boot" Margin="4,0,0,0" Click="BootManagerButton_OnClick"/>
-				<Button Content="Disk" Margin="4,0,0,0" Click="DriveManagerButton_OnClick"/>
-				<Button Content="Network" Margin="4,0,0,0" Click="NetworkManagerButton_OnClick"/>
-				<Button Content="Display" Margin="4,0,0,0" Click="DisplayManagerButton_OnClick"/>
-				<Button Content="Audio" Margin="4,0,0,0" Click="AudioManagerButton_OnClick"/>
-				<Button Name="powerButton" Content="Power" Margin="4,0,0,0" Click="PowerManagerButton_OnClick"/>
+				<Button Content="Check Updates" Background="OrangeRed" ToolTip.Tip="Updates pacman, yay, flatpaks and other sources, kernels etc" Margin="4,0,0,0" Click="CheckUpdatesButton_Click"/>
+				<Button Content="Fix Updates" ToolTip.Tip="If system is having errors updating, run this" Background="Blue" Margin="4,0,0,0" Click="FixUpdatesButton_Click"/>
+				<Button Content="Users" Margin="4,0,0,0" ToolTip.Tip="Manage custom system users" Click="UserManagerButton_OnClick"/>
+				<Button Content="Kernel" Margin="4,0,0,0" ToolTip.Tip="Kernel hacks and tweeks" Click="KernelManagerButton_OnClick"/>
+				<Button Content="GPU" Margin="4,0,0,0" ToolTip.Tip="GPU info and special options" Click="GPUUtilsButton_OnClick"/>
+				<Button Content="Boot" Margin="4,0,0,0" ToolTip.Tip="Boot into another OS" Click="BootManagerButton_OnClick"/>
+				<Button Content="Disk" Margin="4,0,0,0" ToolTip.Tip="Format disks etc" Click="DriveManagerButton_OnClick"/>
+				<Button Content="Network" Margin="4,0,0,0" ToolTip.Tip="Connect to WiFi network" Click="NetworkManagerButton_OnClick"/>
+				<Button Content="Display" Margin="4,0,0,0" ToolTip.Tip="Force single or specific display for Gamescope, Weston and Cage etc" Click="DisplayManagerButton_OnClick"/>
+				<Button Content="Audio" Margin="4,0,0,0" ToolTip.Tip="Set default device or test audio" Click="AudioManagerButton_OnClick"/>
+				<Button Name="powerButton" Content="Power" ToolTip.Tip="Power, clocks, TDP etc" Margin="4,0,0,0" Click="PowerManagerButton_OnClick"/>
 			</StackPanel>
 
 			<StackPanel Margin="245,0,4,4" Height="42" VerticalAlignment="Bottom" Orientation="Horizontal" FlowDirection="LeftToRight">
-				<Button Content="Reinstall Steam" Background="Black" Foreground="#DD0000" Margin="4,0,0,0" Click="ReInstallSteamButton_Click"/>
+				<Button Content="Reinstall Steam" ToolTip.Tip="Reinstalls Steam if its not booting" Background="Black" Foreground="#DD0000" Margin="4,0,0,0" Click="ReInstallSteamButton_Click"/>
 			</StackPanel>
 		</Grid>
 		
