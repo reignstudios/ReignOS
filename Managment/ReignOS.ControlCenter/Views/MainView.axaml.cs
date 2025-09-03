@@ -1239,6 +1239,18 @@ public partial class MainView : UserControl
         MainWindow.singleton.Close();
     }
 
+    private void ReInstallSteamButton_Click(object sender, RoutedEventArgs e)
+    {
+        void callback(MessageBoxOption option)
+        {
+            if (option != MessageBoxOption.Option1) return;
+            App.exitCode = 80;
+            MainWindow.singleton.Close();
+        }
+
+        MessageBoxShow("Are you sure?\nNOTE: This will remove game data", "Ok", null, true, callback);
+    }
+
     private void ExitButton_Click(object sender, RoutedEventArgs e)
     {
         App.exitCode = 20;// close Managment and go to virtual terminal

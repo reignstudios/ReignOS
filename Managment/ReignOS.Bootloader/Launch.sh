@@ -352,6 +352,27 @@ if [ $exit_code -eq 71 ]; then
   exit 0
 fi
 
+if [ $exit_code -eq 80 ]; then
+  echo ""
+  echo "Re-Install Steam..."
+  sudo pacman -Rns steam # force remove steam
+  sudo rm -rf ~/.config/Steam
+  sudo rm -rf ~/.cache/steam
+  sudo rm -rf ~/.steam
+  sudo rm -rf ~/.local/share/Steam
+
+  sudo pacman -Syu # update and install steam
+  sudo pacman --noconfirm --needed -S steam
+
+  #sudo pacman -R amdvlk lib32-amdvlk # remove any unwanted packages
+  #sudo pacman -R amdvlk-pro
+  #sudo pacman -R amdvlk-git
+  #sudo pacman -R nvidia-utils lib32-nvidia-utils
+
+  loginctl terminate-user gamer
+  exit 0
+fi
+
 # install missing packages
 if [ $exit_code -eq 100 ]; then
   echo ""

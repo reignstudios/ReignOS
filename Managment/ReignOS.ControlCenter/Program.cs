@@ -27,7 +27,7 @@ class Program
     public static void Main(string[] args)
     {
         Log.Init("ReignOS.ControlCenter");
-        Log.WriteLine("Installer started: " + VersionInfo.version);
+        Log.WriteLine("Control-Center started: " + VersionInfo.version);
 
         if (args != null)
         {
