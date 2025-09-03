@@ -261,7 +261,7 @@
 			</StackPanel>
 
 			<StackPanel Margin="245,0,4,4" Height="42" VerticalAlignment="Bottom" Orientation="Horizontal" FlowDirection="LeftToRight">
-				<Button Content="Re-Install Steam" Foreground="#DD0000" Margin="4,0,0,0" Click="ReInstallSteamButton_Click"/>
+				<Button Content="Reinstall Steam" Background="Black" Foreground="#DD0000" Margin="4,0,0,0" Click="ReInstallSteamButton_Click"/>
 			</StackPanel>
 		</Grid>
 		

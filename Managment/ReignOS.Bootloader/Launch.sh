@@ -354,7 +354,7 @@ fi
 
 if [ $exit_code -eq 80 ]; then
   echo ""
-  echo "Re-Install Steam..."
+  echo "Reinstall Steam..."
   sudo pacman --noconfirm -Rns steam # force remove steam
   sudo rm -rf ~/.config/Steam
   sudo rm -rf ~/.cache/steam
