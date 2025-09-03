@@ -249,7 +249,6 @@
 			<StackPanel Margin="245,0,4,4" Height="42" VerticalAlignment="Bottom" Background="#000040" Orientation="Horizontal" FlowDirection="RightToLeft">
 				<Button Content="Check Updates" Background="OrangeRed" Margin="4,0,0,0" Click="CheckUpdatesButton_Click"/>
 				<Button Content="Fix Updates" Background="Blue" Margin="4,0,0,0" Click="FixUpdatesButton_Click"/>
-				<Button Content="Re-Install Steam" Background="Red" Margin="4,0,0,0" Click="ReInstallSteamButton_Click"/>
 				<Button Content="Users" Margin="4,0,0,0" Click="UserManagerButton_OnClick"/>
 				<Button Content="Kernel" Margin="4,0,0,0" Click="KernelManagerButton_OnClick"/>
 				<Button Content="GPU" Margin="4,0,0,0" Click="GPUUtilsButton_OnClick"/>
@@ -259,6 +258,10 @@
 				<Button Content="Display" Margin="4,0,0,0" Click="DisplayManagerButton_OnClick"/>
 				<Button Content="Audio" Margin="4,0,0,0" Click="AudioManagerButton_OnClick"/>
 				<Button Name="powerButton" Content="Power" Margin="4,0,0,0" Click="PowerManagerButton_OnClick"/>
+			</StackPanel>
+
+			<StackPanel Margin="245,0,4,4" Height="42" VerticalAlignment="Bottom" Orientation="Horizontal" FlowDirection="LeftToRight">
+				<Button Content="Re-Install Steam" Foreground="#DD0000" Margin="4,0,0,0" Click="ReInstallSteamButton_Click"/>
 			</StackPanel>
 		</Grid>
 		

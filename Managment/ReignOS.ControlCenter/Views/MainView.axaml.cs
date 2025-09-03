@@ -1248,7 +1248,7 @@ public partial class MainView : UserControl
             MainWindow.singleton.Close();
         }
 
-        MessageBoxShow("Are you sure?\nNOTE: This will remove game data", "Ok", null, true, callback);
+        MessageBoxShow("Are you sure?\nNOTE: This may remove game data", "Ok", null, true, callback);
     }
 
     private void ExitButton_Click(object sender, RoutedEventArgs e)
