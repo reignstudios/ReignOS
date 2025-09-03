@@ -32,37 +32,7 @@ namespace ReignOS.Service.Hardware
             {
                 WiFiPatches.Fix2(true);
             }
-            /*else if (Program.hardwareType == HardwareType.AyaneoSlide)
-            {
-                bool needsReboot = false;
-                if (ForceAcpiStrict("/boot/loader/entries/arch.conf")) needsReboot = true;
-                if (ForceAcpiStrict("/boot/loader/entries/chimera.conf")) needsReboot = true;
-                if (ForceAcpiStrict("/boot/loader/entries/bazzite.conf")) needsReboot = true;
-                if (ForceAcpiStrict("/boot/loader/entries/cachy.conf")) needsReboot = true;
-                if (needsReboot) Program.isRebootMode = true; 
-            }*/
         }
-
-        /*private static bool ForceAcpiStrict(string conf)
-        {
-            if (!File.Exists(conf)) return false;
-
-            try
-            {
-                string settings = File.ReadAllText(conf);
-                if (!settings.Contains(" acpi=strict"))
-                {
-                    settings = settings.Replace(" rw rootwait", " rw rootwait acpi=strict");
-                    ProcessUtil.WriteAllTextAdmin(conf, settings);
-                    return true;
-                }
-            }
-            catch (Exception e)
-            {
-                Log.WriteLine(e);
-            }
-            return false;
-        }*/
 
         public static void Update(KeyList keys)
         {
