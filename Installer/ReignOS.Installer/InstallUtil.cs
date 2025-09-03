@@ -296,10 +296,17 @@ static class InstallUtil
         fileBuilder.AppendLine("title ReignOS");
         fileBuilder.AppendLine("linux /vmlinuz-linux");
         fileBuilder.AppendLine("initrd /initramfs-linux.img");
+
+        string vendorName = ProcessUtil.Run("dmidecode", "-s system-manufacturer").Trim();
+        string productName = ProcessUtil.Run("dmidecode", "-s system-product-name").Trim();
+        string extraKernelOptions = "";
+        if (vendorName == "AYANEO" && productName == "SLIDE") extraKernelOptions = " acpi=strict";
+
         string partitionInfoResult = ProcessUtil.Run("blkid", ext4Partition.path, asAdmin:true, useBash:false);
         var match = Regex.Match(partitionInfoResult, @".*?PARTUUID=""(.*?)""");
-        if (match.Success) fileBuilder.AppendLine($"options root=PARTUUID={match.Groups[1].Value} rw rootwait");
-        else fileBuilder.AppendLine($"options root={ext4Partition.path} rw rootwait");
+        if (match.Success) fileBuilder.AppendLine($"options root=PARTUUID={match.Groups[1].Value} rw rootwait{extraKernelOptions}");
+        else fileBuilder.AppendLine($"options root={ext4Partition.path} rw rootwait{extraKernelOptions}");
+
         ProcessUtil.WriteAllTextAdmin(path, fileBuilder);
         Run("systemctl", "enable systemd-networkd systemd-resolved");
         UpdateProgress(22);
@@ -545,7 +552,8 @@ static class InstallUtil
         File.WriteAllText(path, fileBuilder.ToString());
         UpdateProgress(31);
     }
-    
+
+
     private static void InstallArchPackages()
     {
         progressTask = "Installing packages...";

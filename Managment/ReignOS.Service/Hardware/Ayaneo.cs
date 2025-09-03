@@ -32,7 +32,7 @@ namespace ReignOS.Service.Hardware
             {
                 WiFiPatches.Fix2(true);
             }
-            else if (Program.hardwareType == HardwareType.AyaneoSlide)
+            /*else if (Program.hardwareType == HardwareType.AyaneoSlide)
             {
                 bool needsReboot = false;
                 if (ForceAcpiStrict("/boot/loader/entries/arch.conf")) needsReboot = true;
@@ -40,10 +40,10 @@ namespace ReignOS.Service.Hardware
                 if (ForceAcpiStrict("/boot/loader/entries/bazzite.conf")) needsReboot = true;
                 if (ForceAcpiStrict("/boot/loader/entries/cachy.conf")) needsReboot = true;
                 if (needsReboot) Program.isRebootMode = true; 
-            }
+            }*/
         }
 
-        private static bool ForceAcpiStrict(string conf)
+        /*private static bool ForceAcpiStrict(string conf)
         {
             if (!File.Exists(conf)) return false;
 
@@ -62,7 +62,7 @@ namespace ReignOS.Service.Hardware
                 Log.WriteLine(e);
             }
             return false;
-        }
+        }*/
 
         public static void Update(KeyList keys)
         {
