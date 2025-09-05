@@ -169,9 +169,9 @@
 						<Grid>
 							<TextBlock Text="Other Settings" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="OtherSettingsApplyButton_Click"/>
-							<CheckBox Name="vrrCheckbox" Content="VRR" Margin="200,0" ToolTip.Tip="Applys to Gamescope, Weston and Cage" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<CheckBox Name="hdrCheckbox" Content="HDR" Margin="350,0" ToolTip.Tip="Applys to Gamescope" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<CheckBox Name="mangohubCheckbox" Content="Steam Overlay" ToolTip.Tip="MangoHud performance overlay" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<CheckBox Name="mangohubCheckbox" Content="MangoHud" ToolTip.Tip="Performance overlay" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<CheckBox Name="vrrCheckbox" Content="VRR" Margin="350,0" ToolTip.Tip="Applys to Gamescope, Weston and Cage" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<CheckBox Name="hdrCheckbox" Content="HDR" Margin="500,0" ToolTip.Tip="Applys to Gamescope" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 							<CheckBox Name="disableSteamGPUCheckbox" Content="Disable Steam GPU" ToolTip.Tip="Run Steam in software mode" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="170"/>
 							<CheckBox Name="disableSteamDeckCheckbox" Content="Disable SteamDeck Mode" ToolTip.Tip="Run Steam in BigPicture mode" Margin="850,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="200"/>
 						</Grid>
