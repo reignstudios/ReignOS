@@ -1074,6 +1074,7 @@ public partial class MainView : UserControl
                 {
                     try
                     {
+                        // update network status
                         isConnected = App.IsOnline();
                         if (isConnected)
                         {
@@ -1085,6 +1086,18 @@ public partial class MainView : UserControl
                             isConnectedText.Text = "Network Disconnected";
                             isConnectedText.Foreground = new SolidColorBrush(Colors.Red);
                         }
+
+                        // allow UI features
+                        checkUpdatesButton.IsEnabled = isConnected;
+                        fixUpdatesButton.IsEnabled = isConnected;
+                        reinstallSteamButton.IsEnabled = isConnected;
+                        amdDriversApplyButton.IsEnabled = isConnected;
+                        nvidiaDriversApplyButton.IsEnabled = isConnected;
+                        gpuMuxApplyButton.IsEnabled = isConnected;
+                        inputControlApplyButton.IsEnabled = isConnected;
+                        powerManagerApplyButton.IsEnabled = isConnected;
+                        rgbManagerApplyButton.IsEnabled = isConnected;
+                        kernelApplyButton.IsEnabled = isConnected;
                     }
                     catch (Exception ex)
                     {
@@ -2473,32 +2486,39 @@ public partial class MainView : UserControl
     
     private void CopyKernelConf(KernelSettingsCopy target)
     {
-        if (target == KernelSettingsCopy.Chimera)
+        try
         {
-            const string targetKernelConfig = "/boot/loader/entries/chimera.conf";
-            ProcessUtil.CopyFileAdmin("/boot/loader/entries/arch.conf", targetKernelConfig);
-            string copyConf = File.ReadAllText(targetKernelConfig);
-            copyConf = copyConf.Replace("linux /vmlinuz-linux", "linux vmlinuz-linux-chimeraos");
-            copyConf = copyConf.Replace("initrd /initramfs-linux.img", "initrd /initramfs-linux-chimeraos.img");
-            ProcessUtil.WriteAllTextAdmin(targetKernelConfig, copyConf);
+            if (target == KernelSettingsCopy.Chimera)
+            {
+                const string targetKernelConfig = "/boot/loader/entries/chimera.conf";
+                ProcessUtil.CopyFileAdmin("/boot/loader/entries/arch.conf", targetKernelConfig);
+                string copyConf = File.ReadAllText(targetKernelConfig);
+                copyConf = copyConf.Replace("linux /vmlinuz-linux", "linux vmlinuz-linux-chimeraos");
+                copyConf = copyConf.Replace("initrd /initramfs-linux.img", "initrd /initramfs-linux-chimeraos.img");
+                ProcessUtil.WriteAllTextAdmin(targetKernelConfig, copyConf);
+            }
+            else if (target == KernelSettingsCopy.Bazzite)
+            {
+                const string targetKernelConfig = "/boot/loader/entries/bazzite.conf";
+                ProcessUtil.CopyFileAdmin("/boot/loader/entries/arch.conf", targetKernelConfig);
+                string copyConf = File.ReadAllText(targetKernelConfig);
+                copyConf = copyConf.Replace("linux /vmlinuz-linux", "linux vmlinuz-linux-bazzite");
+                copyConf = copyConf.Replace("initrd /initramfs-linux.img", "initrd /initramfs-linux-bazzite.img");
+                ProcessUtil.WriteAllTextAdmin(targetKernelConfig, copyConf);
+            }
+            else if (target == KernelSettingsCopy.Cachy)
+            {
+                const string targetKernelConfig = "/boot/loader/entries/cachy.conf";
+                ProcessUtil.CopyFileAdmin("/boot/loader/entries/arch.conf", targetKernelConfig);
+                string copyConf = File.ReadAllText(targetKernelConfig);
+                copyConf = copyConf.Replace("linux /vmlinuz-linux", "linux vmlinuz-linux-cachyos");
+                copyConf = copyConf.Replace("initrd /initramfs-linux.img", "initrd /initramfs-linux-cachyos.img");
+                ProcessUtil.WriteAllTextAdmin(targetKernelConfig, copyConf);
+            }
         }
-        else if (target == KernelSettingsCopy.Bazzite)
+        catch (Exception e)
         {
-            const string targetKernelConfig = "/boot/loader/entries/bazzite.conf";
-            ProcessUtil.CopyFileAdmin("/boot/loader/entries/arch.conf", targetKernelConfig);
-            string copyConf = File.ReadAllText(targetKernelConfig);
-            copyConf = copyConf.Replace("linux /vmlinuz-linux", "linux vmlinuz-linux-bazzite");
-            copyConf = copyConf.Replace("initrd /initramfs-linux.img", "initrd /initramfs-linux-bazzite.img");
-            ProcessUtil.WriteAllTextAdmin(targetKernelConfig, copyConf);
-        }
-        else if (target == KernelSettingsCopy.Cachy)
-        {
-            const string targetKernelConfig = "/boot/loader/entries/cachy.conf";
-            ProcessUtil.CopyFileAdmin("/boot/loader/entries/arch.conf", targetKernelConfig);
-            string copyConf = File.ReadAllText(targetKernelConfig);
-            copyConf = copyConf.Replace("linux /vmlinuz-linux", "linux vmlinuz-linux-cachyos");
-            copyConf = copyConf.Replace("initrd /initramfs-linux.img", "initrd /initramfs-linux-cachyos.img");
-            ProcessUtil.WriteAllTextAdmin(targetKernelConfig, copyConf);
+            Log.WriteLine(e);
         }
     }
 
