@@ -510,6 +510,7 @@ public partial class MainView : UserControl
     private void RefreshDrivePage()
     {
         nextButton.IsEnabled = false;
+        fixBootButton.IsEnabled = false;
         
         static ulong ParseSizeName(string sizeName)
         {
@@ -740,6 +741,7 @@ public partial class MainView : UserControl
             if (driveListBox.SelectedIndex < 0)
             {
                 nextButton.IsEnabled = false;
+                fixBootButton.IsEnabled = false;
                 return;
             }
         
@@ -747,6 +749,7 @@ public partial class MainView : UserControl
             if (dualBootInstallRadioButton.IsChecked == true && !IsValidDrive(item, true, true))
             {
                 nextButton.IsEnabled = false;
+                fixBootButton.IsEnabled = false;
                 return;
             }
 
@@ -754,9 +757,10 @@ public partial class MainView : UserControl
             if (efiDrive.partitions != null) efiPartition = efiDrive.partitions.FirstOrDefault(x => x.name == efiPartitionName);
             if (ext4Drive.partitions != null) ext4Partition = ext4Drive.partitions.FirstOrDefault(x => x.name == ext4PartitionName);
         }
-        
+
         nextButton.IsEnabled = efiDrive != null && ext4Drive != null && efiPartition != null && ext4Partition != null;
         if (cleanInstallRadioButton.IsChecked != true && dualBootInstallRadioButton.IsChecked != true) nextButton.IsEnabled = false;
+        fixBootButton.IsEnabled = nextButton.IsEnabled;
     }
     
     private void FormatDriveButton_OnClick(object sender, RoutedEventArgs e)
@@ -811,6 +815,31 @@ public partial class MainView : UserControl
             Log.WriteLine("Relaunch with 'install.sh -labwc'");
             MainWindow.singleton.Close();// exit so user can use labwc
         }
+    }
+
+    private void FixBootButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (driveListBox.SelectedIndex < 0 || efiDrive == null || ext4Drive == null) return;
+
+        static void Unmount()
+        {
+            ProcessUtil.Run("umount", "-R /mnt/boot", useBash:false, asAdmin:true);
+            ProcessUtil.Run("umount", "-R /mnt", useBash: false, asAdmin: true);
+        }
+
+        Unmount();
+        ProcessUtil.Run("mount", $"{ext4Partition.path} /mnt", useBash: false, asAdmin: true);
+        ProcessUtil.Run("mount", $"{efiPartition.path} /mnt/boot", useBash: false, asAdmin: true);
+        try
+        {
+            InstallUtil.WriteSystemdBootKernelConf();
+            InstallUtil.WriteSystemdBootLoader();
+        }
+        catch (Exception ex)
+        {
+            Log.WriteLine(ex);
+        }
+        Unmount();
     }
 
     private void CleanInstallButton_OnClick(object sender, RoutedEventArgs e)
