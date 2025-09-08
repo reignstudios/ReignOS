@@ -22,6 +22,8 @@ namespace ReignOS.Bootloader;
 // cat /sys/class/drm/card0-HDMI-A-1/edid | edid-decode
 
 // maybe wanted late packages: asusctl
+// needed for HIP support: hip-runtime-amd via pacman
+// needed for oneAPI support: intel-oneapi-basekit via pacman
 
 static class PackageUpdates
 {
