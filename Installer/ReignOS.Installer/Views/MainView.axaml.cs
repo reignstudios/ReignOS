@@ -848,6 +848,9 @@ public partial class MainView : UserControl
             Log.WriteLine(ex);
         }
         Unmount();
+        
+        // poweroff
+        ShutdownButton_OnClick(null, null);
     }
 
     private void FixBootButton_RemoveHibernation()
