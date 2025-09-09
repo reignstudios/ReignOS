@@ -841,12 +841,53 @@ public partial class MainView : UserControl
         {
             InstallUtil.WriteSystemdBootKernelConf(ext4Partition);
             InstallUtil.WriteSystemdBootLoader();
+            FixBootButton_RemoveHibernation();
         }
         catch (Exception ex)
         {
             Log.WriteLine(ex);
         }
         Unmount();
+    }
+
+    private void FixBootButton_RemoveHibernation()
+    {
+        // disable swap file
+        string filename = "/mnt/etc/fstab";
+        string text = File.ReadAllText(filename);
+        if (text.Contains("/swapfile none swap defaults 0 0"))
+        {
+            text = text.Replace("/swapfile none swap defaults 0 0", "").TrimEnd();
+            ProcessUtil.WriteAllTextAdmin(filename, text);
+        }
+
+        // delete swap file
+        ProcessUtil.DeleteFileAdmin("/mnt/swapfile");
+
+        // remove "resume" hook
+        filename = "/mnt/etc/mkinitcpio.conf";
+        text = File.ReadAllText(filename);
+        var lines = text.Split('\n');
+        foreach (string line in lines)
+        {
+            if (!line.StartsWith("HOOKS=")) continue;
+            var match = Regex.Match(line, @"(HOOKS=\(.*\))");
+            if (match.Success)
+            {
+                string segment = match.Groups[1].Value;
+                if (segment.Contains("filesystems resume"))
+                {
+                    string newLine = segment.Replace("filesystems resume", "filesystems");
+                    text = text.Replace(segment, newLine);
+                    ProcessUtil.WriteAllTextAdmin(filename, text);
+                    break;
+                }
+            }
+        }
+
+        // refresh mkinitcpio
+        static void standardOut_Callback(string line) {/* do nothing: just used to keep output read */}
+        ProcessUtil.Run("arch-chroot", $"/mnt bash -c \\\"mkinitcpio -P\\\"", asAdmin: true, standardOut: standardOut_Callback, verboseLog: true);
     }
 
     private void CleanInstallButton_OnClick(object sender, RoutedEventArgs e)
