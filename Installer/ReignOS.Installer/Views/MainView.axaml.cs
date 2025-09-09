@@ -517,7 +517,6 @@ public partial class MainView : UserControl
     private void RefreshDrivePage()
     {
         nextButton.IsEnabled = false;
-        fixBootButton.IsEnabled = false;
         
         static ulong ParseSizeName(string sizeName)
         {
@@ -748,7 +747,6 @@ public partial class MainView : UserControl
             if (driveListBox.SelectedIndex < 0)
             {
                 nextButton.IsEnabled = false;
-                fixBootButton.IsEnabled = false;
                 return;
             }
         
@@ -756,7 +754,6 @@ public partial class MainView : UserControl
             if (!IsValidDrive(item, true, true))
             {
                 nextButton.IsEnabled = false;
-                fixBootButton.IsEnabled = false;
                 return;
             }
 
@@ -767,7 +764,6 @@ public partial class MainView : UserControl
 
         nextButton.IsEnabled = efiDrive != null && ext4Drive != null && efiPartition != null && ext4Partition != null;
         if (cleanInstallRadioButton.IsChecked != true && dualBootInstallRadioButton.IsChecked != true) nextButton.IsEnabled = false;
-        fixBootButton.IsEnabled = nextButton.IsEnabled;
     }
     
     private void FormatDriveButton_OnClick(object sender, RoutedEventArgs e)
@@ -828,7 +824,36 @@ public partial class MainView : UserControl
 
     private void FixBootButton_OnClick(object sender, RoutedEventArgs e)
     {
-        if (driveListBox.SelectedIndex < 0 || efiDrive == null || ext4Drive == null) return;
+        if (driveListBox.SelectedIndex < 0) return;
+
+        // find paritions
+        Partition partitionEFI = null;
+        Partition partitionEXT4 = null;
+        if (dualBootInstallRadioButton.IsChecked == true && useMultipleDrivesCheckBox.IsChecked == true)
+        {
+            foreach (ListBoxItem item in driveListBox.Items)
+            {
+                var drive = (Drive)item.Tag;
+                foreach (var parition in drive.partitions)
+                {
+                    if (parition.name == efiPartitionName) partitionEFI = parition;
+                    else if (parition.name == ext4PartitionName) partitionEXT4 = parition;
+                }
+            }
+        }
+        else
+        {
+            var item = (ListBoxItem)driveListBox.Items[driveListBox.SelectedIndex];
+            var drive = (Drive)item.Tag;
+            if (drive.partitions != null)
+            {
+                foreach (var parition in drive.partitions)
+                {
+                    if (parition.name == efiPartitionName) partitionEFI = parition;
+                    else if (parition.name == ext4PartitionName) partitionEXT4 = parition;
+                }
+            }
+        }
 
         static void Unmount()
         {
@@ -837,8 +862,8 @@ public partial class MainView : UserControl
         }
 
         Unmount();
-        ProcessUtil.Run("mount", $"{ext4Partition.path} /mnt", useBash: false, asAdmin: true);
-        ProcessUtil.Run("mount", $"{efiPartition.path} /mnt/boot", useBash: false, asAdmin: true);
+        ProcessUtil.Run("mount", $"{partitionEXT4.path} /mnt", useBash: false, asAdmin: true);
+        ProcessUtil.Run("mount", $"{partitionEFI.path} /mnt/boot", useBash: false, asAdmin: true);
         try
         {
             InstallUtil.WriteSystemdBootKernelConf(ext4Partition);
@@ -857,6 +882,10 @@ public partial class MainView : UserControl
 
     private void FixBootButton_RemoveHibernation()
     {
+        // remove lts kernel if it exists
+        ProcessUtil.DeleteFileAdmin("/boot/initramfs-linux-lts.img");
+        ProcessUtil.DeleteFileAdmin("/boot/initramfs-linux-lts-fallback.img");
+
         // disable swap file
         string filename = "/mnt/etc/fstab";
         string text = File.ReadAllText(filename);
