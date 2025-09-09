@@ -72,7 +72,7 @@
 						</Grid>
 						<Button Content="Open GParted" Click="OpenGPartedButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,16,0,0"/>
 					</StackPanel>
-					<Button Name="fixBootButton" Content="Fix Existing Boot" ToolTip.Tip="Resets systemd-boot configs" Background="DarkRed" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4,10,0,0" Click="FixBootButton_OnClick"/>
+					<Button Name="fixBootButton" Content="Fix Existing Boot" Background="DarkRed" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4,10,0,0" Click="FixBootButton_OnClick"/>
 				</Grid>
 			</Grid>
 			
