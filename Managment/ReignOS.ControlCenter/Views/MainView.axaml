@@ -226,7 +226,7 @@
 							<TextBlock Text="Rest Mode" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RestApplyButton_Click"/>
 							<RadioButton Name="restSleepCheckbox" Content="Sleep" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="restHibernateCheckbox" Content="Hibernate" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<RadioButton Name="restHibernateCheckbox" Content="Hibernate" IsEnabled="False" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
 						</Grid>
 					</Grid>
 
