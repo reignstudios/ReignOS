@@ -832,7 +832,7 @@ public partial class MainView : UserControl
         ProcessUtil.Run("mount", $"{efiPartition.path} /mnt/boot", useBash: false, asAdmin: true);
         try
         {
-            InstallUtil.WriteSystemdBootKernelConf();
+            InstallUtil.WriteSystemdBootKernelConf(ext4Partition);
             InstallUtil.WriteSystemdBootLoader();
         }
         catch (Exception ex)

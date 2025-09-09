@@ -291,7 +291,7 @@ static class InstallUtil
         
         // configure systemd-boot
         Run("bootctl", "install");
-        WriteSystemdBootKernelConf();
+        WriteSystemdBootKernelConf(ext4Partition);
         Run("systemctl", "enable systemd-networkd systemd-resolved");
         UpdateProgress(22);
 
@@ -533,7 +533,7 @@ static class InstallUtil
         UpdateProgress(31);
     }
 
-    public static void WriteSystemdBootKernelConf()
+    public static void WriteSystemdBootKernelConf(Partition ext4Partition)
     {
         const string path = "/mnt/boot/loader/entries/arch.conf";
         var fileBuilder = new StringBuilder();
