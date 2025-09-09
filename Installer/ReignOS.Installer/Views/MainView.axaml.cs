@@ -708,9 +708,9 @@ public partial class MainView : UserControl
             {
                 if (partitionEFI == null) return false;
                 
-                const ulong size512MB = 512ul * 1024 * 1024;
+                const ulong size1024MB = 1024ul * 1024 * 1024;
                 bool validNameEFI = partitionEFI.name == efiPartitionName;
-                bool validSizeEFI = partitionEFI.size >= size512MB;
+                bool validSizeEFI = partitionEFI.size >= size1024MB;
                 bool validFormatEFI = partitionEFI.fileSystem == "fat32";
                 bool validFlagsEFI = partitionEFI.flags.Contains("boot") && partitionEFI.flags.Contains("esp");
                 if (!validNameEFI || !validSizeEFI || !validFormatEFI || !validFlagsEFI) return false;
@@ -753,7 +753,7 @@ public partial class MainView : UserControl
             }
         
             var item = (ListBoxItem)driveListBox.Items[driveListBox.SelectedIndex];
-            if (dualBootInstallRadioButton.IsChecked == true && !IsValidDrive(item, true, true))
+            if (!IsValidDrive(item, true, true))
             {
                 nextButton.IsEnabled = false;
                 fixBootButton.IsEnabled = false;
@@ -784,8 +784,8 @@ public partial class MainView : UserControl
         ProcessUtil.Run("parted", $"-s {efiDrive.disk} mklabel gpt", asAdmin:true, useBash:false);
         
         // make new partitions
-        ProcessUtil.Run("parted", $"-s -a optimal {efiDrive.disk} mkpart ESP fat32 1MiB 513MiB", asAdmin:true, useBash:false);
-        ProcessUtil.Run("parted", $"-s -a optimal {efiDrive.disk} mkpart primary ext4 513MiB 100%", asAdmin:true, useBash:false);
+        ProcessUtil.Run("parted", $"-s -a optimal {efiDrive.disk} mkpart ESP fat32 1MiB 1025MiB", asAdmin:true, useBash:false);
+        ProcessUtil.Run("parted", $"-s -a optimal {efiDrive.disk} mkpart primary ext4 1025MiB 100%", asAdmin:true, useBash:false);
 
         // configure partition
         ProcessUtil.Run("parted", $"-s {efiDrive.disk} set 1 boot on", asAdmin:true, useBash:false);
