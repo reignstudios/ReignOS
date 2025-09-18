@@ -1537,7 +1537,7 @@ public partial class MainView : UserControl
             loader = loader.TrimEnd('\n').TrimEnd();
         }
         
-        // remove lts kernel
+        // remove lts kernel (TODO: remove later)
         ProcessUtil.DeleteFileAdmin("/boot/initramfs-linux-lts.img");
         ProcessUtil.DeleteFileAdmin("/boot/initramfs-linux-lts-fallback.img");
         
