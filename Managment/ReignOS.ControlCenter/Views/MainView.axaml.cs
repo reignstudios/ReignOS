@@ -1589,8 +1589,8 @@ public partial class MainView : UserControl
         
         // finish
         SaveSettings();
-        //App.exitCode = 19;// reboot after mkinitcpio
-        //MainWindow.singleton.Close();
+        App.exitCode = 19;// reboot after mkinitcpio
+        MainWindow.singleton.Close();
     }
 
     private void RestApply_Sleep()
