@@ -64,7 +64,7 @@
 						<RadioButton Name="dualBootInstallRadioButton" Content="Dual Boot (Keep Other OS)" Click="DualInstallButton_OnClick"/>
 						<Grid Name="cleanDriveGrid" IsVisible="True">
 							<Button Content="Format Selected Drive" Background="DarkRed" Click="FormatDriveButton_OnClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4,16,0,0"/>
-							<TextBlock Text="NOTE: This will delete all data on the entire drive selected." Margin="4,52,0,0" TextWrapping="Wrap"/>
+							<TextBlock Text="WARNING: This will delete all data on the entire drive selected.&#x0A;NOTE: If 'Format' fails, use 'Dual Boot' option and just manually create partitions." Margin="4,52,0,0" TextWrapping="Wrap"/>
 						</Grid>
 						<Grid Name="keepOSDriveGrid" IsVisible="False">
 							<CheckBox Name="useMultipleDrivesCheckBox" Content="Use Multiple Drives" Margin="0,4,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsCheckedChanged="UseMultipleDrivesCheckBox_OnIsCheckedChanged"/>
