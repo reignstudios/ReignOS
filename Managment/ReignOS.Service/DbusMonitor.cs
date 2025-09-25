@@ -70,7 +70,11 @@ static class DbusMonitor
         {
             Program.isRebootMode = true;
         }
-        else if (line.Contains("Access denied due to active block inhibitor"))// || line.Contains("member=ListInhibitors"))
+        else if
+        (
+            line.Contains("Access denied due to active block inhibitor") ||// older dbus
+            line.Contains("Operation denied due to active block inhibitor")// newer dbus
+        )
         {
             PreShutdown();
         }
