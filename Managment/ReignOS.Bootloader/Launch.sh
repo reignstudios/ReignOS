@@ -186,6 +186,7 @@ if [ $exit_code -eq 52 ]; then
   sudo pacman -R --noconfirm inputplumber
   
   echo "Installing HHD..."
+  yay -R --noconfirm hhd-git
   yay -S --noconfirm hhd hhd-user hhd-ui
   systemctl --user enable hhd-user
   sudo systemctl enable hhd@$(whoami)
