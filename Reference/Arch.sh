@@ -301,13 +301,46 @@ mkdir ~/ReignOS
 cd ~/ReignOS
 cp -r /usr/share/archiso/configs/releng/* .
 
+# update archiso
+cd ~/ReignOS
+cp -r /usr/share/archiso/configs/releng/* .
+
+airootfs/etc/motd # "To install ReignOS Linux follow the installation guide:" "http://reign-os.com/"
+airootfs/etc/passwd # "gamer:x:0:0:gamer:/home/gamer:/usr/bin/bash"
+airootfs/etc/systemd/system/getty@tty1.service.d/autologin.conf # "ExecStart=-/sbin/agetty -o '-p -f -- \\u' --noclear --autologin gamer - $TERM"
+packages.x86_64 # add lines below from "nano packages.x86_64"
+profiledef.sh
+{
+    #iso_name="reignos"
+    #iso_label="REIGNOS_$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y%m)"
+    #iso_publisher="ReignOS <http://reign-studios.com>"
+    #iso_application="ReignOS Installer"
+}
+syslinux/archiso_head.cfg # "MENU TITLE ReignOS"
+syslinux/archiso_pxe-linux.cfg
+{
+    #Boot the ReignOS install medium using NBD.
+    #It allows you to install ReignOS or perform system maintenance.
+    #MENU LABEL ReignOS install medium (x86_64, NBD)
+    #MENU LABEL ReignOS install medium (x86_64, HTTP)
+}
+syslinux/archiso_sys-linux.cfg
+{
+    #Boot the ReignOS install medium on BIOS.
+    #It allows you to install ReignOS or perform system maintenance.
+    #Boot the ReignOS install medium on BIOS with speakup screen reader.
+    #It allows you to install ReignOS or perform system maintenance with speech feedback.
+    #MENU LABEL ReignOS install medium (x86_64, BIOS) with ^speech
+}
+efiboot/loader/entries/<config-files>.conf
+
 # add packages needed in live USB (like dotnet)
 nano packages.x86_64
 
 bash
 parted
 gparted
-ntfs-3g # needed for NFTS partitions
+ntfs-3g
 git
 git-lfs
 gcc
@@ -315,6 +348,7 @@ dotnet-sdk-8.0
 weston
 cage
 labwc
+openbox
 wlr-randr
 dmidecode
 udev
