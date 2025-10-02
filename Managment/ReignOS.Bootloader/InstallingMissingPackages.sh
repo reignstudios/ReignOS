@@ -82,11 +82,6 @@ sudo pacman -S --noconfirm --needed libdvdread libdvdnav libdvdcss libbluray
 yay -S --noconfirm --needed ayaneo-platform-dkms-git
 yay -S --noconfirm --needed ayn-platform-dkms-git
 
-yay -S --noconfirm --needed rtl8812au-dkms-git
-yay -S --noconfirm --needed rtl8814au-dkms-git
-yay -S --noconfirm --needed rtl88x2bu-dkms-git
-yay -S --noconfirm --needed rtl8821au-dkms-git
-
 yay -S --noconfirm --needed ryzenadj
 
 sudo systemctl stop acpid

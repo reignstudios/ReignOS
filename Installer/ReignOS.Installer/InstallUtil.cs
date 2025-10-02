@@ -477,12 +477,6 @@ static class InstallUtil
 
         fileBuilder.AppendLine("yay_retry -S --noconfirm --needed ayaneo-platform-dkms-git");
         fileBuilder.AppendLine("yay_retry -S --noconfirm --needed ayn-platform-dkms-git");
-
-        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed rtl8812au-dkms-git");
-        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed rtl8814au-dkms-git");
-        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed rtl88x2bu-dkms-git");
-        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed rtl8821au-dkms-git");
-        
         fileBuilder.AppendLine("yay_retry -S --noconfirm --needed ryzenadj");
 
         fileBuilder.AppendLine();// disable stop on any error
