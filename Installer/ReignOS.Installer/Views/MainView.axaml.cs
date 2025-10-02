@@ -986,8 +986,7 @@ public partial class MainView : UserControl
         emailSendButton.IsEnabled = false;
         emailCancelButton.IsEnabled = false;
         emailSendingText.IsVisible = true;
-        const string pass = "mssp" + ".skomTDc" + ".x2p034" + "7w19ylzdrn" + ".PZKSda7";
-        EmailUtils.SendEmail(from, "MS_Qb1G8I@test-dnvo4d90k76g5r86.mlsender.net", pass, "ReignOS", toAddress, $"ReignOS: {from}", body, EmailSendCallback, attachments.ToArray());
+        EmailUtils.SendEmail(from, "MS_Qb1G8I@test-dnvo4d90k76g5r86.mlsender.net", Private.Keys.emailKey, "ReignOS", toAddress, $"ReignOS: {from}", body, EmailSendCallback, attachments.ToArray());
     }
 
     private void EmailCancelButton_Click(object sender, RoutedEventArgs e)

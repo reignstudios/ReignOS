@@ -29,4 +29,10 @@
   <ItemGroup>
     <ProjectReference Include="..\ReignOS.Core\ReignOS.Core.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ReignOS.Private">
+      <HintPath>..\ReignOS.Private.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>
