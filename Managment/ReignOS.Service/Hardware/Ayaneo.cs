@@ -26,7 +26,8 @@ namespace ReignOS.Service.Hardware
                 Program.hardwareType == HardwareType.AyaneoPro ||
                 Program.hardwareType == HardwareType.AyaneoPlus ||
                 Program.hardwareType == HardwareType.AyaneoFlipDS || Program.hardwareType == HardwareType.AyaneoFlipDS_1S ||
-                Program.hardwareType == HardwareType.AyaneoSlide;
+                Program.hardwareType == HardwareType.AyaneoSlide ||
+                Program.hardwareType == HardwareType.AyaneoNextLite;
 
             if (Program.hardwareType == HardwareType.Ayaneo1 || Program.hardwareType == HardwareType.AyaneoPro)
             {
