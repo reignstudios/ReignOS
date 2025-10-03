@@ -34,7 +34,8 @@ namespace ReignOS.Service.Hardware
             }
             else if (Program.hardwareType == HardwareType.AyaneoNextLite)
             {
-                WiFiPatches.Fix3(true);
+                WiFiPatches.Fix3(false);
+                WiFiPatches.Fix1(true);
             }
         }
 

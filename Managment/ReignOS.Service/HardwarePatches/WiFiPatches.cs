@@ -1,6 +1,10 @@
 ﻿using ReignOS.Core;
 using System.IO;
 
+// sudo lsmod
+// sudo dmesg | grep -i wifi
+// sudo modinfo iwlwifi | grep depends
+
 namespace ReignOS.Service.HardwarePatches
 {
 	static class WiFiPatches
