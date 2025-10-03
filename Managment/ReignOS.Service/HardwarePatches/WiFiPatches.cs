@@ -13,6 +13,12 @@ namespace ReignOS.Service.HardwarePatches
 			string path = "/usr/lib/systemd/system-sleep";
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
             path = Path.Combine(path, "wifi-sleep.sh");
+            if (!apply && File.Exists(path))
+            {
+                // remove
+                File.Delete(path);
+                return;
+            }
 
             const string config =
 @"#!/bin/bash
@@ -37,6 +43,12 @@ esac";
             string path = "/usr/lib/systemd/system-sleep";
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
             path = Path.Combine(path, "wifi-sleep.sh");
+            if (!apply && File.Exists(path))
+            {
+                // remove
+                File.Delete(path);
+                return;
+            }
 
             const string config =
 @"#!/bin/bash
@@ -61,16 +73,22 @@ esac";
             string path = "/usr/lib/systemd/system-sleep";
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
             path = Path.Combine(path, "wifi-sleep.sh");
+            if (!apply && File.Exists(path))
+            {
+                // remove
+                File.Delete(path);
+                return;
+            }
 
             const string config =
 @"#!/bin/bash
 
 case ""$1"" in
   pre)
-    /usr/sbin/modprobe -r iwlmvm iwlwifi mt7921e
+    /usr/sbin/modprobe -r iwlmvm iwlwifi mac80211
     ;;
   post)
-    /usr/sbin/modprobe mt7921e iwlwifi iwlmvm
+    /usr/sbin/modprobe mac80211 iwlwifi iwlmvm
     ;;
 esac";
             File.WriteAllText(path, config);

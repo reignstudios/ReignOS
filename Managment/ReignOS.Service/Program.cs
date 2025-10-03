@@ -31,6 +31,7 @@ enum HardwareType
     AyaneoFlipDS,
     AyaneoFlipDS_1S,
     AyaneoSlide,
+    AyaneoNextLite,
 
     // One-Netbook
     OneXPlayer_Gen1,
@@ -114,6 +115,7 @@ internal class Program
             else if (productName.StartsWith("FLIP DS")) hardwareType = HardwareType.AyaneoFlipDS;
             else if (productName.StartsWith("FLIP 1S DS")) hardwareType = HardwareType.AyaneoFlipDS_1S;
             else if (productName.StartsWith("SLIDE")) hardwareType = HardwareType.AyaneoSlide;
+            else if (productName.StartsWith("NEXT Lite")) hardwareType = HardwareType.AyaneoNextLite;
             else if (productName.StartsWith("AYA NEO FOUNDER")) hardwareType = HardwareType.Ayaneo1;
             else if (productName.StartsWith("AYANEO 2")) hardwareType = HardwareType.Ayaneo2;
             else if (productName.StartsWith("AYANEO 3")) hardwareType = HardwareType.Ayaneo3;

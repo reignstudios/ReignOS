@@ -32,6 +32,10 @@ namespace ReignOS.Service.Hardware
             {
                 WiFiPatches.Fix2(true);
             }
+            else if (Program.hardwareType == HardwareType.AyaneoNextLite)
+            {
+                WiFiPatches.Fix3(true);
+            }
         }
 
         public static void Update(KeyList keys)
