@@ -3,10 +3,10 @@
 # remove old packages
 # nothing yet...
 
-# run updates first
-cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/
-chmod +x ./Update.sh
-./Update.sh
+# run updates first (avoid boot loops and don't do this)
+#cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/
+#chmod +x ./Update.sh
+#./Update.sh
 
 # make sure yay installed
 if [ ! -d "/home/gamer/yay" ]; then
