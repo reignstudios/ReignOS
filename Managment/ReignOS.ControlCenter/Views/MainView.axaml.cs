@@ -148,6 +148,7 @@ public partial class MainView : UserControl
     private int kernelIntelMaxCState, kernelAMDMaxCState;
 
     private bool hibernatePowerButton;
+    private bool disabledUIState;
     
     private const string magicModulePowerPath = "/sys/class/firmware-attributes/ayaneo-ec/attributes/controller_power/current_value";
     private const string magicModuleStatePath = "/sys/class/firmware-attributes/ayaneo-ec/attributes/controller_modules/current_value";
@@ -161,10 +162,7 @@ public partial class MainView : UserControl
 
         string gitResult = ProcessUtil.Run("git", "branch --show-current", useBash:false);
         gitText.Text = "Branch: " + gitResult.Trim();
-        RefreshGPUs();
-        RefreshMUX();
-        LoadSettings();
-        PostRefreshGPUs();
+        FullSettingsReload();
         #if !DEBUG
         SaveSystemSettings();// apply any system settings in case things get updated
         #endif
@@ -181,6 +179,14 @@ public partial class MainView : UserControl
         // enable Ayaneo3 options
         ayaneoModulePopGrid.IsVisible = Program.ayaneoModules;
         ayaneoModuleNote.IsVisible = !(File.Exists(magicModulePowerPath) && File.Exists(magicModuleStatePath));
+    }
+
+    private void FullSettingsReload()
+    {
+        RefreshGPUs();
+        RefreshMUX();
+        LoadSettings();
+        PostRefreshGPUs();
     }
 
     private void RefreshGPUs()
@@ -1088,9 +1094,10 @@ public partial class MainView : UserControl
                         }
 
                         // allow UI features
-                        checkUpdatesButton.IsEnabled = isConnected;
-                        fixUpdatesButton.IsEnabled = isConnected;
-                        reinstallSteamButton.IsEnabled = isConnected;
+                        bool enabled = isConnected && !disabledUIState;
+                        checkUpdatesButton.IsEnabled = enabled;
+                        fixUpdatesButton.IsEnabled = enabled;
+                        reinstallSteamButton.IsEnabled = enabled;
                         amdDriversApplyButton.IsEnabled = isConnected;
                         nvidiaDriversApplyButton.IsEnabled = isConnected;
                         gpuMuxApplyButton.IsEnabled = isConnected;
@@ -3375,9 +3382,151 @@ public partial class MainView : UserControl
         ProcessUtil.Run("userdel", $"-r {username}", useBash: true, asAdmin: true);// delete user and user folder
         RefreshUserPage();
     }
-    
+
     /*private void UserManagerStartUserButton_OnClick(object sender, RoutedEventArgs e)
     {
         ProcessUtil.Run("openvt", "-f -s -w -c 4 -- bash -c 'labwc'", useBash: true, asAdmin: true);// this just doesn't seem to work to launch compositor in a good way
     }*/
+
+    private void DisableMainUI(object modified)
+    {
+        disabledUIState = true;
+        revertButton.IsVisible = true;
+
+        if (modified != ayaneoModulePopGrid) ayaneoModulePopGrid.IsEnabled = false;
+        if (modified != defaultBootGrid) defaultBootGrid.IsEnabled = false;
+        if (modified != ayaneoModulePopGrid) ayaneoModulePopGrid.IsEnabled = false;
+        if (modified != amdDriversGrid) amdDriversGrid.IsEnabled = false;
+        if (modified != nvidiaDriversGrid) nvidiaDriversGrid.IsEnabled = false;
+        if (modified != primeGPUGrid) primeGPUGrid.IsEnabled = false;
+        if (modified != hybridGPUGrid) hybridGPUGrid.IsEnabled = false;
+        if (modified != otherSettingsGrid) otherSettingsGrid.IsEnabled = false;
+        if (modified != inputControlGrid) inputControlGrid.IsEnabled = false;
+        if (modified != powerManagerSwitchGrid) powerManagerSwitchGrid.IsEnabled = false;
+        if (modified != rgbManagerGrid) rgbManagerGrid.IsEnabled = false;
+        if (modified != kernelGrid) kernelGrid.IsEnabled = false;
+        if (modified != restModeGrid) restModeGrid.IsEnabled = false;
+        if (modified != reignOSMonitorGrid) reignOSMonitorGrid.IsEnabled = false;
+
+        checkUpdatesButton.IsEnabled = false;
+        fixUpdatesButton.IsEnabled = false;
+        reinstallSteamButton.IsEnabled = false;
+
+        usersPageButton.IsEnabled = false;
+        kernelPageButton.IsEnabled = false;
+        gpuPageButton.IsEnabled = false;
+        bootPageButton.IsEnabled = false;
+        diskPageButton.IsEnabled = false;
+        networkPageButton.IsEnabled = false;
+        displayPageButton.IsEnabled = false;
+        audioPageButton.IsEnabled = false;
+        powerButton.IsEnabled = false;
+    }
+
+    private void EnableMainUI()
+    {
+        disabledUIState = false;
+        revertButton.IsVisible = false;
+
+        ayaneoModulePopGrid.IsEnabled = true;
+        defaultBootGrid.IsEnabled = true;
+        screenRotationGrid.IsEnabled = true;
+        amdDriversGrid.IsEnabled = true;
+        nvidiaDriversGrid.IsEnabled = true;
+        primeGPUGrid.IsEnabled = true;
+        hybridGPUGrid.IsEnabled = true;
+        otherSettingsGrid.IsEnabled = true;
+        inputControlGrid.IsEnabled = true;
+        powerManagerSwitchGrid.IsEnabled = true;
+        rgbManagerGrid.IsEnabled = true;
+        kernelGrid.IsEnabled = true;
+        restModeGrid.IsEnabled = true;
+        reignOSMonitorGrid.IsEnabled = true;
+
+        checkUpdatesButton.IsEnabled = isConnected;
+        fixUpdatesButton.IsEnabled = isConnected;
+        reinstallSteamButton.IsEnabled = isConnected;
+
+        usersPageButton.IsEnabled = true;
+        kernelPageButton.IsEnabled = true;
+        gpuPageButton.IsEnabled = true;
+        bootPageButton.IsEnabled = true;
+        diskPageButton.IsEnabled = true;
+        networkPageButton.IsEnabled = true;
+        displayPageButton.IsEnabled = true;
+        audioPageButton.IsEnabled = true;
+        powerButton.IsEnabled = true;
+
+        FullSettingsReload();
+    }
+
+    private void RevertButton_Click(object sender, RoutedEventArgs e)
+    {
+        EnableMainUI();
+    }
+
+    private void DefaultBootOption_Click(object sender, RoutedEventArgs e)
+    {
+        DisableMainUI(defaultBootGrid);
+    }
+
+    private void ScreenRotationOption_Click(object sender, RoutedEventArgs e)
+    {
+        DisableMainUI(screenRotationGrid);
+    }
+
+    private void AMDDriversOption_Click(object sender, RoutedEventArgs e)
+    {
+        DisableMainUI(amdDriversGrid);
+    }
+
+    private void NvidiaDriversOption_Click(object sender, RoutedEventArgs e)
+    {
+        DisableMainUI(nvidiaDriversGrid);
+    }
+
+    private void PrimeGPUOption_Click(object sender, RoutedEventArgs e)
+    {
+        DisableMainUI(primeGPUGrid);
+    }
+
+    private void HybridGPUOption_Click(object sender, RoutedEventArgs e)
+    {
+        DisableMainUI(hybridGPUGrid);
+    }
+
+    private void OtherSettingsOption_Click(object sender, RoutedEventArgs e)
+    {
+        DisableMainUI(otherSettingsGrid);
+    }
+
+    private void InputControlOption_Click(object sender, RoutedEventArgs e)
+    {
+        DisableMainUI(inputControlGrid);
+    }
+
+    private void PowerManagerOption_Click(object sender, RoutedEventArgs e)
+    {
+        DisableMainUI(powerManagerGrid);
+    }
+
+    private void RGBManagerOption_Click(object sender, RoutedEventArgs e)
+    {
+        DisableMainUI(rgbManagerGrid);
+    }
+
+    private void KernelOption_Click(object sender, RoutedEventArgs e)
+    {
+        DisableMainUI(kernelGrid);
+    }
+
+    private void RestModeOption_Click(object sender, RoutedEventArgs e)
+    {
+        DisableMainUI(restModeGrid);
+    }
+
+    private void ReignOSMonitorOption_Click(object sender, RoutedEventArgs e)
+    {
+        DisableMainUI(reignOSMonitorGrid);
+    }
 }

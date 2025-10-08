@@ -9,12 +9,14 @@
 		<Grid Name="mainGrid" IsVisible="True">
 			<Button Content="Exit to Terminal" Margin="4" Click="ExitButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 			<Button Content="Email Logs" Margin="140,4,0,0" Background="#000077" Click="EmailLogsButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+			
 			<TextBlock Text="Remember to check updates!" Foreground="OrangeRed" Margin="4,74,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 			<TextBlock Name="isConnectedText" Text="Network Status" Margin="8" HorizontalAlignment="Right" VerticalAlignment="Top"/>
 			<TextBlock Name="versionText" Text="Version: x.x.x" Foreground="Gray" Margin="0,32,8,0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
 			<TextBlock Name="compositorText" Text="Control-Center Compositor: ..." Foreground="Gray" Margin="0,52,8,0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
 			<TextBlock Name="gitText" Text="Branch: ..." Foreground="Gray" Margin="0,72,8,0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
 			<TextBlock Text="Control Center" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="32" FontWeight="Bold" Margin="4,25,4,4"/>
+			<Button Name="revertButton" Content="Revert" Width="256" Height="64" FontSize="32" Margin="0,4,0,0" Background="#770077" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsVisible="False" Click="RevertButton_Click"/>
 			<Separator HorizontalAlignment="Center" VerticalAlignment="Top" Margin="150,70,150,0"/>
 
 			<ScrollViewer Height="145" VerticalAlignment="Top" Margin="4,95,0,0" Background="#202020" HorizontalScrollBarVisibility="Auto">
@@ -95,146 +97,146 @@
 						</Grid>
 					</Grid>
 
-					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
+					<Grid Name="defaultBootGrid" Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>
 							<TextBlock Text="Default Boot" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="BootApplyButton_OnClick"/>
-							<RadioButton Name="boot_ControlCenter" Content="Control Center" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="boot_Gamescope" Content="Gamescope" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="boot_Weston" Content="Weston" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="boot_Cage" Content="Cage" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="boot_X11" Content="X11" Margin="800,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="boot_KDEG" Content="KDE-G" Margin="950,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<RadioButton Name="boot_ControlCenter" Content="Control Center" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="DefaultBootOption_Click"/>
+							<RadioButton Name="boot_Gamescope" Content="Gamescope" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="DefaultBootOption_Click"/>
+							<RadioButton Name="boot_Weston" Content="Weston" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="DefaultBootOption_Click"/>
+							<RadioButton Name="boot_Cage" Content="Cage" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="DefaultBootOption_Click"/>
+							<RadioButton Name="boot_X11" Content="X11" Margin="800,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="DefaultBootOption_Click"/>
+							<RadioButton Name="boot_KDEG" Content="KDE-G" Margin="950,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="DefaultBootOption_Click"/>
 						</Grid>
 					</Grid>
 				
-					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
+					<Grid Name="screenRotationGrid" Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>
 							<TextBlock Text="Screen Rotation" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RotApplyButton_OnClick"/>
-							<RadioButton Name="rot_Unset" Content="Unset" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="rot_Default" Content="Default" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="rot_Left" Content="Left 90" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="rot_Right" Content="Right 90" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="rot_Flip" Content="Flip 180" Margin="800,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<CheckBox Name="rot_Touchscreen" Content="Rotate touchscreen" Margin="950,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="160"/>
+							<RadioButton Name="rot_Unset" Content="Unset" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="ScreenRotationOption_Click"/>
+							<RadioButton Name="rot_Default" Content="Default" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="ScreenRotationOption_Click"/>
+							<RadioButton Name="rot_Left" Content="Left 90" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="ScreenRotationOption_Click"/>
+							<RadioButton Name="rot_Right" Content="Right 90" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="ScreenRotationOption_Click"/>
+							<RadioButton Name="rot_Flip" Content="Flip 180" Margin="800,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="ScreenRotationOption_Click"/>
+							<CheckBox Name="rot_Touchscreen" Content="Rotate touchscreen" Margin="950,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="160" Click="ScreenRotationOption_Click"/>
 						</Grid>
 					</Grid>
 
-					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
+					<Grid Name="amdDriversGrid" Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>
 							<TextBlock Text="AMD Drivers" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Name="amdDriversApplyButton" Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="AMDApplyButton_OnClick"/>
-							<RadioButton Name="amd_Mesa" Content="RADV" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="amd_VLK" Content="AMDVLK" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="amd_Proprietary" Content="Proprietary" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<RadioButton Name="amd_Mesa" Content="RADV" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="AMDDriversOption_Click"/>
+							<RadioButton Name="amd_VLK" Content="AMDVLK" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="AMDDriversOption_Click"/>
+							<RadioButton Name="amd_Proprietary" Content="Proprietary" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="AMDDriversOption_Click"/>
 						</Grid>
 					</Grid>
 				
-					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
+					<Grid Name="nvidiaDriversGrid" Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>
 							<TextBlock Text="Nvidia Drivers" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Name="nvidiaDriversApplyButton" Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="NvidiaApplyButton_OnClick"/>
-							<RadioButton Name="nvidia_Nouveau" Content="Nouveau" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="nvidia_Proprietary" Content="Proprietary" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<RadioButton Name="nvidia_Nouveau" Content="Nouveau" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="NvidiaDriversOption_Click"/>
+							<RadioButton Name="nvidia_Proprietary" Content="Proprietary" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="NvidiaDriversOption_Click"/>
 						</Grid>
 					</Grid>
 
-					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
+					<Grid Name="primeGPUGrid" Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>
 							<TextBlock Text="Prime GPU" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="PrimeGPUApplyButton_Click"/>
-							<RadioButton Name="gpuButton0" Content="Unset" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="gpuButton1" Content="GPU 1" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="gpuButton2" Content="GPU 2" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="gpuButton3" Content="GPU 3" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="gpuButton4" Content="GPU 4" Margin="800,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<CheckBox Name="gpuButtonNvidiaPrime" Content="Nvidia Prime" Margin="950,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<RadioButton Name="gpuButton0" Content="Unset" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="PrimeGPUOption_Click"/>
+							<RadioButton Name="gpuButton1" Content="GPU 1" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="PrimeGPUOption_Click"/>
+							<RadioButton Name="gpuButton2" Content="GPU 2" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="PrimeGPUOption_Click"/>
+							<RadioButton Name="gpuButton3" Content="GPU 3" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="PrimeGPUOption_Click"/>
+							<RadioButton Name="gpuButton4" Content="GPU 4" Margin="800,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="PrimeGPUOption_Click"/>
+							<CheckBox Name="gpuButtonNvidiaPrime" Content="Nvidia Prime" Margin="950,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="PrimeGPUOption_Click"/>
 						</Grid>
 					</Grid>
 
-					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
+					<Grid Name="hybridGPUGrid" Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>
 							<TextBlock Text="Hybrid GPU" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Name="gpuMuxApplyButton" Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="GPUMUXApplyButton_Click"/>
-							<CheckBox Name="muxButton0" Content="Enabled" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="muxButton1" Content="MUX 1" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="muxButton2" Content="MUX 2" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="muxButton3" Content="MUX 3" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="muxButton4" Content="MUX 4" Margin="800,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<CheckBox Name="muxButton0" Content="Enabled" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="HybridGPUOption_Click"/>
+							<RadioButton Name="muxButton1" Content="MUX 1" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="HybridGPUOption_Click"/>
+							<RadioButton Name="muxButton2" Content="MUX 2" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="HybridGPUOption_Click"/>
+							<RadioButton Name="muxButton3" Content="MUX 3" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="HybridGPUOption_Click"/>
+							<RadioButton Name="muxButton4" Content="MUX 4" Margin="800,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="HybridGPUOption_Click"/>
 						</Grid>
 					</Grid>
 
-					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
+					<Grid Name="otherSettingsGrid" Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>
 							<TextBlock Text="Other Settings" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="OtherSettingsApplyButton_Click"/>
-							<CheckBox Name="mangohubCheckbox" Content="MangoHud" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<CheckBox Name="vrrCheckbox" Content="VRR" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<CheckBox Name="hdrCheckbox" Content="HDR" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<CheckBox Name="disableSteamGPUCheckbox" Content="Disable Steam GPU" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="170"/>
-							<CheckBox Name="disableSteamDeckCheckbox" Content="Disable SteamDeck Mode" Margin="850,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="200"/>
+							<CheckBox Name="mangohubCheckbox" Content="MangoHud" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="OtherSettingsOption_Click"/>
+							<CheckBox Name="vrrCheckbox" Content="VRR" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="OtherSettingsOption_Click"/>
+							<CheckBox Name="hdrCheckbox" Content="HDR" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="OtherSettingsOption_Click"/>
+							<CheckBox Name="disableSteamGPUCheckbox" Content="Disable Steam GPU" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="170" Click="OtherSettingsOption_Click"/>
+							<CheckBox Name="disableSteamDeckCheckbox" Content="Disable SteamDeck Mode" Margin="850,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="200" Click="OtherSettingsOption_Click"/>
 						</Grid>
 					</Grid>
 
-					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
+					<Grid Name="inputControlGrid" Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>
 							<TextBlock Text="Input Control" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Name="inputControlApplyButton" Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="MenuInputApplyButton_Click"/>
-							<RadioButton Name="reignOSInputCheckbox" Content="ReignOS" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="inputPlumberInputCheckbox" Content="InputPlumber" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="hhdInputCheckbox" Content="HHD" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="disableInputCheckbox" Content="Disable" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<RadioButton Name="reignOSInputCheckbox" Content="ReignOS" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="InputControlOption_Click"/>
+							<RadioButton Name="inputPlumberInputCheckbox" Content="InputPlumber" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="InputControlOption_Click"/>
+							<RadioButton Name="hhdInputCheckbox" Content="HHD" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="InputControlOption_Click"/>
+							<RadioButton Name="disableInputCheckbox" Content="Disable" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="InputControlOption_Click"/>
 						</Grid>
 					</Grid>
 					
-					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
+					<Grid Name="powerManagerSwitchGrid" Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>
 							<TextBlock Text="Power Manager" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Name="powerManagerApplyButton" Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="PowerManagerApplyButton_Click"/>
-							<RadioButton Name="powerProfilesCheckbox" Content="Power Profiles" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="powerDeckyTDPCheckbox" Content="DeckyTDP" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="hhdAdjustorCheckbox" Content="HHD Adjustor" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="powerStationCheckbox" Content="Power Station" IsEnabled="False" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="powerManagementDisabledCheckbox" Content="Disable" Margin="800,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<RadioButton Name="powerProfilesCheckbox" Content="Power Profiles" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="PowerManagerOption_Click"/>
+							<RadioButton Name="powerDeckyTDPCheckbox" Content="DeckyTDP" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="PowerManagerOption_Click"/>
+							<RadioButton Name="hhdAdjustorCheckbox" Content="HHD Adjustor" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="PowerManagerOption_Click"/>
+							<RadioButton Name="powerStationCheckbox" Content="Power Station" IsEnabled="False" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="PowerManagerOption_Click"/>
+							<RadioButton Name="powerManagementDisabledCheckbox" Content="Disable" Margin="800,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="PowerManagerOption_Click"/>
 						</Grid>
 					</Grid>
 
-					<Grid Margin="8,8,8,4" Background="#444444" Height="40">
+					<Grid Name="rgbManagerGrid" Margin="8,8,8,4" Background="#444444" Height="40">
 						<Grid>
 							<TextBlock Text="RGB Manager" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Name="rgbManagerApplyButton" Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RBGManagerApplyButton_Click"/>
-							<RadioButton Name="rgbDisabledCheckbox" Content="Disabled" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="rgbHueSyncCheckbox" Content="HueSync" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<RadioButton Name="rgbDisabledCheckbox" Content="Disabled" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="RGBManagerOption_Click"/>
+							<RadioButton Name="rgbHueSyncCheckbox" Content="HueSync" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="RGBManagerOption_Click"/>
 						</Grid>
 					</Grid>
 
-					<Grid Margin="8,8,8,4" Background="#444444" Height="40" IsVisible="True">
+					<Grid Name="kernelGrid" Margin="8,8,8,4" Background="#444444" Height="40" IsVisible="True">
 						<Grid>
 							<TextBlock Text="Kernel" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Name="kernelApplyButton" Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="KernelApplyButton_Click"/>
-							<RadioButton Name="kernelArchCheckbox" Content="Arch" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="kernelChimeraCheckbox" Content="Chimera" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="kernelBazziteCheckbox" Content="Bazzite" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="kernelCachyCheckbox" Content="Cachy" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="300"/>
+							<RadioButton Name="kernelArchCheckbox" Content="Arch" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="KernelOption_Click"/>
+							<RadioButton Name="kernelChimeraCheckbox" Content="Chimera" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="KernelOption_Click"/>
+							<RadioButton Name="kernelBazziteCheckbox" Content="Bazzite" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="KernelOption_Click"/>
+							<RadioButton Name="kernelCachyCheckbox" Content="Cachy" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="300" Click="KernelOption_Click"/>
 							<TextBlock Text="(Takes 30-60+ min, use AC pwr)" Margin="725,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="220" Foreground="Orange"/>
 						</Grid>
 					</Grid>
 					
-					<Grid Margin="8,8,8,4" Background="#444444" Height="40" IsVisible="True">
+					<Grid Name="restModeGrid" Margin="8,8,8,4" Background="#444444" Height="40" IsVisible="True">
 						<Grid>
 							<TextBlock Text="Rest Mode" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RestApplyButton_Click"/>
-							<RadioButton Name="restSleepCheckbox" Content="Sleep" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
-							<RadioButton Name="restHibernateCheckbox" Content="Hibernate" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<RadioButton Name="restSleepCheckbox" Content="Sleep" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="RestModeOption_Click"/>
+							<RadioButton Name="restHibernateCheckbox" Content="Hibernate" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="RestModeOption_Click"/>
 						</Grid>
 					</Grid>
 
-					<Grid Margin="8,8,8,4" Background="#444444" Height="40" IsVisible="True">
+					<Grid Name="reignOSMonitorGrid" Margin="8,8,8,4" Background="#444444" Height="40" IsVisible="True">
 						<Grid>
 							<TextBlock Text="ReignOS.Monitor" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="ReignMonitorApplyButton_Click"/>
-							<CheckBox Name="reignMonitorCheckbox" Content="Enable" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+							<CheckBox Name="reignMonitorCheckbox" Content="Enable" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="ReignOSMonitorOption_Click"/>
 						</Grid>
 					</Grid>
 				</StackPanel>
@@ -249,15 +251,15 @@
 			<StackPanel Margin="245,0,4,4" Height="42" VerticalAlignment="Bottom" Background="#000040" Orientation="Horizontal" FlowDirection="RightToLeft">
 				<Button Content="Check Updates" Name="checkUpdatesButton" Background="OrangeRed" Margin="4,0,0,0" Click="CheckUpdatesButton_Click"/>
 				<Button Content="Fix Updates" Name="fixUpdatesButton" Background="Blue" Margin="4,0,0,0" Click="FixUpdatesButton_Click"/>
-				<Button Content="Users" Margin="4,0,0,0" Click="UserManagerButton_OnClick"/>
-				<Button Content="Kernel" Margin="4,0,0,0" Click="KernelManagerButton_OnClick"/>
-				<Button Content="GPU" Margin="4,0,0,0" Click="GPUUtilsButton_OnClick"/>
-				<Button Content="Boot" Margin="4,0,0,0" Click="BootManagerButton_OnClick"/>
-				<Button Content="Disk" Margin="4,0,0,0" Click="DriveManagerButton_OnClick"/>
-				<Button Content="Network" Margin="4,0,0,0" Click="NetworkManagerButton_OnClick"/>
-				<Button Content="Display" Margin="4,0,0,0" Click="DisplayManagerButton_OnClick"/>
-				<Button Content="Audio" Margin="4,0,0,0" Click="AudioManagerButton_OnClick"/>
-				<Button Name="powerButton" Content="Power" Margin="4,0,0,0" Click="PowerManagerButton_OnClick"/>
+				<Button Content="Users" Name="usersPageButton" Margin="4,0,0,0" Click="UserManagerButton_OnClick"/>
+				<Button Content="Kernel" Name="kernelPageButton" Margin="4,0,0,0" Click="KernelManagerButton_OnClick"/>
+				<Button Content="GPU" Name="gpuPageButton" Margin="4,0,0,0" Click="GPUUtilsButton_OnClick"/>
+				<Button Content="Boot" Name="bootPageButton" Margin="4,0,0,0" Click="BootManagerButton_OnClick"/>
+				<Button Content="Disk" Name="diskPageButton" Margin="4,0,0,0" Click="DriveManagerButton_OnClick"/>
+				<Button Content="Network" Name="networkPageButton" Margin="4,0,0,0" Click="NetworkManagerButton_OnClick"/>
+				<Button Content="Display" Name="displayPageButton" Margin="4,0,0,0" Click="DisplayManagerButton_OnClick"/>
+				<Button Content="Audio" Name="audioPageButton" Margin="4,0,0,0" Click="AudioManagerButton_OnClick"/>
+				<Button Content="Power" Name="powerButton" Margin="4,0,0,0" Click="PowerManagerButton_OnClick"/>
 			</StackPanel>
 
 			<StackPanel Margin="245,0,4,4" Height="42" VerticalAlignment="Bottom" Orientation="Horizontal" FlowDirection="LeftToRight">
