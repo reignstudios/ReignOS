@@ -3395,7 +3395,7 @@ public partial class MainView : UserControl
 
         if (modified != ayaneoModulePopGrid) ayaneoModulePopGrid.IsEnabled = false;
         if (modified != defaultBootGrid) defaultBootGrid.IsEnabled = false;
-        if (modified != ayaneoModulePopGrid) ayaneoModulePopGrid.IsEnabled = false;
+        if (modified != screenRotationGrid) screenRotationGrid.IsEnabled = false;
         if (modified != amdDriversGrid) amdDriversGrid.IsEnabled = false;
         if (modified != nvidiaDriversGrid) nvidiaDriversGrid.IsEnabled = false;
         if (modified != primeGPUGrid) primeGPUGrid.IsEnabled = false;
