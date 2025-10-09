@@ -16,7 +16,7 @@
 			<TextBlock Name="compositorText" Text="Control-Center Compositor: ..." Foreground="Gray" Margin="0,52,8,0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
 			<TextBlock Name="gitText" Text="Branch: ..." Foreground="Gray" Margin="0,72,8,0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
 			<TextBlock Text="Control Center" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="32" FontWeight="Bold" Margin="4,25,4,4"/>
-			<Button Name="revertButton" Content="Revert" Width="256" Height="64" FontSize="32" Margin="0,4,0,0" Background="#770077" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsVisible="False" Click="RevertButton_Click"/>
+			<Button Name="revertButton" Content="Revert" Width="226" Height="48" FontSize="28" Margin="4,40,0,0" Background="#770077" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsVisible="False" Click="RevertButton_Click"/>
 			<Separator HorizontalAlignment="Center" VerticalAlignment="Top" Margin="150,70,150,0"/>
 
 			<ScrollViewer Height="145" VerticalAlignment="Top" Margin="4,95,0,0" Background="#202020" HorizontalScrollBarVisibility="Auto">
@@ -385,7 +385,7 @@
 					</Grid>
 				</Border>
 				
-				<TextBlock Text="Gamescope Config" Margin="380,0,0,80" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+				<TextBlock Text="Gamescope HDR Config" Margin="380,0,0,80" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
 				<Border BorderThickness="4" Margin="380,0,0,4" Width="180" Height="70" BorderBrush="Gray" Padding="4" HorizontalAlignment="Left" VerticalAlignment="Bottom">
 					<Grid>
 						<Button Content="Generate" Margin="0,0,0,10" VerticalAlignment="Bottom" Click="DisplayApplyGamescopeConfButton_OnClick" Background="DarkGreen"/>

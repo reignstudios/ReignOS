@@ -183,10 +183,34 @@ public partial class MainView : UserControl
 
     private void FullSettingsReload()
     {
+        ResetUI();
         RefreshGPUs();
         RefreshMUX();
         LoadSettings();
         PostRefreshGPUs();
+    }
+
+    private void ResetUI()
+    {
+        boot_ControlCenter.IsChecked = true;
+        rot_Unset.IsChecked = true;
+        rot_Touchscreen.IsChecked = false;
+        amd_Mesa.IsChecked = true;
+        nvidia_Nouveau.IsChecked = true;
+        gpuButton0.IsChecked = true;
+        muxButton0.IsChecked = false;
+        muxButton1.IsChecked = true;
+        mangohubCheckbox.IsChecked = false;
+        vrrCheckbox.IsChecked = false;
+        hdrCheckbox.IsChecked = false;
+        disableSteamGPUCheckbox.IsChecked = false;
+        disableSteamDeckCheckbox.IsChecked = false;
+        reignOSInputCheckbox.IsChecked = true;
+        powerProfilesCheckbox.IsChecked = true;
+        rgbDisabledCheckbox.IsChecked = true;
+        kernelArchCheckbox.IsChecked = true;
+        restSleepCheckbox.IsChecked = true;
+        reignMonitorCheckbox.IsChecked = false;
     }
 
     private void RefreshGPUs()
@@ -3322,6 +3346,7 @@ public partial class MainView : UserControl
         foreach (string line in lines)
         {
             string lineTrim = line.Trim();
+            if (string.IsNullOrEmpty(lineTrim)) continue;
             allUsernames.Add(lineTrim);
             if (lineTrim == "nobody" || lineTrim == "gamer") continue;
             
@@ -3507,7 +3532,7 @@ public partial class MainView : UserControl
 
     private void PowerManagerOption_Click(object sender, RoutedEventArgs e)
     {
-        DisableMainUI(powerManagerGrid);
+        DisableMainUI(powerManagerSwitchGrid);
     }
 
     private void RGBManagerOption_Click(object sender, RoutedEventArgs e)
