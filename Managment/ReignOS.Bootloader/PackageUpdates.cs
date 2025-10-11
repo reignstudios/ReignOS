@@ -100,6 +100,7 @@ static class PackageUpdates
         if (!PackageUtils.PackageExits("qt6-wayland")) return true;
         if (!PackageUtils.PackageExits("maliit-keyboard")) return true;
         if (!PackageUtils.PackageExits("wmctrl")) return true;
+        if (!PackageUtils.PackageExits("gwenview")) return true;
 
         if (!PackageUtils.PackageExits("wget")) return true;
         if (!PackageUtils.PackageExits("gparted")) return true;

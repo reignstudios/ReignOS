@@ -712,6 +712,7 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm --needed maliit-keyboard");
         Run("pacman", "-S --noconfirm --needed qt5-wayland qt6-wayland");
         Run("pacman", "-S --noconfirm --needed wmctrl");
+        Run("pacman", "-S --noconfirm --needed gwenview");
         UpdateProgress(85);
 
         // install gparted

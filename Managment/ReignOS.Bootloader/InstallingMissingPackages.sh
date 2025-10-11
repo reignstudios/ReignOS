@@ -53,6 +53,7 @@ sudo pacman -S --noconfirm --needed btrfs-progs ntfs-3g
 sudo pacman -S --noconfirm --needed maliit-keyboard
 sudo pacman -S --noconfirm --needed qt5-wayland qt6-wayland
 sudo pacman -S --noconfirm --needed wmctrl
+sudo pacman -S --noconfirm --needed gwenview
 
 sudo pacman -S --noconfirm --needed wget
 sudo pacman -S --noconfirm --needed gparted
