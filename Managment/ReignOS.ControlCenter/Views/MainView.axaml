@@ -438,7 +438,7 @@
 					<TextBlock Name="kernel_amd_pstate_processor_max_cstate_MaxCState" Text="[cstate: Min=1 Max=X]" Margin="0,0,8,0" VerticalAlignment="Center"/>
 					<TextBox Name="kernel_amd_pstate_processor_max_cstate_TextBox" Text="1" TextChanged="KernelValue_OnIsCheckedChanged"/>
 				</StackPanel>
-				<CheckBox Name="kernel_amd_vulkan_Checkbox" Content="radeon.cik_support=0 amdgpu.cik_support=1 (Fix Vulkan not working old older AMD GPU)" IsCheckedChanged="KernelValue_OnIsCheckedChanged"/>
+				<CheckBox Name="kernel_amd_vulkan_Checkbox" Content="radeon.cik_support=0 amdgpu.cik_support=1 (Fix Vulkan not working on older AMD GPU)" IsCheckedChanged="KernelValue_OnIsCheckedChanged"/>
 				<CheckBox Name="kernel_mem_sleep_default_deep_Checkbox" Content="mem_sleep_default=deep (Force mem sleep mode to deep)" IsCheckedChanged="KernelValue_OnIsCheckedChanged"/>
 				<CheckBox Name="kernel_mem_sleep_default_s2idle_Checkbox" Content="mem_sleep_default=s2idle (Force mem sleep mode to s2idle)" IsCheckedChanged="KernelValue_OnIsCheckedChanged"/>
 				<CheckBox Name="kernel_i915_audio_Checkbox" Content="i915.audio=0 (Disable HDMI audio may help stability issues on some displays)" IsCheckedChanged="KernelValue_OnIsCheckedChanged"/>
