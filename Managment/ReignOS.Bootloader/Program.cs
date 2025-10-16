@@ -359,7 +359,7 @@ internal class Program
                 {
                     var resultValues = result.ToString().Split('\n');
                     var exitCodeValue = resultValues.FirstOrDefault(x => x.Contains("EXIT_CODE: "));// get ControlCenter exit code (Weston doesn't pass this back like Cage)
-                    if (exitCodeValue != null)
+                    if (!string.IsNullOrEmpty(exitCodeValue))
                     {
                         if (!int.TryParse(exitCodeValue.Replace("EXIT_CODE: ", ""), out exitCode)) exitCode = 0;
                     }

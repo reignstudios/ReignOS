@@ -1603,8 +1603,7 @@ public partial class MainView : UserControl
 
         ProcessUtil.WriteAllTextAdmin("/boot/loader/loader.conf", loader);
         SaveSettings();
-        App.exitCode = 19;// reboot after mkinitcpio
-        MainWindow.singleton.Close();
+        CheckUpdatesButton_Click(18, null);
     }
 
     private void RestApplyButton_Click(object sender, RoutedEventArgs e)
@@ -2509,14 +2508,7 @@ public partial class MainView : UserControl
         CopyKernelConf(KernelSettingsCopy.Cachy);
 
         // reboot
-        if (kernel_snd_hda_intel_DisableSleep_Checkbox.IsChecked == true || kernel_snd_hda_intel_DisableHDMI_Checkbox.IsChecked == true)
-        {
-            CheckUpdatesButton_Click(19, null);// run "sudo mkinitcpio -P" before reboot
-        }
-        else
-        {
-            RestartButton_Click(null, null);
-        }
+        CheckUpdatesButton_Click(19, null);// run "sudo mkinitcpio -P" before reboot
     }
     
     private void CopyKernelConf(KernelSettingsCopy target)
