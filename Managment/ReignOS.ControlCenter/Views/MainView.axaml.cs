@@ -1603,7 +1603,8 @@ public partial class MainView : UserControl
 
         ProcessUtil.WriteAllTextAdmin("/boot/loader/loader.conf", loader);
         SaveSettings();
-        CheckUpdatesButton_Click(18, null);
+        App.exitCode = 19;// reboot after mkinitcpio
+        MainWindow.singleton.Close();
     }
 
     private void RestApplyButton_Click(object sender, RoutedEventArgs e)
@@ -2594,6 +2595,8 @@ public partial class MainView : UserControl
             if (kernel_intel_idle_max_cstate_Checkbox.IsChecked == true) builder.Append($" intel_idle.max_cstate={kernel_intel_idle_max_cstate_Value}");
             if (kernel_amd_pstate_processor_max_cstate_Checkbox.IsChecked == true) builder.Append($" amd_pstate=disable processor.max_cstate={kernel_amd_pstate_processor_max_cstate_Value}");
 
+            if (kernel_amd_vulkan_Checkbox.IsChecked == true) builder.Append(" radeon.cik_support=0 amdgpu.cik_support=1");
+
             if (kernel_mem_sleep_default_deep_Checkbox.IsChecked == true) builder.Append(" mem_sleep_default=deep");
             if (kernel_mem_sleep_default_s2idle_Checkbox.IsChecked == true) builder.Append(" mem_sleep_default=s2idle");
 
@@ -2667,6 +2670,8 @@ public partial class MainView : UserControl
                     !part.Contains("intel_idle.max_cstate=") &&
                     part != "amd_pstate=disable" && !part.Contains("processor.max_cstate=") &&
 
+                    part != "radeon.cik_support=0" && part != "amdgpu.cik_support=1" &&
+
                     part != "mem_sleep_default=deep" && part != "mem_sleep_default=s2idle" &&
                     part != "i915.audio=0" && part != "amdgpu.audio=0" && part != "radeon.audio=0" && part != "nouveau.audio=0" &&
                     
@@ -2697,6 +2702,8 @@ public partial class MainView : UserControl
 
         kernel_intel_idle_max_cstate_Checkbox.IsChecked = kernelArchConf_Options.Contains(" intel_idle.max_cstate=");
         kernel_amd_pstate_processor_max_cstate_Checkbox.IsChecked = kernelArchConf_Options.Contains(" amd_pstate=disable processor.max_cstate=");
+
+        kernel_amd_vulkan_Checkbox.IsChecked = kernelArchConf_Options.Contains(" radeon.cik_support=0") && kernelArchConf_Options.Contains(" amdgpu.cik_support=1");
 
         kernel_mem_sleep_default_deep_Checkbox.IsChecked = kernelArchConf_Options.Contains(" mem_sleep_default=deep");
         kernel_mem_sleep_default_s2idle_Checkbox.IsChecked = kernelArchConf_Options.Contains(" mem_sleep_default=s2idle");
