@@ -2162,6 +2162,8 @@ public partial class MainView : UserControl
 
         void MessageBoxCallback(MessageBoxOption option)
         {
+            if (option == MessageBoxOption.Cancel) return;
+
             // unmount partitions and kill auto mount
             ProcessUtil.Run("udiskie-umount", "-a", out _, useBash: false);
             ProcessUtil.Run("systemctl", "stop udisks2", asAdmin: true, useBash: false);

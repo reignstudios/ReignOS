@@ -772,6 +772,7 @@ public partial class MainView : UserControl
 
         void MessageBoxCallback(MessageBoxOption option)
         {
+            if (option == MessageBoxOption.Cancel) return;
             var item = (ListBoxItem)driveListBox.Items[driveListBox.SelectedIndex];
             var drive = (Drive)item.Tag;
 
