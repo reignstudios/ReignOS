@@ -448,26 +448,17 @@ public partial class MainView : UserControl
                     return;
                 }
                 
+                // exit if invalid index
+                if (networkNameIndex == 0 && securityIndex == 0 && signalIndex == 0) return;
+                
                 // seperate line sections
                 lineClipped = line.Replace("[0m", "").Replace("[1;90m", "");
-                string networkNameSection = lineClipped.Substring(networkNameIndex, securityIndex - networkNameIndex);
-                string securitySection = lineClipped.Substring(securityIndex, signalIndex - securityIndex);
-                string signalSection = lineClipped.Substring(signalIndex, lineClipped.Length - signalIndex);
+                string networkNameSection = lineClipped.Substring(networkNameIndex, securityIndex - networkNameIndex).Trim();
+                string securitySection = lineClipped.Substring(securityIndex, signalIndex - securityIndex).Trim();
+                string signalSection = lineClipped.Substring(signalIndex, lineClipped.Length - signalIndex).Trim();
                 
                 // get network name
-                bool isConnected = false;
-                string networkName = "!ERROR!";
-                var match = Regex.Match(lineClipped, @"\s*>\s*(\S*)");
-                if (match.Success)
-                {
-                    isConnected = true;
-                    networkName = match.Groups[1].Value;
-                }
-                else
-                {
-                    match = Regex.Match(networkNameSection, @"\s*(\S*)");
-                    if (match.Success) networkName = match.Groups[1].Value;
-                }
+                bool isConnected = Regex.IsMatch(lineClipped, @"\s*>\s*\S*");
                 
                 // get network security
                 string networkSecurity = securitySection.TrimEnd();
@@ -482,7 +473,7 @@ public partial class MainView : UserControl
 
                 // add entry
                 string connectedTag = isConnected ? " (Connected)" : "";
-                ssids.Add(new SSID(networkName, $"{networkName} [{networkSecurity}] <Signal {signal}>{connectedTag}", isConnected));
+                ssids.Add(new SSID(networkNameSection, $"{networkNameSection} [{networkSecurity}] <Signal {signal}>{connectedTag}", isConnected));
             }
             catch (Exception e)
             {
