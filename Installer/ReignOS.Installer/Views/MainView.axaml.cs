@@ -769,37 +769,43 @@ public partial class MainView : UserControl
     private void FormatDriveButton_OnClick(object sender, RoutedEventArgs e)
     {
         if (driveListBox.SelectedIndex < 0) return;
-        var item = (ListBoxItem)driveListBox.Items[driveListBox.SelectedIndex];
-        var drive = (Drive)item.Tag;
 
-        // delete old partitions
-        foreach (var parition in drive.partitions)
+        void MessageBoxCallback(MessageBoxOption option)
         {
-            ProcessUtil.Run("parted", $"-s {drive.disk} rm {parition.number}", asAdmin:true, useBash:false);
+            var item = (ListBoxItem)driveListBox.Items[driveListBox.SelectedIndex];
+            var drive = (Drive)item.Tag;
+
+            // delete old partitions
+            foreach (var parition in drive.partitions)
+            {
+                ProcessUtil.Run("parted", $"-s {drive.disk} rm {parition.number}", asAdmin: true, useBash: false);
+            }
+
+            // make sure gpt partition scheme
+            ProcessUtil.Run("parted", $"-s {drive.disk} mklabel gpt", asAdmin: true, useBash: false);
+
+            // make new partitions
+            ProcessUtil.Run("parted", $"-s -a optimal {drive.disk} mkpart ESP fat32 1MiB 1025MiB", asAdmin: true, useBash: false);
+            ProcessUtil.Run("parted", $"-s -a optimal {drive.disk} mkpart primary ext4 1025MiB 100%", asAdmin: true, useBash: false);
+
+            // configure partition
+            ProcessUtil.Run("parted", $"-s {drive.disk} set 1 boot on", asAdmin: true, useBash: false);
+            ProcessUtil.Run("parted", $"-s {drive.disk} set 1 esp on", asAdmin: true, useBash: false);
+            ProcessUtil.Run("parted", $"-s {drive.disk} name 1 \"{efiPartitionName}\"", asAdmin: true, useBash: false);
+            ProcessUtil.Run("parted", $"-s {drive.disk} name 2 \"{ext4PartitionName}\"", asAdmin: true, useBash: false);
+
+            // format partitions
+            if (drive.PartitionsUseP()) ProcessUtil.Run("mkfs.fat", $"-F32 {drive.disk}p1", asAdmin: true, useBash: false);
+            else ProcessUtil.Run("mkfs.fat", $"-F32 {drive.disk}1", asAdmin: true, useBash: false);
+
+            if (drive.PartitionsUseP()) ProcessUtil.Run("mkfs.ext4", $"{drive.disk}p2", asAdmin: true, useBash: false);
+            else ProcessUtil.Run("mkfs.ext4", $"{drive.disk}2", asAdmin: true, useBash: false);
+
+            // finish
+            RefreshDrivePage();
         }
-        
-        // make sure gpt partition scheme
-        ProcessUtil.Run("parted", $"-s {drive.disk} mklabel gpt", asAdmin:true, useBash:false);
-        
-        // make new partitions
-        ProcessUtil.Run("parted", $"-s -a optimal {drive.disk} mkpart ESP fat32 1MiB 1025MiB", asAdmin:true, useBash:false);
-        ProcessUtil.Run("parted", $"-s -a optimal {drive.disk} mkpart primary ext4 1025MiB 100%", asAdmin:true, useBash:false);
 
-        // configure partition
-        ProcessUtil.Run("parted", $"-s {drive.disk} set 1 boot on", asAdmin:true, useBash:false);
-        ProcessUtil.Run("parted", $"-s {drive.disk} set 1 esp on", asAdmin:true, useBash:false);
-        ProcessUtil.Run("parted", $"-s {drive.disk} name 1 \"{efiPartitionName}\"", asAdmin:true, useBash:false);
-        ProcessUtil.Run("parted", $"-s {drive.disk} name 2 \"{ext4PartitionName}\"", asAdmin:true, useBash:false);
-        
-        // format partitions
-        if (drive.PartitionsUseP()) ProcessUtil.Run("mkfs.fat", $"-F32 {drive.disk}p1", asAdmin:true, useBash:false);
-        else ProcessUtil.Run("mkfs.fat", $"-F32 {drive.disk}1", asAdmin:true, useBash:false);
-
-        if (drive.PartitionsUseP()) ProcessUtil.Run("mkfs.ext4", $"{drive.disk}p2", asAdmin: true, useBash:false);
-        else ProcessUtil.Run("mkfs.ext4", $"{drive.disk}2", asAdmin:true, useBash:false);
-        
-        // finish
-        RefreshDrivePage();
+        MessageBoxShow("Are you sure?", "Format", null, true, MessageBoxCallback);
     }
 
     public static void FormatExistingPartitions(Partition efiPartition, Partition ext4Partition)
