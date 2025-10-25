@@ -497,16 +497,20 @@ public partial class MainView : UserControl
     }
     
     // NOTE: forget network for debugger: iwctl known-networks <SSID> forget
-    private void NetworkConnectButton_OnClick(object sender, RoutedEventArgs e)
+    private async void NetworkConnectButton_OnClick(object sender, RoutedEventArgs e)
     {
         if (connectionListBox.SelectedIndex < 0) return;
+        networkConnectButton.IsEnabled = false;
 
         var item = (ListBoxItem)connectionListBox.Items[connectionListBox.SelectedIndex];
         var ssid = (SSID)item.Tag;
         ProcessUtil.KillHard("iwctl", true, out _);// make sure any failed processes are not open
-        ProcessUtil.Run("iwctl", $"--passphrase '{networkPasswordText.Text}' station {wlanDevice} connect '{ssid.name}'", useBash: true);
+        ProcessUtil.Run("iwctl", $"--passphrase '{networkPasswordText.Text.Trim()}' station {wlanDevice} connect '{ssid.name}'", useBash: true);
         string result = ProcessUtil.Run("iwctl", $"station {wlanDevice} show", useBash: false);
         Log.WriteLine(result);
+
+        await Task.Delay(2000);
+        networkConnectButton.IsEnabled = true;
     }
     
     private void RefreshDrivesButton_OnClick(object sender, RoutedEventArgs e)

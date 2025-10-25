@@ -17,6 +17,7 @@ using System.Text;
 using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Platform;
+using System.Threading.Tasks;
 
 namespace ReignOS.ControlCenter.Views;
 
@@ -1942,16 +1943,20 @@ public partial class MainView : UserControl
     }
     
     // NOTE: forget network for debugger: iwctl known-networks <SSID> forget
-    private void NetworkConnectButton_OnClick(object sender, RoutedEventArgs e)
+    private async void NetworkConnectButton_OnClick(object sender, RoutedEventArgs e)
     {
         if (connectionListBox.SelectedIndex < 0 || wlanDevice == null) return;
+        networkConnectButton.IsEnabled = false;
 
         var item = (ListBoxItem)connectionListBox.Items[connectionListBox.SelectedIndex];
         var ssid = (SSID)item.Tag;
         ProcessUtil.KillHard("iwctl", true, out _);// make sure any failed processes are not open
-        ProcessUtil.Run("iwctl", $"--passphrase '{networkPasswordText.Text}' station {wlanDevice} connect '{ssid.name}'", useBash:true);
+        ProcessUtil.Run("iwctl", $"--passphrase '{networkPasswordText.Text.Trim()}' station {wlanDevice} connect '{ssid.name}'", useBash:true);
         string result = ProcessUtil.Run("iwctl", $"station {wlanDevice} show", useBash:false);
         Log.WriteLine(result);
+
+        await Task.Delay(2000);
+        networkConnectButton.IsEnabled = true;
     }
 
     private void NetworkDisconnectButton_OnClick(object sender, RoutedEventArgs e)
