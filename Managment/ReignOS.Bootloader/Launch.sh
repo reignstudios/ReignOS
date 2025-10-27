@@ -269,6 +269,7 @@ if [ $exit_code -eq 62 ]; then
 
   echo ""
   echo "Installing DeckyTDP..."
+  curl -L https://github.com/SteamDeckHomebrew/decky-installer/releases/latest/download/install_release.sh | sh
   sudo chmod -R +w "/home/gamer/homebrew/plugins/"
   curl -L https://github.com/aarron-lee/SimpleDeckyTDP/raw/main/install.sh | sh
 
