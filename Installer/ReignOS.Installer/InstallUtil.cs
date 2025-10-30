@@ -671,7 +671,7 @@ static class InstallUtil
 
         // install steam
         Run("pacman", "-S --noconfirm --needed libxcomposite lib32-libxcomposite libxrandr lib32-libxrandr libgcrypt lib32-libgcrypt lib32-pipewire libpulse lib32-libpulse nss lib32-nss glib2 lib32-glib2");
-        Run("pacman", "-S --noconfirm --needed gtk2 lib32-gtk2 gtk3 lib32-gtk3 gtk4");
+        Run("pacman", "-S --noconfirm --needed gtk3 lib32-gtk3 gtk4");
         Run("pacman", "-S --noconfirm --needed libxss lib32-libxss libva lib32-libva libvdpau lib32-libvdpau");
         Run("pacman", "-S --noconfirm --needed gnutls lib32-gnutls openal lib32-openal sqlite lib32-sqlite libcurl-compat lib32-libcurl-compat");
         Run("pacman", "-S --noconfirm --needed mangohud lib32-mangohud gamemode lib32-gamemode");

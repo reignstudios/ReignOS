@@ -139,6 +139,9 @@ static class PackageUpdates
         if (PackageUtils.PackageExits("jack2")) return true;
         if (!PackageUtils.PackageExits("pipewire-jack")) return true;
         
+        if (!PackageUtils.PackageExits("gtk2")) return true;
+        if (!PackageUtils.PackageExits("lib32-gtk2")) return true;
+        
         // check for non-active services
         if (!PackageUtils.ServiceEnabled("pipewire.socket", true, false)) return true;
         if (!PackageUtils.ServiceEnabled("pipewire.service", true, false)) return true;

@@ -85,6 +85,8 @@ yay -S --noconfirm --needed ayn-platform-dkms-git
 
 yay -S --noconfirm --needed ryzenadj
 
+yay -S --noconfirm --needed gtk2 lib32-gtk2
+
 sudo systemctl stop acpid
 sudo systemctl disable acpid
 sudo pacman -R --noconfirm acpid

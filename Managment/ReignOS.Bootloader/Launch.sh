@@ -46,21 +46,28 @@ if [ $exit_code -eq 14 ]; then
   echo ""
   echo "ReignOS (Fix updates)..."
 
+  echo "Removing lock files..."
+  sudo rm /var/lib/pacman/db.lck
+  sudo rm ~/.gnupg/public-keys.d/pubring.db.lock
+
+  echo "Sync Time..."
   sudo pacman -Sy --noconfirm
   sudo timedatectl set-ntp true
   sleep 1
   sudo hwclock --systohc
 
+  echo "Update reflector..."
   COUNTRY=$(curl -s https://ifconfig.co/country-iso)
   reflector --country $COUNTRY --latest 50 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
   sudo pacman -Syyu --noconfirm
 
+  echo "Refresh keyring, db, etc..."
   sudo pacman -Sy archlinux-keyring --noconfirm
   sudo pacman-key --init
   sudo pacman-key --populate archlinux
   sudo pacman-key --refresh-keys
   sudo pacman-key --updatedb
-  sudo pacman -Sy --noconfirm
+  sudo pacman -Syu --noconfirm
   yay -Syu --noconfirm
 
   ./Update.sh
