@@ -449,6 +449,10 @@ static class InstallUtil
         fileBuilder.AppendLine("set -e");// enabled errors
         fileBuilder.AppendLine("sleep 1");
 
+        fileBuilder.AppendLine();// install GTK2
+        fileBuilder.AppendLine("echo \"Installing GTK2...\"");
+        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed gtk2 lib32-gtk2");
+
         fileBuilder.AppendLine();// install MUX support
         fileBuilder.AppendLine("echo \"Installing NUX support...\"");
         fileBuilder.AppendLine("yay_retry -S --noconfirm --needed supergfxctl");
