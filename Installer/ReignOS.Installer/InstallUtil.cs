@@ -205,6 +205,7 @@ static class InstallUtil
 
         // mount partitions
         Run("mount", $"{ext4Partition.path} /mnt");
+        Run("mount", "--bind /mnt /mnt");// bind for arch-chroot compatibility
         Run("rm", "-rf /mnt/*");
         Run("mkdir", "-p /mnt/boot");
         Run("mount", $"{efiPartition.path} /mnt/boot");
@@ -225,7 +226,7 @@ static class InstallUtil
         ProcessUtil.WriteAllTextAdmin("/mnt/etc/vconsole.conf", "KEYMAP=us");
 
         // install arch base
-        Run("pacstrap", "/mnt base");
+        Run("pacstrap", "-K /mnt base base-devel");// install base first
         Run("pacstrap", "/mnt linux linux-headers linux-firmware systemd");
         Run("genfstab", "-U /mnt >> /mnt/etc/fstab");
         archRootMode = true;
@@ -674,7 +675,7 @@ static class InstallUtil
         UpdateProgress(62);
 
         // install compiler tools
-        Run("pacman", "-S --noconfirm --needed base-devel dotnet-sdk-8.0 git git-lfs");
+        Run("pacman", "-S --noconfirm --needed dotnet-sdk-8.0 git git-lfs");
         UpdateProgress(65);
 
         // install steam
