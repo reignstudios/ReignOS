@@ -220,9 +220,13 @@ static class InstallUtil
         Run("mkdir", "-p /mnt/root/.nuget");
         Run("mount", "--bind /mnt/root/.nuget /root/.nuget");
         UpdateProgress(11);
-        
+
+        // make sure keymap file exists to avoid pacstrap failures
+        ProcessUtil.WriteAllTextAdmin("/mnt/etc/vconsole.conf", "KEYMAP=us");
+
         // install arch base
-        Run("pacstrap", "/mnt base linux linux-headers linux-firmware systemd");
+        Run("pacstrap", "/mnt base");
+        Run("pacstrap", "/mnt linux linux-headers linux-firmware systemd");
         Run("genfstab", "-U /mnt >> /mnt/etc/fstab");
         archRootMode = true;
         UpdateProgress(15);
