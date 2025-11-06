@@ -222,15 +222,11 @@ static class InstallUtil
         Run("mount", "--bind /mnt/root/.nuget /root/.nuget");
         UpdateProgress(11);
 
-        // make sure keymap file exists to avoid pacstrap failures
-        ProcessUtil.WriteAllTextAdmin("/mnt/etc/vconsole.conf", "KEYMAP=us");
-
         // install arch base
-        Run("pacstrap", "-K /mnt base base-devel");// install base first
-        Run("pacstrap", "/mnt linux linux-headers linux-firmware systemd");
+        Run("pacstrap", "-K /mnt base base-devel");
         Run("genfstab", "-U /mnt >> /mnt/etc/fstab");
         archRootMode = true;
-        UpdateProgress(15);
+        UpdateProgress(12);
 
         // configure pacman
         string path = "/mnt/etc/pacman.conf";
@@ -238,10 +234,14 @@ static class InstallUtil
         fileText = fileText.Replace("#[multilib]\n#Include = /etc/pacman.d/mirrorlist", "[multilib]\nInclude = /etc/pacman.d/mirrorlist");
         ProcessUtil.WriteAllTextAdmin(path, fileText);
         Run("pacman", "-Syy --noconfirm");
+        UpdateProgress(15);
+
+        // install kernel
+        Run("pacman", "-S --noconfirm --needed linux linux-headers linux-firmware");
         UpdateProgress(16);
-        
-        // install lib32-systemd
-        Run("pacman", "-S --noconfirm --needed lib32-systemd");
+
+        // install systemd
+        Run("pacman", "-S --noconfirm --needed systemd lib32-systemd");
         UpdateProgress(17);
         
         // install network support
