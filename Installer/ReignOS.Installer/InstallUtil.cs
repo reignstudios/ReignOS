@@ -237,6 +237,7 @@ static class InstallUtil
         UpdateProgress(15);
 
         // install kernel
+        ProcessUtil.WriteAllTextAdmin("/mnt/etc/vconsole.conf", "KEYMAP=us");    
         Run("pacman", "-S --noconfirm --needed linux linux-headers linux-firmware");
         UpdateProgress(16);
 
