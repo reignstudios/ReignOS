@@ -249,7 +249,7 @@
 			</StackPanel>
 			
 			<StackPanel Margin="245,0,4,4" Height="42" VerticalAlignment="Bottom" Background="#000040" Orientation="Horizontal" FlowDirection="RightToLeft">
-				<Button Content="Check Updates" Name="checkUpdatesButton" Background="OrangeRed" Margin="4,0,0,0" Click="CheckUpdatesButton_Click"/>
+				<Button Content="System Updates" Name="checkUpdatesButton" Background="OrangeRed" Margin="4,0,0,0" Click="CheckUpdatesButton_Click"/>
 				<Button Content="Fix Updates" Name="fixUpdatesButton" Background="Blue" Margin="4,0,0,0" Click="FixUpdatesButton_Click"/>
 				<Button Content="Users" Name="usersPageButton" Margin="4,0,0,0" Click="UserManagerButton_OnClick"/>
 				<Button Content="Kernel" Name="kernelPageButton" Margin="4,0,0,0" Click="KernelManagerButton_OnClick"/>
