@@ -485,6 +485,10 @@ static class InstallUtil
         fileBuilder.AppendLine("yay_retry -S --noconfirm --needed ttf-ms-fonts");
         fileBuilder.AppendLine("fc-cache -fv");
 
+        fileBuilder.AppendLine();// install KDE virtual keyboard
+        fileBuilder.AppendLine("echo \"Installing KDE Virtual Keyboard...\"");
+        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed maliit-keyboard");
+
         fileBuilder.AppendLine();// install steamcmd
         fileBuilder.AppendLine("echo \"Installing steamcmd...\"");
         fileBuilder.AppendLine("yay_retry -S --noconfirm --needed steamcmd");
@@ -501,7 +505,6 @@ static class InstallUtil
         fileBuilder.AppendLine();// install misc drivers
         fileBuilder.AppendLine("echo \"Installing Misc Drivers...\"");
         fileBuilder.AppendLine("yay_retry -S --noconfirm --needed bcm20702a1-firmware");
-
         fileBuilder.AppendLine("yay_retry -S --noconfirm --needed ayaneo-platform-dkms-git");
         fileBuilder.AppendLine("yay_retry -S --noconfirm --needed ayn-platform-dkms-git");
         fileBuilder.AppendLine("yay_retry -S --noconfirm --needed ryzenadj");
@@ -524,7 +527,7 @@ static class InstallUtil
         fileBuilder.AppendLine("fi");
         fileBuilder.AppendLine("cd /home/gamer/ReignOS/Managment");
         fileBuilder.AppendLine("git pull");
-        fileBuilder.AppendLine("dotnet workload update");
+        fileBuilder.AppendLine("sudo dotnet workload update");
         fileBuilder.AppendLine("dotnet publish -r linux-x64 -c Release");
         fileBuilder.AppendLine("cd /home/gamer");
 
@@ -749,7 +752,6 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm --needed zip unzip gzip bzip2 7zip xz");
         Run("pacman", "-S --noconfirm --needed plasma konsole dolphin kate ark exfatprogs dosfstools partitionmanager");
         Run("pacman", "-S --noconfirm --needed btrfs-progs ntfs-3g");
-        Run("pacman", "-S --noconfirm --needed maliit-keyboard");
         Run("pacman", "-S --noconfirm --needed qt5-wayland qt6-wayland");
         Run("pacman", "-S --noconfirm --needed wmctrl");
         Run("pacman", "-S --noconfirm --needed gwenview");
