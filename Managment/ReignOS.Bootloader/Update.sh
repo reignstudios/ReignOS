@@ -31,7 +31,7 @@ cd /home/gamer/ReignOS
 git pull
 cd /home/gamer/ReignOS/Managment
 echo "ReignOS Building packages..."
-dotnet workload update
+sudo dotnet workload update
 dotnet publish -r linux-x64 -c Release
 sleep 1
 
