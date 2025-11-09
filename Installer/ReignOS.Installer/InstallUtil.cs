@@ -77,7 +77,7 @@ static class InstallUtil
         InstallProgress?.Invoke(progressTask, progress);
     }
 
-    private static void Run(string name, string args, ProcessUtil.ProcessOutputDelegate standardOut = null, ProcessUtil.ProcessInputDelegate getStandardInput = null, string workingDir = null)
+    private static void Run(string name, string args, ProcessUtil.ProcessOutputDelegate standardOut = null, ProcessUtil.ProcessInputDelegate getStandardInput = null, string workingDir = null, bool retryInNonArchRootMode = false)
     {
         if (cancel) throw new Exception("Install Cancelled");
 
@@ -88,7 +88,24 @@ static class InstallUtil
         // invoke process
         if (!archRootMode)
         {
-            ProcessUtil.Run(name, args, asAdmin:true, enterAdminPass:false, standardOut:standardOut, getStandardInput:getStandardInput, workingDir:workingDir, verboseLog:true);
+            if (retryInNonArchRootMode)
+            {
+                const int retryMax = 5;
+                int retryCount = 0;
+                while (retryCount < retryMax)
+                {
+                    ProcessUtil.Run(name, args, asAdmin: true, enterAdminPass: false, standardOut: standardOut, getStandardInput: getStandardInput, workingDir: workingDir, verboseLog: true);
+                    if (!cancel) break;// if it didn't cancel its success
+
+                    retryCount++;
+                    Log.WriteLine($"Attempt failed {retryCount} of {retryMax}. Retry in 5 seconds...");
+                    Thread.Sleep(5);
+                }
+            }
+            else
+            {
+                ProcessUtil.Run(name, args, asAdmin: true, enterAdminPass: false, standardOut: standardOut, getStandardInput: getStandardInput, workingDir: workingDir, verboseLog: true);
+            }
         }
         else
         {
@@ -500,6 +517,17 @@ static class InstallUtil
         fileBuilder.AppendLine("echo \"disable FirstRun...\"");
         fileBuilder.AppendLine("echo -n > /home/gamer/FirstRun.sh");
 
+        fileBuilder.AppendLine();// make sure git repo pulled
+        fileBuilder.AppendLine("echo \"Pull git repo...\"");
+        fileBuilder.AppendLine("if [ ! -d \"/home/gamer/ReignOS\" ]; then");
+            fileBuilder.AppendLine("git clone https://github.com/reignstudios/ReignOS.git /home/gamer/ReignOS");
+        fileBuilder.AppendLine("fi");
+        fileBuilder.AppendLine("cd /home/gamer/ReignOS/Managment");
+        fileBuilder.AppendLine("git pull");
+        fileBuilder.AppendLine("dotnet workload update");
+        fileBuilder.AppendLine("dotnet publish -r linux-x64 -c Release");
+        fileBuilder.AppendLine("cd /home/gamer");
+
         fileBuilder.AppendLine();// run main updates scripts at least once
         fileBuilder.AppendLine("echo \"Running main update script...\"");
         fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Update.sh");
@@ -676,7 +704,9 @@ static class InstallUtil
         UpdateProgress(62);
 
         // install compiler tools
-        Run("pacman", "-S --noconfirm --needed dotnet-sdk-8.0 git git-lfs");
+        Run("pacman", "-S --noconfirm --needed git git-lfs");
+        Run("pacman", "-S --noconfirm --needed dotnet-sdk-8.0");
+        Run("dotnet", "workload update");
         UpdateProgress(65);
 
         // install steam
@@ -749,11 +779,6 @@ static class InstallUtil
         // clear package cache
         Run("rm", "-rf /var/cache/pacman/pkg/*");
         archRootMode = false;
-        
-        // clone ReignOS repo
-        Run("git", "clone https://github.com/reignstudios/ReignOS.git /mnt/home/gamer/ReignOS");
-        Run("NUGET_PACKAGES=/mnt/root/.nuget dotnet", "publish -r linux-x64 -c Release", workingDir:"/mnt/home/gamer/ReignOS/Managment");
-        UpdateProgress(90);
 
         // configure reignos names
         string path = "/mnt/etc/lsb-release";
@@ -777,6 +802,11 @@ BUG_REPORT_URL=""https://gitlab.archlinux.org/groups/archlinux/-/issues""
 PRIVACY_POLICY_URL=""https://terms.archlinux.org/docs/privacy-policy/""
 LOGO=archlinux-logo";
         ProcessUtil.WriteAllTextAdmin(path, text);
+        UpdateProgress(90);
+
+        // clone ReignOS repo
+        Run("git", "clone https://github.com/reignstudios/ReignOS.git /mnt/home/gamer/ReignOS", retryInNonArchRootMode:true);
+        Run("NUGET_PACKAGES=/mnt/root/.nuget dotnet", "publish -r linux-x64 -c Release", workingDir: "/mnt/home/gamer/ReignOS/Managment", retryInNonArchRootMode: true);
         UpdateProgress(95);
 
         // copy wifi settings

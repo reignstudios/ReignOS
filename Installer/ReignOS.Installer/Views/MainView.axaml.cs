@@ -171,7 +171,14 @@ public partial class MainView : UserControl
     public static void ProcessOutput(string line)
     {
         //Log.WriteLine(line);// NOTE: this is already logged from ProcessUtil
-        bool error = InstallUtil.failIfError && line.ToLower().Contains("error:") && !line.Contains("error: command failed to execute correctly");
+        bool error = false;
+        if (InstallUtil.failIfError)
+        {
+            string lineLower = line.ToLower();
+            if (lineLower.Contains("error:") && !line.Contains("error: command failed to execute correctly")) error = true;
+            else if (lineLower.Contains("fatal:")) error = true;
+            else if (lineLower.Contains("MSBUILD : error")) error = true;
+        }
         Dispatcher.UIThread.InvokeAsync(() =>
         {
             installOutputBuilder.AppendLine(line);
