@@ -472,10 +472,6 @@ static class InstallUtil
         fileBuilder.AppendLine("set -e");// enabled errors
         fileBuilder.AppendLine("sleep 1");
 
-        fileBuilder.AppendLine();// install GTK2
-        fileBuilder.AppendLine("echo \"Installing GTK2...\"");
-        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed gtk2 lib32-gtk2");
-
         fileBuilder.AppendLine();// install MUX support
         fileBuilder.AppendLine("echo \"Installing NUX support...\"");
         fileBuilder.AppendLine("yay_retry -S --noconfirm --needed supergfxctl");
@@ -484,10 +480,6 @@ static class InstallUtil
         fileBuilder.AppendLine("echo \"Installing extra fonts...\"");
         fileBuilder.AppendLine("yay_retry -S --noconfirm --needed ttf-ms-fonts");
         fileBuilder.AppendLine("fc-cache -fv");
-
-        fileBuilder.AppendLine();// install KDE virtual keyboard
-        fileBuilder.AppendLine("echo \"Installing KDE Virtual Keyboard...\"");
-        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed maliit-keyboard");
 
         fileBuilder.AppendLine();// install steamcmd
         fileBuilder.AppendLine("echo \"Installing steamcmd...\"");

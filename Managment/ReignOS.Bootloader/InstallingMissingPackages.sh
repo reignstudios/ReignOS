@@ -51,7 +51,6 @@ sudo systemctl enable bolt.service
 sudo pacman -S --noconfirm --needed plasma konsole dolphin kate ark exfatprogs dosfstools partitionmanager
 sudo pacman -S --noconfirm --needed btrfs-progs ntfs-3g
 sudo pacman -S --noconfirm --needed qt5-wayland qt6-wayland
-yay -S --noconfirm --needed maliit-keyboard
 sudo pacman -S --noconfirm --needed wmctrl
 sudo pacman -S --noconfirm --needed gwenview
 
@@ -84,8 +83,6 @@ yay -S --noconfirm --needed ayaneo-platform-dkms-git
 yay -S --noconfirm --needed ayn-platform-dkms-git
 
 yay -S --noconfirm --needed ryzenadj
-
-yay -S --noconfirm --needed gtk2 lib32-gtk2
 
 sudo systemctl stop acpid
 sudo systemctl disable acpid

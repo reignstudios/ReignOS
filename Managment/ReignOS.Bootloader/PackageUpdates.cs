@@ -98,7 +98,6 @@ static class PackageUpdates
         
         if (!PackageUtils.PackageExits("qt5-wayland")) return true;
         if (!PackageUtils.PackageExits("qt6-wayland")) return true;
-        if (!PackageUtils.PackageExits("maliit-keyboard")) return true;
         if (!PackageUtils.PackageExits("wmctrl")) return true;
         if (!PackageUtils.PackageExits("gwenview")) return true;
 
@@ -138,9 +137,6 @@ static class PackageUpdates
         
         if (PackageUtils.PackageExits("jack2")) return true;
         if (!PackageUtils.PackageExits("pipewire-jack")) return true;
-        
-        if (!PackageUtils.PackageExits("gtk2")) return true;
-        if (!PackageUtils.PackageExits("lib32-gtk2")) return true;
         
         // check for non-active services
         if (!PackageUtils.ServiceEnabled("pipewire.socket", true, false)) return true;
