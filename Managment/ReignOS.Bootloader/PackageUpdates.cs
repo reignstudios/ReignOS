@@ -339,7 +339,7 @@ static class PackageUpdates
             string settings = File.ReadAllText(path);
             if
             (
-                !settings.Contains("root=PARTUUID=")
+                !settings.Contains("root=UUID=")
             )
             {
                 // remove bad args
@@ -353,11 +353,11 @@ static class PackageUpdates
                 if (match.Success)
                 {
                     string partitionInfoResult = ProcessUtil.Run("blkid", match.Groups[1].Value, asAdmin: true, useBash: false);
-                    match = Regex.Match(partitionInfoResult, @".*?PARTUUID=""(.*?)""");
+                    match = Regex.Match(partitionInfoResult, @".*?UUID=""(.*?)""");
                     if (match.Success)
                     {
                         var match2 = Regex.Match(settings, @" (root=.*?) rw");
-                        settings = settings.Replace(match2.Groups[1].Value, $"root=PARTUUID={match.Groups[1].Value}");
+                        settings = settings.Replace(match2.Groups[1].Value, $"root=UUID={match.Groups[1].Value}");
 
                         // update conf
                         settings = settings.TrimEnd();
