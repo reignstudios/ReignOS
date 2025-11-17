@@ -37,12 +37,12 @@ static class PackageUpdates
         AddPermissions();
 
         // check bad configs (do them all at once then reboot)
-        bool badConfig = false;
-        if (CheckBadHostname()) badConfig = true;
-        if (CheckBadKernelSettings()) badConfig = true;
+        /*bool badConfig = false;
+        //if (CheckBadHostname()) badConfig = true;
+        //if (CheckBadKernelSettings()) badConfig = true;
         //if (CheckBadDriverSettings()) badConfig = true;
-        if (CheckNonArchKernelDefault()) badConfig = true;
-        if (badConfig) return true;
+        //if (CheckNonArchKernelDefault()) badConfig = true;
+        if (badConfig) return true;*/
 
         // check old packages
         // nothing yet...
@@ -301,7 +301,7 @@ static class PackageUpdates
         }
     }*/
 
-    private static bool CheckBadHostname()
+    /*private static bool CheckBadHostname()
     {
         try
         {
@@ -329,9 +329,9 @@ static class PackageUpdates
         }
 
         return false;
-    }
+    }*/
 
-    private static bool CheckBadKernelSettings()
+    /*private static bool CheckBadKernelSettings()
     {
         try
         {
@@ -374,7 +374,7 @@ static class PackageUpdates
         }
 
         return false;
-    }
+    }*/
 
     /*private static bool CheckBadDriverSettings()
     {
@@ -406,7 +406,7 @@ static class PackageUpdates
         return false;
     }*/
 
-    private static bool CheckNonArchKernelDefault()
+    /*private static bool CheckNonArchKernelDefault()
     {
         try
         {
@@ -421,5 +421,5 @@ static class PackageUpdates
         }
 
         return false;
-    }
+    }*/
 }
