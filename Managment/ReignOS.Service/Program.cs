@@ -98,8 +98,11 @@ internal class Program
         // check if hibernation file exists
         hibernatePowerButton = File.Exists("/swapfile");
 
-        // detect system hardware
-        try
+		// unblock all radio software blocks
+		ProcessUtil.Run("rfkill", "unblock all", asAdmin: false, useBash: false);
+
+		// detect system hardware
+		try
         {
             string vendorName = ProcessUtil.Run("dmidecode", "-s system-manufacturer").Trim();
             Log.WriteLine("Hardware Vendor: " + vendorName);

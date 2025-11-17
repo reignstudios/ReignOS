@@ -101,6 +101,9 @@ public partial class MainView : UserControl
                 Log.WriteLine(e);
             }
         }
+
+        // unblock all radio software blocks
+        ProcessUtil.Run("rfkill", "unblock all", asAdmin:true, useBash:false);
     }
 
     private void Window_Closing(object sender, WindowClosingEventArgs e)
