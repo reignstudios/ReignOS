@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# unblock all radio software blocks
+sudo rfkill unblock all
+
 # run bootloader
 cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
 ./ReignOS.Bootloader $@

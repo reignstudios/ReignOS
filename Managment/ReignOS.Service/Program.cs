@@ -98,9 +98,6 @@ internal class Program
         // check if hibernation file exists
         hibernatePowerButton = File.Exists("/swapfile");
 
-		// unblock all radio software blocks
-		ProcessUtil.Run("rfkill", "unblock all", asAdmin: false, useBash: false);
-
 		// detect system hardware
 		try
         {
