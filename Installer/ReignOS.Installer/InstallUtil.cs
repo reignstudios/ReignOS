@@ -146,6 +146,7 @@ static class InstallUtil
             InstallBaseArch();
             InstallArchPackages();
             InstallReignOSRepo();
+            InstallFinalSteps();
             InstallProgress?.Invoke("Done", progress);
         }
         catch (Exception e)
@@ -803,10 +804,21 @@ LOGO=archlinux-logo";
         Run("git", "clone https://github.com/reignstudios/ReignOS.git /mnt/home/gamer/ReignOS", retryInNonArchRootMode:true);
         Run("NUGET_PACKAGES=/mnt/root/.nuget dotnet", "publish -r linux-x64 -c Release", workingDir: "/mnt/home/gamer/ReignOS/Managment", retryInNonArchRootMode: true);
         UpdateProgress(95);
-
-        // copy wifi settings
-        Run("mkdir", "-p /mnt/var/lib/iwd/");
-        Run("cp", "-r /var/lib/iwd/* /mnt/var/lib/iwd/");
-        UpdateProgress(100);
     }
+
+    private static void InstallFinalSteps()
+    {
+		progressTask = "Final steps...";
+		archRootMode = true;
+
+		// copy wifi settings
+		Run("mkdir", "-p /mnt/var/lib/iwd/");
+		Run("cp", "-r /var/lib/iwd/* /mnt/var/lib/iwd/");
+
+		// init system
+		Run("mkinitcpio", "-P");
+		Run("bootctl", "update");
+
+		UpdateProgress(100);
+	}
 }
