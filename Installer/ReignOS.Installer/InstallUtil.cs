@@ -575,8 +575,8 @@ static class InstallUtil
         if (vendorName == "AYANEO" && productName == "SLIDE") extraKernelOptions = " acpi=strict";
 
         string partitionInfoResult = ProcessUtil.Run("blkid", ext4Partition.path, asAdmin: true, useBash: false);
-        var match = Regex.Match(partitionInfoResult, @".*?PARTUUID=""(.*?)""");
-        if (match.Success) fileBuilder.AppendLine($"options root=PARTUUID={match.Groups[1].Value} rw rootwait{extraKernelOptions}");
+        var match = Regex.Match(partitionInfoResult, @".*?UUID=""(.*?)""");
+        if (match.Success) fileBuilder.AppendLine($"options root=UUID={match.Groups[1].Value} rw rootwait{extraKernelOptions}");
         else fileBuilder.AppendLine($"options root={ext4Partition.path} rw rootwait{extraKernelOptions}");
 
         ProcessUtil.WriteAllTextAdmin(path, fileBuilder);
