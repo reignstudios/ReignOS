@@ -471,12 +471,19 @@
                     * reboot<br>
                 </li>
                 <li>
-                    If "Check Updates" button not working<br>
+                    If "Check Updates" button not working or Control-Center not launching<br>
                     * Go to a terminal<br>
                     * cd ReignOS/Management<br>
                     * git pull<br>
                     * dotnet publish -r linux-x64 -c Release<br>
                     * exit
+                </li>
+                <li>
+                    Manually connect to WiFi<br>
+                    * iwctl device list (NOTE: this will get you devices like wlan0)<br>
+                    * iwctl station wlan0 scan<br>
+                    * iwctl station wlan0 get-networks<br>
+                    * iwctl station --passphrase '&lt;PASS&#62;' wlan0 connect '&lt;SSID&#62;'
                 </li>
         </div>
 
