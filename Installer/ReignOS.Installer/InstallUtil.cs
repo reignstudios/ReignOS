@@ -811,13 +811,14 @@ LOGO=archlinux-logo";
 		progressTask = "Final steps...";
 		archRootMode = true;
 
-		// copy wifi settings
-		Run("mkdir", "-p /mnt/var/lib/iwd/");
-		Run("cp", "-r /var/lib/iwd/* /mnt/var/lib/iwd/");
-
 		// init system
 		Run("mkinitcpio", "-P");
 		Run("bootctl", "update");
+
+		// copy wifi settings
+		archRootMode = false;
+		Run("mkdir", "-p /mnt/var/lib/iwd/");
+		Run("cp", "-r /var/lib/iwd/* /mnt/var/lib/iwd/");
 
 		UpdateProgress(100);
 	}
