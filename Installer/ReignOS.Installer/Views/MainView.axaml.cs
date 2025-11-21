@@ -367,7 +367,8 @@ public partial class MainView : UserControl
                 installTerminalText.Text = "";
                 installTerminalScroll.IsVisible = true;
                 refreshIntegrityCheckbox.IsEnabled = false;
-                InstallUtil.Install(efiPartition, ext4Partition, refreshIntegrityCheckbox.IsChecked == true);
+                disableNouveauCheckbox.IsEnabled = false;
+                InstallUtil.Install(efiPartition, ext4Partition, refreshIntegrityCheckbox.IsChecked == true, disableNouveauCheckbox.IsEnabled == true);
                 break;
             
             case InstallerStage.DoneInstalling:

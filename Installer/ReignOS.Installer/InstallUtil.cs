@@ -69,7 +69,7 @@ static class InstallUtil
     private static float progress;
     private static string progressTask;
     public static bool cancel, failIfError = true;
-    private static bool refreshIntegrity;
+    private static bool refreshIntegrity, disableNouveau;
 
     private static void UpdateProgress(int progress)
     {
@@ -123,11 +123,12 @@ static class InstallUtil
         }
     }
     
-    public static void Install(Partition efiPartition, Partition ext4Partition, bool refreshIntegrity)
+    public static void Install(Partition efiPartition, Partition ext4Partition, bool refreshIntegrity, bool disableNouveau)
     {
         InstallUtil.efiPartition = efiPartition;
         InstallUtil.ext4Partition = ext4Partition;
         InstallUtil.refreshIntegrity = refreshIntegrity;
+        InstallUtil.disableNouveau = disableNouveau;
         installThread = new Thread(InstallThread);
         installThread.Start();
     }
@@ -574,6 +575,7 @@ static class InstallUtil
         string productName = ProcessUtil.Run("dmidecode", "-s system-product-name").Trim();
         string extraKernelOptions = "";
         if (vendorName == "AYANEO" && productName == "SLIDE") extraKernelOptions = " acpi=strict";
+        if (disableNouveau) extraKernelOptions = "modprobe.blacklist=nouveau nouveau.modeset=0";
 
         string partitionInfoResult = ProcessUtil.Run("blkid", ext4Partition.path, asAdmin: true, useBash: false);
         var match = Regex.Match(partitionInfoResult, @".*?UUID=""(.*?)""");
