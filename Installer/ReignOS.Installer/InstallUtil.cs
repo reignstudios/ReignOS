@@ -575,7 +575,7 @@ static class InstallUtil
         string productName = ProcessUtil.Run("dmidecode", "-s system-product-name").Trim();
         string extraKernelOptions = "";
         if (vendorName == "AYANEO" && productName == "SLIDE") extraKernelOptions = " acpi=strict";
-        if (disableNouveau) extraKernelOptions = "modprobe.blacklist=nouveau nouveau.modeset=0";
+        if (disableNouveau) extraKernelOptions = " modprobe.blacklist=nouveau nouveau.modeset=0";
 
         string partitionInfoResult = ProcessUtil.Run("blkid", ext4Partition.path, asAdmin: true, useBash: false);
         var match = Regex.Match(partitionInfoResult, @".*?UUID=""(.*?)""");
