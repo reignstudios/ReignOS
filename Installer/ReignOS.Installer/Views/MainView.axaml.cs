@@ -368,7 +368,7 @@ public partial class MainView : UserControl
                 installTerminalScroll.IsVisible = true;
                 refreshIntegrityCheckbox.IsEnabled = false;
                 disableNouveauCheckbox.IsEnabled = false;
-                InstallUtil.Install(efiPartition, ext4Partition, refreshIntegrityCheckbox.IsChecked == true, disableNouveauCheckbox.IsEnabled == true);
+                InstallUtil.Install(efiPartition, ext4Partition, refreshIntegrityCheckbox.IsChecked == true, disableNouveauCheckbox.IsChecked == true);
                 break;
             
             case InstallerStage.DoneInstalling:
