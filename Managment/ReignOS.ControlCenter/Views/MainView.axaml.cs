@@ -2801,7 +2801,7 @@ public partial class MainView : UserControl
             }
 
             if (count > 0) brightness /= count;
-            displayBrightnessSlider.Value = Math.Clamp(brightness, 0, 100);
+            displayBrightnessSlider.Value = Math.Clamp(brightness, 1, 100);
         }
         catch (Exception ex)
         {
