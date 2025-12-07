@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Avalonia;
-using Avalonia.ReactiveUI;
 using ReignOS.Core;
 
 namespace ReignOS.ControlCenter.Desktop;
@@ -51,5 +50,5 @@ class Program
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.
-    public static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<App>().UsePlatformDetect().WithInterFont().LogToTrace().UseReactiveUI();
+    public static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<App>().UsePlatformDetect().WithInterFont().LogToTrace();
 }

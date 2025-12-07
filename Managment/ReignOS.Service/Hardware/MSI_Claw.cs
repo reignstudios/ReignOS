@@ -232,10 +232,14 @@ public static class MSI_Claw
             {
                 VirtualGamepad.Write_TriggerLeftSteamMenu();
             }
-            else if (KeyEvent.Pressed(keys, input.KEY_F16))
+            else if (KeyEvent.Pressed(keys, input.KEY_F16))// Old BIOS
             {
                 VirtualGamepad.Write_TriggerRightSteamMenu();
             }
-        }
+			else if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_G, true)))// New BIOS
+			{
+				VirtualGamepad.Write_TriggerRightSteamMenu();
+			}
+		}
     }
 }
