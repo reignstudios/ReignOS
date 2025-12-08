@@ -2891,7 +2891,7 @@ public partial class MainView : UserControl
     {
         try
         {
-            double brightness = displayBrightnessSlider.Value / 100;
+            double brightness = Math.Clamp(displayBrightnessSlider.Value / 100, 0.1, 1.0);
             foreach (string dir in Directory.GetDirectories("/sys/class/backlight"))
             {
                 var maxBrightnessText = File.ReadAllText(Path.Combine(dir, "max_brightness")).Trim();
