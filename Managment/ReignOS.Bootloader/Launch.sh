@@ -52,6 +52,7 @@ if [ $exit_code -eq 14 ]; then
   echo "Removing lock files..."
   sudo rm /var/lib/pacman/db.lck
   sudo rm ~/.gnupg/public-keys.d/pubring.db.lock
+  sudo rm -rf /usr/share/dotnet/sdk-manifests/8.0.100
 
   echo "Sync Time..."
   sudo pacman -Sy --noconfirm
