@@ -217,7 +217,7 @@ internal class Program
 		dstPath = Path.Combine(dstPath, "reignos-save-brightness.service");
         if (!File.Exists(dstPath))// configure service
         {
-		    builder = new StringBuilder();
+			builder = new StringBuilder();
 		    builder.AppendLine("[Unit]");
 		    builder.AppendLine("Description=Save backlight brightness");
 		    builder.AppendLine("DefaultDependencies=no");
@@ -236,12 +236,11 @@ internal class Program
         }
         else// restore brightness values
         {
-			Log.WriteLine("FILES: " + Directory.GetFiles(brightnessSettingsPath).Length);
+            Log.WriteLine("Restoring brighness settings...");
 			foreach (string settingsFile in Directory.GetFiles(brightnessSettingsPath))
             {
                 // read brightness setting
                 string name = Path.GetFileNameWithoutExtension(settingsFile);
-				Log.WriteLine("NAME: " + name);
 				string brightnessValue = File.ReadAllText(settingsFile).Trim();
                 if (!ulong.TryParse(brightnessValue, out _)) continue;
 
@@ -249,11 +248,10 @@ internal class Program
 				foreach (string dir in Directory.GetDirectories("/sys/class/backlight"))
 				{
 					string dirName = Path.GetFileName(dir);
-					Log.WriteLine("DIR: " + dirName);
 					if (dirName != name) continue;
 					try
 					{
-                        Log.WriteLine("YAHOO: " + name);
+                        Log.WriteLine("Restoring display brightness for: " + name);
 						File.WriteAllText(Path.Combine(dir, "brightness"), brightnessValue);
 					}
 					catch (Exception ex)
