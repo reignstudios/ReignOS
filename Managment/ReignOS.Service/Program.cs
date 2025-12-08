@@ -205,6 +205,59 @@ internal class Program
             ProcessUtil.Run("systemctl", "daemon-reload");
         }
 
+		// save display brightness settings before power off
+		string brightnessSettingsPath = "/home/gamer/ReignOS_Ext/DisplayBrightness/";
+		if (!Directory.Exists(brightnessSettingsPath)) Directory.CreateDirectory(brightnessSettingsPath);
+
+		dstPath = "/etc/systemd/system/";
+		if (!Directory.Exists(dstPath)) Directory.CreateDirectory(dstPath);
+
+		dstPath = Path.Combine(dstPath, "reignos-save-backlight.service");
+        if (!File.Exists(dstPath))// configure service
+        {
+		    srcPath = Path.Combine(processPath, "SystemD/");
+		    builder = new StringBuilder();
+		    builder.AppendLine("[Unit]");
+		    builder.AppendLine("Description=Save backlight brightness");
+		    builder.AppendLine("DefaultDependencies=no");
+		    builder.AppendLine("Before=shutdown.target reboot.target poweroff.target halt.target");
+		    builder.AppendLine();
+		    builder.AppendLine("[Service]");
+		    builder.AppendLine("Type=oneshot");
+		    builder.AppendLine($"ExecStart={Path.Combine(srcPath, "reignos-save-backlight.sh")}");
+		    builder.AppendLine();
+		    builder.AppendLine("[Install]");
+		    builder.AppendLine("WantedBy=shutdown.target reboot.target poweroff.target halt.target");
+		    File.WriteAllText(dstPath, builder.ToString());
+		    ProcessUtil.Run("systemctl", "daemon-reload");
+		    ProcessUtil.Run("systemctl", "enable reignos-save-backlight.service");
+		    ProcessUtil.Run("systemctl", "start reignos-save-backlight.service");
+        }
+        else// restore brightness values
+        {
+            foreach (string settingsFile in Directory.GetDirectories(brightnessSettingsPath))
+            {
+                // read brightness setting
+                string name = Path.GetFileName(settingsFile);
+                string brightnessValue = File.ReadAllText(settingsFile).Trim();
+                if (!int.TryParse(brightnessValue, out _)) continue;
+
+                // apply brightness setting
+				foreach (string dir in Directory.GetDirectories("/sys/class/backlight"))
+				{
+                    if (dir != name) continue;
+					try
+					{
+						File.WriteAllText(Path.Combine(dir, "brightness"), brightnessValue);
+					}
+					catch (Exception ex)
+					{
+						Log.WriteLine(ex);
+					}
+				}
+			}
+		}
+
         // init virtual gamepad
         if (inputMode == InputMode.ReignOS) VirtualGamepad.Init();
 

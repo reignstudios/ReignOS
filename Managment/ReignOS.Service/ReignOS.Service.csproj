@@ -69,10 +69,14 @@
         <None Update="SteamOS3\steamos-update-user">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="SystemD\reignos-save-states.sh">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Firmware\Bazzite\" />
+      <Folder Include="SystemD\" />
     </ItemGroup>
 
     <Target Name="BuildNativeLibrary" AfterTargets="Publish">
