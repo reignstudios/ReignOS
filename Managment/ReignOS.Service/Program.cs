@@ -206,6 +206,7 @@ internal class Program
         }
 
 		// save display brightness settings before power off
+		srcPath = Path.Combine(processPath, "SystemD/");
 		ProcessUtil.Run("chmod", $"+x {Path.Combine(srcPath, "reignos-save-brightness.sh")}", out _, wait:true, asAdmin:false);
 
 		string brightnessSettingsPath = "/home/gamer/ReignOS_Ext/DisplayBrightness/";
@@ -216,7 +217,6 @@ internal class Program
 		dstPath = Path.Combine(dstPath, "reignos-save-brightness.service");
         if (!File.Exists(dstPath))// configure service
         {
-		    srcPath = Path.Combine(processPath, "SystemD/");
 		    builder = new StringBuilder();
 		    builder.AppendLine("[Unit]");
 		    builder.AppendLine("Description=Save backlight brightness");
