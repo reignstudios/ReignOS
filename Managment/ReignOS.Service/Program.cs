@@ -236,7 +236,8 @@ internal class Program
         }
         else// restore brightness values
         {
-            foreach (string settingsFile in Directory.GetDirectories(brightnessSettingsPath))
+			Log.WriteLine("FILES: " + Directory.GetDirectories(brightnessSettingsPath).Length);
+			foreach (string settingsFile in Directory.GetDirectories(brightnessSettingsPath))
             {
                 // read brightness setting
                 string name = Path.GetFileName(settingsFile);
