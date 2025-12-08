@@ -240,13 +240,15 @@ internal class Program
             {
                 // read brightness setting
                 string name = Path.GetFileName(settingsFile);
-                string brightnessValue = File.ReadAllText(settingsFile).Trim();
-                if (!int.TryParse(brightnessValue, out _)) continue;
+				Log.WriteLine("NAME: " + name);
+				string brightnessValue = File.ReadAllText(settingsFile).Trim();
+                if (!ulong.TryParse(brightnessValue, out _)) continue;
 
                 // apply brightness setting
 				foreach (string dir in Directory.GetDirectories("/sys/class/backlight"))
 				{
-                    if (dir != name) continue;
+					Log.WriteLine("DIR: " + dir);
+					if (dir != name) continue;
 					try
 					{
                         Log.WriteLine("YAHOO: " + name);
