@@ -460,6 +460,7 @@ static class InstallUtil
 
         fileBuilder.AppendLine();// install yay
         fileBuilder.AppendLine("echo \"Installing yay support...\"");
+        fileBuilder.AppendLine("rm -rf /home/gamer/yay");// remove in case there is a borked folder
         fileBuilder.AppendLine("if [ ! -d \"/home/gamer/yay\" ]; then");
         fileBuilder.AppendLine("    cd /home/gamer");
         fileBuilder.AppendLine("    echo 'Running: git clone https://aur.archlinux.org/yay.git'");
