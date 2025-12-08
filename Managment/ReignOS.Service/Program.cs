@@ -208,10 +208,10 @@ internal class Program
 		// save display brightness settings before power off
 		string brightnessSettingsPath = "/home/gamer/ReignOS_Ext/DisplayBrightness/";
 		if (!Directory.Exists(brightnessSettingsPath)) Directory.CreateDirectory(brightnessSettingsPath);
+		ProcessUtil.Run("chmod", $"+x {Path.Combine(srcPath, "reignos-save-backlight.sh")}", out _, wait: true);
 
 		dstPath = "/etc/systemd/system/";
 		if (!Directory.Exists(dstPath)) Directory.CreateDirectory(dstPath);
-
 		dstPath = Path.Combine(dstPath, "reignos-save-backlight.service");
         if (!File.Exists(dstPath))// configure service
         {
