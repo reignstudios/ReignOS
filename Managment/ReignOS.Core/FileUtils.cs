@@ -36,7 +36,7 @@ public static class FileUtils
             return false;
         }
 
-        ProcessUtil.Run("chmod", $"+x {dstPath}", out _, wait:true);
+        ProcessUtil.Run("chmod", $"+x {dstPath}", out _, wait:true, asAdmin:false);
         return true;
     }
 

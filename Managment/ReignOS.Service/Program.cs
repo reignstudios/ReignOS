@@ -206,14 +206,14 @@ internal class Program
         }
 
 		// save display brightness settings before power off
-		ProcessUtil.Run("chmod", $"+x {Path.Combine(srcPath, "reignos-save-backlight.sh")}", out _, wait: true);
+		ProcessUtil.Run("chmod", $"+x {Path.Combine(srcPath, "reignos-save-brightness.sh")}", out _, wait:true, asAdmin:false);
 
 		string brightnessSettingsPath = "/home/gamer/ReignOS_Ext/DisplayBrightness/";
 		if (!Directory.Exists(brightnessSettingsPath)) Directory.CreateDirectory(brightnessSettingsPath);
 
 		dstPath = "/etc/systemd/system/";
 		if (!Directory.Exists(dstPath)) Directory.CreateDirectory(dstPath);
-		dstPath = Path.Combine(dstPath, "reignos-save-backlight.service");
+		dstPath = Path.Combine(dstPath, "reignos-save-brightness.service");
         if (!File.Exists(dstPath))// configure service
         {
 		    srcPath = Path.Combine(processPath, "SystemD/");
@@ -225,14 +225,14 @@ internal class Program
 		    builder.AppendLine();
 		    builder.AppendLine("[Service]");
 		    builder.AppendLine("Type=oneshot");
-		    builder.AppendLine($"ExecStart={Path.Combine(srcPath, "reignos-save-backlight.sh")}");
+		    builder.AppendLine($"ExecStart={Path.Combine(srcPath, "reignos-save-brightness.sh")}");
 		    builder.AppendLine();
 		    builder.AppendLine("[Install]");
 		    builder.AppendLine("WantedBy=shutdown.target reboot.target poweroff.target halt.target");
 		    File.WriteAllText(dstPath, builder.ToString());
 		    ProcessUtil.Run("systemctl", "daemon-reload");
-		    ProcessUtil.Run("systemctl", "enable reignos-save-backlight.service");
-		    ProcessUtil.Run("systemctl", "start reignos-save-backlight.service");
+		    ProcessUtil.Run("systemctl", "enable reignos-save-brightness.service");
+		    ProcessUtil.Run("systemctl", "start reignos-save-brightness.service");
         }
         else// restore brightness values
         {
@@ -249,6 +249,7 @@ internal class Program
                     if (dir != name) continue;
 					try
 					{
+                        Log.WriteLine("YAHOO: " + name);
 						File.WriteAllText(Path.Combine(dir, "brightness"), brightnessValue);
 					}
 					catch (Exception ex)

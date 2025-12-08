@@ -69,7 +69,7 @@
         <None Update="SteamOS3\steamos-update-user">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
-        <None Update="SystemD\reignos-save-backlight.sh">
+        <None Update="SystemD\reignos-save-brightness.sh">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
