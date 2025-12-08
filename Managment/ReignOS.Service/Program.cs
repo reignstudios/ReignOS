@@ -251,7 +251,7 @@ internal class Program
 					if (dirName != name) continue;
 					try
 					{
-                        Log.WriteLine("Restoring display brightness for: " + name);
+                        Log.WriteLine($"Restoring display brightness for: '{name}' with value {brightnessValue}");
 						File.WriteAllText(Path.Combine(dir, "brightness"), brightnessValue);
 					}
 					catch (Exception ex)
