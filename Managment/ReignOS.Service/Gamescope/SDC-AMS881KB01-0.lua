@@ -18,6 +18,12 @@ local panel_hdr = {
    min_content_light_level = 0.001
 }
 
+local panel_colorimetry = {
+   r = { x = 0.6835, y = 0.3154 },
+   g = { x = 0.2402, y = 0.7138 },
+   b = { x = 0.1396, y = 0.0439 },
+   w = { x = 0.3134, y = 0.3291 }
+}
 
 gamescope.config.known_displays[panel_id] = {
   pretty_name = panel_name,
