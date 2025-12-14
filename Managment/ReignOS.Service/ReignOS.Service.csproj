@@ -33,6 +33,9 @@
       <None Update="Gamescope\AYA-AYAOLED_FHD.lua">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Gamescope\SDC-AMS881KB01-0.lua">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
       <None Update="Gamescope\YHB-YHB02P25.lua">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>

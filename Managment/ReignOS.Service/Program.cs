@@ -160,9 +160,10 @@ internal class Program
         FileUtils.SafeCopy(Path.Combine(srcPath, "YHB-YHB02P25.lua"), Path.Combine(dstPath, "YHB-YHB02P25.lua"));
         FileUtils.SafeCopy(Path.Combine(srcPath, "ZDZ-ZDZ0501.lua"), Path.Combine(dstPath, "ZDZ-ZDZ0501.lua"));
         FileUtils.SafeCopy(Path.Combine(srcPath, "AYA-AYAOLED_FHD.lua"), Path.Combine(dstPath, "AYA-AYAOLED_FHD.lua"));
+		FileUtils.SafeCopy(Path.Combine(srcPath, "SDC-AMS881KB01-0.lua"), Path.Combine(dstPath, "SDC-AMS881KB01-0.lua"));
 
-        // install missing firmware
-        if (AudioPatches.InstallFirmware_aw87559())
+		// install missing firmware
+		if (AudioPatches.InstallFirmware_aw87559())
         {
             ProcessUtil.Run("reboot", "-f", useBash: false);
             return;
