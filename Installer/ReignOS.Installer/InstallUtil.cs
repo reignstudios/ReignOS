@@ -12,6 +12,7 @@ public class Partition
     public ulong start, end, size;
     public string fileSystem;
     public string name;
+    public string nameUpper => name != null ? name.ToUpper() : string.Empty;
     public string flags;
 
     public string path

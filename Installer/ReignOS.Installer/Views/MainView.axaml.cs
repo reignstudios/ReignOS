@@ -705,8 +705,8 @@ public partial class MainView : UserControl
             Partition partitionEXT4 = null;
             foreach (var parition in drive.partitions)
             {
-                if (parition.name.ToUpper() == efiPartitionName.ToUpper()) partitionEFI = parition;
-                else if (parition.name.ToUpper() == ext4PartitionName.ToUpper()) partitionEXT4 = parition;
+                if (parition.nameUpper == efiPartitionName.ToUpper()) partitionEFI = parition;
+                else if (parition.nameUpper == ext4PartitionName.ToUpper()) partitionEXT4 = parition;
             }
 
             if (efiCheck)
@@ -714,7 +714,7 @@ public partial class MainView : UserControl
                 if (partitionEFI == null) return false;
                 
                 const ulong size1024MB = 1024ul * 1024 * 1024;
-                bool validNameEFI = partitionEFI.name.ToUpper() == efiPartitionName.ToUpper();
+                bool validNameEFI = partitionEFI.nameUpper == efiPartitionName.ToUpper();
                 bool validSizeEFI = partitionEFI.size >= size1024MB;
                 bool validFormatEFI = partitionEFI.fileSystem == "fat32";
                 bool validFlagsEFI = partitionEFI.flags.Contains("boot") && partitionEFI.flags.Contains("esp");
@@ -726,7 +726,7 @@ public partial class MainView : UserControl
                 if (partitionEXT4 == null) return false;
                 
                 const ulong size48GB = 48ul * 1024 * 1024 * 1024;
-                bool validNameEXT4 = partitionEXT4.name.ToUpper() == ext4PartitionName.ToUpper();
+                bool validNameEXT4 = partitionEXT4.nameUpper == ext4PartitionName.ToUpper();
                 bool validSizeEXT4 = partitionEXT4.size >= size48GB;
                 bool validFormatExt4 = partitionEXT4.fileSystem == "ext4";
                 if (!validNameEXT4 || !validSizeEXT4 || !validFormatExt4) return false;
@@ -745,8 +745,8 @@ public partial class MainView : UserControl
                 if (IsValidDrive(item, false, true)) ext4Drive = (Drive)item.Tag;
             }
             
-            if (efiDrive != null) efiPartition = efiDrive.partitions.FirstOrDefault(x => x.name.ToUpper() == efiPartitionName.ToUpper());
-            if (ext4Drive != null) ext4Partition = ext4Drive.partitions.FirstOrDefault(x => x.name.ToUpper() == ext4PartitionName.ToUpper());
+            if (efiDrive != null) efiPartition = efiDrive.partitions.FirstOrDefault(x => x.nameUpper == efiPartitionName.ToUpper());
+            if (ext4Drive != null) ext4Partition = ext4Drive.partitions.FirstOrDefault(x => x.nameUpper == ext4PartitionName.ToUpper());
         }
         else
         {
@@ -764,8 +764,8 @@ public partial class MainView : UserControl
             }
 
             efiDrive = ext4Drive = (Drive)item.Tag;// always select drive in clean install even if not currently valid
-            if (efiDrive.partitions != null) efiPartition = efiDrive.partitions.FirstOrDefault(x => x.name.ToUpper() == efiPartitionName.ToUpper());
-            if (ext4Drive.partitions != null) ext4Partition = ext4Drive.partitions.FirstOrDefault(x => x.name.ToUpper() == ext4PartitionName.ToUpper());
+            if (efiDrive.partitions != null) efiPartition = efiDrive.partitions.FirstOrDefault(x => x.nameUpper == efiPartitionName.ToUpper());
+            if (ext4Drive.partitions != null) ext4Partition = ext4Drive.partitions.FirstOrDefault(x => x.nameUpper == ext4PartitionName.ToUpper());
         }
 
         nextButton.IsEnabled = efiDrive != null && ext4Drive != null && efiPartition != null && ext4Partition != null;
@@ -849,8 +849,8 @@ public partial class MainView : UserControl
                 var drive = (Drive)item.Tag;
                 foreach (var parition in drive.partitions)
                 {
-                    if (parition.name.ToUpper() == efiPartitionName.ToUpper()) partitionEFI = parition;
-                    else if (parition.name.ToUpper() == ext4PartitionName.ToUpper()) partitionEXT4 = parition;
+                    if (parition.nameUpper == efiPartitionName.ToUpper()) partitionEFI = parition;
+                    else if (parition.nameUpper == ext4PartitionName.ToUpper()) partitionEXT4 = parition;
                 }
             }
         }
@@ -862,8 +862,8 @@ public partial class MainView : UserControl
             {
                 foreach (var parition in drive.partitions)
                 {
-                    if (parition.name.ToUpper() == efiPartitionName.ToUpper()) partitionEFI = parition;
-                    else if (parition.name.ToUpper() == ext4PartitionName.ToUpper()) partitionEXT4 = parition;
+                    if (parition.nameUpper == efiPartitionName.ToUpper()) partitionEFI = parition;
+                    else if (parition.nameUpper == ext4PartitionName.ToUpper()) partitionEXT4 = parition;
                 }
             }
         }
