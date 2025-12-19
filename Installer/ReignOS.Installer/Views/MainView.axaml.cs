@@ -177,14 +177,14 @@ public partial class MainView : UserControl
         bool error = false;
         if (InstallUtil.failIfError)
         {
-            string lineLower = line.ToLower();
+            string lineLower = line != null ? line.ToLower() : "";
             if (lineLower.Contains("error:") && !line.Contains("error: command failed to execute correctly")) error = true;
             else if (lineLower.Contains("fatal:")) error = true;
             else if (lineLower.Contains("MSBUILD : error")) error = true;
         }
         Dispatcher.UIThread.InvokeAsync(() =>
         {
-            installOutputBuilder.AppendLine(line);
+            if (line != null) installOutputBuilder.AppendLine(line);
             const int maxLength = 2048;
             if (installOutputBuilder.Length > maxLength) installOutputBuilder.Remove(0, installOutputBuilder.Length - maxLength);
             singleton.installTerminalText.Text = installOutputBuilder.ToString();
