@@ -54,6 +54,13 @@ if [ $exit_code -eq 14 ]; then
   sudo rm ~/.gnupg/public-keys.d/pubring.db.lock
   sudo rm -rf /usr/share/dotnet/sdk-manifests/8.0.100
 
+  # delete package cache
+  echo ""
+  echo "Deleting old package cache..."
+  sudo pacman -Rns $(pacman -Qdtq) --noconfirm
+  sudo pacman -Scc --noconfirm
+  sudo rm -rf /var/cache/pacman/pkg/*
+
   echo "Sync Time..."
   sudo pacman -Sy --noconfirm
   sudo timedatectl set-ntp true

@@ -24,6 +24,12 @@ if [ "$NetworkUp" = "false" ]; then
     exit 0
 fi
 
+# delete package cache
+echo ""
+echo "Deleting old package cache..."
+sudo pacman -Rns $(pacman -Qdtq) --noconfirm
+sudo pacman -Sc --noconfirm
+
 # update ReignOS Git package
 echo ""
 echo "ReignOS Updating Git packages..."
