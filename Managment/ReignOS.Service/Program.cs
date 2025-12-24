@@ -32,6 +32,7 @@ enum HardwareType
     AyaneoFlipDS_1S,
     AyaneoSlide,
     AyaneoNextLite,
+    AyaneoKun,
 
     // One-Netbook
     OneXPlayer_Gen1,
@@ -119,7 +120,8 @@ internal class Program
             else if (productName.StartsWith("AYA NEO FOUNDER")) hardwareType = HardwareType.Ayaneo1;
             else if (productName.StartsWith("AYANEO 2")) hardwareType = HardwareType.Ayaneo2;
             else if (productName.StartsWith("AYANEO 3")) hardwareType = HardwareType.Ayaneo3;
-            else if (productName.StartsWith("ONE XPLAYER")) hardwareType = HardwareType.OneXPlayer_Gen1;
+			else if (vendorName == "AYANEO" && productName == "KUN") hardwareType = HardwareType.AyaneoKun;
+			else if (productName.StartsWith("ONE XPLAYER")) hardwareType = HardwareType.OneXPlayer_Gen1;
             else if (productName.StartsWith("ONEXPLAYER")) hardwareType = HardwareType.OneXPlayer_Gen2;
             else if (productName.StartsWith("ZOTAC GAMING ZONE")) hardwareType = HardwareType.ZotacZone;
             else if (productName.StartsWith("Loki Zero")) hardwareType = HardwareType.LokiZero;

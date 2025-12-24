@@ -27,7 +27,8 @@ namespace ReignOS.Service.Hardware
                 Program.hardwareType == HardwareType.AyaneoPlus ||
                 Program.hardwareType == HardwareType.AyaneoFlipDS || Program.hardwareType == HardwareType.AyaneoFlipDS_1S ||
                 Program.hardwareType == HardwareType.AyaneoSlide ||
-                Program.hardwareType == HardwareType.AyaneoNextLite;
+                Program.hardwareType == HardwareType.AyaneoNextLite ||
+				Program.hardwareType == HardwareType.AyaneoKun;
 
             if (Program.hardwareType == HardwareType.Ayaneo1 || Program.hardwareType == HardwareType.AyaneoPro)
             {
@@ -57,7 +58,7 @@ namespace ReignOS.Service.Hardware
                 }
             }
 
-            if (Program.hardwareType == HardwareType.Ayaneo2 || Program.hardwareType == HardwareType.AyaneoFlipDS || Program.hardwareType == HardwareType.Ayaneo)
+            if (Program.hardwareType == HardwareType.Ayaneo2 || Program.hardwareType == HardwareType.AyaneoFlipDS || Program.hardwareType == HardwareType.AyaneoKun || Program.hardwareType == HardwareType.Ayaneo)
             {
                 if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_RIGHTCTRL, true), new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_F17, true)))
                 {
@@ -102,7 +103,8 @@ namespace ReignOS.Service.Hardware
                 Program.hardwareType == HardwareType.AyaneoFlipDS || Program.hardwareType == HardwareType.AyaneoFlipDS_1S ||
                 Program.hardwareType == HardwareType.AyaneoSlide ||
                 Program.hardwareType == HardwareType.AyaneoNextLite ||
-                Program.hardwareType == HardwareType.Ayaneo
+				Program.hardwareType == HardwareType.AyaneoKun ||
+				Program.hardwareType == HardwareType.Ayaneo
             )
             {
                 if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_D, true)))
