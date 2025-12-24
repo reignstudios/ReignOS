@@ -49,6 +49,7 @@ if [ $exit_code -eq 14 ]; then
   echo ""
   echo "ReignOS (Fix updates)..."
 
+  # remove files and paths that can cause issues
   echo "Removing lock files..."
   sudo rm /var/lib/pacman/db.lck
   sudo rm ~/.gnupg/public-keys.d/pubring.db.lock

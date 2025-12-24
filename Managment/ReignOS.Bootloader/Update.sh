@@ -83,6 +83,11 @@ if [ "$HAS_UPDATES" = "true" ]; then
     pacman_exit_code=$?
 
     # yay
+    echo "ReignOS Updating yay tool..."
+    cd /home/gamer/yay
+    git pull
+    makepkg -cfsi
+
     echo "ReignOS Updating yay pacages..."
     yay -Syu --noconfirm --ignore aw87559-firmware
     yay_exit_code=$?
