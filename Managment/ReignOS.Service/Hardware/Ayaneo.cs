@@ -66,6 +66,14 @@ namespace ReignOS.Service.Hardware
                 }
             }
 
+            if (Program.hardwareType == HardwareType.AyaneoKun)// extra top right button
+            {
+				if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_RIGHTCTRL, true), new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_F18, true)))
+                {
+					VirtualGamepad.Write_TriggerRightSteamMenu();
+				}
+			}
+
             if (Program.hardwareType == HardwareType.Ayaneo3 || Program.hardwareType == HardwareType.AyaneoFlipDS_1S || Program.hardwareType == HardwareType.Ayaneo)
             {
                 if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_F23, true)))
