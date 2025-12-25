@@ -86,7 +86,7 @@ if [ "$HAS_UPDATES" = "true" ]; then
     echo "ReignOS Updating yay tool..."
     cd /home/gamer/yay
     git pull
-    makepkg -cfsi
+    makepkg -cfsi --noconfirm
 
     echo "ReignOS Updating yay pacages..."
     yay -Syu --noconfirm --ignore aw87559-firmware
