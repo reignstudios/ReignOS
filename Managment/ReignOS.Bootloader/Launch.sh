@@ -73,6 +73,13 @@ if [ $exit_code -eq 14 ]; then
   reflector --country $COUNTRY --latest 50 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
   sudo pacman -Syyu --noconfirm
 
+  echo "ReignOS re-installing yay tool..."
+  cd /home/gamer
+  sudo rm -rf ./yay
+  git clone https://aur.archlinux.org/yay.git
+  cd /home/gamer/yay
+  makepkg -si --noconfirm
+
   echo "Refresh keyring, db, etc..."
   sudo pacman -Sy archlinux-keyring --noconfirm
   sudo pacman-key --init
@@ -82,6 +89,7 @@ if [ $exit_code -eq 14 ]; then
   sudo pacman -Syu --noconfirm
   yay -Syu --noconfirm
 
+  cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
   ./Update.sh
   sudo reboot -f
   exit 0
