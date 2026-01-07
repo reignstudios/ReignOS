@@ -128,8 +128,32 @@ if [ $exit_code -eq 31 ]; then
   exit 0
 fi
 
-# install AMD drivers
 if [ $exit_code -eq 32 ]; then
+  echo ""
+  echo "ReignOS (Install Nvidia Proprietary Legacy-580)..."
+  chmod +x ./Nvidia_Install_Proprietary_Legacy580.sh
+  ./Nvidia_Install_Proprietary_Legacy580.sh
+  exit 0
+fi
+
+if [ $exit_code -eq 33 ]; then
+  echo ""
+  echo "ReignOS (Install Nvidia Proprietary Legacy-470)..."
+  chmod +x ./Nvidia_Install_Proprietary_Legacy470.sh
+  ./Nvidia_Install_Proprietary_Legacy470.sh
+  exit 0
+fi
+
+if [ $exit_code -eq 34 ]; then
+  echo ""
+  echo "ReignOS (Install Nvidia Proprietary Legacy-340)..."
+  chmod +x ./Nvidia_Install_Proprietary_Legacy340.sh
+  ./Nvidia_Install_Proprietary_Legacy340.sh
+  exit 0
+fi
+
+# install AMD drivers
+if [ $exit_code -eq 40 ]; then
   echo ""
   echo "ReignOS (Install AMD MESA)..."
   chmod +x ./AMD_Install_Mesa.sh
@@ -137,7 +161,7 @@ if [ $exit_code -eq 32 ]; then
   exit 0
 fi
 
-if [ $exit_code -eq 33 ]; then
+if [ $exit_code -eq 41 ]; then
   echo ""
   echo "ReignOS (Install AMD AMDVLK)..."
   chmod +x ./AMD_Install_AMDVLK.sh
@@ -145,7 +169,7 @@ if [ $exit_code -eq 33 ]; then
   exit 0
 fi
 
-if [ $exit_code -eq 34 ]; then
+if [ $exit_code -eq 42 ]; then
   echo ""
   echo "ReignOS (Install AMD Proprietary)..."
   chmod +x ./AMD_Install_Proprietary.sh

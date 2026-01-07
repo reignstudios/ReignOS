@@ -139,6 +139,9 @@
 							<Button Name="nvidiaDriversApplyButton" Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="NvidiaApplyButton_OnClick"/>
 							<RadioButton Name="nvidia_Nouveau" Content="Nouveau" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="NvidiaDriversOption_Click"/>
 							<RadioButton Name="nvidia_Proprietary" Content="Proprietary" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="NvidiaDriversOption_Click"/>
+							<RadioButton Name="nvidia_Proprietary_Legacy_580" Content="Proprietary-580" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="140" Click="NvidiaDriversOption_Click"/>
+							<RadioButton Name="nvidia_Proprietary_Legacy_470" Content="Proprietary-470" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="140" Click="NvidiaDriversOption_Click"/>
+							<RadioButton Name="nvidia_Proprietary_Legacy_340" Content="Proprietary-340" Margin="800,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="140" Click="NvidiaDriversOption_Click"/>
 						</Grid>
 					</Grid>
 

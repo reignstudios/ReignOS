@@ -2,11 +2,8 @@
 
 sudo pacman -Syu --noconfirm
 
-echo "Uninstalling Nvidia Proprietary drivers"
-sudo systemctl disable nvidia-suspend.service nvidia-hibernate.service nvidia-resume.service
-sudo pacman -R --noconfirm nvidia nvidia-utils lib32-nvidia-utils nvidia-settings nvidia-prime
-sudo pacman -R --noconfirm nvidia-lts
-sudo pacman -R --noconfirm egl-gbm
+cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
+./Nvidia_Uninstall.sh
 
 echo "Installing Nvidia Nouveau drivers"
 sudo pacman -S --noconfirm vulkan-nouveau lib32-vulkan-nouveau

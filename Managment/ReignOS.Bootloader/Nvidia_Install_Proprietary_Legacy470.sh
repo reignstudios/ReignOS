@@ -6,8 +6,7 @@ cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64
 ./Nvidia_Uninstall.sh
 
 echo "Installing Nvidia Proprietary drivers"
-sudo pacman -S --noconfirm nvidia nvidia-utils lib32-nvidia-utils nvidia-settings
-#sudo pacman -S --noconfirm nvidia-lts #Only needed if we add LTS kernel support
+yay -S --noconfirm nvidia-470xx-dkms nvidia-470xx-utils lib32-nvidia-470xx-utils nvidia-470xx-settings
 sudo pacman -S --noconfirm nvidia-prime
 sudo pacman -S --noconfirm egl-gbm egl-wayland
 sudo mkinitcpio -P

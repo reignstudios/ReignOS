@@ -246,7 +246,7 @@ public partial class MainView : UserControl
 
     private void PostRefreshGPUs()
     {
-        gpuButtonNvidiaPrime.IsVisible = nvidia_Proprietary.IsChecked == true;
+        gpuButtonNvidiaPrime.IsVisible = nvidia_Proprietary.IsChecked == true || nvidia_Proprietary_Legacy_580.IsChecked == true || nvidia_Proprietary_Legacy_470.IsChecked == true || nvidia_Proprietary_Legacy_340.IsChecked == true;
         if (gpuButtonNvidiaPrime.IsVisible)
         {
             if (!gpuButton2.IsVisible) gpuButtonNvidiaPrime.Margin = gpuButton2.Margin;
@@ -344,6 +344,21 @@ public partial class MainView : UserControl
                             nvidia_Proprietary.IsChecked = true;
                             nvidiaSettingsButton.IsEnabled = true;
                         }
+                        else if (parts[1] == "Proprietary_580")
+                        {
+                            nvidia_Proprietary_Legacy_580.IsChecked = true;
+                            nvidiaSettingsButton.IsEnabled = true;
+                        }
+                        else if (parts[1] == "Proprietary_470")
+                        {
+                            nvidia_Proprietary_Legacy_470.IsChecked = true;
+                            nvidiaSettingsButton.IsEnabled = true;
+                        }
+                        else if (parts[1] == "Proprietary_340")
+                        {
+                            nvidia_Proprietary_Legacy_340.IsChecked = true;
+                            nvidiaSettingsButton.IsEnabled = true;
+                        }
                     }
                     else if (parts[0] == "GPU")
                     {
@@ -376,8 +391,14 @@ public partial class MainView : UserControl
                     {
                         if (parts[1] == "100")
                         {
-                            if (nvidia_Proprietary.IsChecked == true) gpuButtonNvidiaPrime.IsChecked = true;
-                            else needsReset = true;
+                            if (nvidia_Proprietary.IsChecked == true || nvidia_Proprietary_Legacy_580.IsChecked == true || nvidia_Proprietary_Legacy_470.IsChecked == true || nvidia_Proprietary_Legacy_340.IsChecked == true)
+                            {
+                                gpuButtonNvidiaPrime.IsChecked = true;
+                            }
+                            else
+                            {
+                                needsReset = true;
+                            }
                         }
                     }
                     else if (parts[0] == "MUX_ENABLED")
@@ -571,6 +592,9 @@ public partial class MainView : UserControl
 
                 if (nvidia_Nouveau.IsChecked == true) writer.WriteLine("NvidiaDrivers=Nouveau");
                 else if (nvidia_Proprietary.IsChecked == true) writer.WriteLine("NvidiaDrivers=Proprietary");
+                else if (nvidia_Proprietary_Legacy_580.IsChecked == true) writer.WriteLine("NvidiaDrivers=Proprietary_580");
+                else if (nvidia_Proprietary_Legacy_470.IsChecked == true) writer.WriteLine("NvidiaDrivers=Proprietary_470");
+                else if (nvidia_Proprietary_Legacy_340.IsChecked == true) writer.WriteLine("NvidiaDrivers=Proprietary_340");
                 else writer.WriteLine("NvidiaDrivers=Nouveau");
 
                 if (gpuButton1.IsChecked == true) writer.WriteLine("GPU=1");
@@ -1382,9 +1406,9 @@ public partial class MainView : UserControl
     {
         // invoke AMD driver install script
         SaveSettings();
-        if (amd_Mesa.IsChecked == true) App.exitCode = 32;
-        else if (amd_VLK.IsChecked == true) App.exitCode = 33;
-        else if (amd_Proprietary.IsChecked == true) App.exitCode = 34;
+        if (amd_Mesa.IsChecked == true) App.exitCode = 40;
+        else if (amd_VLK.IsChecked == true) App.exitCode = 41;
+        else if (amd_Proprietary.IsChecked == true) App.exitCode = 42;
         MainWindow.singleton.Close();
     }
 
@@ -1394,6 +1418,9 @@ public partial class MainView : UserControl
         SaveSettings();
         if (nvidia_Nouveau.IsChecked == true) App.exitCode = 30;
         else if (nvidia_Proprietary.IsChecked == true) App.exitCode = 31;
+        else if (nvidia_Proprietary_Legacy_580.IsChecked == true) App.exitCode = 32;
+        else if (nvidia_Proprietary_Legacy_470.IsChecked == true) App.exitCode = 33;
+        else if (nvidia_Proprietary_Legacy_340.IsChecked == true) App.exitCode = 34;
         MainWindow.singleton.Close();
     }
 
