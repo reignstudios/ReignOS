@@ -246,7 +246,7 @@ public partial class MainView : UserControl
 
     private void PostRefreshGPUs()
     {
-        gpuButtonNvidiaPrime.IsVisible = nvidia_Proprietary.IsChecked == true;// || nvidia_Proprietary_Legacy_580.IsChecked == true || nvidia_Proprietary_Legacy_470.IsChecked == true || nvidia_Proprietary_Legacy_340.IsChecked == true;// legacy drivers don't support this
+        gpuButtonNvidiaPrime.IsVisible = nvidia_Proprietary.IsChecked == true || nvidia_Proprietary_Legacy_580.IsChecked == true || nvidia_Proprietary_Legacy_470.IsChecked == true || nvidia_Proprietary_Legacy_340.IsChecked == true;
         if (gpuButtonNvidiaPrime.IsVisible)
         {
             if (!gpuButton2.IsVisible) gpuButtonNvidiaPrime.Margin = gpuButton2.Margin;
@@ -391,7 +391,7 @@ public partial class MainView : UserControl
                     {
                         if (parts[1] == "100")
                         {
-                            if (nvidia_Proprietary.IsChecked == true)// || nvidia_Proprietary_Legacy_580.IsChecked == true || nvidia_Proprietary_Legacy_470.IsChecked == true || nvidia_Proprietary_Legacy_340.IsChecked == true)// legacy drivers don't support this
+                            if (nvidia_Proprietary.IsChecked == true || nvidia_Proprietary_Legacy_580.IsChecked == true || nvidia_Proprietary_Legacy_470.IsChecked == true || nvidia_Proprietary_Legacy_340.IsChecked == true)
                             {
                                 gpuButtonNvidiaPrime.IsChecked = true;
                             }
