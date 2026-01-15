@@ -53,6 +53,8 @@ if [ $exit_code -eq 14 ]; then
   echo "Removing lock files..."
   sudo rm /var/lib/pacman/db.lck
   sudo rm ~/.gnupg/public-keys.d/pubring.db.lock
+  sudo rm /var/cache/pacman/pkg/archlinux-keyring-*.pkg.tar*
+  sudo rm -r /etc/pacman.d/gnupg
   sudo rm -rf /usr/share/dotnet/sdk-manifests/8.0.100
 
   # delete package cache
@@ -86,8 +88,8 @@ if [ $exit_code -eq 14 ]; then
   sudo pacman-key --populate archlinux
   sudo pacman-key --refresh-keys
   sudo pacman-key --updatedb
-  sudo pacman -Syu --noconfirm
-  yay -Syu --noconfirm
+  sudo pacman -Syyu --noconfirm
+  yay -Syyu --noconfirm
 
   cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
   ./Update.sh
