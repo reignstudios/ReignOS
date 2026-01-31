@@ -154,7 +154,7 @@ public unsafe class HidDevice : IDisposable
             fixed (byte* dataPtr = data)
             {
                 sizeRead = c.read(handle, dataPtr + offset, (UIntPtr)size);
-                if (sizeRead >= 0)
+                if (sizeRead >= 1)
                 {
                     return true;// success on first read
                 }

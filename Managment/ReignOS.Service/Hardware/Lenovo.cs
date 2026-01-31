@@ -51,9 +51,9 @@ public static class Lenovo
         {
             if (hidDevice != null)
             {
-                if (hidDevice.ReadData(buffer, 0, buffer.Length, out nint sizeRead) && sizeRead > 0)
+                if (hidDevice.ReadData(buffer, 0, buffer.Length, out nint sizeRead))
                 {
-                    Log.WriteLine($"LegionGO: {sizeRead}");
+                    Log.WriteDataAsLine("Levono HID Data:", buffer, 0, (int)sizeRead);
                 }
             }
         }

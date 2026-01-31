@@ -114,4 +114,23 @@ public static class Log
             catch { }
         }
     }
+    
+    public static void WriteData(string header, byte[] data, int offset, int length)
+    {
+        writer.WriteLine(header);
+        for (int i = offset; i < length; i++)
+        {
+            writer.WriteLine(data[i].ToString("x4"));
+        }
+    }
+    
+    public static void WriteDataAsLine(string header, byte[] data, int offset, int length)
+    {
+        writer.Write(header);
+        for (int i = offset; i < length; i++)
+        {
+            writer.Write(data[i].ToString("x4"));
+        }
+        writer.WriteLine();
+    }
 }
