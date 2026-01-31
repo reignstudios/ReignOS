@@ -120,7 +120,7 @@ public static class Log
         writer.WriteLine(header);
         for (int i = offset; i < length; i++)
         {
-            writer.WriteLine(data[i].ToString("x4"));
+            writer.WriteLine(" " + data[i].ToString("x4"));
         }
     }
     
@@ -129,7 +129,7 @@ public static class Log
         writer.Write(header);
         for (int i = offset; i < length; i++)
         {
-            writer.Write(data[i].ToString("x4"));
+            writer.Write(data[i].ToString("x4") + " ");
         }
         writer.WriteLine();
     }
