@@ -53,7 +53,7 @@ public static class Lenovo
             {
                 if (hidDevice.ReadData(buffer, 0, buffer.Length, out nint sizeRead))
                 {
-                    Log.WriteDataAsLine("Levono HID Data:", buffer, 0, (int)sizeRead);
+                    //Log.WriteDataAsLine("Levono HID Data:", buffer, 0, (int)sizeRead);
                 }
             }
         }
