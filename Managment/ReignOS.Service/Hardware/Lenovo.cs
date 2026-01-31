@@ -9,7 +9,7 @@ public static class Lenovo
 
     public static void Configure()
     {
-        isEnabled = Program.hardwareType == HardwareType.Lenovo_Go2;
+        isEnabled = Program.hardwareType == HardwareType.LegionGo2;
     }
 
     public static void Update(KeyList keys)

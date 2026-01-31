@@ -22,7 +22,7 @@ enum HardwareType
     RogAlly,
     
     // Lenovo
-    Lenovo_Go2,
+    LegionGo2,
 
     // Ayaneo
     Ayaneo,
@@ -114,7 +114,7 @@ internal class Program
             Log.WriteLine("Hardware Product: " + productName);
             if (productName.StartsWith("Claw ")) hardwareType = HardwareType.MSI_Claw;
             else if (productName.StartsWith("ROG Ally")) hardwareType = HardwareType.RogAlly;
-            else if (vendorName == "LENOVO" && productName == "83N1") hardwareType = HardwareType.Lenovo_Go2;
+            else if (vendorName == "LENOVO" && productName == "83N1") hardwareType = HardwareType.LegionGo2;
             else if (productName.StartsWith("AIR Pro")) hardwareType = HardwareType.AyaneoPro;
             else if (productName.StartsWith("AIR Plus")) hardwareType = HardwareType.AyaneoPlus;
             else if (productName.StartsWith("FLIP DS")) hardwareType = HardwareType.AyaneoFlipDS;
