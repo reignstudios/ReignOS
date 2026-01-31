@@ -20,6 +20,9 @@ enum HardwareType
 
     // Asus
     RogAlly,
+    
+    // Lenovo
+    Lenovo_Go2,
 
     // Ayaneo
     Ayaneo,
@@ -64,7 +67,7 @@ internal class Program
     private const int SIGINT = 2;
 
     public static bool exit;
-    public static HardwareType hardwareType { get; private set; }
+    public static HardwareType hardwareType { get; private set; } = HardwareType.Unknown;
 
     public static KeyboardInput keyboardInput;
     public static InputMode inputMode = InputMode.ReignOS;
@@ -111,6 +114,7 @@ internal class Program
             Log.WriteLine("Hardware Product: " + productName);
             if (productName.StartsWith("Claw ")) hardwareType = HardwareType.MSI_Claw;
             else if (productName.StartsWith("ROG Ally")) hardwareType = HardwareType.RogAlly;
+            else if (vendorName == "LENOVO" && productName == "83N1") hardwareType = HardwareType.Lenovo_Go2;
             else if (productName.StartsWith("AIR Pro")) hardwareType = HardwareType.AyaneoPro;
             else if (productName.StartsWith("AIR Plus")) hardwareType = HardwareType.AyaneoPlus;
             else if (productName.StartsWith("FLIP DS")) hardwareType = HardwareType.AyaneoFlipDS;
@@ -273,6 +277,7 @@ internal class Program
         {
             MSI_Claw.Configure();
             RogAlly.Configure();
+            Lenovo.Configure();
             Ayaneo.Configure();
             OneXPlayer.Configure();
             ZotacZone.Configure();
@@ -337,6 +342,7 @@ internal class Program
             // update devices
             if (MSI_Claw.isEnabled) MSI_Claw.Update(ref time, resumeFromSleep, keys);
             if (RogAlly.isEnabled) RogAlly.Update(keys);
+            if (Lenovo.isEnabled) Lenovo.Update(keys);
             if (Ayaneo.isEnabled) Ayaneo.Update(keys);
             if (OneXPlayer.isEnabled) OneXPlayer.Update(keys);
             if (ZotacZone.isEnabled) ZotacZone.Update(keys);
