@@ -22,7 +22,8 @@ enum HardwareType
     RogAlly,
     
     // Lenovo
-    LegionGo2,
+    Lenovo_LegionGo,
+    Lenovo_LegionGo2,
 
     // Ayaneo
     Ayaneo,
@@ -114,7 +115,8 @@ internal class Program
             Log.WriteLine("Hardware Product: " + productName);
             if (productName.StartsWith("Claw ")) hardwareType = HardwareType.MSI_Claw;
             else if (productName.StartsWith("ROG Ally")) hardwareType = HardwareType.RogAlly;
-            else if (vendorName == "LENOVO" && productName == "83N1") hardwareType = HardwareType.LegionGo2;
+            else if (vendorName == "LENOVO" && productName == "83E1") hardwareType = HardwareType.Lenovo_LegionGo;
+            else if (vendorName == "LENOVO" && productName == "83N1") hardwareType = HardwareType.Lenovo_LegionGo2;
             else if (productName.StartsWith("AIR Pro")) hardwareType = HardwareType.AyaneoPro;
             else if (productName.StartsWith("AIR Plus")) hardwareType = HardwareType.AyaneoPlus;
             else if (productName.StartsWith("FLIP DS")) hardwareType = HardwareType.AyaneoFlipDS;
@@ -378,6 +380,7 @@ internal class Program
         {
             DbusMonitor.Shutdown();
             MSI_Claw.Dispose();
+            Lenovo.Dispose();
             if (inputMode == InputMode.ReignOS) VirtualGamepad.Dispose();
             if (keyboardInput != null) keyboardInput.Dispose();
         }

@@ -401,7 +401,7 @@ static class InstallUtil
         fileBuilder.AppendLine();// make sure we have network still or install needs to fail until it does
 		fileBuilder.AppendLine("sudo rfkill unblock all");// unblock all radio software blocks
 		fileBuilder.AppendLine("NetworkUp=false");
-        fileBuilder.AppendLine("for i in $(seq 1 30); do");
+        fileBuilder.AppendLine("for i in $(seq 1 60); do");
         fileBuilder.AppendLine("    # Try to ping Google's DNS server");
         fileBuilder.AppendLine("    if ping -c 1 -W 2 google.com &> /dev/null; then");
         fileBuilder.AppendLine("        echo \"FirstRun: Network is up!\"");

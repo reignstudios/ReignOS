@@ -1,3 +1,4 @@
+using System;
 using ReignOS.Core;
 using ReignOS.Service.OS;
 
@@ -6,10 +7,39 @@ namespace ReignOS.Service.Hardware;
 public static class Lenovo
 {
     public static bool isEnabled;
+    
+    private static HidDevice hidDevice;
+    private static byte[] buffer;
 
     public static void Configure()
     {
-        isEnabled = Program.hardwareType == HardwareType.LegionGo2;
+        isEnabled =
+            Program.hardwareType == HardwareType.Lenovo_LegionGo ||
+            Program.hardwareType == HardwareType.Lenovo_LegionGo2;
+        
+        if (isEnabled && Program.hardwareType == HardwareType.Lenovo_LegionGo)
+        {
+            hidDevice = new HidDevice();
+            if (hidDevice.Init(0x17ef, 0x6182, true))
+            {
+                buffer = new byte[256];
+            }
+            else
+            {
+                Log.WriteLine("Failed to initialize Lenovo HID input device for (VID:0x17ef PID:0x6182)");
+                hidDevice.Dispose();
+                hidDevice = null;
+            }
+        }
+    }
+
+    public static void Dispose()
+    {
+        if (hidDevice != null)
+        {
+            hidDevice.Dispose();
+            hidDevice = null;
+        }
     }
 
     public static void Update(KeyList keys)
@@ -17,13 +47,26 @@ public static class Lenovo
         if (Program.inputMode != InputMode.ReignOS) return;
 
         // relay OEM buttons to virtual gamepad input
-        if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_D, true)))
+        if (Program.hardwareType == HardwareType.Lenovo_LegionGo)
         {
-            VirtualGamepad.Write_TriggerLeftSteamMenu();
+            if (hidDevice != null)
+            {
+                if (hidDevice.ReadData(buffer, 0, buffer.Length, out nint sizeRead) && sizeRead > 0)
+                {
+                    Log.WriteLine($"LegionGO: {sizeRead}");
+                }
+            }
         }
-        else if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTCTRL, true), new KeyEvent(input.KEY_LEFTALT, true)))
+        else if (Program.hardwareType == HardwareType.Lenovo_LegionGo2)
         {
-            VirtualGamepad.Write_TriggerRightSteamMenu();
+            if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_D, true)))
+            {
+                VirtualGamepad.Write_TriggerLeftSteamMenu();
+            }
+            else if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTCTRL, true), new KeyEvent(input.KEY_LEFTALT, true)))
+            {
+                VirtualGamepad.Write_TriggerRightSteamMenu();
+            }
         }
     }
 }

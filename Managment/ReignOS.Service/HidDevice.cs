@@ -1,10 +1,14 @@
-namespace ReignOS.Service;
 using ReignOS.Service.OS;
 using ReignOS.Core;
 using System.Text;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+
+namespace ReignOS.Service;
+
+// HID devices on Hub: sudo udevadm info -a -n /dev/hidraw1
+// Watch Events: sudo hid-recorder /dev/hidrawX
 
 public unsafe class HidDevice : IDisposable
 {
