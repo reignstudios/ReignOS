@@ -99,12 +99,6 @@ public static class Lenovo
         {
             if (device.ReadData(buffer, 0, buffer.Length, out var length, requireReadLength:32))
             {
-                /*Log.WriteLine(length.ToString());
-                if (detector.TestDelta(buffer, (int)length))
-                {
-                    Log.WriteDataAsLine("LEGION: ", buffer, 0, (int)length);
-                }*/
-                
                 leftMenuButton.Update(buffer[leftButtonIndex] == leftButtonValue);
                 rightMenuButton.Update(buffer[rightButtonIndex] == rightButtonValue);
                 if (leftMenuButton.down) VirtualGamepad.Write_TriggerLeftSteamMenu();

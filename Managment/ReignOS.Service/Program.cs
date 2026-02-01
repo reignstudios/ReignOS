@@ -301,7 +301,7 @@ internal class Program
         // run events
         Log.WriteLine("Running events...");
         var time = DateTime.Now;
-        float wakeFromSleepTime = 0;
+        float wakeFromSleepTimeSec = 0;
         while (!exit)
         {
             // update time
@@ -314,7 +314,7 @@ internal class Program
             if (timeSpan.TotalSeconds >= 3)
             {
                 resumeFromSleep = true;
-                wakeFromSleepTime = 0;
+                wakeFromSleepTimeSec = 0;
                 PowerProfiles.Apply(false);
                 RestoreBrightness();
             }
@@ -339,7 +339,7 @@ internal class Program
             else if (KeyEvent.Pressed(keys, input.KEY_VOLUMEUP, includeHeld:true)) Console.WriteLine("SET_VOLUME_UP");
             
             // handle rest state
-            if (!disablePowerButton && !resumeFromSleep && wakeFromSleepTime >= 5 && KeyEvent.Pressed(keys, input.KEY_POWER))
+            if (!disablePowerButton && !resumeFromSleep && wakeFromSleepTimeSec >= 5 && KeyEvent.Pressed(keys, input.KEY_POWER))
             {
                 Log.WriteLine("PowerButton Pressed");
                 if (hibernatePowerButton) ProcessUtil.Run("systemctl", "hibernate", useBash: false);
@@ -352,7 +352,7 @@ internal class Program
             // sleep thread
             const int sleepMS = 1000 / 30;
             Thread.Sleep(sleepMS);
-            wakeFromSleepTime += sleepMS / 1000f;
+            wakeFromSleepTimeSec += sleepMS / 1000f;
         }
         
         // shutdown
