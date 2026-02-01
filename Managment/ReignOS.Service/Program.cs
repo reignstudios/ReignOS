@@ -118,7 +118,7 @@ internal class Program
             else if (productName.StartsWith("ROG Ally")) hardwareType = HardwareType.RogAlly;
             else if (vendorName == "LENOVO" && productName == "83E1") hardwareType = HardwareType.Lenovo_LegionGo;
             else if (vendorName == "LENOVO" && productName == "83N1") hardwareType = HardwareType.Lenovo_LegionGo2;
-            else if (vendorName == "LENOVO" && productName == "83N1") hardwareType = HardwareType.Lenovo_LegionGoS;
+            else if (vendorName == "LENOVO" && productName == "83L3") hardwareType = HardwareType.Lenovo_LegionGoS;
             else if (productName.StartsWith("AIR Pro")) hardwareType = HardwareType.AyaneoPro;
             else if (productName.StartsWith("AIR Plus")) hardwareType = HardwareType.AyaneoPlus;
             else if (productName.StartsWith("FLIP DS")) hardwareType = HardwareType.AyaneoFlipDS;

@@ -31,6 +31,13 @@ public static class Lenovo
             vid = 0x17ef;
             pid = 0x61eb;
         }
+        else if (Program.hardwareType == HardwareType.Lenovo_LegionGoS)
+        {
+            isEnabled = true;
+            initHID = true;
+            vid = 0x1a86;
+            pid = 0xe310;
+        }
 
         if (initHID)
         {
@@ -71,16 +78,14 @@ public static class Lenovo
         }
 
         // relay OEM buttons to virtual gamepad input
+        if (hidDevice != null)
         {
-            if (hidDevice != null)
+            if (hidDevice.ReadData(buffer, 0, buffer.Length, out _))
             {
-                if (hidDevice.ReadData(buffer, 0, buffer.Length, out _))
-                {
-                    leftMenuButton.Update(buffer[18] == 0x80);
-                    rightMenuButton.Update(buffer[18] == 0x40);
-                    if (leftMenuButton.down) VirtualGamepad.Write_TriggerLeftSteamMenu();
-                    else if (rightMenuButton.down) VirtualGamepad.Write_TriggerRightSteamMenu();
-                }
+                leftMenuButton.Update(buffer[18] == 0x80);
+                rightMenuButton.Update(buffer[18] == 0x40);
+                if (leftMenuButton.down) VirtualGamepad.Write_TriggerLeftSteamMenu();
+                else if (rightMenuButton.down) VirtualGamepad.Write_TriggerRightSteamMenu();
             }
         }
     }
