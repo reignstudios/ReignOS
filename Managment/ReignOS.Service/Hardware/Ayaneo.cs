@@ -130,7 +130,7 @@ namespace ReignOS.Service.Hardware
             // init hid device
             using (var device = new HidDevice())
             {
-                if (device.Init(7247, 2, false, physicalLocation:"input2", physicalLocationIsContains:true) || device.handles.Count >= 1)
+                if (device.Init(7247, 2, false, HidDeviceOpenMode.ReadWrite, physicalLocation:"input2", physicalLocationIsContains:true) || device.handles.Count >= 1)
                 {
                     var data = new byte[256];
                     int i;
@@ -219,7 +219,7 @@ namespace ReignOS.Service.Hardware
             // init hid device
             using (var device = new HidDevice())
             {
-                if (device.Init(7247, 2, false, physicalLocation: "input2", physicalLocationIsContains: true) || device.handles.Count >= 1)
+                if (device.Init(7247, 2, false, HidDeviceOpenMode.ReadWrite, physicalLocation: "input2", physicalLocationIsContains: true) || device.handles.Count >= 1)
                 {
                     var data = new byte[256];
                     int i;

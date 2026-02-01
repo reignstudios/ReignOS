@@ -10,16 +10,24 @@ namespace ReignOS.Service;
 // HID devices on Hub: sudo udevadm info -a -n /dev/hidraw1
 // Watch Events: sudo hid-recorder /dev/hidrawX
 
+public enum HidDeviceOpenMode
+{
+    ReadOnly = c.O_RDONLY,
+    WriteOnly = c.O_WRONLY,
+    ReadWrite = c.O_RDWR
+}
+
 public unsafe class HidDevice : IDisposable
 {
     public List<int> handles;
     
     public bool Init
     (
-        ushort vendorID, ushort productID, bool openAll,
+        ushort vendorID, ushort productID, bool openAll, HidDeviceOpenMode mode,
         string name = null, bool nameIsContains = false,
         string physicalLocation = null, bool physicalLocationIsContains = false,
-        bool blocking = false, bool resetDevice = false
+        bool blocking = false, bool resetDevice = false,
+        bool debugLog = false
     )
     {
         const int bufferSize = 256;
@@ -31,11 +39,12 @@ public unsafe class HidDevice : IDisposable
         {
             // open keyboard
             string path = $"/dev/hidraw{i}";
+            if (debugLog) Log.WriteLine($"HID: Path '{path}'");
             byte[] uinputPath = Encoding.UTF8.GetBytes(path);
             int handle;
             int blockFlag = blocking ? 0 : c.O_NONBLOCK;
             if (resetDevice) fixed (byte* uinputPathPtr = uinputPath) handle = c.open(uinputPathPtr, c.O_WRONLY | blockFlag);
-            else fixed (byte* uinputPathPtr = uinputPath) handle = c.open(uinputPathPtr, c.O_RDWR | blockFlag);
+            else fixed (byte* uinputPathPtr = uinputPath) handle = c.open(uinputPathPtr, (int)mode | blockFlag);
             if (handle < 0) continue;
             
             // validate hardware
@@ -50,7 +59,9 @@ public unsafe class HidDevice : IDisposable
             }
             else
             {
+                if (debugLog) Log.WriteLine("HID: 'HIDIOCGRAWINFO' reached");
                 if (c.ioctl(handle, hid.HIDIOCGRAWINFO, &info) < 0) goto CONTINUE;
+                if (debugLog) Log.WriteLine($"HID: 'HIDIOCGRAWINFO' Info, VID:{info.vendor.ToString("x4")} PID:{info.product.ToString("x4")}");
             }
 
             if (info.vendor == vendorID && info.product == productID)

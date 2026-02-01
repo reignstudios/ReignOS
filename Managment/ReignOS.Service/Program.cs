@@ -76,6 +76,7 @@ internal class Program
     private static bool hibernatePowerButton = false, disablePowerButton = false;
 
     public static bool? isRebootMode;
+    private static string brightnessSettingsPath;
 
     private static void BindSignalEvents()
     {
@@ -220,7 +221,7 @@ internal class Program
 		srcPath = Path.Combine(processPath, "SystemD/");
 		ProcessUtil.Run("chmod", $"+x {Path.Combine(srcPath, "reignos-save-brightness.sh")}", out _, wait:true, asAdmin:false);
 
-		string brightnessSettingsPath = "/home/gamer/ReignOS_Ext/DisplayBrightness/";
+		brightnessSettingsPath = "/home/gamer/ReignOS_Ext/DisplayBrightness/";
 		if (!Directory.Exists(brightnessSettingsPath)) Directory.CreateDirectory(brightnessSettingsPath);
 
 		dstPath = "/etc/systemd/system/";
@@ -247,31 +248,8 @@ internal class Program
         }
         else// restore brightness values
         {
-            Log.WriteLine("Restoring brighness settings...");
-			foreach (string settingsFile in Directory.GetFiles(brightnessSettingsPath))
-            {
-                // read brightness setting
-                string name = Path.GetFileNameWithoutExtension(settingsFile);
-				string brightnessValue = File.ReadAllText(settingsFile).Trim();
-                if (!ulong.TryParse(brightnessValue, out _)) continue;
-
-                // apply brightness setting
-				foreach (string dir in Directory.GetDirectories("/sys/class/backlight"))
-				{
-					string dirName = Path.GetFileName(dir);
-					if (dirName != name) continue;
-					try
-					{
-                        Log.WriteLine($"Restoring display brightness for: '{name}' with value {brightnessValue}");
-						File.WriteAllText(Path.Combine(dir, "brightness"), brightnessValue);
-					}
-					catch (Exception ex)
-					{
-						Log.WriteLine(ex);
-					}
-				}
-			}
-		}
+            RestoreBrightness();
+        }
 
         // init virtual gamepad
         if (inputMode == InputMode.ReignOS) VirtualGamepad.Init();
@@ -338,6 +316,7 @@ internal class Program
                 resumeFromSleep = true;
                 wakeFromSleepTime = 0;
                 PowerProfiles.Apply(false);
+                RestoreBrightness();
             }
 
             // update keyboard
@@ -445,5 +424,33 @@ internal class Program
     public static void RunUserCmd(string cmd)
     {
         Console.WriteLine("ReignOS.Service.COMMAND: " + cmd);
+    }
+    
+    private static void RestoreBrightness()
+    {
+        Log.WriteLine("Restoring brighness settings...");
+        foreach (string settingsFile in Directory.GetFiles(brightnessSettingsPath))
+        {
+            // read brightness setting
+            string name = Path.GetFileNameWithoutExtension(settingsFile);
+            string brightnessValue = File.ReadAllText(settingsFile).Trim();
+            if (!ulong.TryParse(brightnessValue, out _)) continue;
+
+            // apply brightness setting
+            foreach (string dir in Directory.GetDirectories("/sys/class/backlight"))
+            {
+                string dirName = Path.GetFileName(dir);
+                if (dirName != name) continue;
+                try
+                {
+                    Log.WriteLine($"Restoring display brightness for: '{name}' with value {brightnessValue}");
+                    File.WriteAllText(Path.Combine(dir, "brightness"), brightnessValue);
+                }
+                catch (Exception ex)
+                {
+                    Log.WriteLine(ex);
+                }
+            }
+        }
     }
 }

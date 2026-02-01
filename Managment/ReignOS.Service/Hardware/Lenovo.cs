@@ -9,7 +9,7 @@ public static class Lenovo
 {
     public static bool isEnabled;
     
-    private static HidDevice hidDevice;
+    private static HidDevice device;
     private static byte[] buffer;
     private static ButtonEvent leftMenuButton, rightMenuButton;
     private static int leftButtonIndex, rightButtonIndex;
@@ -57,27 +57,27 @@ public static class Lenovo
 
         if (initHID)
         {
-            hidDevice = new HidDevice();
-            if (hidDevice.Init(vid, pid, true))
+            device = new HidDevice();
+            if (device.Init(vid, pid, true, HidDeviceOpenMode.ReadWrite, debugLog:true))
             {
-                Log.WriteLine($"Lenovo HID Device Initialized (VID:{vid.ToString("x4")} PID:{pid.ToString("x4")} Handles:{hidDevice.handles.Count})");
+                Log.WriteLine($"Lenovo HID Device Initialized (VID:{vid.ToString("x4")} PID:{pid.ToString("x4")} Handles:{device.handles.Count})");
                 buffer = new byte[256];
             }
             else
             {
                 Log.WriteLine($"Failed to initialize Lenovo HID input device for (VID:{vid.ToString("x4")} PID:{pid.ToString("x4")})");
-                hidDevice.Dispose();
-                hidDevice = null;
+                device.Dispose();
+                device = null;
             }
         }
     }
 
     public static void Dispose()
     {
-        if (hidDevice != null)
+        if (device != null)
         {
-            hidDevice.Dispose();
-            hidDevice = null;
+            device.Dispose();
+            device = null;
         }
     }
 
@@ -95,9 +95,9 @@ public static class Lenovo
         }
 
         // relay OEM buttons to virtual gamepad input
-        if (hidDevice != null)
+        if (device != null)
         {
-            if (hidDevice.ReadData(buffer, 0, buffer.Length, out var length))
+            if (device.ReadData(buffer, 0, buffer.Length, out var length))
             {
                 Log.WriteLine(length.ToString());
                 if (length == 32 && detector.TestDelta(buffer, (int)length))
