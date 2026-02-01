@@ -23,7 +23,7 @@ public unsafe class HidDevice : IDisposable
     
     public bool Init
     (
-        ushort vendorID, ushort productID, bool openAll, HidDeviceOpenMode mode,
+        int vendorID, int productID, bool openAll, HidDeviceOpenMode mode,
         string name = null, bool nameIsContains = false,
         string physicalLocation = null, bool physicalLocationIsContains = false,
         bool blocking = false, bool resetDevice = false,
@@ -60,12 +60,18 @@ public unsafe class HidDevice : IDisposable
             else
             {
                 if (debugLog) Log.WriteLine("HID: 'HIDIOCGRAWINFO' reached");
-                if (c.ioctl(handle, hid.HIDIOCGRAWINFO, &info) < 0) goto CONTINUE;
+                if (c.ioctl(handle, hid.HIDIOCGRAWINFO, &info) < 0)
+                {
+                    if (debugLog) Log.WriteLine("HID: 'HIDIOCGRAWINFO' FAILED");
+                    goto CONTINUE;
+                }
                 if (debugLog) Log.WriteLine($"HID: 'HIDIOCGRAWINFO' Info, VID:{info.vendor.ToString("x4")} PID:{info.product.ToString("x4")}");
             }
 
             if (info.vendor == vendorID && info.product == productID)
             {
+                if (debugLog) Log.WriteLine($"HID: matching reached VID:{vendorID.ToString("x4")} PID:{productID.ToString("x4")}");
+                
                 // get name
                 string deviceName = null;
                 NativeUtils.ZeroMemory(buffer, bufferSize);
