@@ -12,6 +12,8 @@ public static class Lenovo
     private static HidDevice hidDevice;
     private static byte[] buffer;
     private static ButtonEvent leftMenuButton, rightMenuButton;
+    private static int leftButtonIndex, rightButtonIndex;
+    private static byte leftButtonValue, rightButtonValue;
 
     public static void Configure()
     {
@@ -23,6 +25,10 @@ public static class Lenovo
             initHID = true;
             vid = 0x17ef;
             pid = 0x6182;
+            leftButtonIndex = 18;
+            rightButtonIndex = 18;
+            leftButtonValue = 0x80;
+            leftButtonValue = 0x40;
         }
         else if (Program.hardwareType == HardwareType.Lenovo_LegionGo2)
         {
@@ -30,6 +36,10 @@ public static class Lenovo
             initHID = true;
             vid = 0x17ef;
             pid = 0x61eb;
+            leftButtonIndex = 18;
+            rightButtonIndex = 18;
+            leftButtonValue = 0x80;
+            leftButtonValue = 0x40;
         }
         else if (Program.hardwareType == HardwareType.Lenovo_LegionGoS)
         {
@@ -37,6 +47,10 @@ public static class Lenovo
             initHID = true;
             vid = 0x1a86;
             pid = 0xe310;
+            leftButtonIndex = 1;
+            rightButtonIndex = 1;
+            leftButtonValue = 0x01;
+            leftButtonValue = 0x02;
         }
 
         if (initHID)
@@ -82,8 +96,8 @@ public static class Lenovo
         {
             if (hidDevice.ReadData(buffer, 0, buffer.Length, out _))
             {
-                leftMenuButton.Update(buffer[18] == 0x80);
-                rightMenuButton.Update(buffer[18] == 0x40);
+                leftMenuButton.Update(buffer[leftButtonIndex] == leftButtonValue);
+                rightMenuButton.Update(buffer[rightButtonIndex] == rightButtonValue);
                 if (leftMenuButton.down) VirtualGamepad.Write_TriggerLeftSteamMenu();
                 else if (rightMenuButton.down) VirtualGamepad.Write_TriggerRightSteamMenu();
             }
