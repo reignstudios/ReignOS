@@ -14,20 +14,33 @@ public static class Lenovo
 
     public static void Configure()
     {
-        isEnabled =
-            Program.hardwareType == HardwareType.Lenovo_LegionGo ||
-            Program.hardwareType == HardwareType.Lenovo_LegionGo2;
-        
-        if (isEnabled && Program.hardwareType == HardwareType.Lenovo_LegionGo)
+        bool initHID = false;
+        ushort vid = 0, pid = 0;
+        if (Program.hardwareType == HardwareType.Lenovo_LegionGo)
+        {
+            isEnabled = true;
+            initHID = true;
+            vid = 0x17ef;
+            pid = 0x6182;
+        }
+        else if (Program.hardwareType == HardwareType.Lenovo_LegionGo2)
+        {
+            isEnabled = true;
+            initHID = true;
+            vid = 0x17ef;
+            pid = 0x61eb;
+        }
+
+        if (initHID)
         {
             hidDevice = new HidDevice();
-            if (hidDevice.Init(0x17ef, 0x6182, true))
+            if (hidDevice.Init(vid, pid, true))
             {
                 buffer = new byte[256];
             }
             else
             {
-                Log.WriteLine("Failed to initialize Lenovo HID input device for (VID:0x17ef PID:0x6182)");
+                Log.WriteLine($"Failed to initialize Lenovo HID input device for (VID:{vid.ToString("x4")} PID:{pid.ToString("x4")})");
                 hidDevice.Dispose();
                 hidDevice = null;
             }
@@ -48,13 +61,12 @@ public static class Lenovo
         if (Program.inputMode != InputMode.ReignOS) return;
 
         // relay OEM buttons to virtual gamepad input
-        if (Program.hardwareType == HardwareType.Lenovo_LegionGo)
+        //if (Program.hardwareType == HardwareType.Lenovo_LegionGo)
         {
             if (hidDevice != null)
             {
                 if (hidDevice.ReadData(buffer, 0, buffer.Length, out nint sizeRead))
                 {
-                    //Log.WriteDataAsLine("Levono HID Data:", buffer, 0, (int)sizeRead);
                     leftMenuButton.Update(buffer[18] == 0x80);
                     rightMenuButton.Update(buffer[18] == 0x40);
                 }
@@ -63,7 +75,7 @@ public static class Lenovo
                 else if (rightMenuButton.down) VirtualGamepad.Write_TriggerRightSteamMenu();
             }
         }
-        else if (Program.hardwareType == HardwareType.Lenovo_LegionGo2)
+        /*else if (Program.hardwareType == HardwareType.Lenovo_LegionGo2)
         {
             if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_D, true)))
             {
@@ -73,6 +85,6 @@ public static class Lenovo
             {
                 VirtualGamepad.Write_TriggerRightSteamMenu();
             }
-        }
+        }*/
     }
 }
