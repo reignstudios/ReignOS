@@ -99,7 +99,7 @@ public static class Lenovo
         {
             if (device.ReadData(buffer, 0, buffer.Length, out var length, requireReadLength:33))
             {
-                //Log.WriteLine(length.ToString());
+                Log.WriteLine(length.ToString());
                 if (detector.TestDelta(buffer, (int)length))
                 {
                     Log.WriteDataAsLine("LEGION: ", buffer, 0, (int)length);
