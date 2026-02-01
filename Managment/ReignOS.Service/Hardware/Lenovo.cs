@@ -55,8 +55,8 @@ public static class Lenovo
                 if (hidDevice.ReadData(buffer, 0, buffer.Length, out nint sizeRead))
                 {
                     //Log.WriteDataAsLine("Levono HID Data:", buffer, 0, (int)sizeRead);
-                    leftMenuButton.Update(buffer[19] == 0x80);
-                    rightMenuButton.Update(buffer[19] == 0x40);
+                    leftMenuButton.Update(buffer[18] == 0x80);
+                    rightMenuButton.Update(buffer[18] == 0x40);
                 }
                 
                 if (leftMenuButton.down) VirtualGamepad.Write_TriggerLeftSteamMenu();
