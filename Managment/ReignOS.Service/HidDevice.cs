@@ -20,6 +20,7 @@ public enum HidDeviceOpenMode
 public unsafe class HidDevice : IDisposable
 {
     public List<int> handles;
+    private byte[] readBuffer;
     
     public bool Init
     (
@@ -164,21 +165,30 @@ public unsafe class HidDevice : IDisposable
         return success;
     }
     
-    public bool ReadData(byte[] data, int offset, int size, out nint sizeRead)
+    public bool ReadData(byte[] data, int offset, int size, out nint sizeRead, int requireReadLength = -1)
     {
-        foreach (int handle in handles)
+        // only allocate whats needed
+        if (readBuffer == null) readBuffer = new byte[size];
+        else if (readBuffer.Length < size) Array.Resize(ref readBuffer, size);
+        
+        // read all handles
+        sizeRead = -1;
+        bool success = false;
+        fixed (byte* readBufferPtr = readBuffer)
         {
-            fixed (byte* dataPtr = data)
+            foreach (int handle in handles)
             {
-                sizeRead = c.read(handle, dataPtr + offset, (UIntPtr)size);
-                if (sizeRead >= 1)
+                nint readBufferSizeRead = c.read(handle, readBufferPtr, (UIntPtr)size);
+                if (readBufferSizeRead >= 1 && !success)// only copy to first successful
                 {
-                    return true;// success on first read
+                    if (requireReadLength >= 1 && requireReadLength != readBufferSizeRead) continue;
+                    sizeRead = readBufferSizeRead;
+                    Array.Copy(readBuffer, 0, data, offset, readBufferSizeRead);
+                    success = true;// success on first read
                 }
             }
         }
 
-        sizeRead = -1;
-        return false;
+        return success;
     }
 }
