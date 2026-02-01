@@ -74,14 +74,13 @@ public static class Lenovo
         {
             if (hidDevice != null)
             {
-                if (hidDevice.ReadData(buffer, 0, buffer.Length, out nint sizeRead))
+                if (hidDevice.ReadData(buffer, 0, buffer.Length, out _))
                 {
                     leftMenuButton.Update(buffer[18] == 0x80);
                     rightMenuButton.Update(buffer[18] == 0x40);
+                    if (leftMenuButton.down) VirtualGamepad.Write_TriggerLeftSteamMenu();
+                    else if (rightMenuButton.down) VirtualGamepad.Write_TriggerRightSteamMenu();
                 }
-                
-                if (leftMenuButton.down) VirtualGamepad.Write_TriggerLeftSteamMenu();
-                else if (rightMenuButton.down) VirtualGamepad.Write_TriggerRightSteamMenu();
             }
         }
     }
