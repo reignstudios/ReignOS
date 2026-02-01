@@ -49,8 +49,8 @@ public static class Lenovo
             initHID = true;
             vid = 0x1a86;
             pid = 0xe310;
-            leftButtonIndex = 1;
-            rightButtonIndex = 1;
+            leftButtonIndex = 0;
+            rightButtonIndex = 0;
             leftButtonValue = 0x01;
             rightButtonValue = 0x02;
         }
@@ -99,11 +99,11 @@ public static class Lenovo
         {
             if (device.ReadData(buffer, 0, buffer.Length, out var length, requireReadLength:32))
             {
-                Log.WriteLine(length.ToString());
+                /*Log.WriteLine(length.ToString());
                 if (detector.TestDelta(buffer, (int)length))
                 {
                     Log.WriteDataAsLine("LEGION: ", buffer, 0, (int)length);
-                }
+                }*/
                 
                 leftMenuButton.Update(buffer[leftButtonIndex] == leftButtonValue);
                 rightMenuButton.Update(buffer[rightButtonIndex] == rightButtonValue);
