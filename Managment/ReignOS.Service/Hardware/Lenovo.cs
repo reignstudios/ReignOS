@@ -93,9 +93,9 @@ public static class Lenovo
         if (Program.inputMode != InputMode.ReignOS) return;
 
         // re-init after sleep
-        lock (locker)
+        if (resumeFromSleep)
         {
-            if (resumeFromSleep)
+            lock (locker)
             {
                 Thread.Sleep(3000);
                 Dispose();
