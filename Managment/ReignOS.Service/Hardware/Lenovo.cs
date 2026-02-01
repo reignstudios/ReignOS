@@ -15,6 +15,8 @@ public static class Lenovo
     private static int leftButtonIndex, rightButtonIndex;
     private static byte leftButtonValue, rightButtonValue;
 
+    private static BufferDeltaDetector detector = new BufferDeltaDetector();
+
     public static void Configure()
     {
         bool initHID = false;
@@ -95,8 +97,13 @@ public static class Lenovo
         // relay OEM buttons to virtual gamepad input
         if (hidDevice != null)
         {
-            if (hidDevice.ReadData(buffer, 0, buffer.Length, out _))
+            if (hidDevice.ReadData(buffer, 0, buffer.Length, out var length))
             {
+                if (detector.TestDelta(buffer, (int)length))
+                {
+                    Log.WriteDataAsLine("LEGION: ", buffer, 0, (int)length);
+                }
+                
                 leftMenuButton.Update(buffer[leftButtonIndex] == leftButtonValue);
                 rightMenuButton.Update(buffer[rightButtonIndex] == rightButtonValue);
                 if (leftMenuButton.down) VirtualGamepad.Write_TriggerLeftSteamMenu();
