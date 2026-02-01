@@ -14,6 +14,7 @@ public static class Lenovo
     private static ButtonEvent leftMenuButton, rightMenuButton;
     private static int leftButtonIndex, rightButtonIndex;
     private static byte leftButtonValue, rightButtonValue;
+    private static int requireReadLength;
 
     private static Thread thread;
     private static object locker = new object();
@@ -34,6 +35,7 @@ public static class Lenovo
             rightButtonIndex = 18;
             leftButtonValue = 0x80;
             rightButtonValue = 0x40;
+            requireReadLength = 64;
         }
         else if (Program.hardwareType == HardwareType.Lenovo_LegionGo2)
         {
@@ -45,6 +47,7 @@ public static class Lenovo
             rightButtonIndex = 18;
             leftButtonValue = 0x80;
             rightButtonValue = 0x40;
+            requireReadLength = 64;
         }
         else if (Program.hardwareType == HardwareType.Lenovo_LegionGoS)
         {
@@ -56,6 +59,7 @@ public static class Lenovo
             rightButtonIndex = 0;
             leftButtonValue = 0x01;
             rightButtonValue = 0x02;
+            requireReadLength = 32;
         }
 
         if (initHID)
@@ -115,7 +119,7 @@ public static class Lenovo
             {
                 lock (locker)
                 {
-                    if (device.ReadData(buffer, 0, buffer.Length, out _, requireReadLength: 32))
+                    if (device.ReadData(buffer, 0, buffer.Length, out _, requireReadLength: requireReadLength))
                     {
                         leftMenuButton.Update(buffer[leftButtonIndex] == leftButtonValue);
                         rightMenuButton.Update(buffer[rightButtonIndex] == rightButtonValue);
