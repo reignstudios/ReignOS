@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using ReignOS.Core;
 using ReignOS.Service.OS;
 
@@ -56,12 +57,20 @@ public static class Lenovo
         }
     }
 
-    public static void Update(KeyList keys)
+    public static void Update(ref DateTime time, bool resumeFromSleep)
     {
         if (Program.inputMode != InputMode.ReignOS) return;
 
+        // re-init after sleep
+        if (resumeFromSleep)
+        {
+            Thread.Sleep(3000);
+            Dispose();
+            Configure();
+            time = DateTime.Now;// reset time
+        }
+
         // relay OEM buttons to virtual gamepad input
-        //if (Program.hardwareType == HardwareType.Lenovo_LegionGo)
         {
             if (hidDevice != null)
             {
@@ -75,16 +84,5 @@ public static class Lenovo
                 else if (rightMenuButton.down) VirtualGamepad.Write_TriggerRightSteamMenu();
             }
         }
-        /*else if (Program.hardwareType == HardwareType.Lenovo_LegionGo2)
-        {
-            if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_D, true)))
-            {
-                VirtualGamepad.Write_TriggerLeftSteamMenu();
-            }
-            else if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_LEFTCTRL, true), new KeyEvent(input.KEY_LEFTALT, true)))
-            {
-                VirtualGamepad.Write_TriggerRightSteamMenu();
-            }
-        }*/
     }
 }

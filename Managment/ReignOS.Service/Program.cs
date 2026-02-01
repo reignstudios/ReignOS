@@ -344,7 +344,7 @@ internal class Program
             // update devices
             if (MSI_Claw.isEnabled) MSI_Claw.Update(ref time, resumeFromSleep, keys);
             if (RogAlly.isEnabled) RogAlly.Update(keys);
-            if (Lenovo.isEnabled) Lenovo.Update(keys);
+            if (Lenovo.isEnabled) Lenovo.Update(ref time, resumeFromSleep);
             if (Ayaneo.isEnabled) Ayaneo.Update(keys);
             if (OneXPlayer.isEnabled) OneXPlayer.Update(keys);
             if (ZotacZone.isEnabled) ZotacZone.Update(keys);
