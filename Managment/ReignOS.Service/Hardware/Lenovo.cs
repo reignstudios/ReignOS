@@ -20,7 +20,7 @@ public static class Lenovo
     public static void Configure()
     {
         bool initHID = false;
-        int vid = 0, pid = 0;
+        ushort vid = 0, pid = 0;
         if (Program.hardwareType == HardwareType.Lenovo_LegionGo)
         {
             isEnabled = true;

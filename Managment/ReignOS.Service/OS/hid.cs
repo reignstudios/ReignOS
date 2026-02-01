@@ -31,7 +31,7 @@ public unsafe static class hid
     public struct hidraw_devinfo
     {
         public __u32 bustype;
-        public __s16 vendor;
-        public __s16 product;
+        public __u16 vendor;// __s16: force to ushort
+        public __u16 product;// __s16: force to ushort
     };
 }

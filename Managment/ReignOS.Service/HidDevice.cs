@@ -23,7 +23,7 @@ public unsafe class HidDevice : IDisposable
     
     public bool Init
     (
-        int vendorID, int productID, bool openAll, HidDeviceOpenMode mode,
+        ushort vendorID, ushort productID, bool openAll, HidDeviceOpenMode mode,
         string name = null, bool nameIsContains = false,
         string physicalLocation = null, bool physicalLocationIsContains = false,
         bool blocking = false, bool resetDevice = false,
@@ -68,7 +68,7 @@ public unsafe class HidDevice : IDisposable
                 if (debugLog) Log.WriteLine($"HID: 'HIDIOCGRAWINFO' Info, VID:{info.vendor.ToString("x4")} PID:{info.product.ToString("x4")}");
             }
 
-            if (info.vendor.ToString("x4") == vendorID.ToString("x4") && info.product.ToString("x4") == productID.ToString("x4"))
+            if (info.vendor == vendorID && info.product == productID)
             {
                 if (debugLog) Log.WriteLine($"HID: matching reached VID:{vendorID.ToString("x4")} PID:{productID.ToString("x4")}");
                 
