@@ -28,7 +28,7 @@ public static class Lenovo
             leftButtonIndex = 18;
             rightButtonIndex = 18;
             leftButtonValue = 0x80;
-            leftButtonValue = 0x40;
+            rightButtonValue = 0x40;
         }
         else if (Program.hardwareType == HardwareType.Lenovo_LegionGo2)
         {
@@ -39,7 +39,7 @@ public static class Lenovo
             leftButtonIndex = 18;
             rightButtonIndex = 18;
             leftButtonValue = 0x80;
-            leftButtonValue = 0x40;
+            rightButtonValue = 0x40;
         }
         else if (Program.hardwareType == HardwareType.Lenovo_LegionGoS)
         {
@@ -50,7 +50,7 @@ public static class Lenovo
             leftButtonIndex = 1;
             rightButtonIndex = 1;
             leftButtonValue = 0x01;
-            leftButtonValue = 0x02;
+            rightButtonValue = 0x02;
         }
 
         if (initHID)
@@ -58,6 +58,7 @@ public static class Lenovo
             hidDevice = new HidDevice();
             if (hidDevice.Init(vid, pid, true))
             {
+                Log.Write("Lenovo HID Device Initialized");
                 buffer = new byte[256];
             }
             else
