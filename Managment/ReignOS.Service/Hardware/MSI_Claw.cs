@@ -42,11 +42,11 @@ public static class MSI_Claw
         if (Program.inputMode == InputMode.ReignOS)
         {
             device = new HidDevice();
-            if (!device.Init(0x0DB0, 0x1901, true) || device.handles.Count == 0)// mode 1 (normal operating mode)
+            if (!device.Init(0x0DB0, 0x1901, true))// mode 1 (normal operating mode)
             {
                 device.Dispose();
                 device = new HidDevice();
-                if (!device.Init(0x0DB0, 0x1902, true) || device.handles.Count == 0)// mode 2 (DInput mode)
+                if (!device.Init(0x0DB0, 0x1902, true))// mode 2 (DInput mode)
                 {
                     device.Dispose();
                     device = new HidDevice();

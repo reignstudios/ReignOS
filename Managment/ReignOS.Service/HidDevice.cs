@@ -30,7 +30,7 @@ public unsafe class HidDevice : IDisposable
         for (int i = 0; i != 32; ++i)
         {
             // open keyboard
-            string path = "/dev/hidraw" + i.ToString();
+            string path = $"/dev/hidraw{i}";
             byte[] uinputPath = Encoding.UTF8.GetBytes(path);
             int handle;
             int blockFlag = blocking ? 0 : c.O_NONBLOCK;
@@ -103,7 +103,7 @@ public unsafe class HidDevice : IDisposable
             CONTINUE: c.close(handle);
         }
 
-        return openAll;
+        return openAll && handles.Count > 0;
     }
     
     public void Dispose()
