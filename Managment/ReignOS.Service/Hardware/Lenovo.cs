@@ -99,7 +99,7 @@ public static class Lenovo
         {
             if (hidDevice.ReadData(buffer, 0, buffer.Length, out var length))
             {
-                if (length == 33 && detector.TestDelta(buffer, (int)length))
+                if (length == 32 && detector.TestDelta(buffer, (int)length))
                 {
                     Log.WriteDataAsLine("LEGION: ", buffer, 0, (int)length);
                 }
