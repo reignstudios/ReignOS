@@ -60,7 +60,7 @@ public static class Lenovo
             hidDevice = new HidDevice();
             if (hidDevice.Init(vid, pid, true))
             {
-                Log.WriteLine("Lenovo HID Device Initialized");
+                Log.WriteLine($"Lenovo HID Device Initialized (VID:{vid.ToString("x4")} PID:{pid.ToString("x4")} Handles:{hidDevice.handles.Count})");
                 buffer = new byte[256];
             }
             else
