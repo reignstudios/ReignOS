@@ -16,10 +16,6 @@ public static class Lenovo
     private static byte leftButtonValue, rightButtonValue;
     private static int requireReadLength;
 
-    private static Thread thread;
-    private static object locker = new object();
-    private static bool threadAlive;
-
     public static void Configure()
     {
         isEnabled = false;
@@ -69,9 +65,6 @@ public static class Lenovo
             {
                 Log.WriteLine($"Lenovo HID Device Initialized (VID:{vid.ToString("x4")} PID:{pid.ToString("x4")} Handles:{device.handles.Count})");
                 buffer = new byte[256];
-                thread = new Thread(UpdateThread);
-                thread.IsBackground = true;
-                thread.Start();
             }
             else
             {
@@ -84,7 +77,6 @@ public static class Lenovo
 
     public static void Dispose()
     {
-        threadAlive = false;
         if (device != null)
         {
             device.Dispose();
@@ -99,37 +91,24 @@ public static class Lenovo
         // re-init after sleep
         if (resumeFromSleep)
         {
-            lock (locker)
-            {
-                Thread.Sleep(3000);
-                Dispose();
-                Configure();
-                time = DateTime.Now; // reset time
-            }
+            Thread.Sleep(3000);
+            Dispose();
+            Configure();
+            time = DateTime.Now; // reset time
         }
-    }
-    
-    private static void UpdateThread()
-    {
+        
         // relay OEM buttons to virtual gamepad input
         if (device != null)
         {
-            threadAlive = true;
-            while (threadAlive)
+            if (device.ReadData(buffer, 0, buffer.Length, out _, requireReadLength: requireReadLength))
             {
-                lock (locker)
-                {
-                    if (device.ReadData(buffer, 0, buffer.Length, out _, requireReadLength: requireReadLength))
-                    {
-                        leftMenuButton.Update(buffer[leftButtonIndex] == leftButtonValue);
-                        rightMenuButton.Update(buffer[rightButtonIndex] == rightButtonValue);
-                        if (leftMenuButton.down) VirtualGamepad.Write_TriggerLeftSteamMenu();
-                        else if (rightMenuButton.down) VirtualGamepad.Write_TriggerRightSteamMenu();
-                    }
-                }
-
-                Thread.Sleep(1);
+                leftMenuButton.Update(buffer[leftButtonIndex] == leftButtonValue);
+                rightMenuButton.Update(buffer[rightButtonIndex] == rightButtonValue);
+                if (leftMenuButton.down) VirtualGamepad.Write_TriggerLeftSteamMenu();
+                else if (rightMenuButton.down) VirtualGamepad.Write_TriggerRightSteamMenu();
             }
+
+            Thread.Sleep(1);
         }
     }
 }

@@ -101,7 +101,7 @@ public unsafe class KeyboardInput : IDisposable
         const int bufferSize = 256;
         byte* buffer = stackalloc byte[bufferSize];
 
-        int NBITS(int x) => (x + 7) / 8;
+        static int NBITS(int x) => (x + 7) / 8;
         
         int ev_bitsSize = NBITS(input.EV_MAX);
         var ev_bits = stackalloc byte[ev_bitsSize];

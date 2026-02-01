@@ -350,7 +350,7 @@ internal class Program
             // TODO: invoke "steam -shutdown" if you hold Alt+F4 or Guide+B for more than 4 seconds
 
             // sleep thread
-            const int sleepMS = 1000 / 30;
+            const int sleepMS = 1;//1000 / 30;
             Thread.Sleep(sleepMS);
             wakeFromSleepTimeSec += sleepMS / 1000f;
         }
