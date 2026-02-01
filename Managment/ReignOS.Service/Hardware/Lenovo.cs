@@ -10,6 +10,7 @@ public static class Lenovo
     
     private static HidDevice hidDevice;
     private static byte[] buffer;
+    private static ButtonEvent leftMenuButton, rightMenuButton;
 
     public static void Configure()
     {
@@ -17,7 +18,7 @@ public static class Lenovo
             Program.hardwareType == HardwareType.Lenovo_LegionGo ||
             Program.hardwareType == HardwareType.Lenovo_LegionGo2;
         
-        /*if (isEnabled && Program.hardwareType == HardwareType.Lenovo_LegionGo)
+        if (isEnabled && Program.hardwareType == HardwareType.Lenovo_LegionGo)
         {
             hidDevice = new HidDevice();
             if (hidDevice.Init(0x17ef, 0x6182, true))
@@ -30,7 +31,7 @@ public static class Lenovo
                 hidDevice.Dispose();
                 hidDevice = null;
             }
-        }*/
+        }
     }
 
     public static void Dispose()
@@ -49,13 +50,18 @@ public static class Lenovo
         // relay OEM buttons to virtual gamepad input
         if (Program.hardwareType == HardwareType.Lenovo_LegionGo)
         {
-            /*if (hidDevice != null)
+            if (hidDevice != null)
             {
                 if (hidDevice.ReadData(buffer, 0, buffer.Length, out nint sizeRead))
                 {
                     //Log.WriteDataAsLine("Levono HID Data:", buffer, 0, (int)sizeRead);
+                    leftMenuButton.Update(buffer[19] == 0x80);
+                    rightMenuButton.Update(buffer[19] == 0x40);
                 }
-            }*/
+                
+                if (leftMenuButton.down) VirtualGamepad.Write_TriggerLeftSteamMenu();
+                else if (rightMenuButton.down) VirtualGamepad.Write_TriggerRightSteamMenu();
+            }
         }
         else if (Program.hardwareType == HardwareType.Lenovo_LegionGo2)
         {
