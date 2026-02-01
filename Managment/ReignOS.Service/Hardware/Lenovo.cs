@@ -97,7 +97,7 @@ public static class Lenovo
         // relay OEM buttons to virtual gamepad input
         if (device != null)
         {
-            if (device.ReadData(buffer, 0, buffer.Length, out var length, requireReadLength:33))
+            if (device.ReadData(buffer, 0, buffer.Length, out var length, requireReadLength:32))
             {
                 Log.WriteLine(length.ToString());
                 if (detector.TestDelta(buffer, (int)length))
