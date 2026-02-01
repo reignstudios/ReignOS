@@ -68,7 +68,7 @@ public unsafe class HidDevice : IDisposable
                 if (debugLog) Log.WriteLine($"HID: 'HIDIOCGRAWINFO' Info, VID:{info.vendor.ToString("x4")} PID:{info.product.ToString("x4")}");
             }
 
-            if (info.vendor == vendorID && info.product == productID)
+            if (info.vendor.ToString("x4") == vendorID.ToString("x4") && info.product.ToString("x4") == productID.ToString("x4"))
             {
                 if (debugLog) Log.WriteLine($"HID: matching reached VID:{vendorID.ToString("x4")} PID:{productID.ToString("x4")}");
                 
