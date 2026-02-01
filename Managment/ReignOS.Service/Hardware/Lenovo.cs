@@ -108,12 +108,12 @@ public static class Lenovo
     private static void UpdateThread()
     {
         // relay OEM buttons to virtual gamepad input
-        lock (locker)
+        if (device != null)
         {
-            if (device != null)
+            threadAlive = true;
+            while (threadAlive)
             {
-                threadAlive = true;
-                while (threadAlive)
+                lock (locker)
                 {
                     if (device.ReadData(buffer, 0, buffer.Length, out _, requireReadLength: 32))
                     {
@@ -122,8 +122,9 @@ public static class Lenovo
                         if (leftMenuButton.down) VirtualGamepad.Write_TriggerLeftSteamMenu();
                         else if (rightMenuButton.down) VirtualGamepad.Write_TriggerRightSteamMenu();
                     }
-                    Thread.Sleep(1);
                 }
+
+                Thread.Sleep(1);
             }
         }
     }
