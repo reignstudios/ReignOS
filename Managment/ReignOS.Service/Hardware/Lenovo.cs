@@ -60,7 +60,7 @@ public static class Lenovo
             hidDevice = new HidDevice();
             if (hidDevice.Init(vid, pid, true))
             {
-                Log.Write("Lenovo HID Device Initialized");
+                Log.WriteLine("Lenovo HID Device Initialized");
                 buffer = new byte[256];
             }
             else
@@ -99,7 +99,7 @@ public static class Lenovo
         {
             if (hidDevice.ReadData(buffer, 0, buffer.Length, out var length))
             {
-                if (detector.TestDelta(buffer, (int)length))
+                if (length == 33 && detector.TestDelta(buffer, (int)length))
                 {
                     Log.WriteDataAsLine("LEGION: ", buffer, 0, (int)length);
                 }

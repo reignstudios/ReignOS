@@ -345,15 +345,15 @@ internal class Program
 
             // update devices
             if (MSI_Claw.isEnabled) MSI_Claw.Update(ref time, resumeFromSleep, keys);
-            if (RogAlly.isEnabled) RogAlly.Update(keys);
-            if (Lenovo.isEnabled) Lenovo.Update(ref time, resumeFromSleep);
-            if (Ayaneo.isEnabled) Ayaneo.Update(keys);
-            if (OneXPlayer.isEnabled) OneXPlayer.Update(keys);
-            if (ZotacZone.isEnabled) ZotacZone.Update(keys);
-            if (AOKZOE.isEnabled) AOKZOE.Update(keys);
-            if (LokiZero.isEnabled) LokiZero.Update(keys);
-            if (Win600.isEnabled) Win600.Update(keys);
-            if (TJD.isEnabled) TJD.Update(keys);
+            else if (RogAlly.isEnabled) RogAlly.Update(keys);
+            else if (Lenovo.isEnabled) Lenovo.Update(ref time, resumeFromSleep);
+            else if (Ayaneo.isEnabled) Ayaneo.Update(keys);
+            else if (OneXPlayer.isEnabled) OneXPlayer.Update(keys);
+            else if (ZotacZone.isEnabled) ZotacZone.Update(keys);
+            else if (AOKZOE.isEnabled) AOKZOE.Update(keys);
+            else if (LokiZero.isEnabled) LokiZero.Update(keys);
+            else if (Win600.isEnabled) Win600.Update(keys);
+            else if (TJD.isEnabled) TJD.Update(keys);
 
             // update volume (send signal to bootloader)
             if (KeyEvent.Pressed(keys, input.KEY_VOLUMEDOWN, includeHeld:true)) Console.WriteLine("SET_VOLUME_DOWN");
