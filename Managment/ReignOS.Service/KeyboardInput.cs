@@ -263,4 +263,9 @@ public unsafe class KeyboardInput : IDisposable
         
         return false;
     }
+
+    public void ClearKeys()
+    {
+        keyList.Clear();
+    }
 }

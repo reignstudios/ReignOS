@@ -315,6 +315,7 @@ internal class Program
             {
                 resumeFromSleep = true;
                 wakeFromSleepTimeSec = 0;
+                keyboardInput.ClearKeys();
                 PowerProfiles.Apply(false);
                 RestoreBrightness();
             }
@@ -339,7 +340,7 @@ internal class Program
             else if (KeyEvent.Pressed(keys, input.KEY_VOLUMEUP, includeHeld:true)) Console.WriteLine("SET_VOLUME_UP");
             
             // handle rest state
-            if (!disablePowerButton && !resumeFromSleep && wakeFromSleepTimeSec >= 5 && KeyEvent.Pressed(keys, input.KEY_POWER))
+            if (!disablePowerButton && !resumeFromSleep && wakeFromSleepTimeSec >= 10 && KeyEvent.Pressed(keys, input.KEY_POWER))
             {
                 Log.WriteLine("PowerButton Pressed");
                 if (hibernatePowerButton) ProcessUtil.Run("systemctl", "hibernate", useBash: false);
