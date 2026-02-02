@@ -398,7 +398,10 @@ if [ $exit_code -eq 64 ]; then
   
   echo ""
   echo "Installing SteamOS Manager..."
+  yay -R --noconfirm hhd-git
   yay -S --noconfirm steamos-manager-hhd-git
+  systemctl --user enable hhd-user
+  sudo systemctl enable hhd@$(whoami)
 
   sleep 2
   sudo reboot -f
