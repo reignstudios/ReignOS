@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using ReignOS.Core;
-using ReignOS.Service.OS;
 
 namespace ReignOS.Service.Hardware;
 
