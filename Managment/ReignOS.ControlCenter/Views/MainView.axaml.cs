@@ -140,7 +140,7 @@ public partial class MainView : UserControl
     private List<PowerSetting> powerSettings = new();
     private List<PowerCPUSetting> powerCPUSettings = new();
     private bool? powerIntelTurboBoostEnabled;
-    private string lastPowerManagerOption;
+    private string lastPowerManagerOption = "PowerProfiles";
     
     private List<DisplaySetting> displaySettings = new();
 
