@@ -140,6 +140,7 @@ public partial class MainView : UserControl
     private List<PowerSetting> powerSettings = new();
     private List<PowerCPUSetting> powerCPUSettings = new();
     private bool? powerIntelTurboBoostEnabled;
+    private string lastPowerManagerOption;
     
     private List<DisplaySetting> displaySettings = new();
 
@@ -448,36 +449,44 @@ public partial class MainView : UserControl
                     {
                         if (parts[1] == "ReignOS") reignOSInputCheckbox.IsChecked = true;
                         else if (parts[1] == "InputPlumber") inputPlumberInputCheckbox.IsChecked = true;
-                        else if (parts[1] == "HHD") hhdInputCheckbox.IsChecked = true;
+                        else if (parts[1] == "HHD")
+                        {
+                            hhdInputCheckbox.IsChecked = true;
+
+                            // adjustor will always be used with HHD
+                            hhdAdjustorCheckbox.IsChecked = true;
+                            powerButton.IsVisible = false;
+                        }
                         else if (parts[1] == "Disable") disableInputCheckbox.IsChecked = true;
                     }
                     else if (parts[0] == "PowerManager")
                     {
+                        lastPowerManagerOption = parts[1];
                         if (parts[1] == "PowerProfiles")
                         {
                             powerProfilesCheckbox.IsChecked = true;
                             powerButton.IsVisible = true;
                         }
-                        else if (parts[1] == "PowerStation")
+                        /*else if (parts[1] == "PowerStation")
                         {
                             powerStationCheckbox.IsChecked = true;
                             powerButton.IsVisible = false;
-                        }
+                        }*/
                         else if (parts[1] == "DeckyTDP")
                         {
                             powerDeckyTDPCheckbox.IsChecked = true;
                             powerButton.IsVisible = false;
                         }
-                        else if (parts[1] == "Adjustor")
+                        /*else if (parts[1] == "Adjustor")
                         {
                             hhdAdjustorCheckbox.IsChecked = true;
                             powerButton.IsVisible = false;
-                        }
-                        else if (parts[1] == "SteamOSManager")
+                        }*/
+                        /*else if (parts[1] == "SteamOSManager")
                         {
                             steamOSManagerCheckbox.IsChecked = true;
                             powerButton.IsVisible = false;
-                        }
+                        }*/
                         else if (parts[1] == "Disabled")
                         {
                             powerManagementDisabledCheckbox.IsChecked = true;
@@ -644,10 +653,10 @@ public partial class MainView : UserControl
                 else writer.WriteLine("Input=ReignOS");
 
                 if (powerProfilesCheckbox.IsChecked == true) writer.WriteLine("PowerManager=PowerProfiles");
-                else if (powerStationCheckbox.IsChecked == true) writer.WriteLine("PowerManager=PowerStation");
+                //else if (powerStationCheckbox.IsChecked == true) writer.WriteLine("PowerManager=PowerStation");
                 else if (powerDeckyTDPCheckbox.IsChecked == true) writer.WriteLine("PowerManager=DeckyTDP");
                 else if (hhdAdjustorCheckbox.IsChecked == true) writer.WriteLine("PowerManager=Adjustor");
-                else if (steamOSManagerCheckbox.IsChecked == true) writer.WriteLine("PowerManager=SteamOSManager");
+                //else if (steamOSManagerCheckbox.IsChecked == true) writer.WriteLine("PowerManager=SteamOSManager");
                 else if (powerManagementDisabledCheckbox.IsChecked == true) writer.WriteLine("PowerManager=Disabled");
 
                 if (rgbHueSyncCheckbox.IsChecked == true) writer.WriteLine("RGBManager=HueSync");
@@ -1572,10 +1581,10 @@ public partial class MainView : UserControl
         // apply settings
         SaveSettings();
         if (powerProfilesCheckbox.IsChecked == true) App.exitCode = 60;
-        else if (powerStationCheckbox.IsChecked == true) App.exitCode = 61;
+        //else if (powerStationCheckbox.IsChecked == true) App.exitCode = 61;
         else if (powerDeckyTDPCheckbox.IsChecked == true) App.exitCode = 62;
-        else if (hhdAdjustorCheckbox.IsChecked == true) App.exitCode = 63;
-        else if (steamOSManagerCheckbox.IsChecked == true) App.exitCode = 64;
+        //else if (hhdAdjustorCheckbox.IsChecked == true) App.exitCode = 63;
+        //else if (steamOSManagerCheckbox.IsChecked == true) App.exitCode = 64;
         else if (powerManagementDisabledCheckbox.IsChecked == true) App.exitCode = 65;
         MainWindow.singleton.Close();
     }
@@ -3563,6 +3572,19 @@ public partial class MainView : UserControl
 
     private void InputControlOption_Click(object sender, RoutedEventArgs e)
     {
+        if (hhdInputCheckbox.IsChecked == true)
+        {
+            hhdAdjustorCheckbox.IsChecked = true;
+        }
+        else
+        {
+            switch (lastPowerManagerOption)
+            {
+                case "PowerProfiles": powerProfilesCheckbox.IsChecked = true; break;
+                case "DeckyTDP": powerDeckyTDPCheckbox.IsChecked = true; break;
+                default: powerManagementDisabledCheckbox.IsChecked = true; break;
+            }
+        }
         DisableMainUI(inputControlGrid);
     }
 

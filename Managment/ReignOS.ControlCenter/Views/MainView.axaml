@@ -199,9 +199,9 @@
 							<Button Name="powerManagerApplyButton" Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="PowerManagerApplyButton_Click"/>
 							<RadioButton Name="powerProfilesCheckbox" Content="Power Profiles" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="PowerManagerOption_Click"/>
 							<RadioButton Name="powerDeckyTDPCheckbox" Content="DeckyTDP" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="PowerManagerOption_Click"/>
-							<RadioButton Name="hhdAdjustorCheckbox" Content="HHD (Adjustor)" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="PowerManagerOption_Click"/>
-							<RadioButton Name="steamOSManagerCheckbox" Content="SteamOS Manager" IsVisible="False" IsEnabled="False" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="160" Click="PowerManagerOption_Click"/>
-							<RadioButton Name="powerStationCheckbox" Content="Power Station" IsVisible="False" IsEnabled="False" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="PowerManagerOption_Click"/>
+							<RadioButton Name="hhdAdjustorCheckbox" Content="HHD (Adjustor)" IsEnabled="False" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130"/>
+							<!--<RadioButton Name="steamOSManagerCheckbox" Content="SteamOS Manager" IsVisible="False" IsEnabled="False" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="160" Click="PowerManagerOption_Click"/>-->
+							<!--<RadioButton Name="powerStationCheckbox" Content="Power Station" IsVisible="False" IsEnabled="False" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="PowerManagerOption_Click"/>-->
 							<RadioButton Name="powerManagementDisabledCheckbox" Content="Disable" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="PowerManagerOption_Click"/>
 						</Grid>
 					</Grid>

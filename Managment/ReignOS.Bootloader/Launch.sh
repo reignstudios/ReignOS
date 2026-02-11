@@ -232,6 +232,33 @@ if [ $exit_code -eq 51 ]; then
 fi
 
 if [ $exit_code -eq 52 ]; then
+  # remove other TDP managers (HHD will use built-in Adjustor)
+  echo ""
+  echo "Uninstalling HHD Adjustor..."
+  yay -R --noconfirm adjustor
+
+  echo ""
+  echo "Uninstalling PowerProfiles..."
+  sudo systemctl stop power-profiles-daemon
+  sudo systemctl disable power-profiles-daemon
+  sudo pacman -R --noconfirm power-profiles-daemon
+
+  echo ""
+  echo "Uninstalling PowerStation..."
+  sudo systemctl stop powerstation
+  sudo systemctl disable powerstation
+  yay -R --noconfirm powerstation-bin
+  
+  echo ""
+  echo "Uninstalling DeckyTDP..."
+  sudo rm -rf /home/gamer/homebrew/plugins/SimpleDeckyTDP
+  sudo systemctl restart plugin_loader.service
+
+  echo ""
+  echo "Uninstalling HHD SteamOS Manager..."
+  yay -R --noconfirm steamos-manager-hhd-git
+
+  # remove other Input managers
   echo ""
   echo "Uninstalling InputPlumber..."
   sudo systemctl stop inputplumber inputplumber-suspend
@@ -343,36 +370,36 @@ if [ $exit_code -eq 62 ]; then
   exit 0
 fi
 
-if [ $exit_code -eq 63 ]; then
-  echo ""
-  echo "Uninstalling PowerProfiles..."
-  sudo systemctl stop power-profiles-daemon
-  sudo systemctl disable power-profiles-daemon
-  sudo pacman -R --noconfirm power-profiles-daemon
-
-  echo ""
-  echo "Uninstalling PowerStation..."
-  sudo systemctl stop powerstation
-  sudo systemctl disable powerstation
-  yay -R --noconfirm powerstation-bin
-  
-  echo ""
-  echo "Uninstalling DeckyTDP..."
-  sudo rm -rf /home/gamer/homebrew/plugins/SimpleDeckyTDP
-  sudo systemctl restart plugin_loader.service
-
-  echo ""
-  echo "Uninstalling HHD SteamOS Manager..."
-  yay -R --noconfirm steamos-manager-hhd-git
-  
-  echo ""
-  echo "Installing HHD Adjustor..."
-  yay -S --noconfirm adjustor
-
-  sleep 2
-  sudo reboot -f
-  exit 0
-fi
+#if [ $exit_code -eq 63 ]; then #NOTE: this is now part of HHD directly
+#  echo ""
+#  echo "Uninstalling PowerProfiles..."
+#  sudo systemctl stop power-profiles-daemon
+#  sudo systemctl disable power-profiles-daemon
+#  sudo pacman -R --noconfirm power-profiles-daemon
+#
+#  echo ""
+#  echo "Uninstalling PowerStation..."
+#  sudo systemctl stop powerstation
+#  sudo systemctl disable powerstation
+#  yay -R --noconfirm powerstation-bin
+#  
+#  echo ""
+#  echo "Uninstalling DeckyTDP..."
+#  sudo rm -rf /home/gamer/homebrew/plugins/SimpleDeckyTDP
+#  sudo systemctl restart plugin_loader.service
+#
+#  echo ""
+#  echo "Uninstalling HHD SteamOS Manager..."
+#  yay -R --noconfirm steamos-manager-hhd-git
+#  
+#  echo ""
+#  echo "Installing HHD Adjustor..."
+#  yay -S --noconfirm adjustor
+#
+#  sleep 2
+#  sudo reboot -f
+#  exit 0
+#fi
 
 if [ $exit_code -eq 64 ]; then
   echo ""

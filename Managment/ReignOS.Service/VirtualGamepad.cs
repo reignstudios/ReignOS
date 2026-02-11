@@ -12,7 +12,6 @@ public unsafe static class VirtualGamepad
     private static int handle;
     private static bool UI_DEV_created;
     private static input.input_event e;
-    private static object locker = new object();
 
     public static void Init()
     {
@@ -93,46 +92,40 @@ public unsafe static class VirtualGamepad
 
     public static void Write_TriggerLeftSteamMenu()
     {
-        lock (locker)
-        {
-            // press
-            StartWrites();
-            WriteButton(input.BTN_MODE, true);
-            EndWrites();
+        // press
+        StartWrites();
+        WriteButton(input.BTN_MODE, true);
+        EndWrites();
 
-            // release
-            Thread.Sleep(100);
-            StartWrites();
-            WriteButton(input.BTN_MODE, false);
-            EndWrites();
-        }
+        // release
+        Thread.Sleep(100);
+        StartWrites();
+        WriteButton(input.BTN_MODE, false);
+        EndWrites();
     }
 
     public static void Write_TriggerRightSteamMenu()
     {
-        lock (locker)
-        {
-            // hold guide
-            StartWrites();
-            WriteButton(input.BTN_MODE, true);
-            EndWrites();
+        // hold guide
+        StartWrites();
+        WriteButton(input.BTN_MODE, true);
+        EndWrites();
 
-            // tap A
-            Thread.Sleep(100);
-            StartWrites();
-            WriteButton(input.BTN_A, true);
-            EndWrites();
+        // tap A
+        Thread.Sleep(100);
+        StartWrites();
+        WriteButton(input.BTN_A, true);
+        EndWrites();
 
-            Thread.Sleep(100);
-            StartWrites();
-            WriteButton(input.BTN_A, false);
-            EndWrites();
+        Thread.Sleep(100);
+        StartWrites();
+        WriteButton(input.BTN_A, false);
+        EndWrites();
 
-            // release guide
-            StartWrites();
-            WriteButton(input.BTN_MODE, false);
-            EndWrites();
-        }
+        // release guide
+        StartWrites();
+        WriteButton(input.BTN_MODE, false);
+        EndWrites();
     }
 }
 
