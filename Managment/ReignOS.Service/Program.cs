@@ -326,7 +326,7 @@ internal class Program
             }
 
             // update keyboard
-            keyboardInput.ReadNextKeys(out var keys, 1000);// wait 1 sec to build input
+            keyboardInput.ReadNextKeys(out var keys, 256);// wait 256ms sec to build input
 
             // update devices
             if (MSI_Claw.isEnabled) MSI_Claw.Update(ref time, resumeFromSleep, keys);
