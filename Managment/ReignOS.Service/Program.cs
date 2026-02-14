@@ -44,6 +44,8 @@ enum HardwareType
     OneXPlayer_Gen2,
 
     // GPD
+    GPD_Win3,
+    GPD_Win4,
     GPD_Win5,
 
     // Zotac
@@ -135,6 +137,8 @@ internal class Program
 			else if (vendorName == "AYANEO" && productName == "KUN") hardwareType = HardwareType.AyaneoKun;
 			else if (productName.StartsWith("ONE XPLAYER")) hardwareType = HardwareType.OneXPlayer_Gen1;
             else if (productName.StartsWith("ONEXPLAYER")) hardwareType = HardwareType.OneXPlayer_Gen2;
+            else if (vendorName == "GPD" && productName == "G1618-03") hardwareType = HardwareType.GPD_Win3;
+            else if (vendorName == "GPD" && productName == "G1618-04") hardwareType = HardwareType.GPD_Win4;
             else if (vendorName == "GPD" && productName == "G1618-05") hardwareType = HardwareType.GPD_Win5;
             else if (productName.StartsWith("ZOTAC GAMING ZONE")) hardwareType = HardwareType.ZotacZone;
             else if (productName.StartsWith("Loki Zero")) hardwareType = HardwareType.LokiZero;
