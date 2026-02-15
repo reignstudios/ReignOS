@@ -1,5 +1,5 @@
 namespace ReignOS.Service;
-using ReignOS.Service.OS;
+using ReignOS.Core.OS;
 using ReignOS.Core;
 
 using System;

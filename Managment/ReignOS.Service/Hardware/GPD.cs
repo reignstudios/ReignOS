@@ -1,5 +1,5 @@
 ﻿using ReignOS.Core;
-using ReignOS.Service.OS;
+using ReignOS.Core.OS;
 
 namespace ReignOS.Service.Hardware;
 

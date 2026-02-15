@@ -1,4 +1,4 @@
-namespace ReignOS.Service.OS;
+namespace ReignOS.Core.OS;
 using System.Runtime.InteropServices;
 
 using __u8 = System.Byte;

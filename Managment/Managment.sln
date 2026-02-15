@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReignOS.ControlCenter", "Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReignOS.Monitor", "ReignOS.Monitor\ReignOS.Monitor.csproj", "{B2E10562-68FE-429B-B798-01FC7A681BFB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReignOS.DeviceTester", "ReignOS.DeviceTester\ReignOS.DeviceTester.csproj", "{D4CEFD78-A016-46C7-A790-024D16600116}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{B2E10562-68FE-429B-B798-01FC7A681BFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2E10562-68FE-429B-B798-01FC7A681BFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2E10562-68FE-429B-B798-01FC7A681BFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4CEFD78-A016-46C7-A790-024D16600116}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4CEFD78-A016-46C7-A790-024D16600116}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4CEFD78-A016-46C7-A790-024D16600116}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4CEFD78-A016-46C7-A790-024D16600116}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

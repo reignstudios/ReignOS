@@ -2,7 +2,7 @@
 using ReignOS.Core;
 using ReignOS.Service.Hardware;
 using ReignOS.Service.HardwarePatches;
-using ReignOS.Service.OS;
+using ReignOS.Core.OS;
 
 using System;
 using System.IO;

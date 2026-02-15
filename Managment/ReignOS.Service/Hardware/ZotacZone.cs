@@ -1,4 +1,4 @@
-﻿using ReignOS.Service.OS;
+﻿using ReignOS.Core.OS;
 using System;
 using System.Collections.Generic;
 using System.Linq;

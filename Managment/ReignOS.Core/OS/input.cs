@@ -1,4 +1,4 @@
-namespace ReignOS.Service.OS;
+namespace ReignOS.Core.OS;
 
 using System;
 using System.Runtime.InteropServices;
