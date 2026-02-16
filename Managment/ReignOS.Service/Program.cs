@@ -429,7 +429,7 @@ internal class Program
 
     private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
-        if (e != null) Log.WriteLine($"Unhandled exception: {e}");
+        if (e != null) Log.WriteLine($"Unhandled exception: {e.ExceptionObject}");
         else Log.WriteLine("Unhandled exception: Unknown");
     }
 
