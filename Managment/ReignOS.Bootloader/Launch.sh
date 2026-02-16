@@ -48,6 +48,9 @@ fi
 if [ $exit_code -eq 14 ]; then
   echo ""
   echo "ReignOS (Fix updates)..."
+  
+  # remove dotnet workloads
+  sudo rm -rf /usr/share/dotnet/sdk-manifests/
 
   # remove files and paths that can cause issues
   echo "Removing lock files..."
