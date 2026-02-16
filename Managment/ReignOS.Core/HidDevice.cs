@@ -24,7 +24,7 @@ public unsafe class HidDevice : IDisposable
     
     public bool Init
     (
-        ushort vendorID, ushort productID, bool openAll, HidDeviceOpenMode mode,
+        ushort vendorID, ushort productID, bool openAll, HidDeviceOpenMode mode, bool forceOpenAllEndpoints = false,
         string name = null, bool nameIsContains = false,
         string physicalLocation = null, bool physicalLocationIsContains = false,
         bool blocking = false, bool resetDevice = false,
@@ -48,6 +48,14 @@ public unsafe class HidDevice : IDisposable
             if (resetDevice) fixed (byte* uinputPathPtr = uinputPath) handle = c.open(uinputPathPtr, c.O_WRONLY | blockFlag);
             else fixed (byte* uinputPathPtr = uinputPath) handle = c.open(uinputPathPtr, (int)mode | blockFlag);
             if (handle < 0) continue;
+            
+            // force open all endpoints
+            if (forceOpenAllEndpoints)
+            {
+                Log.WriteLine($"Force open All found:{path}");
+                handles.Add(handle);
+                continue;
+            }
             
             // validate hardware
             hid.hidraw_devinfo info;

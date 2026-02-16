@@ -87,16 +87,16 @@ public class KeyList
     }
 }
 
-public unsafe class KeyboardInput : IDisposable
+public unsafe class InputDevice : IDisposable
 {
     private List<int> handles;
 
     private KeyList keyList = new KeyList(32);
     private int keyListWaitCount;
 
-    public void Init(string name, bool useName, ushort vendorID, ushort productID, bool openAll = false)
+    public void Init(string name, bool useName, ushort vendorID, ushort productID, bool alsoOpenGamepadInputs = false, bool forceOpenAllEndpoints = false)
     {
-        Log.WriteLine("Searching for media keyboard...");
+        Log.WriteLine("Searching for input devices...");
         
         handles = new List<int>();
         const int bufferSize = 256;
@@ -113,20 +113,30 @@ public unsafe class KeyboardInput : IDisposable
         const nint EVIOCGBIT_EV_KEY_key_bitsSize_ = -2141174495;
         
         // scan devices
+        string pathBase = "/dev/input/event";
+        string infoPath = "/sys/class/input/event";
+        PATH_BASE_CHANGE: ;
         for (int i = 0; i != 32; ++i)
         {
-            // open keyboard
-            string path = "/dev/input/event" + i.ToString();
+            // open device
+            string path = pathBase + i.ToString();
             byte[] pathEncoded = Encoding.UTF8.GetBytes(path);
             int handle;
             fixed (byte* uinputPathPtr = pathEncoded) handle = c.open(uinputPathPtr, c.O_RDONLY | c.O_NONBLOCK);
             if (handle < 0) continue;
             
+            // force open all endpoints
+            if (forceOpenAllEndpoints)
+            {
+                Log.WriteLine($"Force open All found:{path}");
+                handles.Add(handle);
+                continue;
+            }
+            
             // validate hardware
             if (useName)
             {
-                string infoPath = $"/sys/class/input/event{i}/device/name";
-                byte[] infoPathEncoded = Encoding.UTF8.GetBytes(infoPath);
+                byte[] infoPathEncoded = Encoding.UTF8.GetBytes($"{infoPath}{i}/device/name");
                 int infoHandle;
                 fixed (byte* infoPathEncodedPtr = infoPathEncoded) infoHandle = c.open(infoPathEncodedPtr, c.O_RDONLY);
                 if (infoHandle < 0) goto CONTINUE;
@@ -142,7 +152,7 @@ public unsafe class KeyboardInput : IDisposable
                 c.close(infoHandle);
                 if (deviceName == name)
                 {
-                    Log.WriteLine($"Keyboard event device found name:'{name}' path:{path}");
+                    Log.WriteLine($"Device event device found name:'{name}' path:{path}");
                     handles.Add(handle);
                     break;
                 }
@@ -151,13 +161,6 @@ public unsafe class KeyboardInput : IDisposable
             {
                 if (vendorID == 0 && productID == 0)
                 {
-                    if (openAll)
-                    {
-                        Log.WriteLine($"Open All found:{path}");
-                        handles.Add(handle);
-                        continue;
-                    }
-                    
                     int TestBit(int bit, byte* array) => array[bit / 8] & (1 << (bit % 8));
                     
                     NativeUtils.ZeroMemory(ev_bits, ev_bitsSize);
@@ -194,7 +197,7 @@ public unsafe class KeyboardInput : IDisposable
                     if (c.ioctl(handle, input.EVIOCGID, &id) < 0) goto CONTINUE;
                     if (id.vendor == vendorID && id.product == productID)
                     {
-                        Log.WriteLine($"Keyboard event device found vendorID:{vendorID} productID:{productID} path:{path}");
+                        Log.WriteLine($"Device event device found vendorID:{vendorID} productID:{productID} path:{path}");
                         handles.Add(handle);
                         break;
                     }
@@ -203,6 +206,15 @@ public unsafe class KeyboardInput : IDisposable
             
             // close
             CONTINUE: c.close(handle);
+        }
+        
+        // open gamepad analog inputs
+        if (alsoOpenGamepadInputs)
+        {
+            alsoOpenGamepadInputs = false;
+            pathBase = "/dev/input/js";
+            infoPath = "/sys/class/input/js";
+            goto PATH_BASE_CHANGE;
         }
     }
     
@@ -213,6 +225,29 @@ public unsafe class KeyboardInput : IDisposable
             foreach (var handle in handles) c.close(handle);
             handles = null;
         }
+    }
+
+    public bool ReadNextGamepadInput()
+    {
+        if (handles == null || handles.Count == 0) return false;
+        
+        foreach (var handle in handles)
+        {
+            var e = new input.input_event();
+            if (c.read(handle, &e, (UIntPtr)Marshal.SizeOf<joystick.js_event>()) >= 0)
+            {
+                if (e.type == joystick.JS_EVENT_BUTTON)
+                {
+                    
+                }
+                else if (e.type == joystick.JS_EVENT_AXIS)
+                {
+                    
+                }
+            }
+        }
+
+        return false;
     }
     
     public bool ReadNextKey(out KeyEvent key)

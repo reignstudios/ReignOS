@@ -6,17 +6,16 @@ enum Mode
 {
     Unset,
     HID,
-    KEY
+    Input
 }
 
 class Program
 {
     private static Mode mode = Mode.Unset;
-    private static bool listMode;
     private static ushort vid, pid;
     
     private static HidDevice hidDevice;
-    private static KeyboardInput keyboardInput;
+    private static InputDevice deviceInput;
     
     static void Main(string[] args)
     {
@@ -25,7 +24,7 @@ class Program
         #if DEBUG
         args = new[]
         {
-            "-mode=HID",
+            "-mode=Input",
             "-vid=0x45e",
             "-pid=0x2ea"
         };
@@ -35,8 +34,8 @@ class Program
         if (args == null || args.Length == 0)
         {
             Console.WriteLine("--- HELP ---");
-            Console.WriteLine("   Mode: -mode=<HID,KEY>");
-            Console.WriteLine("   HID Option: -list -vid=<HEX,DEC> -pid=<HEX,DEC>");
+            Console.WriteLine("   Mode: -mode=<HID,Input>");
+            Console.WriteLine("   Option: -vid=<HEX,DEC> -pid=<HEX,DEC> (blank opens everything)");
             return;
         }
 
@@ -46,11 +45,7 @@ class Program
             {
                 var parts = arg.Split('=');
                 if (parts[1] == "HID") mode = Mode.HID;
-                else if (parts[1] == "KEY") mode = Mode.KEY;
-            }
-            else if (arg.StartsWith("-list"))
-            {
-                listMode = true;
+                else if (parts[1] == "Input") mode = Mode.Input;
             }
             else if (arg.StartsWith("-vid="))
             {
@@ -70,7 +65,7 @@ class Program
         switch (mode)
         {
             case Mode.HID: Mode_HID(); break;
-            case Mode.KEY: Mode_KEY(); break;
+            case Mode.Input: Mode_Input(); break;
             default: throw new NotImplementedException();
         }
     }
@@ -78,7 +73,7 @@ class Program
     private static void Mode_HID()
     {
         hidDevice = new HidDevice();
-        if (!hidDevice.Init(vid, pid, true, HidDeviceOpenMode.ReadOnly, debugLog:true))
+        if (!hidDevice.Init(vid, pid, true, HidDeviceOpenMode.ReadOnly, forceOpenAllEndpoints: vid != 0 && pid != 0))
         {
             Console.WriteLine("ERROR: No HID device found");
             hidDevice.Dispose();
@@ -97,21 +92,28 @@ class Program
                 }
                 Console.WriteLine();
             }
+            Thread.Sleep(1);
         }
     }
     
-    private static void Mode_KEY()
+    private static void Mode_Input()
     {
-        keyboardInput = new KeyboardInput();
-        keyboardInput.Init(null, false, 0, 0, openAll:true);
+        deviceInput = new InputDevice();
+        deviceInput.Init(null, false, vid, pid, alsoOpenGamepadInputs: true, forceOpenAllEndpoints: vid != 0 && pid != 0);
 
         while (true)
         {
-            if (keyboardInput.ReadNextKey(out var key))
+            /*if (deviceInput.ReadNextKey(out var key))
             {
-                string keyValue = key.key.ToString("X2");
-                Console.WriteLine($"KEY: 0x{keyValue}");
+                string value = key.key.ToString("X2");
+                Console.WriteLine($"KEY: 0x{value}");
+            }*/
+            
+            if (deviceInput.ReadNextGamepadInput())
+            {
+                
             }
+            
             Thread.Sleep(1);
         }
     }
