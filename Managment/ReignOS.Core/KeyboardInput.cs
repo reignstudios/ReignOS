@@ -1,4 +1,3 @@
-namespace ReignOS.Service;
 using ReignOS.Core.OS;
 using ReignOS.Core;
 using System.Text;
@@ -6,6 +5,8 @@ using System.Text;
 using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
+
+namespace ReignOS.Core;
 
 public struct KeyEvent
 {
@@ -93,7 +94,7 @@ public unsafe class KeyboardInput : IDisposable
     private KeyList keyList = new KeyList(32);
     private int keyListWaitCount;
 
-    public void Init(string name, bool useName, ushort vendorID, ushort productID)
+    public void Init(string name, bool useName, ushort vendorID, ushort productID, bool openAll = false)
     {
         Log.WriteLine("Searching for media keyboard...");
         
@@ -150,6 +151,13 @@ public unsafe class KeyboardInput : IDisposable
             {
                 if (vendorID == 0 && productID == 0)
                 {
+                    if (openAll)
+                    {
+                        Log.WriteLine($"Open All found:{path}");
+                        handles.Add(handle);
+                        continue;
+                    }
+                    
                     int TestBit(int bit, byte* array) => array[bit / 8] & (1 << (bit % 8));
                     
                     NativeUtils.ZeroMemory(ev_bits, ev_bitsSize);
@@ -212,7 +220,6 @@ public unsafe class KeyboardInput : IDisposable
         key = new KeyEvent();
         if (handles == null || handles.Count == 0) return false;
         
-        bool hasEvent = false;
         foreach (var handle in handles)
         {
             var e = new input.input_event();
@@ -223,12 +230,12 @@ public unsafe class KeyboardInput : IDisposable
                     key.key = e.code;
                     key.pressed = e.value == 1;
                     key.held = e.value == 2;
-                    hasEvent = true;
+                    return true;
                 }
             }
         }
         
-        return hasEvent;
+        return false;
     }
 
     public bool ReadNextKeys(out KeyList keys, int waitCount)

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace ReignOS.Service;
+namespace ReignOS.Core;
 
 // HID devices on Hub: sudo udevadm info -a -n /dev/hidraw1
 // Watch Events: sudo hid-recorder /dev/hidrawX

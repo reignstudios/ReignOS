@@ -4,11 +4,15 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\ReignOS.Core\ReignOS.Core.csproj" />
     </ItemGroup>
+
+    <Target Name="BuildNativeLibrary" AfterTargets="Publish">
+        <Exec Command="gcc -O2 -shared -fPIC -o $(PublishDir)/ReignOS.Service.Native.so $(MSBuildProjectDirectory)/../ReignOS.Service.Native/Library.c" />
+    </Target>
 
 </Project>
