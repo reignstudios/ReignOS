@@ -441,28 +441,41 @@ internal class Program
     private static void RestoreBrightness()
     {
         Log.WriteLine("Restoring brighness settings...");
-        foreach (string settingsFile in Directory.GetFiles(brightnessSettingsPath))
+        try
         {
-            // read brightness setting
-            string name = Path.GetFileNameWithoutExtension(settingsFile);
-            string brightnessValue = File.ReadAllText(settingsFile).Trim();
-            if (!ulong.TryParse(brightnessValue, out _)) continue;
-
-            // apply brightness setting
-            foreach (string dir in Directory.GetDirectories("/sys/class/backlight"))
+            if (!Directory.Exists(brightnessSettingsPath))
             {
-                string dirName = Path.GetFileName(dir);
-                if (dirName != name) continue;
-                try
+                Log.WriteLine("ERROR: Brightness settings path not found");
+                return;
+            }
+            
+            foreach (string settingsFile in Directory.GetFiles(brightnessSettingsPath))
+            {
+                // read brightness setting
+                string name = Path.GetFileNameWithoutExtension(settingsFile);
+                string brightnessValue = File.ReadAllText(settingsFile).Trim();
+                if (!ulong.TryParse(brightnessValue, out _)) continue;
+
+                // apply brightness setting
+                foreach (string dir in Directory.GetDirectories("/sys/class/backlight"))
                 {
-                    Log.WriteLine($"Restoring display brightness for: '{name}' with value {brightnessValue}");
-                    File.WriteAllText(Path.Combine(dir, "brightness"), brightnessValue);
-                }
-                catch (Exception ex)
-                {
-                    Log.WriteLine(ex);
+                    string dirName = Path.GetFileName(dir);
+                    if (dirName != name) continue;
+                    try
+                    {
+                        Log.WriteLine($"Restoring display brightness for: '{name}' with value {brightnessValue}");
+                        File.WriteAllText(Path.Combine(dir, "brightness"), brightnessValue);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.WriteLine(ex);
+                    }
                 }
             }
+        }
+        catch (Exception e)
+        {
+            Log.WriteLine(e);
         }
     }
 }
