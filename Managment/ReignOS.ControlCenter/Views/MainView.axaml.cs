@@ -480,11 +480,11 @@ public partial class MainView : UserControl
                             powerDeckyTDPCheckbox.IsChecked = true;
                             powerButton.IsVisible = false;
                         }
-                        /*else if (parts[1] == "Adjustor")
+                        else if (parts[1] == "Adjustor")
                         {
                             hhdAdjustorCheckbox.IsChecked = true;
                             powerButton.IsVisible = false;
-                        }*/
+                        }
                         /*else if (parts[1] == "SteamOSManager")
                         {
                             steamOSManagerCheckbox.IsChecked = true;
