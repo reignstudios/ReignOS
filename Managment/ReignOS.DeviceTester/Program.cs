@@ -13,7 +13,7 @@ class Program
 {
     private static Mode mode = Mode.Unset;
     private static bool listMode;
-    private static int vid, pid;
+    private static ushort vid, pid;
     
     private static HidDevice hidDevice;
     private static KeyboardInput keyboardInput;
@@ -25,7 +25,9 @@ class Program
         #if DEBUG
         args = new[]
         {
-            "-mode=KEY"
+            "-mode=HID",
+            "-vid=0x45e",
+            "-pid=0x2ea"
         };
         #endif
         
@@ -53,14 +55,14 @@ class Program
             else if (arg.StartsWith("-vid="))
             {
                 var parts = arg.Split('=');
-                if (int.TryParse(parts[1], out int value)) vid = value;
-                else vid = Convert.ToInt32(parts[1], 16);
+                if (ushort.TryParse(parts[1], out ushort value)) vid = value;
+                else vid = Convert.ToUInt16(parts[1], 16);
             }
             else if (arg.StartsWith("-pid="))
             {
                 var parts = arg.Split('=');
-                if (int.TryParse(parts[1], out int value)) pid = value;
-                else pid = Convert.ToInt32(parts[1], 16);
+                if (ushort.TryParse(parts[1], out ushort value)) pid = value;
+                else pid = Convert.ToUInt16(parts[1], 16);
             }
         }
         
@@ -75,7 +77,27 @@ class Program
 
     private static void Mode_HID()
     {
-        
+        hidDevice = new HidDevice();
+        if (!hidDevice.Init(vid, pid, true, HidDeviceOpenMode.ReadOnly, debugLog:true))
+        {
+            Console.WriteLine("ERROR: No HID device found");
+            hidDevice.Dispose();
+            return;
+        }
+
+        var data = new byte[1024];
+        while (true)
+        {
+            if (hidDevice.ReadData(data, 0, data.Length, out nint sizeRead))
+            {
+                for (nint i = 0; i < sizeRead; i++)
+                {
+                    string value = data[i].ToString("X2");
+                    Console.Write($"0x{value} ");
+                }
+                Console.WriteLine();
+            }
+        }
     }
     
     private static void Mode_KEY()

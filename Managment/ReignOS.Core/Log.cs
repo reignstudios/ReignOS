@@ -55,7 +55,12 @@ public static class Log
     {
         lock (lockObj)
         {
-            if (writer == null) return;
+            if (writer == null)
+            {
+                Console.Write(prefix + message);
+                return;
+            }
+            
             try
             {
                 writer.Write(prefix + message);
@@ -75,7 +80,12 @@ public static class Log
     {
         lock (lockObj)
         {
-            if (writer == null) return;
+            if (writer == null)
+            {
+                Console.WriteLine(prefix + message);
+                return;
+            }
+            
             try
             {
                 writer.WriteLine(prefix + message);
@@ -95,7 +105,21 @@ public static class Log
     {
         lock (lockObj)
         {
-            if (writer == null) return;
+            if (writer == null)
+            {
+                Console.Write(prefix + header);
+                int i = 0;
+                char c = (char)nativeText[0];
+                while (c != '\0')
+                {
+                    Console.Write(c);
+                    i++;
+                    c = (char)nativeText[i];
+                }
+                Console.WriteLine();
+                return;
+            }
+            
             try
             {
                 writer.Write(prefix + header);
@@ -117,20 +141,47 @@ public static class Log
     
     public static void WriteData(string header, byte[] data, int offset, int length)
     {
-        writer.WriteLine(header);
-        for (int i = offset; i < length; i++)
+        lock (lockObj)
         {
-            writer.WriteLine(" " + data[i].ToString("x4"));
+            if (writer == null)
+            {
+                Console.WriteLine(header);
+                for (int i = offset; i < length; i++)
+                {
+                    Console.WriteLine(" " + data[i].ToString("x4"));
+                }
+                return;
+            }
+            
+            writer.WriteLine(header);
+            for (int i = offset; i < length; i++)
+            {
+                writer.WriteLine(" " + data[i].ToString("x4"));
+            }
         }
     }
     
     public static void WriteDataAsLine(string header, byte[] data, int offset, int length)
     {
-        writer.Write(header);
-        for (int i = offset; i < length; i++)
+        lock (lockObj)
         {
-            writer.Write(data[i].ToString("x4") + " ");
+            if (writer == null)
+            {
+                Console.Write(header);
+                for (int i = offset; i < length; i++)
+                {
+                    Console.Write(data[i].ToString("x4") + " ");
+                }
+                Console.WriteLine();
+                return;
+            }
+            
+            writer.Write(header);
+            for (int i = offset; i < length; i++)
+            {
+                writer.Write(data[i].ToString("x4") + " ");
+            }
+            writer.WriteLine();
         }
-        writer.WriteLine();
     }
 }

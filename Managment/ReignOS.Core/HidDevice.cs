@@ -40,6 +40,7 @@ public unsafe class HidDevice : IDisposable
         {
             // open keyboard
             string path = $"/dev/hidraw{i}";
+            //string path = $"/dev/input/event{i}";
             if (debugLog) Log.WriteLine($"HID: Path '{path}'");
             byte[] uinputPath = Encoding.UTF8.GetBytes(path);
             int handle;
@@ -66,12 +67,12 @@ public unsafe class HidDevice : IDisposable
                     if (debugLog) Log.WriteLine("HID: 'HIDIOCGRAWINFO' FAILED");
                     goto CONTINUE;
                 }
-                if (debugLog) Log.WriteLine($"HID: 'HIDIOCGRAWINFO' Info, VID:{info.vendor.ToString("x4")} PID:{info.product.ToString("x4")}");
+                if (debugLog) Log.WriteLine($"HID: 'HIDIOCGRAWINFO' Info, VID:0x{info.vendor.ToString("X4")} PID:0x{info.product.ToString("X4")}");
             }
 
             if (info.vendor == vendorID && info.product == productID)
             {
-                if (debugLog) Log.WriteLine($"HID: matching reached VID:{vendorID.ToString("x4")} PID:{productID.ToString("x4")}");
+                if (debugLog) Log.WriteLine($"HID: matching reached VID:0x{vendorID.ToString("X4")} PID:0x{productID.ToString("X4")}");
                 
                 // get name
                 string deviceName = null;

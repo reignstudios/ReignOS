@@ -3575,6 +3575,11 @@ public partial class MainView : UserControl
         if (hhdInputCheckbox.IsChecked == true)
         {
             hhdAdjustorCheckbox.IsChecked = true;
+            
+            // disable other options
+            powerProfilesCheckbox.IsEnabled = false;
+            powerDeckyTDPCheckbox.IsEnabled = false;
+            powerManagementDisabledCheckbox.IsEnabled = false;
         }
         else
         {
@@ -3584,6 +3589,11 @@ public partial class MainView : UserControl
                 case "DeckyTDP": powerDeckyTDPCheckbox.IsChecked = true; break;
                 default: powerManagementDisabledCheckbox.IsChecked = true; break;
             }
+            
+            // enable other options
+            powerProfilesCheckbox.IsEnabled = true;
+            powerDeckyTDPCheckbox.IsEnabled = true;
+            powerManagementDisabledCheckbox.IsEnabled = true;
         }
         DisableMainUI(inputControlGrid);
     }
