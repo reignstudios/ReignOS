@@ -83,11 +83,12 @@ internal class Program
     public static bool? isRebootMode;
     private static string brightnessSettingsPath;
 
+    private static SignalHandler signalHandler;
     private static void BindSignalEvents()
     {
         Console.CancelKeyPress += ExitEvent;
-        var signalHandler = new SignalHandler(SignalCloseEvent);
-        signal(SIGINT, SignalCloseEvent);
+        signalHandler = new SignalHandler(SignalCloseEvent);
+        signal(SIGINT, signalHandler);
     }
     
     static void Main(string[] args)
