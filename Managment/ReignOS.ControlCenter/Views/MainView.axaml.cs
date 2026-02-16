@@ -452,10 +452,13 @@ public partial class MainView : UserControl
                         else if (parts[1] == "HHD")
                         {
                             hhdInputCheckbox.IsChecked = true;
-
-                            // adjustor will always be used with HHD
-                            hhdAdjustorCheckbox.IsChecked = true;
                             powerButton.IsVisible = false;
+                            hhdAdjustorCheckbox.IsChecked = true;// adjustor will always be used with HHD
+                            
+                            // disable other options
+                            powerProfilesCheckbox.IsEnabled = false;
+                            powerDeckyTDPCheckbox.IsEnabled = false;
+                            powerManagementDisabledCheckbox.IsEnabled = false;
                         }
                         else if (parts[1] == "Disable") disableInputCheckbox.IsChecked = true;
                     }
