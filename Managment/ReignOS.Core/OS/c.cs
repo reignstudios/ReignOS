@@ -10,7 +10,7 @@ using size_t = System.UIntPtr;
 
 public unsafe static class c
 {
-    public const string lib = "libc.so";
+    public const string lib = "libc";
 
     public const int O_RDONLY = 00;
     public const int O_WRONLY = 01;
