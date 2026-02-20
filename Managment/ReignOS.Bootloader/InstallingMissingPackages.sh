@@ -73,10 +73,10 @@ yay -S --noconfirm --needed proton-ge-custom-bin
 sudo pacman -S --noconfirm --needed dkms
 sudo pacman -S --noconfirm --needed fwupd
 
-sudo pacman -S --noconfirm --needed vdpauinfo
-sudo pacman -S --noconfirm --needed ffmpeg gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav
 sudo pacman -R --noconfirm gstreamer-vaapi # NOTE: "gstreamer-vaapi" is replaced by "gst-plugin-va"
-sudo pacman -S --noconfirm --needed libva libva-utils gst-plugin-va
+sudo pacman -S --noconfirm --needed vdpauinfo
+sudo pacman -S --noconfirm --needed ffmpeg gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-plugin-va gst-libav
+sudo pacman -S --noconfirm --needed libva libva-utils
 sudo pacman -S --noconfirm --needed libvdpau-va-gl mesa-vdpau
 sudo pacman -S --noconfirm --needed libdvdread libdvdnav libdvdcss libbluray
 

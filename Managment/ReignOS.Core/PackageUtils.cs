@@ -11,14 +11,18 @@ namespace ReignOS.Core
         public static bool PackageExits(string package)
         {
             string result = ProcessUtil.Run("pacman", $"-Q {package}", useBash: false);
-            return result != null && !result.StartsWith("error:");
+            bool value = result != null && !result.StartsWith("error:");
+            Log.WriteLine($"Package '{package}' Exists: {value}");
+            return value;
         }
         
         public static bool ServiceEnabled(string service, bool user, bool asAdmin)
         {
             string userArg = user ? "--user " : "";
             string result = ProcessUtil.Run("systemctl", $"{userArg}status {service}", useBash: false, asAdmin: asAdmin);
-            return result != null && result.Contains("Active: active");
+            bool value = result != null && result.Contains("Active: active");
+            Log.WriteLine($"Service '{service}' Active: {value}");
+            return value;
         }
     }
 }

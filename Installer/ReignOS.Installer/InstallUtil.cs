@@ -649,8 +649,8 @@ static class InstallUtil
         
         // codex / misc
         Run("pacman", "-S --noconfirm --needed vdpauinfo");
-        Run("pacman", "-S --noconfirm --needed ffmpeg gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav");
-        Run("pacman", "-S --noconfirm --needed libva libva-utils gst-plugin-va");// NOTE: "gstreamer-vaapi" is replaced by "gst-plugin-va"
+        Run("pacman", "-S --noconfirm --needed ffmpeg gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-plugin-va gst-libav");// NOTE: "gstreamer-vaapi" is replaced by "gst-plugin-va"
+        Run("pacman", "-S --noconfirm --needed libva libva-utils");
         Run("pacman", "-S --noconfirm --needed libvdpau-va-gl");// NOTE: "mesa-vdpau" no longer needed
         Run("pacman", "-S --noconfirm --needed libdvdread libdvdnav libdvdcss libbluray");
         UpdateProgress(54);
