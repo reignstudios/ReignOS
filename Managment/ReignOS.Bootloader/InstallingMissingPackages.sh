@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo pacman -Syyu --noconfirm
+
 # remove old packages
 # nothing yet...
 
@@ -16,6 +18,7 @@ if [ ! -d "/home/gamer/yay" ]; then
 	makepkg -si --noconfirm
 	yay -Syy --noconfirm
 fi
+yay -Syyu --noconfirm
 
 # add core pacman packages
 sudo pacman -S --noconfirm --needed linux-headers linux-tools

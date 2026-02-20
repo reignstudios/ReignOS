@@ -162,7 +162,7 @@ internal class Program
         // detect if system needs package updates
         if (PackageUpdates.CheckUpdates())
         {
-            for (int i = 0; i != 30; ++i)
+            for (int i = 0; i != 60; ++i)
             {
                 Thread.Sleep(1000);
                 Log.WriteLine("Missing packages (Waiting for network...)");
