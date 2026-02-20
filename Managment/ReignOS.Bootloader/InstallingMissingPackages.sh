@@ -75,7 +75,8 @@ sudo pacman -S --noconfirm --needed fwupd
 
 sudo pacman -S --noconfirm --needed vdpauinfo
 sudo pacman -S --noconfirm --needed ffmpeg gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav
-sudo pacman -S --noconfirm --needed libva libva-utils gstreamer-vaapi
+sudo pacman -R --noconfirm gstreamer-vaapi # NOTE: "gstreamer-vaapi" is replaced by "gst-plugin-va"
+sudo pacman -S --noconfirm --needed libva libva-utils gst-plugin-va
 sudo pacman -S --noconfirm --needed libvdpau-va-gl mesa-vdpau
 sudo pacman -S --noconfirm --needed libdvdread libdvdnav libdvdcss libbluray
 
@@ -88,5 +89,5 @@ sudo systemctl stop acpid
 sudo systemctl disable acpid
 sudo pacman -R --noconfirm acpid
 
-# enable missing audio services
+# enable audio services
 systemctl --user enable pipewire.socket pipewire.service pipewire-pulse.socket pipewire-pulse.service

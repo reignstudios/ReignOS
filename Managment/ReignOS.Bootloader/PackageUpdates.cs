@@ -128,6 +128,7 @@ static class PackageUpdates
         if (!PackageUtils.PackageExits("libva")) return true;
         if (!PackageUtils.PackageExits("libvdpau-va-gl")) return true;
         if (!PackageUtils.PackageExits("libdvdread")) return true;
+        if (!PackageUtils.PackageExits("gst-plugin-va")) return true;
 
         if (!PackageUtils.PackageExits("ayaneo-platform-dkms-git")) return true;
         if (!PackageUtils.PackageExits("ayn-platform-dkms-git")) return true;
