@@ -15,7 +15,7 @@ class Program
     private static ushort vid, pid;
     
     private static HidDevice hidDevice;
-    private static InputDevice deviceInput;
+    private static KeyboardDevice keyboardDevice;
     
     static void Main(string[] args)
     {
@@ -98,8 +98,8 @@ class Program
     
     private static void Mode_Input()
     {
-        deviceInput = new InputDevice();
-        deviceInput.Init(null, false, vid, pid, alsoOpenGamepadInputs: true, forceOpenAllEndpoints: vid != 0 && pid != 0);
+        keyboardDevice = new KeyboardDevice();
+        keyboardDevice.Init(null, false, vid, pid, alsoOpenGamepadInputs: true, forceOpenAllEndpoints: vid != 0 && pid != 0);
 
         while (true)
         {
@@ -109,7 +109,7 @@ class Program
                 Console.WriteLine($"KEY: 0x{value}");
             }*/
             
-            if (deviceInput.ReadNextGamepadInput())
+            if (keyboardDevice.ReadNextGamepadInput())
             {
                 
             }

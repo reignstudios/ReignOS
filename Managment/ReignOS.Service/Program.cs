@@ -76,7 +76,7 @@ internal class Program
     public static bool exit;
     public static HardwareType hardwareType { get; private set; } = HardwareType.Unknown;
 
-    public static InputDevice keyboardInput;
+    public static KeyboardDevice keyboardInput;
     public static InputMode inputMode = InputMode.ReignOS;
     private static bool hibernatePowerButton = false, disablePowerButton = false;
 
@@ -293,7 +293,7 @@ internal class Program
         // if no hardware has known keyboard find generic one
         if (keyboardInput == null)
         {
-            keyboardInput = new InputDevice();
+            keyboardInput = new KeyboardDevice();
             keyboardInput.Init(null, false, 0, 0);
         }
 

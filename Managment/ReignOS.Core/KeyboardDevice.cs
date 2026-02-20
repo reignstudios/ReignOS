@@ -87,7 +87,7 @@ public class KeyList
     }
 }
 
-public unsafe class InputDevice : IDisposable
+public unsafe class KeyboardDevice : IDisposable
 {
     private List<int> handles;
 
