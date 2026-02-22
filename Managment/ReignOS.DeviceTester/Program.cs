@@ -6,16 +6,14 @@ enum Mode
 {
     Unset,
     HID,
-    Input
+    Keyboard,
+    Gamepad
 }
 
 class Program
 {
     private static Mode mode = Mode.Unset;
     private static ushort vid, pid;
-    
-    private static HidDevice hidDevice;
-    private static KeyboardDevice keyboardDevice;
     
     static void Main(string[] args)
     {
@@ -24,7 +22,7 @@ class Program
         #if DEBUG
         args = new[]
         {
-            "-mode=Input",
+            "-mode=Gamepad",
             "-vid=0x45e",
             "-pid=0x2ea"
         };
@@ -34,7 +32,7 @@ class Program
         if (args == null || args.Length == 0)
         {
             Console.WriteLine("--- HELP ---");
-            Console.WriteLine("   Mode: -mode=<HID,Input>");
+            Console.WriteLine("   Mode: -mode=<HID,Keyboard,Gamepad>");
             Console.WriteLine("   Option: -vid=<HEX,DEC> -pid=<HEX,DEC> (blank opens everything)");
             return;
         }
@@ -45,7 +43,8 @@ class Program
             {
                 var parts = arg.Split('=');
                 if (parts[1] == "HID") mode = Mode.HID;
-                else if (parts[1] == "Input") mode = Mode.Input;
+                else if (parts[1] == "Keyboard") mode = Mode.Keyboard;
+                else if (parts[1] == "Gamepad") mode = Mode.Gamepad;
             }
             else if (arg.StartsWith("-vid="))
             {
@@ -65,14 +64,15 @@ class Program
         switch (mode)
         {
             case Mode.HID: Mode_HID(); break;
-            case Mode.Input: Mode_Input(); break;
+            case Mode.Keyboard: Mode_Keyboard(); break;
+            case Mode.Gamepad: Mode_Gamepad(); break;
             default: throw new NotImplementedException();
         }
     }
 
     private static void Mode_HID()
     {
-        hidDevice = new HidDevice();
+        var hidDevice = new HidDevice();
         if (!hidDevice.Init(vid, pid, true, HidDeviceOpenMode.ReadOnly, forceOpenAllEndpoints: vid != 0 && pid != 0))
         {
             Console.WriteLine("ERROR: No HID device found");
@@ -94,27 +94,57 @@ class Program
             }
             Thread.Sleep(1);
         }
+        
+        hidDevice.Dispose();
     }
     
-    private static void Mode_Input()
+    private static void Mode_Keyboard()
     {
-        keyboardDevice = new KeyboardDevice();
-        keyboardDevice.Init(null, false, vid, pid, alsoOpenGamepadInputs: true, forceOpenAllEndpoints: vid != 0 && pid != 0);
+        var keyboardDevice = new KeyboardDevice();
+        keyboardDevice.Init(null, false, vid, pid, forceOpenAllEndpoints: vid != 0 && pid != 0);
 
         while (true)
         {
-            /*if (deviceInput.ReadNextKey(out var key))
+            if (keyboardDevice.ReadNextKey(out var key))
             {
                 string value = key.key.ToString("X2");
                 Console.WriteLine($"KEY: 0x{value}");
-            }*/
-            
-            if (keyboardDevice.ReadNextGamepadInput())
-            {
-                
             }
-            
             Thread.Sleep(1);
         }
+        
+        keyboardDevice.Dispose();
+    }
+    
+    private static void Mode_Gamepad()
+    {
+        var gamepadDevice = new GamepadDevice();
+        gamepadDevice.Init(vid, pid);
+
+        while (true)
+        {
+            var gamepads = gamepadDevice.ReadNextInput();
+            if (gamepads == null) break;
+            
+            foreach (var gamepad in gamepads)
+            {
+                int i = 0;
+                foreach (var button in gamepad.buttons)
+                {
+                    if (button.down) Console.WriteLine($"Gamepad:'{gamepad.name}' Button: {i}");
+                    i++;
+                }
+                
+                i = 0;
+                foreach (var axis in gamepad.axes)
+                {
+                    if (axis.value != 0) Console.WriteLine($"Gamepad:'{gamepad.name}' Axis: {i} Value:{axis.value}");
+                    i++;
+                }
+            }
+            Thread.Sleep(1);
+        }
+        
+        gamepadDevice.Dispose();
     }
 }

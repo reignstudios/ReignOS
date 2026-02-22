@@ -94,7 +94,7 @@ public unsafe class KeyboardDevice : IDisposable
     private KeyList keyList = new KeyList(32);
     private int keyListWaitCount;
 
-    public void Init(string name, bool useName, ushort vendorID, ushort productID, bool alsoOpenGamepadInputs = false, bool forceOpenAllEndpoints = false)
+    public void Init(string name, bool useName, ushort vendorID, ushort productID, bool forceOpenAllEndpoints = false)
     {
         Log.WriteLine("Searching for input devices...");
         
@@ -113,13 +113,10 @@ public unsafe class KeyboardDevice : IDisposable
         const nint EVIOCGBIT_EV_KEY_key_bitsSize_ = -2141174495;
         
         // scan devices
-        string pathBase = "/dev/input/event";
-        string infoPath = "/sys/class/input/event";
-        PATH_BASE_CHANGE: ;
         for (int i = 0; i != 32; ++i)
         {
             // open device
-            string path = pathBase + i.ToString();
+            string path = "/dev/input/event" + i.ToString();
             byte[] pathEncoded = Encoding.UTF8.GetBytes(path);
             int handle;
             fixed (byte* uinputPathPtr = pathEncoded) handle = c.open(uinputPathPtr, c.O_RDONLY | c.O_NONBLOCK);
@@ -136,7 +133,7 @@ public unsafe class KeyboardDevice : IDisposable
             // validate hardware
             if (useName)
             {
-                byte[] infoPathEncoded = Encoding.UTF8.GetBytes($"{infoPath}{i}/device/name");
+                byte[] infoPathEncoded = Encoding.UTF8.GetBytes($"/sys/class/input/event{i}/device/name");
                 int infoHandle;
                 fixed (byte* infoPathEncodedPtr = infoPathEncoded) infoHandle = c.open(infoPathEncodedPtr, c.O_RDONLY);
                 if (infoHandle < 0) goto CONTINUE;
@@ -197,24 +194,15 @@ public unsafe class KeyboardDevice : IDisposable
                     if (c.ioctl(handle, input.EVIOCGID, &id) < 0) goto CONTINUE;
                     if (id.vendor == vendorID && id.product == productID)
                     {
-                        Log.WriteLine($"Device event device found vendorID:{vendorID} productID:{productID} path:{path}");
+                        Log.WriteLine($"Keyboard device found vendorID:{vendorID} productID:{productID} path:{path}");
                         handles.Add(handle);
-                        break;
+                        continue;
                     }
                 }
             }
             
             // close
             CONTINUE: c.close(handle);
-        }
-        
-        // open gamepad analog inputs
-        if (alsoOpenGamepadInputs)
-        {
-            alsoOpenGamepadInputs = false;
-            pathBase = "/dev/input/js";
-            infoPath = "/sys/class/input/js";
-            goto PATH_BASE_CHANGE;
         }
     }
     
@@ -225,29 +213,6 @@ public unsafe class KeyboardDevice : IDisposable
             foreach (var handle in handles) c.close(handle);
             handles = null;
         }
-    }
-
-    public bool ReadNextGamepadInput()
-    {
-        if (handles == null || handles.Count == 0) return false;
-        
-        foreach (var handle in handles)
-        {
-            var e = new input.input_event();
-            if (c.read(handle, &e, (UIntPtr)Marshal.SizeOf<joystick.js_event>()) >= 0)
-            {
-                if (e.type == joystick.JS_EVENT_BUTTON)
-                {
-                    
-                }
-                else if (e.type == joystick.JS_EVENT_AXIS)
-                {
-                    
-                }
-            }
-        }
-
-        return false;
     }
     
     public bool ReadNextKey(out KeyEvent key)
