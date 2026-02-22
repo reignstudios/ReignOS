@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ReignOS.Core;
 
-static unsafe class NativeUtils
+public static unsafe class NativeUtils
 {
     public static void ZeroMemory(void* buffer, int size)
     {
