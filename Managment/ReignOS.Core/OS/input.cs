@@ -3,6 +3,7 @@ namespace ReignOS.Core.OS;
 using System;
 using System.Runtime.InteropServices;
 
+using __u8 = System.Byte;
 using __u16 = System.UInt16;
 using __u32 = System.UInt32;
 using __s16 = System.Int16;
@@ -99,6 +100,13 @@ public unsafe static class input
     public const int ABS_CNT = (ABS_MAX+1);
 
     public const int EV_UINPUT = 0x0101;
+    public const int UI_FF_UPLOAD = 1;
+    public const int UI_FF_ERASE = 2;
+
+    public const uint UI_BEGIN_FF_UPLOAD = 3228063176;
+    public const uint UI_END_FF_UPLOAD = 1080579529;
+    public const uint UI_BEGIN_FF_ERASE = 3222033866;
+    public const uint UI_END_FF_ERASE = 1074550219;
     
     [StructLayout(LayoutKind.Sequential)]
     public struct input_id
@@ -149,5 +157,128 @@ public unsafe static class input
         public __u16 code; /* axis code */
         /* __u16 filler; */
         public input_absinfo absinfo;
+    }
+    
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ff_replay
+    {
+        public __u16 length;
+        public __u16 delay;
+    }
+    
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ff_trigger
+    {
+        public __u16 button;
+        public __u16 interval;
+    }
+    
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ff_envelope
+    {
+        public __u16 attack_length;
+        public __u16 attack_level;
+        public __u16 fade_length;
+        public __u16 fade_level;
+    }
+    
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ff_constant_effect
+    {
+        public __s16 level;
+        public ff_envelope envelope;
+    }
+    
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ff_ramp_effect
+    {
+        public __s16 start_level;
+        public __s16 end_level;
+        public ff_envelope envelope;
+    }
+    
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ff_periodic_effect
+    {
+        public __u16 waveform;
+        public __u16 period;
+        public __s16 magnitude;
+        public __s16 offset;
+        public __u16 phase;
+        public ff_envelope envelope;
+        public __u32 custom_len;
+        public __s16 *custom_data;
+    }
+    
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ff_condition_effect
+    {
+        public __u16 right_saturation;
+        public __u16 left_saturation;
+
+        public __s16 right_coeff;
+        public __s16 left_coeff;
+
+        public __u16 deadband;
+        public __s16 center;
+    }
+    
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ff_rumble_effect
+    {
+        public __u16 strong_magnitude;
+        public __u16 weak_magnitude;
+    }
+    
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ff_haptic_effect
+    {
+        public __u16 hid_usage;
+        public __u16 vendor_id;
+        public __u8  vendor_waveform_page;
+        public __u16 intensity;
+        public __u16 repeat_count;
+        public __u16 retrigger_period;
+    }
+    
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ff_effect
+    {
+        public __u16 type;
+        public __s16 id;
+        public __u16 direction;
+        public ff_trigger trigger;
+        public ff_replay replay;
+
+        [StructLayout(LayoutKind.Explicit)]
+        public struct U
+        {
+            [FieldOffset(0)] public ff_constant_effect constant;
+            [FieldOffset(0)] public ff_ramp_effect ramp;
+            [FieldOffset(0)] public ff_periodic_effect periodic;
+            [FieldOffset(0)] public ff_condition_effect conditionX; // One for each axis
+            [FieldOffset(1)] public ff_condition_effect conditionY; // One for each axis
+            [FieldOffset(0)] public ff_rumble_effect rumble;
+            [FieldOffset(0)] public ff_haptic_effect haptic;
+        }
+
+        public U u;
+    }
+    
+    [StructLayout(LayoutKind.Sequential)]
+    public struct uinput_ff_upload
+    {
+        public __u32 request_id;
+        public __s32 retval;
+        public ff_effect effect;
+        public ff_effect old;
+    }
+    
+    [StructLayout(LayoutKind.Sequential)]
+    public struct uinput_ff_erase
+    {
+        public __u32 request_id;
+        public __s32 retval;
+        public __u32 effect_id;
     }
 }

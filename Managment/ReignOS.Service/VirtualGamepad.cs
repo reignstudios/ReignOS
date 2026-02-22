@@ -150,14 +150,52 @@ public unsafe static class VirtualGamepad
         }
     }
 
-    public static void ReadForceFeedback()
+    public delegate void ReadForceFeedbackCallback(in input.input_event e);
+    public static void ReadForceFeedback(ReadForceFeedbackCallback callback)
     {
         var e = new input.input_event();
-        while (c.read(handle, &e, (UIntPtr)Marshal.SizeOf<input.input_event>()) >= 0)
+        var size = (IntPtr)Marshal.SizeOf<input.input_event>();
+        while (c.read(handle, &e, (UIntPtr)size) == size)
         {
             if (e.type == input.EV_UINPUT)
             {
-                
+                if (e.code == input.UI_FF_UPLOAD)
+                {
+                    var upload = new input.uinput_ff_upload();
+                    upload.request_id = (uint)e.value;
+                    if (c.ioctl(handle, input.UI_BEGIN_FF_UPLOAD, &upload) < 0) continue;
+                    
+                    /*input.ff_effect *effect &upload.effect;// NOTE: relevent value reference
+                    if (effect->type == input.FF_RUMBLE)
+                    {
+                        //input.ff_rumble_effect *rumble = &effect->u.rumble;
+                        //rumble->strong_magnitude;
+                        //rumble->weak_magnitude;
+                        //effect->replay.length;
+                        //effect->replay.delay;
+                    }
+                    else if (effect->type == input.FF_PERIODIC)
+                    {
+                        //effect->u.periodic.waveform;
+                        //effect->u.periodic.magnitude;
+                        //effect->u.periodic.period;
+                    }*/
+                    
+                    // tell kernel success
+                    c.ioctl(handle, input.UI_END_FF_UPLOAD, &upload);
+                    callback?.Invoke(e);
+                }
+                else if (e.code == input.UI_FF_ERASE)
+                {
+                    var erase = new input.uinput_ff_erase();
+                    erase.request_id = (uint)e.value;
+                    if (c.ioctl(handle, input.UI_BEGIN_FF_ERASE, &erase) < 0) continue;
+                    
+                    // tell kernel success
+                    erase.retval = 0;
+                    c.ioctl(handle, input.UI_END_FF_ERASE, &erase);
+                    callback?.Invoke(e);
+                }
             }
         }
     }
