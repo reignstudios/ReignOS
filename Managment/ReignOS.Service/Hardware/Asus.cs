@@ -15,8 +15,8 @@ namespace ReignOS.Service.Hardware
 
         private const int button_A = 0;
         private const int button_B = 1;
-        private const int button_X = 2;
-        private const int button_Y = 3;
+        private const int button_Y = 2;
+        private const int button_X = 3;
         private const int button_BumperLeft = 4;
         private const int button_BumperRight = 5;
         private const int button_Back = 6;
