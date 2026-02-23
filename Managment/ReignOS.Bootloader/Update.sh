@@ -94,8 +94,8 @@ if [ "$HAS_UPDATES" = "true" ]; then
 
     # just stop everything if Pacman fails to update (but allow ReignOS git to update before this)
     if [ $pacman_exit_code -ne 0 ]; then
-        echo "ERROR: ReignOS Updating Pacman failed: $pacman_exit_code 'hit Ctrl+C to stop boot' or run Fix Updates"
-        sleep 15
+        echo "ERROR: ReignOS Updating Pacman failed: $pacman_exit_code 'hit Ctrl+C to stop boot' or run Fix Updates (waiting 30 sec)"
+        sleep 30
 
         echo "Re-Installing Linux firmware..."
         sudo pacman --noconfirm -R linux-firmware
@@ -105,8 +105,8 @@ if [ "$HAS_UPDATES" = "true" ]; then
     fi
 
     if [ $yay_exit_code -ne 0 ]; then
-        echo "ERROR: ReignOS Updating Yay failed: $yay_exit_code 'hit Ctrl+C to stop boot' or run Fix Updates"
-        sleep 15
+        echo "ERROR: ReignOS Updating Yay failed: $yay_exit_code 'hit Ctrl+C to stop boot' or run Fix Updates (waiting 30 sec)"
+        sleep 30
     fi
 
     # reboot if updates ran
