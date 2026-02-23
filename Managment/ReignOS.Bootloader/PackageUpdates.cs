@@ -48,101 +48,10 @@ static class PackageUpdates
         // nothing yet...
 
         // check for missing packages
-        if (!PackageUtils.PackageExits("linux-headers")) return true;
-        if (!PackageUtils.PackageExits("cpupower")) return true;
-        if (!PackageUtils.PackageExits("jq")) return true;
-        if (!PackageUtils.PackageExits("hwinfo")) return true;
-        if (!PackageUtils.PackageExits("sysstat")) return true;
-        if (!PackageUtils.PackageExits("rsync")) return true;
-        if (!PackageUtils.PackageExits("reflector")) return true;
-
-        if (!PackageUtils.PackageExits("wayland-utils")) return true;
-        if (!PackageUtils.PackageExits("weston")) return true;
-        if (!PackageUtils.PackageExits("labwc")) return true;
-        if (!PackageUtils.PackageExits("cage")) return true;
-        if (!PackageUtils.PackageExits("gamescope")) return true;
-        if (!PackageUtils.PackageExits("wlr-randr")) return true;
-        if (!PackageUtils.PackageExits("openbox")) return true;
-        if (!PackageUtils.PackageExits("xdg-desktop-portal")) return true;
-        if (!PackageUtils.PackageExits("xdg-desktop-portal-wlr")) return true;
-        if (!PackageUtils.PackageExits("xdg-desktop-portal-kde")) return true;
-        if (!PackageUtils.PackageExits("xdg-desktop-portal-gtk")) return true;
-
-        if (!PackageUtils.PackageExits("vulkan-tools")) return true;
-        if (!PackageUtils.PackageExits("vulkan-mesa-layers")) return true;
-        if (!PackageUtils.PackageExits("lib32-vulkan-mesa-layers")) return true;
-
-        if (!PackageUtils.PackageExits("python")) return true;
-        if (!PackageUtils.PackageExits("hidapi")) return true;
-        if (!PackageUtils.PackageExits("python-hidapi")) return true;
-        if (!PackageUtils.PackageExits("libusb")) return true;
-        if (!PackageUtils.PackageExits("usbutils")) return true;
-
-        if (!PackageUtils.PackageExits("alsa-firmware")) return true;
-        if (!PackageUtils.PackageExits("alsa-ucm-conf")) return true;
-
-        if (!PackageUtils.PackageExits("bluez")) return true;
-        if (!PackageUtils.PackageExits("bluez-utils")) return true;
-
-        if (!PackageUtils.PackageExits("plasma-desktop")) return true;
-        if (!PackageUtils.PackageExits("konsole")) return true;
-        if (!PackageUtils.PackageExits("dolphin")) return true;
-        if (!PackageUtils.PackageExits("kate")) return true;
-        if (!PackageUtils.PackageExits("ark")) return true;
-        if (!PackageUtils.PackageExits("exfatprogs")) return true;
-        if (!PackageUtils.PackageExits("dosfstools")) return true;
-        if (!PackageUtils.PackageExits("partitionmanager")) return true;
-        if (!PackageUtils.PackageExits("btrfs-progs")) return true;
-        if (!PackageUtils.PackageExits("ntfs-3g")) return true;
-        
-        if (!PackageUtils.PackageExits("qt5-wayland")) return true;
-        if (!PackageUtils.PackageExits("qt6-wayland")) return true;
-        if (!PackageUtils.PackageExits("wmctrl")) return true;
-        if (!PackageUtils.PackageExits("gwenview")) return true;
-
-        if (!PackageUtils.PackageExits("wget")) return true;
-        if (!PackageUtils.PackageExits("gparted")) return true;
-        if (!PackageUtils.PackageExits("flatpak")) return true;
-        if (!PackageUtils.PackageExits("zip")) return true;
-        if (!PackageUtils.PackageExits("unzip")) return true;
-        if (!PackageUtils.PackageExits("gzip")) return true;
-        if (!PackageUtils.PackageExits("bzip2")) return true;
-        if (!PackageUtils.PackageExits("7zip")) return true;
-        if (!PackageUtils.PackageExits("xz")) return true;
-
-        if (!PackageUtils.PackageExits("openssh")) return true;
-        if (!PackageUtils.PackageExits("net-tools")) return true;
-
-        if (!PackageUtils.PackageExits("yay")) return true;
-        if (!PackageUtils.PackageExits("supergfxctl")) return true;
-        if (!PackageUtils.PackageExits("ttf-ms-fonts")) return true;
-        if (!PackageUtils.PackageExits("steamcmd")) return true;
-        if (!PackageUtils.PackageExits("proton-ge-custom-bin")) return true;
-
-        if (!PackageUtils.PackageExits("dkms")) return true;
-        if (!PackageUtils.PackageExits("fwupd")) return true;
-        
-        if (!PackageUtils.PackageExits("vdpauinfo")) return true;
-        if (!PackageUtils.PackageExits("ffmpeg")) return true;
-        if (!PackageUtils.PackageExits("libva")) return true;
-        if (!PackageUtils.PackageExits("libvdpau-va-gl")) return true;
-        if (!PackageUtils.PackageExits("libdvdread")) return true;
         if (!PackageUtils.PackageExits("gst-plugin-va")) return true;
-
-        if (!PackageUtils.PackageExits("ayaneo-platform-dkms-git")) return true;
-        if (!PackageUtils.PackageExits("ayn-platform-dkms-git")) return true;
-        if (!PackageUtils.PackageExits("ryzenadj")) return true;
-
-        if (PackageUtils.PackageExits("acpid")) return true;
         
         if (PackageUtils.PackageExits("jack2")) return true;
         if (!PackageUtils.PackageExits("pipewire-jack")) return true;
-        
-        // check for non-active services
-        if (!PackageUtils.ServiceEnabled("pipewire.socket", true, false)) return true;
-        if (!PackageUtils.ServiceEnabled("pipewire.service", true, false)) return true;
-        if (!PackageUtils.ServiceEnabled("pipewire-pulse.socket", true, false)) return true;
-        if (!PackageUtils.ServiceEnabled("pipewire-pulse.service", true, false)) return true;
 
         return false;
     }
