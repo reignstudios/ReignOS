@@ -156,13 +156,13 @@ public unsafe class GamepadDevice : IDisposable
     {
         if (gamepads == null || gamepads.Count == 0) return null;
         
-        var buttonsPressed = stackalloc bool[64];
-        var axesValues = stackalloc float[32];
+        //var buttonsPressed = stackalloc bool[64];
+        //var axesValues = stackalloc float[32];
         foreach (var gamepad in gamepads)
         {
             // clear input
-            for (int i = 0; i != gamepad.buttons.Length; ++i) buttonsPressed[i] = false;
-            for (int i = 0; i != gamepad.axes.Length; ++i) axesValues[i] = 0;
+            //for (int i = 0; i != gamepad.buttons.Length; ++i) buttonsPressed[i] = false;
+            //for (int i = 0; i != gamepad.axes.Length; ++i) axesValues[i] = 0;
             
             // gather input
             var e = new joystick.js_event();
@@ -172,11 +172,13 @@ public unsafe class GamepadDevice : IDisposable
                 {
                     if (e.type == joystick.JS_EVENT_BUTTON)
                     {
-                        buttonsPressed[e.number] = e.value != 0;
+                        //buttonsPressed[e.number] = e.value != 0;
+                        gamepad.buttons[e.number].Update(e.value != 0);
                     }
                     else if (e.type == joystick.JS_EVENT_AXIS)
                     {
-                        axesValues[e.number] = e.value / (float)short.MaxValue;
+                        //axesValues[e.number] = e.value / (float)short.MaxValue;
+                        gamepad.axes[e.number].Update(e.value / (float)short.MaxValue);
                     }
                 }
                 else
@@ -186,7 +188,7 @@ public unsafe class GamepadDevice : IDisposable
             }
             
             // update input
-            for (int i = 0; i != gamepad.buttons.Length; ++i)
+            /*for (int i = 0; i != gamepad.buttons.Length; ++i)
             {
                 gamepad.buttons[i].Update(buttonsPressed[i]);
             }
@@ -194,7 +196,7 @@ public unsafe class GamepadDevice : IDisposable
             for (int i = 0; i != gamepad.axes.Length; ++i)
             {
                 gamepad.axes[i].Update(axesValues[i]);
-            }
+            }*/
         }
         
         return gamepads;
