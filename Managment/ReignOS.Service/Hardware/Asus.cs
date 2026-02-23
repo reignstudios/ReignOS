@@ -109,26 +109,26 @@ namespace ReignOS.Service.Hardware
                         if (buttons[button_X].hasUpdate) VirtualGamepad.WriteButton(input.BTN_WEST, buttons[button_X].on);
                         if (buttons[button_Y].hasUpdate) VirtualGamepad.WriteButton(input.BTN_NORTH, buttons[button_Y].on);
                         
-                        if (buttons[button_BumperLeft].hasUpdate) VirtualGamepad.WriteButton(input.BTN_THUMBL, buttons[button_BumperLeft].on);
-                        if (buttons[button_BumperRight].hasUpdate) VirtualGamepad.WriteButton(input.BTN_THUMBR, buttons[button_BumperRight].on);
+                        if (buttons[button_BumperLeft].hasUpdate) VirtualGamepad.WriteButton(input.BTN_TL, buttons[button_BumperLeft].on);
+                        if (buttons[button_BumperRight].hasUpdate) VirtualGamepad.WriteButton(input.BTN_TR, buttons[button_BumperRight].on);
                         
-                        if (buttons[button_Back].hasUpdate) VirtualGamepad.WriteButton(input.BTN_TL, buttons[button_Back].on);
-                        if (buttons[button_Menu].hasUpdate) VirtualGamepad.WriteButton(input.BTN_TR, buttons[button_Menu].on);
+                        if (buttons[button_Back].hasUpdate) VirtualGamepad.WriteButton(input.BTN_SELECT, buttons[button_Back].on);
+                        if (buttons[button_Menu].hasUpdate) VirtualGamepad.WriteButton(input.BTN_START, buttons[button_Menu].on);
                         
                         if (buttons[button_StickLeft].hasUpdate) VirtualGamepad.WriteButton(input.BTN_THUMBL, buttons[button_StickLeft].on);
                         if (buttons[button_StickRight].hasUpdate) VirtualGamepad.WriteButton(input.BTN_THUMBR, buttons[button_StickRight].on);
                         
                         // axes
-                        if (buttons[axis_StickLeftX].hasUpdate) VirtualGamepad.WriteButton(input.ABS_X, buttons[axis_StickLeftX].on);
-                        if (buttons[axis_StickLeftY].hasUpdate) VirtualGamepad.WriteButton(input.ABS_Y, buttons[axis_StickLeftY].on);
-                        if (buttons[axis_StickRightX].hasUpdate) VirtualGamepad.WriteButton(input.ABS_RX, buttons[axis_StickRightX].on);
-                        if (buttons[axis_StickRightY].hasUpdate) VirtualGamepad.WriteButton(input.ABS_RY, buttons[axis_StickRightY].on);
+                        if (buttons[axis_StickLeftX].hasUpdate) VirtualGamepad.WriteAxis(input.ABS_X, axes[axis_StickLeftX].value);
+                        if (buttons[axis_StickLeftY].hasUpdate) VirtualGamepad.WriteAxis(input.ABS_Y, axes[axis_StickLeftY].value);
+                        if (buttons[axis_StickRightX].hasUpdate) VirtualGamepad.WriteAxis(input.ABS_RX, axes[axis_StickRightX].value);
+                        if (buttons[axis_StickRightY].hasUpdate) VirtualGamepad.WriteAxis(input.ABS_RY, axes[axis_StickRightY].value);
                         
-                        if (buttons[axis_TriggerLeft].hasUpdate) VirtualGamepad.WriteButton(input.ABS_Z, buttons[axis_TriggerLeft].on);
-                        if (buttons[axis_TriggerRight].hasUpdate) VirtualGamepad.WriteButton(input.ABS_RZ, buttons[axis_TriggerRight].on);
+                        if (buttons[axis_TriggerLeft].hasUpdate) VirtualGamepad.WriteAxis(input.ABS_Z, axes[axis_TriggerLeft].value);
+                        if (buttons[axis_TriggerRight].hasUpdate) VirtualGamepad.WriteAxis(input.ABS_RZ, axes[axis_TriggerRight].value);
                         
-                        if (buttons[axis_DPadX].hasUpdate) VirtualGamepad.WriteButton(input.ABS_HAT0X, buttons[axis_DPadX].on);
-                        if (buttons[axis_DPadY].hasUpdate) VirtualGamepad.WriteButton(input.ABS_HAT0Y, buttons[axis_DPadY].on);
+                        if (buttons[axis_DPadX].hasUpdate) VirtualGamepad.WriteAxis(input.ABS_HAT0X, axes[axis_DPadX].value);
+                        if (buttons[axis_DPadY].hasUpdate) VirtualGamepad.WriteAxis(input.ABS_HAT0Y, axes[axis_DPadY].value);
                         
                         VirtualGamepad.EndWrites();
                     }
