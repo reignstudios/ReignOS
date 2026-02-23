@@ -8,8 +8,7 @@ cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64
 
 echo "Installing Nvidia Proprietary drivers"
 set -e
-sudo pacman -S --noconfirm nvidia nvidia-utils lib32-nvidia-utils nvidia-settings nvidia-prime egl-wayland egl-gbm
-sudo pacman -S --noconfirm nvidia-lts
+sudo pacman -S --noconfirm nvidia-open nvidia-utils lib32-nvidia-utils nvidia-settings nvidia-prime egl-wayland egl-gbm
 sudo mkinitcpio -P
 sudo systemctl enable nvidia-suspend.service nvidia-hibernate.service nvidia-resume.service
 

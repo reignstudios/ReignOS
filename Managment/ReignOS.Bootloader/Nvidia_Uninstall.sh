@@ -22,7 +22,8 @@ echo "Uninstalling Nvidia Proprietary drivers"
 sudo pacman -Rdd --noconfirm nvidia-580xx nvidia-580xx-utils lib32-nvidia-580xx-utils nvidia-580xx-settings
 
 echo "Uninstalling Nvidia Proprietary drivers"
-sudo pacman -Rdd --noconfirm nvidia nvidia-utils lib32-nvidia-utils nvidia-settings nvidia-open
+sudo pacman -Rdd --noconfirm nvidia nvidia-utils lib32-nvidia-utils nvidia-settings
+sudo pacman -Rdd --noconfirm nvidia-open
 
 echo "Uninstalling Nvidia Nouveau drivers"
 sudo pacman -Rdd --noconfirm vulkan-nouveau lib32-vulkan-nouveau
