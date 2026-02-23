@@ -6,7 +6,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace ReignOS.Service;
+namespace ReignOS.Core;
 
 public unsafe static class VirtualGamepad
 {
@@ -119,20 +119,26 @@ public unsafe static class VirtualGamepad
         c.ioctl(handle, input.UI_ABS_SETUP, &abs_setup);
         
         // setup force-feedback features
-        c.ioctl(handle, input.UI_SET_EVBIT, input.EV_FF);
+        /*c.ioctl(handle, input.UI_SET_EVBIT, input.EV_FF);
         
         c.ioctl(handle, input.UI_SET_FFBIT, input.FF_RUMBLE);
         c.ioctl(handle, input.UI_SET_FFBIT, input.FF_PERIODIC);
         c.ioctl(handle, input.UI_SET_FFBIT, input.FF_SQUARE);
         c.ioctl(handle, input.UI_SET_FFBIT, input.FF_TRIANGLE);
         c.ioctl(handle, input.UI_SET_FFBIT, input.FF_SINE);
-        c.ioctl(handle, input.UI_SET_FFBIT, input.FF_GAIN);
+        c.ioctl(handle, input.UI_SET_FFBIT, input.FF_GAIN);*/
         
         // create device
         c.write(handle, &uidev, (UIntPtr)Marshal.SizeOf<input.uinput_user_dev>());
-        if (c.ioctl(handle, input.UI_DEV_CREATE) < 0)
+        int errorValue = c.ioctl(handle, input.UI_DEV_CREATE);
+        if (errorValue < 0)
         {
-            Log.WriteLine("VirtualGamepad: Error creating uinput device");
+            byte* errorPtr = c.strerror(errorValue);
+            int len = 0;
+            while (errorPtr[len] != 0) len++;
+            string error = Encoding.UTF8.GetString(errorPtr, len);
+            
+            Log.WriteLine("VirtualGamepad: Error creating uinput device: " + error);
             c.close(handle);
             handle = 0;
             return;
@@ -153,6 +159,7 @@ public unsafe static class VirtualGamepad
     public delegate void ReadForceFeedbackCallback(in input.input_event e);
     public static void ReadForceFeedback(ReadForceFeedbackCallback callback)
     {
+        if (!UI_DEV_created) return;
         var e = new input.input_event();
         var size = (IntPtr)Marshal.SizeOf<input.input_event>();
         while (c.read(handle, &e, (UIntPtr)size) == size)
@@ -202,6 +209,7 @@ public unsafe static class VirtualGamepad
     
     public static void StartWrites()
     {
+        if (!UI_DEV_created) return;
         var e = new input.input_event();
         c.gettimeofday(&e.time, null);
         VirtualGamepad.e = e;
@@ -209,6 +217,7 @@ public unsafe static class VirtualGamepad
     
     public static void WriteButton(int button, bool pressed)
     {
+        if (!UI_DEV_created) return;
         var e = VirtualGamepad.e;
         e.type = input.EV_KEY;
         e.code = (ushort)button;
@@ -218,6 +227,7 @@ public unsafe static class VirtualGamepad
     
     public static void EndWrites()
     {
+        if (!UI_DEV_created) return;
         var e = VirtualGamepad.e;
         e.type = input.EV_SYN;
         e.code = input.SYN_REPORT;

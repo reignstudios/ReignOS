@@ -47,4 +47,7 @@ public unsafe static class c
     
     [DllImport(lib)]
     public static extern ssize_t read(int __fd, void *__buf, size_t __nbytes);
+
+    [DllImport(lib)]
+    public static extern byte* strerror(int __errnum);
 }
