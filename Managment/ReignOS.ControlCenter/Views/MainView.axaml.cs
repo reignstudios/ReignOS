@@ -18,6 +18,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Platform;
 using System.Threading.Tasks;
+using Avalonia.Input;
 
 namespace ReignOS.ControlCenter.Views;
 
@@ -1194,6 +1195,29 @@ public partial class MainView : UserControl
         }
     }
 
+    protected override void OnPointerMoved(PointerEventArgs e)
+    {
+        base.OnPointerMoved(e);
+        ResetSleepTimer();
+    }
+
+    protected override void OnPointerPressed(PointerPressedEventArgs e)
+    {
+        base.OnPointerPressed(e);
+        ResetSleepTimer();
+    }
+
+    protected override void OnPointerReleased(PointerReleasedEventArgs e)
+    {
+        base.OnPointerReleased(e);
+        ResetSleepTimer();
+    }
+
+    private void ResetSleepTimer()
+    {
+        timeAwakeMS = -connectedTimerCheckTic;// reset with buffer time
+    }
+
     private delegate void MessageBoxDelegate(MessageBoxOption option);
     private MessageBoxDelegate messageBoxCallback;
     private void MessageBoxShow(string message, string optionText1, string optionText2, bool cancel, MessageBoxDelegate callback)
@@ -1305,7 +1329,7 @@ public partial class MainView : UserControl
     
     private void SleepButton_Click(object sender, RoutedEventArgs e)
     {
-        timeAwakeMS = -connectedTimerCheckTic;// reset with buffer time
+        ResetSleepTimer();
         if (hibernatePowerButton) ProcessUtil.Run("systemctl", "hibernate", wait:false, useBash:false);
         else ProcessUtil.Run("systemctl", "suspend", wait:false, useBash:false);
     }
