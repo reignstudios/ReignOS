@@ -4,7 +4,7 @@
  "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
 <policyconfig>
 
-  <vendor>ReignOS Chimera</vendor>
+  <vendor>ReignOS</vendor>
   <vendor_url>http://reign-os.com</vendor_url>
 
   <action id="org.reignos.policykit.steamos.pkexec.run-steamos-update">

@@ -102,7 +102,6 @@ class DisplaySetting
 
 enum KernelSettingsCopy
 {
-    Chimera,
     Bazzite,
     Cachy
 }
@@ -511,7 +510,6 @@ public partial class MainView : UserControl
                     else if (parts[0] == "Kernel")
                     {
                         if (parts[1] == "Arch") kernelArchCheckbox.IsChecked = true;
-                        else if (parts[1] == "Chimera") kernelChimeraCheckbox.IsChecked = true;
                         else if (parts[1] == "Bazzite") kernelBazziteCheckbox.IsChecked = true;
                         else if (parts[1] == "Cachy") kernelCachyCheckbox.IsChecked = true;
                     }
@@ -675,7 +673,6 @@ public partial class MainView : UserControl
                 if (powerBoostCheckBox.IsChecked == true) writer.WriteLine("PowerBoost=True");
 
                 if (kernelArchCheckbox.IsChecked == true) writer.WriteLine("Kernel=Arch");
-                else if (kernelChimeraCheckbox.IsChecked == true) writer.WriteLine("Kernel=Chimera");
                 else if (kernelBazziteCheckbox.IsChecked == true) writer.WriteLine("Kernel=Bazzite");
                 else if (kernelCachyCheckbox.IsChecked == true) writer.WriteLine("Kernel=Cachy");
 
@@ -1662,13 +1659,6 @@ public partial class MainView : UserControl
             loader += "\ndefault arch.conf";
             ProcessUtil.WriteAllTextAdmin("/boot/ReignOS_Kernel.txt", "Arch");
         }
-        else if (kernelChimeraCheckbox.IsChecked == true)
-        {
-            RemoveEntries(ref loader);
-            loader += "\ndefault chimera.conf";
-            ProcessUtil.WriteAllTextAdmin("/boot/ReignOS_Kernel.txt", "Chimera");
-            CopyKernelConf(KernelSettingsCopy.Chimera);
-        }
         else if (kernelBazziteCheckbox.IsChecked == true)
         {
             RemoveEntries(ref loader);
@@ -1755,7 +1745,6 @@ public partial class MainView : UserControl
                     segment = match.Groups[1].Value;
                     text = text.Replace(segment, "");
                     ProcessUtil.WriteAllTextAdmin(filename, text);
-                    CopyKernelConf(KernelSettingsCopy.Chimera);
                     CopyKernelConf(KernelSettingsCopy.Bazzite);
                     CopyKernelConf(KernelSettingsCopy.Cachy);
                 }
@@ -1839,7 +1828,6 @@ public partial class MainView : UserControl
             {
                 text = text.Replace("rootwait", $"rootwait resume={segment} resume_offset={resumeOffset}");
                 ProcessUtil.WriteAllTextAdmin(filename, text);
-                CopyKernelConf(KernelSettingsCopy.Chimera);
                 CopyKernelConf(KernelSettingsCopy.Bazzite);
                 CopyKernelConf(KernelSettingsCopy.Cachy);
             }
@@ -2588,7 +2576,6 @@ public partial class MainView : UserControl
         string archConf = kernelArchConf;
         archConf = archConf.Replace(kernelArchConf_Options, kernelArchConfigTextBox.Text);
         ProcessUtil.WriteAllTextAdmin("/boot/loader/entries/arch.conf", archConf);
-        CopyKernelConf(KernelSettingsCopy.Chimera);
         CopyKernelConf(KernelSettingsCopy.Bazzite);
         CopyKernelConf(KernelSettingsCopy.Cachy);
 
@@ -2601,15 +2588,7 @@ public partial class MainView : UserControl
         try
         {
             const string archKernelConfig = "/boot/loader/entries/arch.conf";
-            if (target == KernelSettingsCopy.Chimera)
-            {
-                const string targetKernelConfig = "/boot/loader/entries/chimera.conf";
-                string copyConf = File.ReadAllText(archKernelConfig);
-                copyConf = copyConf.Replace("linux /vmlinuz-linux", "linux vmlinuz-linux-chimeraos");
-                copyConf = copyConf.Replace("initrd /initramfs-linux.img", "initrd /initramfs-linux-chimeraos.img");
-                ProcessUtil.WriteAllTextAdmin(targetKernelConfig, copyConf);
-            }
-            else if (target == KernelSettingsCopy.Bazzite)
+            if (target == KernelSettingsCopy.Bazzite)
             {
                 const string targetKernelConfig = "/boot/loader/entries/bazzite.conf";
                 string copyConf = File.ReadAllText(archKernelConfig);

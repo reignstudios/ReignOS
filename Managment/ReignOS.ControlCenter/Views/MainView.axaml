@@ -221,9 +221,8 @@
 							<TextBlock Text="Kernel" Margin="4,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 							<Button Name="kernelApplyButton" Content="Apply" Margin="125,0" HorizontalAlignment="Left" VerticalAlignment="Center" Click="KernelApplyButton_Click"/>
 							<RadioButton Name="kernelArchCheckbox" Content="Arch" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="KernelOption_Click"/>
-							<RadioButton Name="kernelChimeraCheckbox" Content="Chimera" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="KernelOption_Click"/>
-							<RadioButton Name="kernelBazziteCheckbox" Content="Bazzite" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="KernelOption_Click"/>
-							<RadioButton Name="kernelCachyCheckbox" Content="Cachy" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="300" Click="KernelOption_Click"/>
+							<RadioButton Name="kernelBazziteCheckbox" Content="Bazzite" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="KernelOption_Click"/>
+							<RadioButton Name="kernelCachyCheckbox" Content="Cachy" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="300" Click="KernelOption_Click"/>
 							<TextBlock Text="(Takes 30-60+ min, use AC pwr)" Margin="725,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="220" Foreground="Orange"/>
 						</Grid>
 					</Grid>
