@@ -125,13 +125,13 @@ public unsafe class GamepadDevice : IDisposable
             byte count = 0;
             if (c.ioctl(gamepad.handle, joystick.JSIOCGBUTTONS, &count) >= 0)
             {
-                gamepads.Last().buttons = new GamepadButton[count];
+                gamepad.buttons = new GamepadButton[count];
             }
             
             count = 0;
             if (c.ioctl(gamepad.handle, joystick.JSIOCGAXES, &count) >= 0)
             {
-                gamepads.Last().axes = new GamepadAxis[count];
+                gamepad.axes = new GamepadAxis[count];
             }
         }
     }
