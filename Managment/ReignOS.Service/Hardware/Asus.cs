@@ -38,16 +38,16 @@ namespace ReignOS.Service.Hardware
             isEnabled = false;
             bool initGamepad = false;
             ushort vid = 0, pid = 0;
-            if (Program.hardwareType == HardwareType.RogAllyX)
+            if (Program.hardwareType == HardwareType.RogAlly)
+            {
+                isEnabled = true;
+            }
+            else if (Program.hardwareType == HardwareType.RogAllyX || Program.hardwareType == HardwareType.RogXboxAllyX)
             {
                 isEnabled = true;
                 initGamepad = true;
                 vid = 0x0b05;
                 pid = 0x1b4c;
-            }
-            else if (Program.hardwareType == HardwareType.RogAlly)
-            {
-                isEnabled = true;
             }
 
             if (initGamepad)
