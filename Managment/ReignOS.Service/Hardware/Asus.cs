@@ -77,61 +77,38 @@ namespace ReignOS.Service.Hardware
                 var gamepad = gamepadDevice.ReadNextInput().FirstOrDefault();
                 if (gamepad != null)
                 {
-                    var buttons = gamepad.buttons;
-                    bool hasButtonUpdates = false;
-                    for (int i = 0; i != buttons.Length; i++)
-                    {
-                        if (buttons[i].hasUpdate)
-                        {
-                            hasButtonUpdates = true;
-                            break;
-                        }
-                    }
+                    VirtualGamepad.StartWrites();
                     
+                    // buttons
+                    var buttons = gamepad.buttons;
+                    VirtualGamepad.WriteButton(input.BTN_SOUTH, buttons[button_A].on);
+                    VirtualGamepad.WriteButton(input.BTN_EAST, buttons[button_B].on);
+                    VirtualGamepad.WriteButton(input.BTN_WEST, buttons[button_X].on);
+                    VirtualGamepad.WriteButton(input.BTN_NORTH, buttons[button_Y].on);
+                    
+                    VirtualGamepad.WriteButton(input.BTN_TL, buttons[button_BumperLeft].on);
+                    VirtualGamepad.WriteButton(input.BTN_TR, buttons[button_BumperRight].on);
+                    
+                    VirtualGamepad.WriteButton(input.BTN_SELECT, buttons[button_Back].on);
+                    VirtualGamepad.WriteButton(input.BTN_START, buttons[button_Menu].on);
+                    
+                    VirtualGamepad.WriteButton(input.BTN_THUMBL, buttons[button_StickLeft].on);
+                    VirtualGamepad.WriteButton(input.BTN_THUMBR, buttons[button_StickRight].on);
+                    
+                    // axes
                     var axes = gamepad.axes;
-                    bool hasAxisUpdates = false;
-                    for (int i = 0; i != axes.Length; i++)
-                    {
-                        if (axes[i].hasUpdate)
-                        {
-                            hasAxisUpdates = true;
-                            break;
-                        }
-                    }
-
-                    if (hasButtonUpdates || hasAxisUpdates)
-                    {
-                        VirtualGamepad.StartWrites();
-                        
-                        // buttons
-                        if (buttons[button_A].hasUpdate) VirtualGamepad.WriteButton(input.BTN_SOUTH, buttons[button_A].on);
-                        if (buttons[button_B].hasUpdate) VirtualGamepad.WriteButton(input.BTN_EAST, buttons[button_B].on);
-                        if (buttons[button_X].hasUpdate) VirtualGamepad.WriteButton(input.BTN_WEST, buttons[button_X].on);
-                        if (buttons[button_Y].hasUpdate) VirtualGamepad.WriteButton(input.BTN_NORTH, buttons[button_Y].on);
-                        
-                        if (buttons[button_BumperLeft].hasUpdate) VirtualGamepad.WriteButton(input.BTN_TL, buttons[button_BumperLeft].on);
-                        if (buttons[button_BumperRight].hasUpdate) VirtualGamepad.WriteButton(input.BTN_TR, buttons[button_BumperRight].on);
-                        
-                        if (buttons[button_Back].hasUpdate) VirtualGamepad.WriteButton(input.BTN_SELECT, buttons[button_Back].on);
-                        if (buttons[button_Menu].hasUpdate) VirtualGamepad.WriteButton(input.BTN_START, buttons[button_Menu].on);
-                        
-                        if (buttons[button_StickLeft].hasUpdate) VirtualGamepad.WriteButton(input.BTN_THUMBL, buttons[button_StickLeft].on);
-                        if (buttons[button_StickRight].hasUpdate) VirtualGamepad.WriteButton(input.BTN_THUMBR, buttons[button_StickRight].on);
-                        
-                        // axes
-                        if (axes[axis_StickLeftX].hasUpdate) VirtualGamepad.WriteAxis(input.ABS_X, axes[axis_StickLeftX].value);
-                        if (axes[axis_StickLeftY].hasUpdate) VirtualGamepad.WriteAxis(input.ABS_Y, axes[axis_StickLeftY].value);
-                        if (axes[axis_StickRightX].hasUpdate) VirtualGamepad.WriteAxis(input.ABS_RX, axes[axis_StickRightX].value);
-                        if (axes[axis_StickRightY].hasUpdate) VirtualGamepad.WriteAxis(input.ABS_RY, axes[axis_StickRightY].value);
-                        
-                        if (axes[axis_TriggerLeft].hasUpdate) VirtualGamepad.WriteAxis(input.ABS_Z, axes[axis_TriggerLeft].value);
-                        if (axes[axis_TriggerRight].hasUpdate) VirtualGamepad.WriteAxis(input.ABS_RZ, axes[axis_TriggerRight].value);
-                        
-                        if (axes[axis_DPadX].hasUpdate) VirtualGamepad.WriteAxis(input.ABS_HAT0X, axes[axis_DPadX].value);
-                        if (axes[axis_DPadY].hasUpdate) VirtualGamepad.WriteAxis(input.ABS_HAT0Y, axes[axis_DPadY].value);
-                        
-                        VirtualGamepad.EndWrites();
-                    }
+                    VirtualGamepad.WriteAxis(input.ABS_X, axes[axis_StickLeftX].value);
+                    VirtualGamepad.WriteAxis(input.ABS_Y, axes[axis_StickLeftY].value);
+                    VirtualGamepad.WriteAxis(input.ABS_RX, axes[axis_StickRightX].value);
+                    VirtualGamepad.WriteAxis(input.ABS_RY, axes[axis_StickRightY].value);
+                    
+                    VirtualGamepad.WriteAxis(input.ABS_Z, axes[axis_TriggerLeft].value);
+                    VirtualGamepad.WriteAxis(input.ABS_RZ, axes[axis_TriggerRight].value);
+                    
+                    VirtualGamepad.WriteAxis(input.ABS_HAT0X, axes[axis_DPadX].value);
+                    VirtualGamepad.WriteAxis(input.ABS_HAT0Y, axes[axis_DPadY].value);
+                    
+                    VirtualGamepad.EndWrites();
                 }
             }
 

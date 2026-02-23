@@ -11,19 +11,16 @@ namespace ReignOS.Core;
 public struct GamepadButton
 {
     public bool on, down, up;
-    public bool hasUpdate;
 
     public void Update(bool on)
     {
         down = false;
         up = false;
-        hasUpdate = false;
         if (this.on != on)
         {
             down = on;
             up = !on;
             this.on = on;
-            hasUpdate = true;
         }
     }
 }
@@ -31,17 +28,11 @@ public struct GamepadButton
 public struct GamepadAxis
 {
     public float value;
-    public bool hasUpdate;
 
     public void Update(float value)
     {
         if (MathF.Abs(value) < 0.1f) value = 0;
-        hasUpdate = false;
-        if (this.value != value)
-        {
-            this.value = value;
-            hasUpdate = true;
-        }
+        this.value = value;
     }
 }
 
