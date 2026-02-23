@@ -119,7 +119,7 @@ namespace ReignOS.Service.Hardware
             {
                 VirtualGamepad.Write_TriggerLeftSteamMenu();
             }
-            else if (KeyEvent.Pressed(keys, input.KEY_PROG1) || (Program.hardwareType == HardwareType.RogXboxAllyX && KeyEvent.Pressed(keys, input.KEY_F15)))
+            else if (KeyEvent.Pressed(keys, input.KEY_PROG1))
             {
                 VirtualGamepad.Write_TriggerRightSteamMenu();
             }
