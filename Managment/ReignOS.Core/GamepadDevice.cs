@@ -99,6 +99,7 @@ public unsafe class GamepadDevice : IDisposable
             {
                 Log.WriteLine($"Open Gamepad found:{path}");
                 gamepads.Add(new Gamepad(handle, deviceName));
+                continue;
             }
             else
             {

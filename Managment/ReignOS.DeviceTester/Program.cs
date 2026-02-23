@@ -23,8 +23,8 @@ class Program
         args = new[]
         {
             "-mode=Gamepad",
-            "-vid=0x45e",
-            "-pid=0x2ea"
+            //"-vid=0x45e",
+            //"-pid=0x2ea"
         };
         #endif
         
