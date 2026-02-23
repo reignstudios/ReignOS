@@ -1413,6 +1413,7 @@ public partial class MainView : UserControl
         else if (boot_KDE.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --kde");
         File.WriteAllText(launchFile, text);
         SaveSettings();
+        EnableMainUI();
     }
 
     private void RotApplyButton_OnClick(object sender, RoutedEventArgs e)
