@@ -125,10 +125,12 @@ public partial class MainView : UserControl
     private const string launchFile = "/home/gamer/ReignOS_Launch.sh";
     private const string settingsFile = "/home/gamer/ReignOS_Ext/Settings.txt";
     
+    private const int connectedTimerCheckTic = 1000 * 5;
     private System.Timers.Timer connectedTimer;
     private List<string> wlanDevices = new();
     private string wlanDevice;
     private bool isConnected;
+    private float timeAwakeMS;
     
     private List<Drive> drives;
     private List<GPU> gpus;
@@ -169,7 +171,7 @@ public partial class MainView : UserControl
         SaveSystemSettings();// apply any system settings in case things get updated
         #endif
         
-        connectedTimer = new System.Timers.Timer(1000 * 5);
+        connectedTimer = new System.Timers.Timer(connectedTimerCheckTic);
         connectedTimer.Elapsed += ConnectedTimer;
         connectedTimer.AutoReset = true;
         connectedTimer.Start();
@@ -1174,6 +1176,10 @@ public partial class MainView : UserControl
                         powerManagerApplyButton.IsEnabled = isConnected;
                         rgbManagerApplyButton.IsEnabled = isConnected;
                         kernelApplyButton.IsEnabled = isConnected;
+                        
+                        // increase time awake
+                        timeAwakeMS += connectedTimerCheckTic;
+                        if (timeAwakeMS >= 1000 * 60) SleepButton_Click(null, null);
                     }
                     catch (Exception ex)
                     {
