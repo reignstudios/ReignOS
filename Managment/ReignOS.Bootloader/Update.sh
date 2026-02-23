@@ -79,7 +79,7 @@ if [ "$HAS_UPDATES" = "true" ]; then
 
     # pacman
     echo "ReignOS Updating pacman pacages..."
-    sudo pacman -Syu --noconfirm
+    sudo pacman -Syyu --noconfirm
     pacman_exit_code=$?
 
     # yay
@@ -89,7 +89,7 @@ if [ "$HAS_UPDATES" = "true" ]; then
     makepkg -cfsi --noconfirm
 
     echo "ReignOS Updating yay pacages..."
-    yay -Syu --noconfirm --ignore aw87559-firmware
+    yay -Syyu --noconfirm --ignore aw87559-firmware
     yay_exit_code=$?
 
     # just stop everything if Pacman fails to update (but allow ReignOS git to update before this)
