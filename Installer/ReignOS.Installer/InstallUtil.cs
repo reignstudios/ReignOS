@@ -501,7 +501,6 @@ static class InstallUtil
 
         fileBuilder.AppendLine();// install misc drivers
         fileBuilder.AppendLine("echo \"Installing Misc Drivers...\"");
-        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed bcm20702a1-firmware");
         fileBuilder.AppendLine("yay_retry -S --noconfirm --needed ayaneo-platform-dkms-git");
         fileBuilder.AppendLine("yay_retry -S --noconfirm --needed ayn-platform-dkms-git");
         fileBuilder.AppendLine("yay_retry -S --noconfirm --needed ryzenadj");

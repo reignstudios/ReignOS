@@ -135,6 +135,7 @@ internal class Program
         if (forceControlCenter) compositor = Compositor.None;
 
         // ensure permissions
+        ProcessUtil.Run("chmod", "+x ./FixUpdates.sh", useBash:false);
         ProcessUtil.Run("chmod", "+x ./Launch.sh", useBash:false);
         ProcessUtil.Run("chmod", "+x ./Update.sh", useBash:false);
         ProcessUtil.Run("chmod", "+x ./InstallingMissingPackages.sh", useBash:false);

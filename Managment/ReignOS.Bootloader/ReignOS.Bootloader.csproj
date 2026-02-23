@@ -31,6 +31,9 @@
     <None Update="Launch.sh">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="FixUpdates.sh">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Nvidia_Install_Proprietary_Legacy340.sh">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

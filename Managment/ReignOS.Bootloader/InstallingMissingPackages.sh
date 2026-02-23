@@ -1,12 +1,10 @@
 #!/bin/bash
 
-# remove old packages
-# nothing yet...
-
-# run updates first (avoid boot loops and don't do this)
-#cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/
-#chmod +x ./Update.sh
-#./Update.sh
+# run fix updates first (avoid boot loops)
+cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/
+chmod +x ./FixUpdates.sh
+chmod +x ./Update.sh
+./FixUpdates.sh
 
 # make sure yay installed
 if [ ! -d "/home/gamer/yay" ]; then
@@ -43,7 +41,6 @@ sudo pacman -S --noconfirm --needed pipewire pipewire-pulse pipewire-alsa pipewi
 
 sudo pacman -S --noconfirm --needed bluez bluez-utils
 sudo systemctl enable bluetooth
-yay -S --noconfirm --needed bcm20702a1-firmware
 
 sudo pacman -S --noconfirm --needed bolt
 sudo systemctl enable bolt.service

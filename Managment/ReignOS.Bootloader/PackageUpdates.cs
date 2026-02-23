@@ -83,7 +83,6 @@ static class PackageUpdates
 
         if (!PackageUtils.PackageExits("bluez")) return true;
         if (!PackageUtils.PackageExits("bluez-utils")) return true;
-        if (!PackageUtils.PackageExits("bcm20702a1-firmware")) return true;
 
         if (!PackageUtils.PackageExits("plasma-desktop")) return true;
         if (!PackageUtils.PackageExits("konsole")) return true;
