@@ -33,8 +33,8 @@ static class PackageUpdates
         //AddLaunchScript();
         //FixOSName();
         IgnorePackages();
-        ReconfigureAutoLogin();
-        AddPermissions();
+        //ReconfigureAutoLogin();
+        //AddPermissions();
 
         // check bad configs (do them all at once then reboot)
         /*bool badConfig = false;
@@ -44,16 +44,15 @@ static class PackageUpdates
         //if (CheckNonArchKernelDefault()) badConfig = true;
         if (badConfig) return true;*/
 
-        // check old packages
-        // nothing yet...
+        // read last version
+        const string versionPath = "/home/gamer/ReignOS_Version";
+        string lastVersion = VersionInfo.version;
+        if (File.Exists(versionPath)) lastVersion = File.ReadAllText(versionPath);
 
-        // check for missing packages
-        if (!PackageUtils.PackageExits("gst-plugin-va")) return true;
-        
-        if (PackageUtils.PackageExits("jack2")) return true;
-        if (!PackageUtils.PackageExits("pipewire-jack")) return true;
+        // write current version
+        File.WriteAllText(versionPath, VersionInfo.version);
 
-        return false;
+        return versionPath != VersionInfo.version;
     }
 
     private static void IgnorePackages()
@@ -79,7 +78,7 @@ static class PackageUpdates
         }
     }
 
-    private static void ReconfigureAutoLogin()
+    /*private static void ReconfigureAutoLogin()
     {
         try
         {
@@ -96,9 +95,9 @@ static class PackageUpdates
         {
             Log.WriteLine(e);
         }
-    }
+    }*/
 
-    private static void AddPermissions()
+    /*private static void AddPermissions()
     {
         //Run("usermod", "-aG wheel,audio,video,storage gamer");
         //Run("usermod", "-aG wheel,audio,video,storage,input,games,gamemode gamer");
@@ -114,7 +113,7 @@ static class PackageUpdates
         {
             Log.WriteLine(e);
         }
-    }
+    }*/
 
     /*private static void AddLaunchScript()
     {
