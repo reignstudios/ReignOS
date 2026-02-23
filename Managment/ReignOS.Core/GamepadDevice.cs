@@ -40,13 +40,16 @@ public class Gamepad
 {
     public int handle;
     public string name;
+    public ushort vid, pid;
     public GamepadButton[] buttons;
     public GamepadAxis[] axes;
     
-    public Gamepad(int handle, string name)
+    public Gamepad(int handle, string name, ushort vid, ushort pid)
     {
         this.handle = handle;
         this.name = name;
+        this.vid = vid;
+        this.pid = pid;
     }
 
     public void Dispose()
@@ -97,8 +100,12 @@ public unsafe class GamepadDevice : IDisposable
             // validate hardware
             if (vendorID == 0 && productID == 0)
             {
-                Log.WriteLine($"Open Gamepad found:{path}");
-                gamepads.Add(new Gamepad(handle, deviceName));
+                string vendorValue = File.ReadAllText($"/sys/class/input/js{i}/device/id/vendor").TrimEnd();
+                string productValue = File.ReadAllText($"/sys/class/input/js{i}/device/id/product").TrimEnd();
+                ushort vendor = Convert.ToUInt16(vendorValue, 16);
+                ushort product = Convert.ToUInt16(productValue, 16);
+                Log.WriteLine($"Gamepad device found vendorID:{vendor} productID:{product} path:{path}");
+                gamepads.Add(new Gamepad(handle, deviceName, vendor, product));
                 continue;
             }
             else
@@ -109,8 +116,8 @@ public unsafe class GamepadDevice : IDisposable
                 ushort product = Convert.ToUInt16(productValue, 16);
                 if (vendor == vendorID && product == productID)
                 {
-                    Log.WriteLine($"Gamepad device found vendorID:{vendorID} productID:{productID} path:{path}");
-                    gamepads.Add(new Gamepad(handle, deviceName));
+                    Log.WriteLine($"Gamepad device found vendorID:{vendor} productID:{product} path:{path}");
+                    gamepads.Add(new Gamepad(handle, deviceName, vendor, product));
                     continue;
                 }
             }
