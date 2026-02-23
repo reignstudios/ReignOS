@@ -315,6 +315,7 @@ public partial class MainView : UserControl
                         else if (parts[1] == "Cage") boot_Cage.IsChecked = true;
                         else if (parts[1] == "X11") boot_X11.IsChecked = true;
                         else if (parts[1] == "KDE-G") boot_KDEG.IsChecked = true;
+                        else if (parts[1] == "KDE") boot_KDE.IsChecked = true;
                     }
                     else if (parts[0] == "ScreenRotation")
                     {
@@ -591,6 +592,7 @@ public partial class MainView : UserControl
                 else if (boot_Cage.IsChecked == true) writer.WriteLine("Boot=Cage");
                 else if (boot_X11.IsChecked == true) writer.WriteLine("Boot=X11");
                 else if (boot_KDEG.IsChecked == true) writer.WriteLine("Boot=KDE-G");
+                else if (boot_KDE.IsChecked == true) writer.WriteLine("Boot=KDE");
                 else writer.WriteLine("Boot=ControlCenter");
 
                 if (rot_Default.IsChecked == true) writer.WriteLine("ScreenRotation=Default");
@@ -1401,12 +1403,14 @@ public partial class MainView : UserControl
         text = text.Replace(" --cage", "");
         text = text.Replace(" --x11", "");
         text = text.Replace(" --kde-g", "");
+        text = text.Replace(" --kde", "");
 
         if (boot_Gamescope.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --gamescope");
         else if (boot_Weston.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --weston");
         else if (boot_Cage.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --cage");
         else if (boot_X11.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --x11");
         else if (boot_KDEG.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --kde-g");
+        else if (boot_KDE.IsChecked == true) text = text.Replace("--use-controlcenter", "--use-controlcenter --kde");
         File.WriteAllText(launchFile, text);
         SaveSettings();
     }

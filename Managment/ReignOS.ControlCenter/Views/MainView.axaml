@@ -107,6 +107,7 @@
 							<RadioButton Name="boot_Cage" Content="Cage" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="DefaultBootOption_Click"/>
 							<RadioButton Name="boot_X11" Content="X11" Margin="800,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="DefaultBootOption_Click"/>
 							<RadioButton Name="boot_KDEG" Content="KDE-G" Margin="950,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="DefaultBootOption_Click"/>
+							<RadioButton Name="boot_KDE" Content="KDE" Margin="1100,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="DefaultBootOption_Click"/>
 						</Grid>
 					</Grid>
 				
