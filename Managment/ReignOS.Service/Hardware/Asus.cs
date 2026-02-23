@@ -21,6 +21,7 @@ namespace ReignOS.Service.Hardware
         private const int button_BumperRight = 5;
         private const int button_Back = 6;
         private const int button_Menu = 7;
+        private const int button_System = 10;
         private const int button_StickLeft = 8;
         private const int button_StickRight = 9;
         
@@ -91,6 +92,7 @@ namespace ReignOS.Service.Hardware
                     
                     VirtualGamepad.WriteButton(input.BTN_SELECT, buttons[button_Back].on);
                     VirtualGamepad.WriteButton(input.BTN_START, buttons[button_Menu].on);
+                    VirtualGamepad.WriteButton(input.BTN_MODE, buttons[button_System].on);
                     
                     VirtualGamepad.WriteButton(input.BTN_THUMBL, buttons[button_StickLeft].on);
                     VirtualGamepad.WriteButton(input.BTN_THUMBR, buttons[button_StickRight].on);
