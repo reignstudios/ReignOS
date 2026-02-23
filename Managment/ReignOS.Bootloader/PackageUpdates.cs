@@ -52,7 +52,7 @@ static class PackageUpdates
         // write current version
         File.WriteAllText(versionPath, VersionInfo.version);
 
-        return versionPath != VersionInfo.version;
+        return lastVersion != VersionInfo.version;
     }
 
     private static void IgnorePackages()
