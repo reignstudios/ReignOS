@@ -20,6 +20,7 @@ enum HardwareType
 
     // Asus
     RogAlly,
+    RogAllyX,
     
     // Lenovo
     Lenovo_LegionGo,
@@ -122,6 +123,7 @@ internal class Program
             string productName = ProcessUtil.Run("dmidecode", "-s system-product-name").Trim();
             Log.WriteLine("Hardware Product: " + productName);
             if (productName.StartsWith("Claw ")) hardwareType = HardwareType.MSI_Claw;
+            else if (productName.StartsWith("ROG Ally X")) hardwareType = HardwareType.RogAllyX;
             else if (productName.StartsWith("ROG Ally")) hardwareType = HardwareType.RogAlly;
             else if (vendorName == "LENOVO" && productName == "83E1") hardwareType = HardwareType.Lenovo_LegionGo;
             else if (vendorName == "LENOVO" && productName == "83N1") hardwareType = HardwareType.Lenovo_LegionGo2;
@@ -267,7 +269,7 @@ internal class Program
         try
         {
             MSI_Claw.Configure();
-            RogAlly.Configure();
+            Asus.Configure();
             Lenovo.Configure();
             Ayaneo.Configure();
             OneXPlayer.Configure();
@@ -335,7 +337,7 @@ internal class Program
 
             // update devices
             if (MSI_Claw.isEnabled) MSI_Claw.Update(ref time, resumeFromSleep, keys);
-            else if (RogAlly.isEnabled) RogAlly.Update(keys);
+            else if (Asus.isEnabled) Asus.Update(keys);
             else if (Lenovo.isEnabled) Lenovo.Update(ref time, resumeFromSleep);
             else if (Ayaneo.isEnabled) Ayaneo.Update(keys);
             else if (OneXPlayer.isEnabled) OneXPlayer.Update(keys);
@@ -374,6 +376,7 @@ internal class Program
             DbusMonitor.Shutdown();
             MSI_Claw.Dispose();
             Lenovo.Dispose();
+            Asus.Dispose();
             if (inputMode == InputMode.ReignOS) VirtualGamepad.Dispose();
             if (keyboardInput != null) keyboardInput.Dispose();
         }

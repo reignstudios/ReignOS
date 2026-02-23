@@ -11,16 +11,19 @@ namespace ReignOS.Core;
 public struct GamepadButton
 {
     public bool on, down, up;
+    public bool hasUpdate;
 
     public void Update(bool on)
     {
         down = false;
         up = false;
+        hasUpdate = false;
         if (this.on != on)
         {
             down = on;
             up = !on;
             this.on = on;
+            hasUpdate = true;
         }
     }
 }
@@ -28,11 +31,17 @@ public struct GamepadButton
 public struct GamepadAxis
 {
     public float value;
+    public bool hasUpdate;
 
     public void Update(float value)
     {
         if (MathF.Abs(value) < 0.1f) value = 0;
-        this.value = value;
+        hasUpdate = false;
+        if (this.value != value)
+        {
+            this.value = value;
+            hasUpdate = true;
+        }
     }
 }
 
@@ -104,7 +113,7 @@ public unsafe class GamepadDevice : IDisposable
                 string productValue = File.ReadAllText($"/sys/class/input/js{i}/device/id/product").TrimEnd();
                 ushort vendor = Convert.ToUInt16(vendorValue, 16);
                 ushort product = Convert.ToUInt16(productValue, 16);
-                Log.WriteLine($"Gamepad device found vendorID:{vendor} productID:{product} path:{path}");
+                Log.WriteLine($"Gamepad device found Name:'{deviceName}' vendorID:{vendor} productID:{product} path:{path}");
                 gamepads.Add(new Gamepad(handle, deviceName, vendor, product));
                 continue;
             }
@@ -116,7 +125,7 @@ public unsafe class GamepadDevice : IDisposable
                 ushort product = Convert.ToUInt16(productValue, 16);
                 if (vendor == vendorID && product == productID)
                 {
-                    Log.WriteLine($"Gamepad device found vendorID:{vendor} productID:{product} path:{path}");
+                    Log.WriteLine($"Gamepad device found Name:'{deviceName}' vendorID:{vendor} productID:{product} path:{path}");
                     gamepads.Add(new Gamepad(handle, deviceName, vendor, product));
                     continue;
                 }

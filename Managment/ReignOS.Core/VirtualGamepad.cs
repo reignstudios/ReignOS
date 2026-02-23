@@ -225,6 +225,16 @@ public unsafe static class VirtualGamepad
         c.write(handle, &e, (UIntPtr)Marshal.SizeOf<input.input_event>());
     }
     
+    public static void WriteAxis(ushort code, float axis)
+    {
+        if (!UI_DEV_created) return;
+        var e = VirtualGamepad.e;
+        e.type = input.EV_ABS;
+        e.code = code;
+        e.value = Math.Clamp((int)(axis * 32767), -32767, 32767);
+        c.write(handle, &e, (UIntPtr)Marshal.SizeOf<input.input_event>());
+    }
+    
     public static void EndWrites()
     {
         if (!UI_DEV_created) return;
