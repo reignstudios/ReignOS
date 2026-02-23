@@ -1180,7 +1180,7 @@ public partial class MainView : UserControl
                         
                         // increase time awake
                         timeAwakeMS += connectedTimerCheckTic;
-                        if (timeAwakeMS >= 1000 * 60) SleepButton_Click(null, null);
+                        if (timeAwakeMS >= 1000 * 60 * 3) SleepButton_Click(null, null);// reset after 3 minutes
                     }
                     catch (Exception ex)
                     {
@@ -1198,22 +1198,22 @@ public partial class MainView : UserControl
     protected override void OnPointerMoved(PointerEventArgs e)
     {
         base.OnPointerMoved(e);
-        ResetSleepTimer();
+        ResetRestTimer();
     }
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
         base.OnPointerPressed(e);
-        ResetSleepTimer();
+        ResetRestTimer();
     }
 
     protected override void OnPointerReleased(PointerReleasedEventArgs e)
     {
         base.OnPointerReleased(e);
-        ResetSleepTimer();
+        ResetRestTimer();
     }
 
-    private void ResetSleepTimer()
+    private void ResetRestTimer()
     {
         timeAwakeMS = -connectedTimerCheckTic;// reset with buffer time
     }
@@ -1329,7 +1329,7 @@ public partial class MainView : UserControl
     
     private void SleepButton_Click(object sender, RoutedEventArgs e)
     {
-        ResetSleepTimer();
+        ResetRestTimer();
         if (hibernatePowerButton) ProcessUtil.Run("systemctl", "hibernate", wait:false, useBash:false);
         else ProcessUtil.Run("systemctl", "suspend", wait:false, useBash:false);
     }
