@@ -1305,6 +1305,7 @@ public partial class MainView : UserControl
     
     private void SleepButton_Click(object sender, RoutedEventArgs e)
     {
+        timeAwakeMS = -connectedTimerCheckTic;// reset with buffer time
         if (hibernatePowerButton) ProcessUtil.Run("systemctl", "hibernate", wait:false, useBash:false);
         else ProcessUtil.Run("systemctl", "suspend", wait:false, useBash:false);
     }
