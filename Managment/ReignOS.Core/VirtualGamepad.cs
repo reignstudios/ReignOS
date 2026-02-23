@@ -60,9 +60,10 @@ public unsafe static class VirtualGamepad
         
         // setup axis features
         c.ioctl(handle, input.UI_SET_EVBIT, input.EV_ABS);
-        var abs_setup = new input.uinput_abs_setup();
+        input.uinput_abs_setup abs_setup;
         
         c.ioctl(handle, input.UI_SET_ABSBIT, input.ABS_X);
+        abs_setup = new input.uinput_abs_setup();
         abs_setup.code = input.ABS_X;
         abs_setup.absinfo.minimum = -32768;
         abs_setup.absinfo.maximum = 32767;
@@ -71,6 +72,7 @@ public unsafe static class VirtualGamepad
         c.ioctl(handle, input.UI_ABS_SETUP, &abs_setup);
         
         c.ioctl(handle, input.UI_SET_ABSBIT, input.ABS_Y);
+        abs_setup = new input.uinput_abs_setup();
         abs_setup.code = input.ABS_Y;
         abs_setup.absinfo.minimum = -32768;
         abs_setup.absinfo.maximum = 32767;
@@ -79,12 +81,14 @@ public unsafe static class VirtualGamepad
         c.ioctl(handle, input.UI_ABS_SETUP, &abs_setup);
         
         c.ioctl(handle, input.UI_SET_ABSBIT, input.ABS_Z);
+        abs_setup = new input.uinput_abs_setup();
         abs_setup.code = input.ABS_Z;
         abs_setup.absinfo.minimum = 0;
         abs_setup.absinfo.maximum = 1023;
         c.ioctl(handle, input.UI_ABS_SETUP, &abs_setup);
         
         c.ioctl(handle, input.UI_SET_ABSBIT, input.ABS_RX);
+        abs_setup = new input.uinput_abs_setup();
         abs_setup.code = input.ABS_RX;
         abs_setup.absinfo.minimum = -32768;
         abs_setup.absinfo.maximum = 32767;
@@ -93,6 +97,7 @@ public unsafe static class VirtualGamepad
         c.ioctl(handle, input.UI_ABS_SETUP, &abs_setup);
         
         c.ioctl(handle, input.UI_SET_ABSBIT, input.ABS_RY);
+        abs_setup = new input.uinput_abs_setup();
         abs_setup.code = input.ABS_RY;
         abs_setup.absinfo.minimum = -32768;
         abs_setup.absinfo.maximum = 32767;
@@ -101,18 +106,21 @@ public unsafe static class VirtualGamepad
         c.ioctl(handle, input.UI_ABS_SETUP, &abs_setup);
         
         c.ioctl(handle, input.UI_SET_ABSBIT, input.ABS_RZ);
+        abs_setup = new input.uinput_abs_setup();
         abs_setup.code = input.ABS_RZ;
         abs_setup.absinfo.minimum = 0;
         abs_setup.absinfo.maximum = 1023;
         c.ioctl(handle, input.UI_ABS_SETUP, &abs_setup);
         
         c.ioctl(handle, input.UI_SET_ABSBIT, input.ABS_HAT0X);
+        abs_setup = new input.uinput_abs_setup();
         abs_setup.code = input.ABS_HAT0X;
         abs_setup.absinfo.minimum = -1;
         abs_setup.absinfo.maximum = 1;
         c.ioctl(handle, input.UI_ABS_SETUP, &abs_setup);
         
         c.ioctl(handle, input.UI_SET_ABSBIT, input.ABS_HAT0Y);
+        abs_setup = new input.uinput_abs_setup();
         abs_setup.code = input.ABS_HAT0Y;
         abs_setup.absinfo.minimum = -1;
         abs_setup.absinfo.maximum = 1;
