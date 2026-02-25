@@ -48,7 +48,4 @@ sudo pacman-key --updatedb
 sudo pacman -Syyu --noconfirm
 yay -Syyu --noconfirm
 
-cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
-./Update.sh
-sudo reboot -f
 exit 0

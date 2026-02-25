@@ -47,6 +47,9 @@ fi
 # check updates
 if [ $exit_code -eq 14 ]; then
   ./FixUpdates.sh
+  cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
+  ./Update.sh
+  sudo reboot -f
 fi
 
 if [ $exit_code -eq 17 ]; then
@@ -460,6 +463,8 @@ if [ $exit_code -eq 100 ]; then
   echo ""
   echo "ReignOS (Installing missing packages)..."
   ./InstallingMissingPackages.sh
+  cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
+  ./Update.sh
   sudo reboot -f
   exit 0
 fi
