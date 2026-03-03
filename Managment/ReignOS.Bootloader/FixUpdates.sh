@@ -8,10 +8,11 @@ sudo rm -rf /usr/share/dotnet/sdk-manifests/
 
 # remove files and paths that can cause issues
 echo "Removing lock files..."
+
 sudo rm /var/lib/pacman/db.lck
 sudo rm ~/.gnupg/public-keys.d/pubring.db.lock
 sudo rm /var/cache/pacman/pkg/archlinux-keyring-*.pkg.tar*
-sudo rm -r /etc/pacman.d/gnupg
+sudo rm -rf /etc/pacman.d/gnupg
 sudo rm -rf /usr/share/dotnet/sdk-manifests/8.0.100
 
 # delete package cache

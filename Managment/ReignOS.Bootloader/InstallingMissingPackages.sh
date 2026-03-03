@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# run fix updates first (avoid boot loops)
-cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/
-chmod +x ./FixUpdates.sh
-./FixUpdates.sh
-
 # make sure yay installed
 if [ ! -d "/home/gamer/yay" ]; then
 	cd /home/gamer
