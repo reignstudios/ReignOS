@@ -7,13 +7,18 @@ echo "ReignOS (Fix updates)..."
 sudo rm -rf /usr/share/dotnet/sdk-manifests/
 
 # remove files and paths that can cause issues
+echo ""
 echo "Removing lock files..."
-
 sudo rm /var/lib/pacman/db.lck
 sudo rm ~/.gnupg/public-keys.d/pubring.db.lock
 sudo rm /var/cache/pacman/pkg/archlinux-keyring-*.pkg.tar*
-sudo rm -rf /etc/pacman.d/gnupg
 sudo rm -rf /usr/share/dotnet/sdk-manifests/8.0.100
+
+echo ""
+echo "Recreate gnupg..."
+sudo rm -rf /etc/pacman.d/gnupg
+sudo mkdir -p /etc/pacman.d/gnupg
+sudo chown -R root:root /etc/pacman.d/gnupg
 
 # delete package cache
 echo ""
