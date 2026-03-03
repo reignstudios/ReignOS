@@ -27,17 +27,20 @@ sudo pacman -Rns $(pacman -Qdtq) --noconfirm
 sudo pacman -Scc --noconfirm
 sudo rm -rf /var/cache/pacman/pkg/*
 
+echo ""
 echo "Sync Time..."
 sudo pacman -Sy --noconfirm
 sudo timedatectl set-ntp true
 sleep 1
 sudo hwclock --systohc
 
+echo ""
 echo "Update reflector..."
 COUNTRY=$(curl -s https://ifconfig.co/country-iso)
 reflector --country $COUNTRY --latest 50 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 sudo pacman -Syyu --noconfirm
 
+echo ""
 echo "ReignOS re-installing yay tool..."
 cd /home/gamer
 sudo rm -rf ./yay
@@ -45,6 +48,7 @@ git clone https://aur.archlinux.org/yay.git
 cd /home/gamer/yay
 makepkg -si --noconfirm
 
+echo ""
 echo "Refresh keyring, db, etc..."
 sudo pacman -Sy archlinux-keyring --noconfirm
 sudo pacman-key --init

@@ -78,22 +78,26 @@ if [ "$HAS_UPDATES" = "true" ]; then
     sleep 2
 
     # pacman
+    echo ""
     echo "ReignOS Updating pacman pacages..."
     sudo pacman -Syyu --noconfirm
     pacman_exit_code=$?
 
     # yay
+    echo ""
     echo "ReignOS Updating yay tool..."
     cd /home/gamer/yay
     git pull
     makepkg -cfsi --noconfirm
 
+    echo ""
     echo "ReignOS Updating yay pacages..."
     yay -Syyu --noconfirm --ignore aw87559-firmware
     yay_exit_code=$?
 
     # just stop everything if Pacman fails to update (but allow ReignOS git to update before this)
     if [ $pacman_exit_code -ne 0 ]; then
+        echo ""
         echo "================================"
         echo "================================"
         echo "ERROR: ReignOS Updating Pacman failed: $pacman_exit_code 'hit Ctrl+C to stop boot' or run Fix Updates (waiting 30 sec)"
@@ -110,6 +114,7 @@ if [ "$HAS_UPDATES" = "true" ]; then
     fi
 
     if [ $yay_exit_code -ne 0 ]; then
+        echo ""
         echo "================================"
         echo "================================"
         echo "ERROR: ReignOS Updating Yay failed: $yay_exit_code 'hit Ctrl+C to stop boot' or run Fix Updates (waiting 30 sec)"
