@@ -50,11 +50,11 @@ makepkg -si --noconfirm
 
 echo ""
 echo "Refresh keyring, db, etc..."
-sudo pacman -Sy archlinux-keyring --noconfirm
 sudo pacman-key --init
 sudo pacman-key --populate archlinux
 sudo pacman-key --refresh-keys
 sudo pacman-key --updatedb
+sudo pacman -Sy archlinux-keyring --noconfirm
 sudo pacman -Syyu --noconfirm
 yay -Syyu --noconfirm
 
