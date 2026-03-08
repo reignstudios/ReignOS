@@ -192,7 +192,7 @@ static class PackageUpdates
             {
                 text = text.Replace("NAME=\"Arch Linux\"", "NAME=\"ReignOS\"");
                 text = text.Replace("PRETTY_NAME=\"Arch Linux\"", "PRETTY_NAME=\"ReignOS\"");
-                text = text.Replace("HOME_URL=\"https://archlinux.org/\"", "HOME_URL=\"http://reign-os.com/\"");
+                text = text.Replace("HOME_URL=\"https://archlinux.org/\"", "HOME_URL=\"https://reign-os.com/\"");
                 text = text.Replace("ID=arch", "ID=reignos");
                 void getStandardInput(StreamWriter writer)
                 {
