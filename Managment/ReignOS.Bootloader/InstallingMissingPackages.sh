@@ -23,7 +23,7 @@ sudo pacman -S --noconfirm --needed wayland-utils
 sudo pacman -S --noconfirm --needed wlr-randr gamescope cage labwc weston
 sudo pacman -S --noconfirm --needed openbox
 sudo pacman -S --noconfirm --needed xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-kde xdg-desktop-portal-gtk
-sudo pacman -S --noconfirm gnome-keyring
+sudo pacman -S --noconfirm --needed libsecret gnome-keyring
 
 sudo pacman -S --noconfirm --needed vulkan-tools vulkan-mesa-layers lib32-vulkan-mesa-layers
 

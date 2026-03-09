@@ -666,7 +666,7 @@ static class InstallUtil
 
         // install desktop portal
         Run("pacman", "-S --noconfirm --needed xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-kde xdg-desktop-portal-gtk");
-        Run("pacman", "-S --noconfirm --needed gnome-keyring");
+        Run("pacman", "-S --noconfirm --needed libsecret gnome-keyring");
         UpdateProgress(58);
 
         // install audio
