@@ -33,8 +33,9 @@ enum HardwareType
     Ayaneo1,
     Ayaneo2,
     Ayaneo3,
-    AyaneoPro,
-    AyaneoPlus,
+    AyaneoAirPro,
+    AyaneoAirPlus,
+    AyaneoAir1S,
     AyaneoFlipDS,
     AyaneoFlipDS_1S,
     AyaneoSlide,
@@ -130,8 +131,9 @@ internal class Program
             else if (vendorName == "LENOVO" && productName == "83E1") hardwareType = HardwareType.Lenovo_LegionGo;
             else if (vendorName == "LENOVO" && productName == "83N1") hardwareType = HardwareType.Lenovo_LegionGo2;
             else if (vendorName == "LENOVO" && productName == "83L3") hardwareType = HardwareType.Lenovo_LegionGoS;
-            else if (productName.StartsWith("AIR Pro")) hardwareType = HardwareType.AyaneoPro;
-            else if (productName.StartsWith("AIR Plus")) hardwareType = HardwareType.AyaneoPlus;
+            else if (productName.StartsWith("AIR Pro")) hardwareType = HardwareType.AyaneoAirPro;
+            else if (productName.StartsWith("AIR Plus")) hardwareType = HardwareType.AyaneoAirPlus;
+            else if (productName.StartsWith("AIR 1S")) hardwareType = HardwareType.AyaneoAir1S;
             else if (productName.StartsWith("FLIP DS")) hardwareType = HardwareType.AyaneoFlipDS;
             else if (productName.StartsWith("FLIP 1S DS")) hardwareType = HardwareType.AyaneoFlipDS_1S;
             else if (productName.StartsWith("SLIDE")) hardwareType = HardwareType.AyaneoSlide;
