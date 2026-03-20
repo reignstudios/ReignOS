@@ -1588,6 +1588,7 @@ public partial class MainView : UserControl
                 // remove existing options
                 newLine = newLine.Replace(" --input-reignos", "");
                 newLine = newLine.Replace(" --input-inputplumber", "");
+                newLine = newLine.Replace(" --input-hhd", "");
                 newLine = newLine.Replace(" --input-disable", "");
 
                 // gather new options

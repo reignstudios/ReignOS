@@ -301,17 +301,17 @@ internal class Program
                 Log.WriteLine("Waiting...");
                 Thread.Sleep(1000);
 
-                ProcessUtil.Wait("weston", 6);// wait for cage
-                ProcessUtil.KillHard("weston", true, out _);// kill cage in case its stuck
+                ProcessUtil.Wait("weston", 6);// wait for weston
+                ProcessUtil.KillHard("weston", true, out _);// kill weston in case its stuck
 
                 ProcessUtil.Wait("cage", 6);// wait for cage
                 ProcessUtil.KillHard("cage", true, out _);// kill cage in case its stuck
 
-                ProcessUtil.Wait("openbox", 6);// wait for cage
-                ProcessUtil.KillHard("openbox", true, out _);// kill cage in case its stuck
+                ProcessUtil.Wait("openbox", 6);// wait for openbox
+                ProcessUtil.KillHard("openbox", true, out _);// kill openbox in case its stuck
 
-                ProcessUtil.Wait("kwin_wayland", 6);// wait for cage
-                ProcessUtil.KillHard("kwin_wayland", true, out _);// kill cage in case its stuck
+                ProcessUtil.Wait("kwin_wayland", 6);// wait for kwin
+                ProcessUtil.KillHard("kwin_wayland", true, out _);// kill kwin in case its stuck
 
                 if (serviceProcess.HasExited)
                 {
