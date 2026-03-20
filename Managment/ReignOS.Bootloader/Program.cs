@@ -245,7 +245,7 @@ internal class Program
                 if (args != null && args.Data != null)
                 {
                     string value = args.Data;
-                    Log.WriteLine(value);
+                    if (value != null) Log.WriteLine(value);
                 }
             };
             serviceProcess.Start();
@@ -552,19 +552,34 @@ internal class Program
         }
         else if (useX11)
         {
-            if (!serviceProcess.HasExited) serviceProcess.StandardInput.WriteLine("stop-inhibit");
+            WriteServiceSTDIO(serviceProcess, "stop-inhibit");
             ConfigureX11($"{gpuArg}startplasma-x11");
             ProcessUtil.Run("startx", "", useBash:false, verboseLog:true);
-            if (!serviceProcess.HasExited) serviceProcess.StandardInput.WriteLine("start-inhibit");
+            WriteServiceSTDIO(serviceProcess, "start-inhibit");
         }
         else
         {
-            if (!serviceProcess.HasExited) serviceProcess.StandardInput.WriteLine("stop-inhibit");
+            WriteServiceSTDIO(serviceProcess, "stop-inhibit");
             DisableX11();
             ProcessUtil.Run($"{gpuArg}startplasma-wayland", "", useBash:true, verboseLog:true);
-            if (!serviceProcess.HasExited) serviceProcess.StandardInput.WriteLine("start-inhibit");
+            WriteServiceSTDIO(serviceProcess, "start-inhibit");
         }
         kdeActive = false;
+    }
+
+    private static void WriteServiceSTDIO(Process serviceProcess, string value)
+    {
+        try
+        {
+            if (!serviceProcess.HasExited)
+            {
+                serviceProcess.StandardInput.WriteLine(value);
+            }
+        }
+        catch (Exception e)
+        {
+            Log.WriteLine(e);
+        }
     }
 
     public static bool IsOnline()
