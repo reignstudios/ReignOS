@@ -36,8 +36,8 @@ enum HardwareType
     AyaneoAirPro,
     AyaneoAirPlus,
     AyaneoAir1S,
-    AyaneoFlipDS,
-    AyaneoFlipDS_1S,
+    AyaneoFlip,
+    AyaneoFlip_1S,
     AyaneoSlide,
     AyaneoNextLite,
     AyaneoKun,
@@ -134,8 +134,8 @@ internal class Program
             else if (productName.StartsWith("AIR Pro")) hardwareType = HardwareType.AyaneoAirPro;
             else if (productName.StartsWith("AIR Plus")) hardwareType = HardwareType.AyaneoAirPlus;
             else if (productName.StartsWith("AIR 1S")) hardwareType = HardwareType.AyaneoAir1S;
-            else if (productName.StartsWith("FLIP DS")) hardwareType = HardwareType.AyaneoFlipDS;
-            else if (productName.StartsWith("FLIP 1S DS")) hardwareType = HardwareType.AyaneoFlipDS_1S;
+            else if (productName.StartsWith("FLIP 1S ")) hardwareType = HardwareType.AyaneoFlip_1S;
+            else if (productName.StartsWith("FLIP ")) hardwareType = HardwareType.AyaneoFlip;
             else if (productName.StartsWith("SLIDE")) hardwareType = HardwareType.AyaneoSlide;
             else if (productName.StartsWith("NEXT Lite")) hardwareType = HardwareType.AyaneoNextLite;
             else if (productName.StartsWith("AYA NEO FOUNDER")) hardwareType = HardwareType.Ayaneo1;

@@ -26,7 +26,7 @@ namespace ReignOS.Service.Hardware
                 Program.hardwareType == HardwareType.AyaneoAirPro ||
                 Program.hardwareType == HardwareType.AyaneoAirPlus ||
                 Program.hardwareType == HardwareType.AyaneoAir1S ||
-                Program.hardwareType == HardwareType.AyaneoFlipDS || Program.hardwareType == HardwareType.AyaneoFlipDS_1S ||
+                Program.hardwareType == HardwareType.AyaneoFlip || Program.hardwareType == HardwareType.AyaneoFlip_1S ||
                 Program.hardwareType == HardwareType.AyaneoSlide ||
                 Program.hardwareType == HardwareType.AyaneoNextLite ||
 				Program.hardwareType == HardwareType.AyaneoKun;
@@ -59,7 +59,7 @@ namespace ReignOS.Service.Hardware
                 }
             }
 
-            if (Program.hardwareType == HardwareType.Ayaneo2 || Program.hardwareType == HardwareType.AyaneoFlipDS || Program.hardwareType == HardwareType.AyaneoKun || Program.hardwareType == HardwareType.AyaneoAir1S || Program.hardwareType == HardwareType.Ayaneo)
+            if (Program.hardwareType == HardwareType.Ayaneo2 || Program.hardwareType == HardwareType.AyaneoFlip || Program.hardwareType == HardwareType.AyaneoKun || Program.hardwareType == HardwareType.AyaneoAir1S || Program.hardwareType == HardwareType.Ayaneo)
             {
                 if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_RIGHTCTRL, true), new KeyEvent(input.KEY_LEFTMETA, true), new KeyEvent(input.KEY_F17, true)))
                 {
@@ -75,7 +75,7 @@ namespace ReignOS.Service.Hardware
 				}
 			}
 
-            if (Program.hardwareType == HardwareType.Ayaneo3 || Program.hardwareType == HardwareType.AyaneoFlipDS_1S || Program.hardwareType == HardwareType.Ayaneo)
+            if (Program.hardwareType == HardwareType.Ayaneo3 || Program.hardwareType == HardwareType.AyaneoFlip_1S || Program.hardwareType == HardwareType.Ayaneo)
             {
                 if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_F23, true)))
                 {
@@ -110,7 +110,7 @@ namespace ReignOS.Service.Hardware
                 Program.hardwareType == HardwareType.AyaneoAirPro ||
                 Program.hardwareType == HardwareType.AyaneoAirPlus ||
                 Program.hardwareType == HardwareType.AyaneoAir1S ||
-                Program.hardwareType == HardwareType.AyaneoFlipDS || Program.hardwareType == HardwareType.AyaneoFlipDS_1S ||
+                Program.hardwareType == HardwareType.AyaneoFlip || Program.hardwareType == HardwareType.AyaneoFlip_1S ||
                 Program.hardwareType == HardwareType.AyaneoSlide ||
                 Program.hardwareType == HardwareType.AyaneoNextLite ||
 				Program.hardwareType == HardwareType.AyaneoKun ||
