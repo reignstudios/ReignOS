@@ -10,4 +10,4 @@ ReignOS is a SteamOS / SteamDeck like Arch distro but with its own unique take f
 [Discord](https://disboard.org/server/1344845464175902750)<br>
 [Website Repo](https://github.com/reignstudios/ReignOS.Website)<br>
 [ISO Builder](https://github.com/reignstudios/ReignOS.ISO)<br><br>
-![Examples](https://github.com/reignstudios/ReignOS.Website/blob/main/ReignOS.png)
+![Examples](https://github.com/reignstudios/ReignOS.Website/blob/main/Assets/ReignOS.png)
