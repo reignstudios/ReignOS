@@ -477,6 +477,10 @@ static class InstallUtil
         fileBuilder.AppendLine("set -e");// enabled errors
         fileBuilder.AppendLine("sleep 1");
 
+        fileBuilder.AppendLine();// ensure jack2 is not installed
+        fileBuilder.AppendLine("echo \"Ensure jack2 is not installed...\"");
+        fileBuilder.AppendLine("pacman -Rdd --noconfirm jack2");
+
         fileBuilder.AppendLine();// install MUX support
         fileBuilder.AppendLine("echo \"Installing NUX support...\"");
         fileBuilder.AppendLine("yay_retry -S --noconfirm --needed supergfxctl");
@@ -676,6 +680,7 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm --needed pipewire pipewire-pulse pipewire-alsa pipewire-jack wireplumber");
         Run("systemctl", "--user enable pipewire pipewire-pulse wireplumber");
         Run("systemctl", "--user enable pipewire.socket pipewire.service pipewire-pulse.socket pipewire-pulse.service");
+        using (new FailIfError(false)) Run("pacman", "-Rdd --noconfirm jack2");// force remove jack2 again just in case
         UpdateProgress(60);
 
         // install power

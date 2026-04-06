@@ -9,6 +9,7 @@
 		<Grid Name="mainGrid" IsVisible="True">
 			<Button Content="Exit to Terminal" Margin="4" Click="ExitButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 			<Button Content="Email Logs" Margin="140,4,0,0" Background="#000077" Click="EmailLogsButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+			<CheckBox Name="pauseRestCheckbox" Content="Pause Auto Rest" Margin="4,42,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 			
 			<TextBlock Text="Remember to check updates!" Foreground="OrangeRed" Margin="4,74,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 			<TextBlock Name="isConnectedText" Text="Network Status" Margin="8" HorizontalAlignment="Right" VerticalAlignment="Top"/>

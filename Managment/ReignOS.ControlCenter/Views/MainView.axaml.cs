@@ -1176,8 +1176,11 @@ public partial class MainView : UserControl
                         kernelApplyButton.IsEnabled = isConnected;
                         
                         // increase time awake
-                        timeAwakeMS += connectedTimerCheckTic;
-                        if (timeAwakeMS >= 1000 * 60 * 3) SleepButton_Click(null, null);// reset after 3 minutes
+                        if (pauseRestCheckbox.IsChecked != true)
+                        {
+                            timeAwakeMS += connectedTimerCheckTic;
+                            if (timeAwakeMS >= 1000 * 60 * 3) SleepButton_Click(null, null);// reset after 3 minutes
+                        }
                     }
                     catch (Exception ex)
                     {
