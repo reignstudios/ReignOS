@@ -456,6 +456,10 @@ static class InstallUtil
         fileBuilder.AppendLine("echo \"Hook up git-lfs...\"");
         fileBuilder.AppendLine("git lfs install");
 
+        fileBuilder.AppendLine();// ensure jack2 is not installed
+        fileBuilder.AppendLine("echo \"Ensure jack2 is not installed...\"");
+        fileBuilder.AppendLine("sudo pacman -Rdd --noconfirm jack2");
+
         fileBuilder.AppendLine();// stop on any error
         fileBuilder.AppendLine("set -e");
 
@@ -476,10 +480,6 @@ static class InstallUtil
         fileBuilder.AppendLine("yay -Syu --noconfirm");
         fileBuilder.AppendLine("set -e");// enabled errors
         fileBuilder.AppendLine("sleep 1");
-
-        fileBuilder.AppendLine();// ensure jack2 is not installed
-        fileBuilder.AppendLine("echo \"Ensure jack2 is not installed...\"");
-        fileBuilder.AppendLine("sudo pacman -Rdd --noconfirm jack2");
 
         fileBuilder.AppendLine();// install MUX support
         fileBuilder.AppendLine("echo \"Installing NUX support...\"");
