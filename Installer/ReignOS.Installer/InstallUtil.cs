@@ -479,7 +479,7 @@ static class InstallUtil
 
         fileBuilder.AppendLine();// ensure jack2 is not installed
         fileBuilder.AppendLine("echo \"Ensure jack2 is not installed...\"");
-        fileBuilder.AppendLine("pacman -Rdd --noconfirm jack2");
+        fileBuilder.AppendLine("sudo pacman -Rdd --noconfirm jack2");
 
         fileBuilder.AppendLine();// install MUX support
         fileBuilder.AppendLine("echo \"Installing NUX support...\"");
