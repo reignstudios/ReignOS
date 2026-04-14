@@ -492,7 +492,7 @@ static class InstallUtil
 
         fileBuilder.AppendLine();// install ProtonGE
         fileBuilder.AppendLine("echo \"Installing ProtonGE...\"");
-        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed proton-ge-custom-bin");// TODO: remove after confirm "yay_retry -S -dd..."
+        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed proton-ge-custom-bin");
 
         fileBuilder.AppendLine();// install DeckyLoader
         fileBuilder.AppendLine("echo \"Installing DeckyLoader...\"");
