@@ -32,7 +32,7 @@ sudo pacman -S --noconfirm --needed python hidapi python-hidapi libusb usbutils
 sudo pacman -S --noconfirm --needed alsa-firmware alsa-ucm-conf
 
 sudo pacman -Rdd --noconfirm jack2
-sudo pacman -S --noconfirm --needed pipewire pipewire-pulse pipewire-alsa pipewire-jack wireplumber
+sudo pacman -S --noconfirm --needed pipewire pipewire-pulse pipewire-alsa pipewire-jack lib32-pipewire-jack wireplumber
 
 sudo pacman -S --noconfirm --needed bluez bluez-utils
 sudo systemctl enable bluetooth

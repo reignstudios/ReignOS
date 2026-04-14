@@ -673,7 +673,7 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm --needed alsa-firmware alsa-utils alsa-plugins alsa-ucm-conf");
         Run("pacman", "-S --noconfirm --needed sof-firmware");
         using (new FailIfError(false)) Run("pacman", "-Rdd --noconfirm jack2");// force remove jack2 let pipewire-jack install instead (installed from ffmpeg)
-        Run("pacman", "-S --noconfirm --needed pipewire pipewire-pulse pipewire-alsa pipewire-jack wireplumber");
+        Run("pacman", "-S --noconfirm --needed pipewire pipewire-pulse pipewire-alsa pipewire-jack lib32-pipewire-jack wireplumber");
         Run("systemctl", "--user enable pipewire pipewire-pulse wireplumber");
         Run("systemctl", "--user enable pipewire.socket pipewire.service pipewire-pulse.socket pipewire-pulse.service");
         using (new FailIfError(false)) Run("pacman", "-Rdd --noconfirm jack2");// force remove jack2 again just in case
