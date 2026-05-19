@@ -45,7 +45,7 @@ public partial class App : Application
     
     public static bool IsOnline()
     {
-        string result = ProcessUtil.Run("ping", "-c 1 -W 4 google.com", log:false, useBash:false);
+        string result = ProcessUtil.Run("ping", "-c 1 -W 4 reign-os.com", log:false, useBash:false);
         if (result != null) return result.Contains("1 received");
         return false;
     }

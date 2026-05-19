@@ -403,7 +403,7 @@ static class InstallUtil
 		fileBuilder.AppendLine("NetworkUp=false");
         fileBuilder.AppendLine("for i in $(seq 1 60); do");
         fileBuilder.AppendLine("    # Try to ping Google's DNS server");
-        fileBuilder.AppendLine("    if ping -c 1 -W 2 google.com &> /dev/null; then");
+        fileBuilder.AppendLine("    if ping -c 1 -W 2 reign-os.com &> /dev/null; then");
         fileBuilder.AppendLine("        echo \"FirstRun: Network is up!\"");
         fileBuilder.AppendLine("        NetworkUp=true");
         fileBuilder.AppendLine("        sleep 1");
