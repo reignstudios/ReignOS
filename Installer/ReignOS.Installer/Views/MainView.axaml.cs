@@ -725,9 +725,9 @@ public partial class MainView : UserControl
             {
                 if (partitionEXT4 == null) return false;
                 
-                const ulong size48GB = 48ul * 1024 * 1024 * 1024;
+                const ulong size27GB = 27ul * 1024 * 1024 * 1024;
                 bool validNameEXT4 = partitionEXT4.nameUpper == ext4PartitionName.ToUpper();
-                bool validSizeEXT4 = partitionEXT4.size >= size48GB;
+                bool validSizeEXT4 = partitionEXT4.size >= size27GB;
                 bool validFormatExt4 = partitionEXT4.fileSystem == "ext4";
                 if (!validNameEXT4 || !validSizeEXT4 || !validFormatExt4) return false;
             }
