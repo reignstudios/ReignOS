@@ -88,7 +88,7 @@ namespace ReignOS.Service.Hardware
                 var gamepad = inputDevice.ReadNextInputAsGamepad().FirstOrDefault();
                 if (gamepad != null)
                 {
-                    /*VirtualGamepad.StartWrites();
+                    VirtualGamepad.StartWrites();
                     
                     // buttons
                     var buttons = gamepad.buttons;
@@ -120,7 +120,7 @@ namespace ReignOS.Service.Hardware
                     VirtualGamepad.WriteAxis(input.ABS_HAT0X, axes[axis_DPadX].value);
                     VirtualGamepad.WriteAxis(input.ABS_HAT0Y, axes[axis_DPadY].value);
                     
-                    VirtualGamepad.EndWrites();*/
+                    VirtualGamepad.EndWrites();
                 }
                 else if (gamepadDevice != null)
                 {
