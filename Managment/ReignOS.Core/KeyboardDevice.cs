@@ -97,6 +97,34 @@ public unsafe class KeyboardDevice : IDisposable
 
     private Gamepad[] gamepads;
 
+    private static nint EVIOCGABS(int abs)
+    {
+        // _IOR('E', 0x40 + abs, struct input_absinfo)
+        const int _IOC_NRBITS   = 8;
+        const int _IOC_TYPEBITS = 8;
+        const int _IOC_SIZEBITS = 14;
+        const int _IOC_DIRBITS  = 2;
+
+        const int _IOC_NRSHIFT   = 0;
+        const int _IOC_TYPESHIFT = _IOC_NRSHIFT + _IOC_NRBITS;
+        const int _IOC_SIZESHIFT = _IOC_TYPESHIFT + _IOC_TYPEBITS;
+        const int _IOC_DIRSHIFT  = _IOC_SIZESHIFT + _IOC_SIZEBITS;
+
+        const int _IOC_READ = 2;// _IOC_READ direction
+
+        int size = Marshal.SizeOf<input.input_absinfo>();
+        int nr = 0x40 + abs;
+
+        nint ioctl_num = (nint)(
+            (_IOC_READ << _IOC_DIRSHIFT) |
+            ('E' << _IOC_TYPESHIFT) |
+            (nr << _IOC_NRSHIFT) |
+            (size << _IOC_SIZESHIFT)
+        );
+
+        return ioctl_num;
+    }
+
     public void Init(string name, bool useName, ushort vendorID, ushort productID, bool forceOpenAllEndpoints = false, bool exclusiveLock = false, bool initAsGamepad = false)
     {
         Log.WriteLine("Searching for input devices...");
@@ -259,9 +287,13 @@ public unsafe class KeyboardDevice : IDisposable
                             {
                                 if (TestBit(a, abs_bits) != 0)
                                 {
+                                    var absinfo = new input.input_absinfo();
+                                    float range = 1;
+                                    if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGABS(a)), &absinfo) >= 0) range = absinfo.maximum;
                                     var axis = new GamepadAxis()
                                     {
-                                        code = a
+                                        code = a,
+                                        range = range
                                     };
                                     axes.Add(axis);
                                 }
@@ -422,7 +454,7 @@ public unsafe class KeyboardDevice : IDisposable
                         if (gamepad.axes[a].code == e.code)
                         {
                             Log.WriteLine($"AXIS: {a} VALUE: {e.value}");
-                            gamepad.axes[a].tempState = e.value / (float)short.MaxValue;
+                            gamepad.axes[a].tempState = e.value / gamepad.axes[a].range;
                             break;
                         }
                     }
