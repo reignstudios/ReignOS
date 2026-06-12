@@ -12,6 +12,7 @@ public struct KeyEvent
 {
     public ushort key;
     public bool pressed, held;
+    public bool on, down, up;
 
     public KeyEvent(ushort key, bool pressed, bool held = false)
     {
@@ -94,7 +95,9 @@ public unsafe class KeyboardDevice : IDisposable
     private KeyList keyList = new KeyList(32);
     private int keyListWaitCount;
 
-    public void Init(string name, bool useName, ushort vendorID, ushort productID, bool forceOpenAllEndpoints = false, bool exclusiveLock = false)
+    private Gamepad[] gamepads;
+
+    public void Init(string name, bool useName, ushort vendorID, ushort productID, bool forceOpenAllEndpoints = false, bool exclusiveLock = false, bool initAsGamepad = false)
     {
         Log.WriteLine("Searching for input devices...");
         
@@ -103,6 +106,7 @@ public unsafe class KeyboardDevice : IDisposable
         byte* buffer = stackalloc byte[bufferSize];
 
         static int NBITS(int x) => (x + 7) / 8;
+        static int TestBit(int bit, byte* array) => array[bit / 8] & (1 << (bit % 8));
         
         int ev_bitsSize = NBITS(input.EV_MAX);
         var ev_bits = stackalloc byte[ev_bitsSize];
@@ -111,7 +115,11 @@ public unsafe class KeyboardDevice : IDisposable
         int key_bitsSize = NBITS(input.KEY_MAX);
         var key_bits = stackalloc byte[key_bitsSize];
         const nint EVIOCGBIT_EV_KEY_key_bitsSize_ = -2141174495;
-        
+
+        int abs_bitsSize = NBITS(input.ABS_MAX);
+        var abs_bits = stackalloc byte[abs_bitsSize];
+        const nint EVIOCGBIT_EV_ABS_abs_bitsSize_ = -2146941661;
+
         // scan devices
         for (int i = 0; i != 32; ++i)
         {
@@ -160,8 +168,6 @@ public unsafe class KeyboardDevice : IDisposable
             {
                 if (vendorID == 0 && productID == 0)
                 {
-                    int TestBit(int bit, byte* array) => array[bit / 8] & (1 << (bit % 8));
-                    
                     NativeUtils.ZeroMemory(ev_bits, ev_bitsSize);
                     if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_MAX_ev_bitsSize_), ev_bits) < 0) goto CONTINUE;
                     
@@ -209,6 +215,57 @@ public unsafe class KeyboardDevice : IDisposable
             
             // close
             CONTINUE: c.close(handle);
+        }
+
+        // init gamepad bits if needed
+        if (initAsGamepad)
+        {
+            gamepads = new Gamepad[handles.Count];
+            for (int i = 0; i != gamepads.Length; ++i)
+            {
+                int handle = handles[i];
+                gamepads[i] = new Gamepad(handle, $"Event Gamepad {i}", 0, 0);
+
+                // gather counts
+                int buttonCount = 0;
+                int axisCount = 0;
+                NativeUtils.ZeroMemory(ev_bits, ev_bitsSize);
+                if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_MAX_ev_bitsSize_), ev_bits) < 0)
+                {
+                    if (TestBit(input.EV_KEY, ev_bits) != 0)
+                    {
+                        NativeUtils.ZeroMemory(key_bits, key_bitsSize);
+                        if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_KEY_key_bitsSize_), key_bits) < 0)
+                        {
+                            for (int k = 0; k < input.KEY_MAX; ++k)
+                            {
+                                if (TestBit(i, key_bits) != 0)
+                                {
+                                    buttonCount++;
+                                }
+                            }
+                        }
+                    }
+                    else if (TestBit(input.EV_ABS, ev_bits) != 0)
+                    {
+                        NativeUtils.ZeroMemory(abs_bits, abs_bitsSize);
+                        if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_ABS_abs_bitsSize_), abs_bits) < 0)
+                        {
+                            for (int k = 0; k < input.ABS_MAX; ++k)
+                            {
+                                if (TestBit(i, abs_bits) != 0)
+                                {
+                                    axisCount++;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // alloc primitives
+                gamepads[i].buttons = new GamepadButton[buttonCount];
+                gamepads[i].axes = new GamepadAxis[axisCount];
+            }
         }
     }
 
@@ -301,5 +358,33 @@ public unsafe class KeyboardDevice : IDisposable
     public void ClearKeys()
     {
         keyList.Clear();
+    }
+
+    public Gamepad[] ReadNextInputAsGamepad()
+    {
+        if (gamepads == null) return null;
+
+        // gather input
+        for (int i = 0; i != gamepads.Length; ++i)
+        {
+            ref var gamepad = ref gamepads[i];
+            int buttonIndex = 0;
+            int axisIndex = 0;
+
+            var e = new input.input_event();
+            while (c.read(gamepad.handle, &e, (UIntPtr)Marshal.SizeOf<input.input_event>()) >= 0)
+            {
+                if (e.type == input.EV_KEY)
+                {
+                    gamepad.buttons[buttonIndex++].Update(e.value == 1);
+                }
+                else if (e.type == input.EV_ABS)
+                {
+                    gamepad.axes[axisIndex++].Update(e.value / (float)short.MaxValue);
+                }
+            }
+        }
+
+        return gamepads;
     }
 }

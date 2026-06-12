@@ -70,7 +70,7 @@ public unsafe class GamepadDevice : IDisposable
 {
     private List<Gamepad> gamepads;
     
-    public void Init(ushort vendorID, ushort productID, bool exclusiveLock)
+    public void Init(ushort vendorID, ushort productID, bool exclusiveLock = false)
     {
         gamepads = new List<Gamepad>();
         const int bufferSize = 256;

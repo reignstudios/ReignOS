@@ -119,7 +119,7 @@ class Program
     private static void Mode_Gamepad()
     {
         var gamepadDevice = new GamepadDevice();
-        gamepadDevice.Init(vid, pid, false);
+        gamepadDevice.Init(vid, pid);
 
         while (true)
         {

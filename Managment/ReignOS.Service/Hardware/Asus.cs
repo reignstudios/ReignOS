@@ -56,11 +56,10 @@ namespace ReignOS.Service.Hardware
             {
                 Log.WriteLine($"Asus Gamepad init: VID={vid}, PID={pid}");
                 gamepadDevice = new GamepadDevice();
-                gamepadDevice.Init(vid, pid, false);
+                gamepadDevice.Init(vid, pid, exclusiveLock:true);
 
-                // used to take exclusive lock
                 inputDevice = new KeyboardDevice();
-                inputDevice.Init(null, false, vid, pid, exclusiveLock:true);
+                inputDevice.Init(null, false, vid, pid, exclusiveLock:true, initAsGamepad:true);
             }
         }
 
@@ -84,9 +83,9 @@ namespace ReignOS.Service.Hardware
             if (Program.inputMode != InputMode.ReignOS) return;
             
             // relay gamepad to virtual gamepad
-            if (gamepadDevice != null)
+            if (inputDevice != null)
             {
-                var gamepad = gamepadDevice.ReadNextInput().FirstOrDefault();
+                var gamepad = inputDevice.ReadNextInputAsGamepad().FirstOrDefault();
                 if (gamepad != null)
                 {
                     VirtualGamepad.StartWrites();
@@ -122,6 +121,46 @@ namespace ReignOS.Service.Hardware
                     VirtualGamepad.WriteAxis(input.ABS_HAT0Y, axes[axis_DPadY].value);
                     
                     VirtualGamepad.EndWrites();
+                }
+                else if (gamepadDevice != null)
+                {
+                    gamepad = gamepadDevice.ReadNextInput().FirstOrDefault();
+                    if (gamepad != null)
+                    {
+                        VirtualGamepad.StartWrites();
+                    
+                        // buttons
+                        var buttons = gamepad.buttons;
+                        VirtualGamepad.WriteButton(input.BTN_SOUTH, buttons[button_A].on);
+                        VirtualGamepad.WriteButton(input.BTN_EAST, buttons[button_B].on);
+                        VirtualGamepad.WriteButton(input.BTN_WEST, buttons[button_X].on);
+                        VirtualGamepad.WriteButton(input.BTN_NORTH, buttons[button_Y].on);
+                    
+                        VirtualGamepad.WriteButton(input.BTN_TL, buttons[button_BumperLeft].on);
+                        VirtualGamepad.WriteButton(input.BTN_TR, buttons[button_BumperRight].on);
+                    
+                        VirtualGamepad.WriteButton(input.BTN_SELECT, buttons[button_Back].on);
+                        VirtualGamepad.WriteButton(input.BTN_START, buttons[button_Menu].on);
+                        VirtualGamepad.WriteButton(input.BTN_MODE, buttons[button_System].on);
+                    
+                        VirtualGamepad.WriteButton(input.BTN_THUMBL, buttons[button_StickLeft].on);
+                        VirtualGamepad.WriteButton(input.BTN_THUMBR, buttons[button_StickRight].on);
+                    
+                        // axes
+                        var axes = gamepad.axes;
+                        VirtualGamepad.WriteAxis(input.ABS_X, axes[axis_StickLeftX].value);
+                        VirtualGamepad.WriteAxis(input.ABS_Y, axes[axis_StickLeftY].value);
+                        VirtualGamepad.WriteAxis(input.ABS_RX, axes[axis_StickRightX].value);
+                        VirtualGamepad.WriteAxis(input.ABS_RY, axes[axis_StickRightY].value);
+                    
+                        VirtualGamepad.WriteAxis(input.ABS_Z, axes[axis_TriggerLeft].value);
+                        VirtualGamepad.WriteAxis(input.ABS_RZ, axes[axis_TriggerRight].value);
+                    
+                        VirtualGamepad.WriteAxis(input.ABS_HAT0X, axes[axis_DPadX].value);
+                        VirtualGamepad.WriteAxis(input.ABS_HAT0Y, axes[axis_DPadY].value);
+                    
+                        VirtualGamepad.EndWrites();
+                    }
                 }
             }
 
