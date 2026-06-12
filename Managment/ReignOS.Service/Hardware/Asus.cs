@@ -89,7 +89,7 @@ namespace ReignOS.Service.Hardware
                 Gamepad gamepad = null;
                 foreach (var g in gamepads)
                 {
-                    if (g.buttons.Length != 0 && g.axes.Length != 0)
+                    if (g.buttons.Length == 14 && g.axes.Length == 8)
                     {
                         gamepad = g;
                         break;
