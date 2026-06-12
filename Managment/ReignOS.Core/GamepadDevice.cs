@@ -10,6 +10,8 @@ namespace ReignOS.Core;
 
 public struct GamepadButton
 {
+    public int code;
+    public bool tempState;
     public bool on, down, up;
 
     public void Update(bool on)
@@ -27,6 +29,8 @@ public struct GamepadButton
 
 public struct GamepadAxis
 {
+    public int code;
+    public float tempState;
     public float value;
 
     public void Update(float value)
@@ -154,6 +158,9 @@ public unsafe class GamepadDevice : IDisposable
             {
                 gamepad.axes = new GamepadAxis[0];
             }
+
+            for (int i = 0; i != gamepad.buttons.Length; ++i) gamepad.buttons[i].code = i;
+            for (int i = 0; i != gamepad.axes.Length; ++i) gamepad.axes[i].code = i;
 
             Log.WriteLine($"Gamepad:'{gamepad.name}' ButtonCount:{gamepad.buttons.Length} AxisCount:{gamepad.axes.Length}");
         }

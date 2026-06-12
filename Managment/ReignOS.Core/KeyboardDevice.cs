@@ -226,8 +226,8 @@ public unsafe class KeyboardDevice : IDisposable
                 int handle = handles[i];
 
                 // gather counts
-                int buttonCount = 0;
-                int axisCount = 0;
+                var buttons = new List<GamepadButton>();
+                var axes = new List<GamepadAxis>();
                 NativeUtils.ZeroMemory(ev_bits, ev_bitsSize);
                 if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_MAX_ev_bitsSize_), ev_bits) >= 0)
                 {
@@ -240,7 +240,11 @@ public unsafe class KeyboardDevice : IDisposable
                             {
                                 if (TestBit(k, key_bits) != 0)
                                 {
-                                    buttonCount++;
+                                    var button = new GamepadButton()
+                                    {
+                                        code = k
+                                    };
+                                    buttons.Add(button);
                                 }
                             }
                         }
@@ -255,7 +259,11 @@ public unsafe class KeyboardDevice : IDisposable
                             {
                                 if (TestBit(a, abs_bits) != 0)
                                 {
-                                    axisCount++;
+                                    var axis = new GamepadAxis()
+                                    {
+                                        code = a
+                                    };
+                                    axes.Add(axis);
                                 }
                             }
                         }
@@ -280,8 +288,8 @@ public unsafe class KeyboardDevice : IDisposable
                 // alloc primitives
                 gamepads[i] = new Gamepad(handle, gamepadName, 0, 0);
                 var gamepad = gamepads[i];
-                gamepad.buttons = new GamepadButton[buttonCount];
-                gamepad.axes = new GamepadAxis[axisCount];
+                gamepad.buttons = buttons.ToArray();
+                gamepad.axes = axes.ToArray();
                 Log.WriteLine($"Event Gamepad:'{gamepad.name}' ButtonCount:{gamepad.buttons.Length} AxisCount:{gamepad.axes.Length}");
             }
         }
@@ -386,21 +394,42 @@ public unsafe class KeyboardDevice : IDisposable
         for (int i = 0; i != gamepads.Length; ++i)
         {
             ref var gamepad = ref gamepads[i];
-            int buttonIndex = 0;
-            int axisIndex = 0;
+            
+            // reset temp states
+            for (int b = 0; b != gamepad.buttons.Length; ++b) gamepad.buttons[i].tempState = false;
+            for (int a = 0; a != gamepad.axes.Length; ++a) gamepad.axes[i].tempState = 0;
 
+            // grap avaliable temp input states
             var e = new input.input_event();
             while (c.read(gamepad.handle, &e, (UIntPtr)Marshal.SizeOf<input.input_event>()) >= 0)
             {
                 if (e.type == input.EV_KEY)
                 {
-                    if (buttonIndex < gamepad.buttons.Length) gamepad.buttons[buttonIndex++].Update(e.value == 1);
+                    for (int b = 0; b != gamepad.buttons.Length; ++b)
+                    {
+                        if (gamepad.buttons[b].code == e.code)
+                        {
+                            gamepad.buttons[b].tempState = e.value == 1;
+                            break;
+                        }
+                    }
                 }
                 else if (e.type == input.EV_ABS)
                 {
-                    if (axisIndex < gamepad.axes.Length) gamepad.axes[axisIndex++].Update(e.value / (float)short.MaxValue);
+                    for (int a = 0; a != gamepad.axes.Length; ++a)
+                    {
+                        if (gamepad.axes[a].code == e.code)
+                        {
+                            gamepad.axes[a].tempState = e.value / (float)short.MaxValue;
+                            break;
+                        }
+                    }
                 }
             }
+
+            // apply temp states
+            for (int b = 0; b != gamepad.buttons.Length; ++b) gamepad.buttons[i].Update(gamepad.buttons[i].tempState);
+            for (int a = 0; a != gamepad.buttons.Length; ++a) gamepad.axes[i].Update(gamepad.axes[i].tempState);
         }
 
         return gamepads;
