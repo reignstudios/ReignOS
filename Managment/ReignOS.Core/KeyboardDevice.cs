@@ -119,7 +119,7 @@ public unsafe class KeyboardDevice : IDisposable
             string path = "/dev/input/event" + i.ToString();
             byte[] pathEncoded = Encoding.UTF8.GetBytes(path);
             int handle;
-            fixed (byte* uinputPathPtr = pathEncoded) handle = c.open(uinputPathPtr, c.O_RDONLY | c.O_NONBLOCK | c.O_EXCL);
+            fixed (byte* uinputPathPtr = pathEncoded) handle = c.open(uinputPathPtr, c.O_RDONLY | c.O_NONBLOCK);
             if (handle < 0) continue;
             
             // force open all endpoints

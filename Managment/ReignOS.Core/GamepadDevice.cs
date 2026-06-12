@@ -56,6 +56,11 @@ public class Gamepad
     {
         if (handle >= 0)
         {
+            // release exclusive lock
+            /*int grab = 0;
+            c.ioctl(handle, c.EVIOCGRAB, &grab);*/
+
+            // close
             c.close(handle);
             handle = -1;
         }
@@ -90,7 +95,12 @@ public unsafe class GamepadDevice : IDisposable
                     continue;
                 }*/
 
-
+                /*int grab = 1;
+                if (c.ioctl(handle, c.EVIOCGRAB, &grab) < 0)
+                {
+                    Log.WriteLine($"Failed to take exclusive gamepad lock: vendorID:{vendorID} productID:{productID}");
+                    continue;
+                }*/
             }
             
             // get device name
