@@ -245,7 +245,8 @@ public unsafe class KeyboardDevice : IDisposable
                             }
                         }
                     }
-                    else if (TestBit(input.EV_ABS, ev_bits) != 0)
+                    
+                    if (TestBit(input.EV_ABS, ev_bits) != 0)
                     {
                         NativeUtils.ZeroMemory(abs_bits, abs_bitsSize);
                         if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_ABS_abs_bitsSize_), abs_bits) >= 0)
