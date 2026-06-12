@@ -52,15 +52,10 @@ public class Gamepad
         this.pid = pid;
     }
 
-    public unsafe void Dispose()
+    public void Dispose()
     {
         if (handle >= 0)
         {
-            // release exclusive lock
-            //int grab = 0;
-            //c.ioctl(handle, c.EVIOCGRAB, &grab);
-
-            // close
             c.close(handle);
             handle = -1;
         }
@@ -85,23 +80,6 @@ public unsafe class GamepadDevice : IDisposable
             int handle;
             fixed (byte* uinputPathPtr = pathEncoded) handle = c.open(uinputPathPtr, c.O_RDONLY | c.O_NONBLOCK);
             if (handle < 0) continue;
-
-            // take exclusive lock
-            if (exclusiveLock)
-            {
-                if (c.flock(handle, c.LOCK_EX | c.LOCK_NB) != 0)// lock with unblocking
-                {
-                    Log.WriteLine($"Failed to take exclusive gamepad lock: vendorID:{vendorID} productID:{productID}");
-                    continue;
-                }
-
-                /*int grab = 1;
-                if (c.ioctl(handle, c.EVIOCGRAB, &grab) < 0)
-                {
-                    Log.WriteLine($"Failed to take exclusive gamepad lock: vendorID:{vendorID} productID:{productID}");
-                    continue;
-                }*/
-            }
             
             // get device name
             byte[] infoPathEncoded = Encoding.UTF8.GetBytes($"/sys/class/input/js{i}/device/name");
@@ -128,6 +106,7 @@ public unsafe class GamepadDevice : IDisposable
                 ushort product = Convert.ToUInt16(productValue, 16);
                 Log.WriteLine($"Gamepad device found Name:'{deviceName}' vendorID:{vendor} productID:{product} path:{path}");
                 gamepads.Add(new Gamepad(handle, deviceName, vendor, product));
+                if (exclusiveLock) TakeExclusiveLock(handle);
                 continue;
             }
             else
@@ -140,6 +119,7 @@ public unsafe class GamepadDevice : IDisposable
                 {
                     Log.WriteLine($"Gamepad device found Name:'{deviceName}' vendorID:{vendor} productID:{product} path:{path}");
                     gamepads.Add(new Gamepad(handle, deviceName, vendor, product));
+                    if (exclusiveLock) TakeExclusiveLock(handle);
                     continue;
                 }
             }
@@ -163,6 +143,16 @@ public unsafe class GamepadDevice : IDisposable
                 gamepad.axes = new GamepadAxis[count];
             }
         }
+    }
+
+    private bool TakeExclusiveLock(int handle)
+    {
+        if (c.flock(handle, c.LOCK_EX | c.LOCK_NB) != 0)// lock with unblocking
+        {
+            Log.WriteLine($"Failed to take exclusive gamepad lock");
+            return false;
+        }
+        return true;
     }
     
     public void Dispose()

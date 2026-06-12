@@ -94,7 +94,7 @@ public unsafe class KeyboardDevice : IDisposable
     private KeyList keyList = new KeyList(32);
     private int keyListWaitCount;
 
-    public void Init(string name, bool useName, ushort vendorID, ushort productID, bool forceOpenAllEndpoints = false)
+    public void Init(string name, bool useName, ushort vendorID, ushort productID, bool forceOpenAllEndpoints = false, bool exclusiveLock = false)
     {
         Log.WriteLine("Searching for input devices...");
         
@@ -121,22 +121,13 @@ public unsafe class KeyboardDevice : IDisposable
             int handle;
             fixed (byte* uinputPathPtr = pathEncoded) handle = c.open(uinputPathPtr, c.O_RDONLY | c.O_NONBLOCK);
             if (handle < 0) continue;
-
-            /*if (path == "/dev/input/event9")// HACK TEST
-            {
-                int grab = 1;
-                if (c.ioctl(handle, c.EVIOCGRAB, &grab) < 0)
-                {
-                    Log.WriteLine($"Failed to take exclusive input lock: vendorID:{vendorID} productID:{productID}");
-                    continue;
-                }
-            }*/
             
             // force open all endpoints
             if (forceOpenAllEndpoints)
             {
                 Log.WriteLine($"Force open All found:{path}");
                 handles.Add(handle);
+                if (exclusiveLock) TakeExclusiveLock(handle);
                 continue;
             }
             
@@ -161,6 +152,7 @@ public unsafe class KeyboardDevice : IDisposable
                 {
                     Log.WriteLine($"Device event device found name:'{name}' path:{path}");
                     handles.Add(handle);
+                    if (exclusiveLock) TakeExclusiveLock(handle);
                     break;
                 }
             }
@@ -182,18 +174,21 @@ public unsafe class KeyboardDevice : IDisposable
                         {
                             Log.WriteLine($"Media Keyboard device found path:{path}");
                             handles.Add(handle);
+                            if (exclusiveLock) TakeExclusiveLock(handle);
                             continue;
                         }
                         else if (TestBit(input.KEY_A, key_bits) != 0 || TestBit(input.KEY_Z, key_bits) != 0)
                         {
                             Log.WriteLine($"Keyboard device found path:{path}");
                             handles.Add(handle);
+                            if (exclusiveLock) TakeExclusiveLock(handle);
                             continue;
                         }
                         else if (TestBit(input.KEY_POWER, key_bits) != 0)
                         {
                             Log.WriteLine($"PowerButton device found path:{path}");
                             handles.Add(handle);
+                            if (exclusiveLock) TakeExclusiveLock(handle);
                             continue;
                         }
                     }
@@ -206,6 +201,7 @@ public unsafe class KeyboardDevice : IDisposable
                     {
                         Log.WriteLine($"Keyboard device found vendorID:{vendorID} productID:{productID} path:{path}");
                         handles.Add(handle);
+                        if (exclusiveLock) TakeExclusiveLock(handle);
                         continue;
                     }
                 }
@@ -215,12 +211,33 @@ public unsafe class KeyboardDevice : IDisposable
             CONTINUE: c.close(handle);
         }
     }
+
+    private bool TakeExclusiveLock(int handle)
+    {
+        int grab = 1;
+        if (c.ioctl(handle, c.EVIOCGRAB, &grab) < 0)
+        {
+            Log.WriteLine($"Failed to take exclusive input lock");
+            return false;
+        }
+        return true;
+    }
     
     public void Dispose()
     {
         if (handles != null)
         {
-            foreach (var handle in handles) c.close(handle);
+            foreach (var handle in handles)
+            {
+                if (handle < 0) continue;
+
+                // release exclusive lock
+                int grab = 0;
+                c.ioctl(handle, c.EVIOCGRAB, &grab);
+
+                // close
+                c.close(handle);
+            }
             handles = null;
         }
     }

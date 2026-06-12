@@ -12,6 +12,7 @@ namespace ReignOS.Service.Hardware
     {
         public static bool isEnabled;
         private static GamepadDevice gamepadDevice;
+        private static KeyboardDevice inputDevice;
 
         private const int button_A = 0;
         private const int button_B = 1;
@@ -56,11 +57,21 @@ namespace ReignOS.Service.Hardware
                 Log.WriteLine($"Asus Gamepad init: VID={vid}, PID={pid}");
                 gamepadDevice = new GamepadDevice();
                 gamepadDevice.Init(vid, pid, true);
+
+                // used to take exclusive lock
+                inputDevice = new KeyboardDevice();
+                inputDevice.Init(null, false, vid, pid, exclusiveLock:true);
             }
         }
 
         public static void Dispose()
         {
+            if (inputDevice != null)
+            {
+                inputDevice.Dispose();
+                inputDevice = null;
+            }
+
             if (gamepadDevice != null)
             {
                 gamepadDevice.Dispose();
