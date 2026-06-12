@@ -56,10 +56,10 @@ namespace ReignOS.Service.Hardware
             {
                 Log.WriteLine($"Asus Gamepad init: VID={vid}, PID={pid}");
                 gamepadDevice = new GamepadDevice();
-                gamepadDevice.Init(vid, pid, exclusiveLock:true);
+                gamepadDevice.Init(vid, pid, exclusiveLock:false);
 
                 inputDevice = new KeyboardDevice();
-                inputDevice.Init(null, false, vid, pid, exclusiveLock:true, initAsGamepad:true);
+                inputDevice.Init(null, false, vid, pid, exclusiveLock:false, initAsGamepad:true);
             }
         }
 
@@ -88,7 +88,7 @@ namespace ReignOS.Service.Hardware
                 var gamepad = inputDevice.ReadNextInputAsGamepad().FirstOrDefault();
                 if (gamepad != null)
                 {
-                    VirtualGamepad.StartWrites();
+                    /*VirtualGamepad.StartWrites();
                     
                     // buttons
                     var buttons = gamepad.buttons;
@@ -120,7 +120,7 @@ namespace ReignOS.Service.Hardware
                     VirtualGamepad.WriteAxis(input.ABS_HAT0X, axes[axis_DPadX].value);
                     VirtualGamepad.WriteAxis(input.ABS_HAT0Y, axes[axis_DPadY].value);
                     
-                    VirtualGamepad.EndWrites();
+                    VirtualGamepad.EndWrites();*/
                 }
                 else if (gamepadDevice != null)
                 {

@@ -238,7 +238,7 @@ public unsafe class KeyboardDevice : IDisposable
                         {
                             for (int k = 0; k < input.KEY_MAX; ++k)
                             {
-                                if (TestBit(i, key_bits) != 0)
+                                if (TestBit(k, key_bits) != 0)
                                 {
                                     buttonCount++;
                                 }
@@ -250,9 +250,9 @@ public unsafe class KeyboardDevice : IDisposable
                         NativeUtils.ZeroMemory(abs_bits, abs_bitsSize);
                         if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_ABS_abs_bitsSize_), abs_bits) < 0)
                         {
-                            for (int k = 0; k < input.ABS_MAX; ++k)
+                            for (int a = 0; a < input.ABS_MAX; ++a)
                             {
-                                if (TestBit(i, abs_bits) != 0)
+                                if (TestBit(a, abs_bits) != 0)
                                 {
                                     axisCount++;
                                 }
@@ -261,8 +261,23 @@ public unsafe class KeyboardDevice : IDisposable
                     }
                 }
 
+                // get name
+                byte[] infoPathEncoded = Encoding.UTF8.GetBytes($"/sys/class/input/event{i}/device/name");
+                int infoHandle;
+                fixed (byte* infoPathEncodedPtr = infoPathEncoded) infoHandle = c.open(infoPathEncodedPtr, c.O_RDONLY);
+                string gamepadName = $"Event Gamepad {i}";
+                if (infoHandle >= 0)
+                {
+                    NativeUtils.ZeroMemory(buffer, bufferSize);
+                    if (c.read(infoHandle, buffer, bufferSize - 1) >= 0)
+                    {
+                        gamepadName = Marshal.PtrToStringAnsi((IntPtr)buffer).TrimEnd();
+                        c.close(infoHandle);
+                    }
+                }
+
                 // alloc primitives
-                gamepads[i] = new Gamepad(handle, $"Event Gamepad {i}", 0, 0);
+                gamepads[i] = new Gamepad(handle, gamepadName, 0, 0);
                 var gamepad = gamepads[i];
                 gamepad.buttons = new GamepadButton[buttonCount];
                 gamepad.axes = new GamepadAxis[axisCount];
