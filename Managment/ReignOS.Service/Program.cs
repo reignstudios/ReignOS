@@ -21,6 +21,7 @@ enum HardwareType
     // Asus
     RogAlly,
     RogAllyX,
+    RogXboxAlly,
     RogXboxAllyX,
     
     // Lenovo
@@ -126,6 +127,7 @@ internal class Program
             Log.WriteLine("Hardware Product: " + productName);
             if (productName.StartsWith("Claw ")) hardwareType = HardwareType.MSI_Claw;
             else if (productName.StartsWith("ROG Xbox Ally X")) hardwareType = HardwareType.RogXboxAllyX;
+            else if (productName.StartsWith("ROG Xbox Ally")) hardwareType = HardwareType.RogXboxAlly;
             else if (productName.StartsWith("ROG Ally X")) hardwareType = HardwareType.RogAllyX;
             else if (productName.StartsWith("ROG Ally")) hardwareType = HardwareType.RogAlly;
             else if (vendorName == "LENOVO" && productName == "83E1") hardwareType = HardwareType.Lenovo_LegionGo;
