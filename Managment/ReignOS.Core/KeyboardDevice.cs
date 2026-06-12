@@ -409,6 +409,7 @@ public unsafe class KeyboardDevice : IDisposable
                     {
                         if (gamepad.buttons[b].code == e.code)
                         {
+                            Log.WriteLine($"BUTTON: {b}");
                             gamepad.buttons[b].tempState = e.value == 1;
                             break;
                         }
@@ -420,6 +421,7 @@ public unsafe class KeyboardDevice : IDisposable
                     {
                         if (gamepad.axes[a].code == e.code)
                         {
+                            Log.WriteLine($"AXIS: {a}");
                             gamepad.axes[a].tempState = e.value / (float)short.MaxValue;
                             break;
                         }
