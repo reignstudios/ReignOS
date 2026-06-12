@@ -56,6 +56,10 @@ public class Gamepad
     {
         if (handle >= 0)
         {
+            // release lock
+            c.flock(handle, c.LOCK_UN);
+
+            // close
             c.close(handle);
             handle = -1;
         }

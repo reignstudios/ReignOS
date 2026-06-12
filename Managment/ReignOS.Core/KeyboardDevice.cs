@@ -215,7 +215,7 @@ public unsafe class KeyboardDevice : IDisposable
     private bool TakeExclusiveLock(int handle)
     {
         int grab = 1;
-        if (c.ioctl(handle, c.EVIOCGRAB, &grab) < 0)
+        if (c.ioctl(handle, c.EVIOCGRAB, grab) < 0)
         {
             Log.WriteLine($"Failed to take exclusive input lock");
             return false;
@@ -233,7 +233,7 @@ public unsafe class KeyboardDevice : IDisposable
 
                 // release exclusive lock
                 int grab = 0;
-                c.ioctl(handle, c.EVIOCGRAB, &grab);
+                c.ioctl(handle, c.EVIOCGRAB, grab);
 
                 // close
                 c.close(handle);
