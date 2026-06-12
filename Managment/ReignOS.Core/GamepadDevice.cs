@@ -78,7 +78,7 @@ public unsafe class GamepadDevice : IDisposable
             string path = "/dev/input/js" + i.ToString();
             byte[] pathEncoded = Encoding.UTF8.GetBytes(path);
             int handle;
-            fixed (byte* uinputPathPtr = pathEncoded) handle = c.open(uinputPathPtr, c.O_RDONLY | c.O_NONBLOCK);
+            fixed (byte* uinputPathPtr = pathEncoded) handle = c.open(uinputPathPtr, c.O_RDONLY | c.O_NONBLOCK | c.O_EXCL);
             if (handle < 0) continue;
             
             // get device name

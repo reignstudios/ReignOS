@@ -16,6 +16,7 @@ public unsafe static class c
     public const int O_WRONLY = 01;
     public const int O_RDWR = 02;
     public const int O_NONBLOCK = 04000;
+    public const int O_EXCL = 0200;
     
     [StructLayout(LayoutKind.Sequential)]
     public struct timeval
