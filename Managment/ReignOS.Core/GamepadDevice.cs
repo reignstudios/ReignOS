@@ -84,11 +84,13 @@ public unsafe class GamepadDevice : IDisposable
             // take exclusive lock
             if (exclusiveLock)
             {
-                if (c.flock(handle, c.LOCK_EX | c.LOCK_NB) != 0)// lock with unblocking
+                /*if (c.flock(handle, c.LOCK_EX | c.LOCK_NB) != 0)// lock with unblocking
                 {
-                    Log.Write($"Failed to take exclusive gamepad lock: vendorID:{vendorID} productID:{productID}");
+                    Log.WriteLine($"Failed to take exclusive gamepad lock: vendorID:{vendorID} productID:{productID}");
                     continue;
-                }
+                }*/
+
+
             }
             
             // get device name
