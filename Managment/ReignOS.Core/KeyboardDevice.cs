@@ -224,7 +224,6 @@ public unsafe class KeyboardDevice : IDisposable
             for (int i = 0; i != gamepads.Length; ++i)
             {
                 int handle = handles[i];
-                gamepads[i] = new Gamepad(handle, $"Event Gamepad {i}", 0, 0);
 
                 // gather counts
                 int buttonCount = 0;
@@ -263,8 +262,11 @@ public unsafe class KeyboardDevice : IDisposable
                 }
 
                 // alloc primitives
-                gamepads[i].buttons = new GamepadButton[buttonCount];
-                gamepads[i].axes = new GamepadAxis[axisCount];
+                gamepads[i] = new Gamepad(handle, $"Event Gamepad {i}", 0, 0);
+                var gamepad = gamepads[i];
+                gamepad.buttons = new GamepadButton[buttonCount];
+                gamepad.axes = new GamepadAxis[axisCount];
+                Log.WriteLine($"Event Gamepad:'{gamepad.name}' ButtonCount:{gamepad.buttons.Length} AxisCount:{gamepad.axes.Length}");
             }
         }
     }
@@ -376,11 +378,11 @@ public unsafe class KeyboardDevice : IDisposable
             {
                 if (e.type == input.EV_KEY)
                 {
-                    gamepad.buttons[buttonIndex++].Update(e.value == 1);
+                    if (buttonIndex < gamepad.buttons.Length) gamepad.buttons[buttonIndex++].Update(e.value == 1);
                 }
                 else if (e.type == input.EV_ABS)
                 {
-                    gamepad.axes[axisIndex++].Update(e.value / (float)short.MaxValue);
+                    if (axisIndex < gamepad.axes.Length) gamepad.axes[axisIndex++].Update(e.value / (float)short.MaxValue);
                 }
             }
         }
