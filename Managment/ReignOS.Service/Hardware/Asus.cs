@@ -85,7 +85,16 @@ namespace ReignOS.Service.Hardware
             // relay gamepad to virtual gamepad
             if (inputDevice != null)
             {
-                var gamepad = inputDevice.ReadNextInputAsGamepad().FirstOrDefault();
+                var gamepads = inputDevice.ReadNextInputAsGamepad();
+                Gamepad gamepad = null;
+                foreach (var g in gamepads)
+                {
+                    if (g.buttons.Length != 0 && g.axes.Length != 0)
+                    {
+                        gamepad = g;
+                        break;
+                    }
+                }
                 if (gamepad != null)
                 {
                     VirtualGamepad.StartWrites();
