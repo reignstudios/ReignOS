@@ -55,7 +55,7 @@ namespace ReignOS.Service.Hardware
             {
                 Log.Write($"Asus Gamepad init: VID={vid}, PID={pid}");
                 gamepadDevice = new GamepadDevice();
-                gamepadDevice.Init(vid, pid);
+                gamepadDevice.Init(vid, pid, true);
             }
         }
 

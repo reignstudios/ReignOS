@@ -66,7 +66,7 @@ public unsafe class GamepadDevice : IDisposable
 {
     private List<Gamepad> gamepads;
     
-    public void Init(ushort vendorID, ushort productID)
+    public void Init(ushort vendorID, ushort productID, bool exclusiveLock)
     {
         gamepads = new List<Gamepad>();
         const int bufferSize = 256;
@@ -78,8 +78,18 @@ public unsafe class GamepadDevice : IDisposable
             string path = "/dev/input/js" + i.ToString();
             byte[] pathEncoded = Encoding.UTF8.GetBytes(path);
             int handle;
-            fixed (byte* uinputPathPtr = pathEncoded) handle = c.open(uinputPathPtr, c.O_RDONLY | c.O_NONBLOCK | c.O_EXCL);
+            fixed (byte* uinputPathPtr = pathEncoded) handle = c.open(uinputPathPtr, c.O_RDONLY | c.O_NONBLOCK);
             if (handle < 0) continue;
+
+            // take exclusive lock
+            if (exclusiveLock)
+            {
+                if (c.flock(handle, c.LOCK_EX | c.LOCK_NB) != 0)// lock with unblocking
+                {
+                    Log.Write($"Failed to take exclusive gamepad lock: vendorID:{vendorID} productID:{productID}");
+                    continue;
+                }
+            }
             
             // get device name
             byte[] infoPathEncoded = Encoding.UTF8.GetBytes($"/sys/class/input/js{i}/device/name");

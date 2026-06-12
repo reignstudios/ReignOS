@@ -17,6 +17,11 @@ public unsafe static class c
     public const int O_RDWR = 02;
     public const int O_NONBLOCK = 04000;
     public const int O_EXCL = 0200;
+
+    public const int LOCK_SH = 1;
+    public const int LOCK_EX = 2;
+    public const int LOCK_NB = 4;
+    public const int LOCK_UN = 8;
     
     [StructLayout(LayoutKind.Sequential)]
     public struct timeval
@@ -30,6 +35,9 @@ public unsafe static class c
     
     [DllImport(lib)]
     public static extern int close(int __fd);
+
+    [DllImport(lib)]
+    public static extern int flock(int __fd, int __operation);
     
     [DllImport("ReignOS.Service.Native.so", EntryPoint = "ioctl_var_arg0")]
     public static extern int ioctl(int __fd, UIntPtr __request);
