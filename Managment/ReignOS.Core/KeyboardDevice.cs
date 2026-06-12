@@ -229,12 +229,12 @@ public unsafe class KeyboardDevice : IDisposable
                 int buttonCount = 0;
                 int axisCount = 0;
                 NativeUtils.ZeroMemory(ev_bits, ev_bitsSize);
-                if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_MAX_ev_bitsSize_), ev_bits) < 0)
+                if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_MAX_ev_bitsSize_), ev_bits) >= 0)
                 {
                     if (TestBit(input.EV_KEY, ev_bits) != 0)
                     {
                         NativeUtils.ZeroMemory(key_bits, key_bitsSize);
-                        if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_KEY_key_bitsSize_), key_bits) < 0)
+                        if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_KEY_key_bitsSize_), key_bits) >= 0)
                         {
                             for (int k = 0; k < input.KEY_MAX; ++k)
                             {
@@ -248,7 +248,7 @@ public unsafe class KeyboardDevice : IDisposable
                     else if (TestBit(input.EV_ABS, ev_bits) != 0)
                     {
                         NativeUtils.ZeroMemory(abs_bits, abs_bitsSize);
-                        if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_ABS_abs_bitsSize_), abs_bits) < 0)
+                        if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGBIT_EV_ABS_abs_bitsSize_), abs_bits) >= 0)
                         {
                             for (int a = 0; a < input.ABS_MAX; ++a)
                             {
