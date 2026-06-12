@@ -121,6 +121,13 @@ public unsafe class KeyboardDevice : IDisposable
             int handle;
             fixed (byte* uinputPathPtr = pathEncoded) handle = c.open(uinputPathPtr, c.O_RDONLY | c.O_NONBLOCK);
             if (handle < 0) continue;
+
+            int grab = 1;
+            if (c.ioctl(handle, c.EVIOCGRAB, &grab) < 0)
+            {
+                Log.WriteLine($"Failed to take exclusive input lock: vendorID:{vendorID} productID:{productID}");
+                continue;
+            }
             
             // force open all endpoints
             if (forceOpenAllEndpoints)
