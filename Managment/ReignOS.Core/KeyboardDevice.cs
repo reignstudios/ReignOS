@@ -396,8 +396,8 @@ public unsafe class KeyboardDevice : IDisposable
             ref var gamepad = ref gamepads[i];
             
             // reset temp states
-            for (int b = 0; b != gamepad.buttons.Length; ++b) gamepad.buttons[i].tempState = false;
-            for (int a = 0; a != gamepad.axes.Length; ++a) gamepad.axes[i].tempState = 0;
+            for (int b = 0; b != gamepad.buttons.Length; ++b) gamepad.buttons[b].tempState = false;
+            for (int a = 0; a != gamepad.axes.Length; ++a) gamepad.axes[a].tempState = 0;
 
             // grap avaliable temp input states
             var e = new input.input_event();
@@ -428,8 +428,8 @@ public unsafe class KeyboardDevice : IDisposable
             }
 
             // apply temp states
-            for (int b = 0; b != gamepad.buttons.Length; ++b) gamepad.buttons[i].Update(gamepad.buttons[i].tempState);
-            for (int a = 0; a != gamepad.axes.Length; ++a) gamepad.axes[i].Update(gamepad.axes[i].tempState);
+            for (int b = 0; b != gamepad.buttons.Length; ++b) gamepad.buttons[i].Update(gamepad.buttons[b].tempState);
+            for (int a = 0; a != gamepad.axes.Length; ++a) gamepad.axes[i].Update(gamepad.axes[a].tempState);
         }
 
         return gamepads;
