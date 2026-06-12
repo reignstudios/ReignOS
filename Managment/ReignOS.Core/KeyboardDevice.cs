@@ -429,7 +429,7 @@ public unsafe class KeyboardDevice : IDisposable
 
             // apply temp states
             for (int b = 0; b != gamepad.buttons.Length; ++b) gamepad.buttons[i].Update(gamepad.buttons[i].tempState);
-            for (int a = 0; a != gamepad.buttons.Length; ++a) gamepad.axes[i].Update(gamepad.axes[i].tempState);
+            for (int a = 0; a != gamepad.axes.Length; ++a) gamepad.axes[i].Update(gamepad.axes[i].tempState);
         }
 
         return gamepads;
