@@ -22,6 +22,8 @@ public unsafe static class c
     public const int LOCK_EX = 2;
     public const int LOCK_NB = 4;
     public const int LOCK_UN = 8;
+
+    public const int EVIOCGRAB = 1074021776;
     
     [StructLayout(LayoutKind.Sequential)]
     public struct timeval

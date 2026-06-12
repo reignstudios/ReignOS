@@ -52,13 +52,13 @@ public class Gamepad
         this.pid = pid;
     }
 
-    public void Dispose()
+    public unsafe void Dispose()
     {
         if (handle >= 0)
         {
             // release exclusive lock
-            /*int grab = 0;
-            c.ioctl(handle, c.EVIOCGRAB, &grab);*/
+            int grab = 0;
+            c.ioctl(handle, c.EVIOCGRAB, &grab);
 
             // close
             c.close(handle);
@@ -95,12 +95,12 @@ public unsafe class GamepadDevice : IDisposable
                     continue;
                 }*/
 
-                /*int grab = 1;
+                int grab = 1;
                 if (c.ioctl(handle, c.EVIOCGRAB, &grab) < 0)
                 {
                     Log.WriteLine($"Failed to take exclusive gamepad lock: vendorID:{vendorID} productID:{productID}");
                     continue;
-                }*/
+                }
             }
             
             // get device name
