@@ -428,8 +428,8 @@ public unsafe class KeyboardDevice : IDisposable
             var gamepad = gamepads[i];
             
             // reset temp states
-            for (int b = 0; b != gamepad.buttons.Length; ++b) gamepad.buttons[b].tempState = false;
-            for (int a = 0; a != gamepad.axes.Length; ++a) gamepad.axes[a].tempState = 0;
+            //for (int b = 0; b != gamepad.buttons.Length; ++b) gamepad.buttons[b].tempState = false;
+            //for (int a = 0; a != gamepad.axes.Length; ++a) gamepad.axes[a].tempState = 0;
 
             // grap avaliable temp input states
             var e = new input.input_event();
@@ -441,7 +441,6 @@ public unsafe class KeyboardDevice : IDisposable
                     {
                         if (gamepad.buttons[b].code == e.code)
                         {
-                            Log.WriteLine($"BUTTON: {b}");
                             gamepad.buttons[b].tempState = e.value == 1;
                             break;
                         }
@@ -453,7 +452,6 @@ public unsafe class KeyboardDevice : IDisposable
                     {
                         if (gamepad.axes[a].code == e.code)
                         {
-                            Log.WriteLine($"AXIS: {a} VALUE: {e.value}");
                             gamepad.axes[a].tempState = e.value / gamepad.axes[a].range;
                             break;
                         }
