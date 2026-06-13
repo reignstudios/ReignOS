@@ -14,6 +14,27 @@ namespace ReignOS.Service.Hardware
         private static GamepadDevice gamepadDevice;
         private static KeyboardDevice inputDevice;
 
+        private const int button_A = 0;
+        private const int button_B = 1;
+        private const int button_Y = 2;
+        private const int button_X = 3;
+        private const int button_BumperLeft = 4;
+        private const int button_BumperRight = 5;
+        private const int button_Back = 6;
+        private const int button_Menu = 7;
+        private const int button_System = 10;
+        private const int button_StickLeft = 8;
+        private const int button_StickRight = 9;
+         
+        private const int axis_StickLeftX = 0;
+        private const int axis_StickLeftY = 1;
+        private const int axis_StickRightX = 3;
+        private const int axis_StickRightY = 4;
+        private const int axis_TriggerLeft = 2;
+        private const int axis_TriggerRight = 5;
+        private const int axis_DPadX = 6;
+        private const int axis_DPadY = 7;
+
         public static void Configure()
         {
             isEnabled = false;
@@ -76,27 +97,6 @@ namespace ReignOS.Service.Hardware
                 }
                 if (gamepad != null)
                 {
-                    const int button_A = 0;
-                    const int button_B = 1;
-                    const int button_Y = 3;
-                    const int button_X = 2;
-                    const int button_BumperLeft = 4;
-                    const int button_BumperRight = 5;
-                    const int button_Back = 6;
-                    const int button_Menu = 7;
-                    const int button_System = 10;
-                    const int button_StickLeft = 8;
-                    const int button_StickRight = 9;
-        
-                    const int axis_StickLeftX = 0;
-                    const int axis_StickLeftY = 1;
-                    const int axis_StickRightX = 3;
-                    const int axis_StickRightY = 4;
-                    const int axis_TriggerLeft = 2;
-                    const int axis_TriggerRight = 5;
-                    const int axis_DPadX = 6;
-                    const int axis_DPadY = 7;
-
                     VirtualGamepad.StartWrites();
                     
                     // buttons
@@ -136,27 +136,6 @@ namespace ReignOS.Service.Hardware
                     gamepad = gamepadDevice.ReadNextInput().FirstOrDefault();
                     if (gamepad != null)
                     {
-                        const int button_A = 0;
-                        const int button_B = 1;
-                        const int button_Y = 2;
-                        const int button_X = 3;
-                        const int button_BumperLeft = 4;
-                        const int button_BumperRight = 5;
-                        const int button_Back = 6;
-                        const int button_Menu = 7;
-                        const int button_System = 10;
-                        const int button_StickLeft = 8;
-                        const int button_StickRight = 9;
-        
-                        const int axis_StickLeftX = 0;
-                        const int axis_StickLeftY = 1;
-                        const int axis_StickRightX = 3;
-                        const int axis_StickRightY = 4;
-                        const int axis_TriggerLeft = 2;
-                        const int axis_TriggerRight = 5;
-                        const int axis_DPadX = 6;
-                        const int axis_DPadY = 7;
-
                         VirtualGamepad.StartWrites();
                     
                         // buttons
