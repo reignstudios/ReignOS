@@ -56,10 +56,10 @@ namespace ReignOS.Service.Hardware
             {
                 Log.WriteLine($"Asus Gamepad init: VID={vid}, PID={pid}");
                 gamepadDevice = new GamepadDevice();
-                gamepadDevice.Init(vid, pid, exclusiveLock:true);
+                gamepadDevice.Init(vid, pid, exclusiveLock:false);
 
                 inputDevice = new KeyboardDevice();
-                inputDevice.Init(null, false, vid, pid, exclusiveLock:true, initAsGamepad:true);
+                inputDevice.Init(null, false, vid, pid, exclusiveLock:false, initAsGamepad:true);
             }
         }
 
