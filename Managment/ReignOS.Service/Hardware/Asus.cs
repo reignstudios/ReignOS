@@ -38,7 +38,7 @@ namespace ReignOS.Service.Hardware
         public static void Configure()
         {
             isEnabled = false;
-            bool initGamepad = false, preferInputDevice = false;
+            bool initGamepad = false;
             ushort vid = 0, pid = 0;
             if (Program.hardwareType == HardwareType.RogAlly)
             {
@@ -48,7 +48,6 @@ namespace ReignOS.Service.Hardware
             {
                 isEnabled = true;
                 initGamepad = true;
-                preferInputDevice = false;//Program.hardwareType == HardwareType.RogXboxAllyX || Program.hardwareType == HardwareType.RogXboxAlly;
                 vid = 0x0b05;
                 pid = 0x1b4c;
             }
@@ -57,19 +56,16 @@ namespace ReignOS.Service.Hardware
             {
                 Log.WriteLine($"Asus Gamepad init: VID={vid}, PID={pid}");
                 gamepadDevice = new GamepadDevice();
-                gamepadDevice.Init(vid, pid, exclusiveLock:false);
+                gamepadDevice.Init(vid, pid, exclusiveLock:true);
 
-                if (preferInputDevice)
+                inputDevice = new KeyboardDevice();
+                inputDevice.Init(null, vid, pid, exclusiveLock:true, initAsGamepad:true);
+                foreach (var gamepad in inputDevice.gamepads)
                 {
-                    inputDevice = new KeyboardDevice();
-                    inputDevice.Init(null, vid, pid, exclusiveLock:false, initAsGamepad:true);
-                    foreach (var gamepad in inputDevice.gamepads)
+                    if (gamepad.buttons.Length == 14 && gamepad.axes.Length == 8)
                     {
-                        if (gamepad.buttons.Length == 14 && gamepad.axes.Length == 8)
-                        {
-                            inputDevice.TakeExclusiveLock(gamepad.handle);// only lock the one we need
-                            break;
-                        }
+                        inputDevice.TakeExclusiveLock(gamepad.handle);// only lock the one we need
+                        break;
                     }
                 }
             }
