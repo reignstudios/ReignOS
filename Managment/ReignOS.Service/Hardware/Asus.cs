@@ -38,7 +38,7 @@ namespace ReignOS.Service.Hardware
         public static void Configure()
         {
             isEnabled = false;
-            bool initGamepad = false, useInputDevice = false;
+            bool initGamepad = false, preferInputDevice = false;
             ushort vid = 0, pid = 0;
             if (Program.hardwareType == HardwareType.RogAlly)
             {
@@ -48,7 +48,7 @@ namespace ReignOS.Service.Hardware
             {
                 isEnabled = true;
                 initGamepad = true;
-                useInputDevice = Program.hardwareType == HardwareType.RogXboxAllyX || Program.hardwareType == HardwareType.RogXboxAlly;
+                preferInputDevice = Program.hardwareType == HardwareType.RogXboxAllyX || Program.hardwareType == HardwareType.RogXboxAlly;
                 vid = 0x0b05;
                 pid = 0x1b4c;
             }
@@ -59,10 +59,10 @@ namespace ReignOS.Service.Hardware
                 gamepadDevice = new GamepadDevice();
                 gamepadDevice.Init(vid, pid, exclusiveLock:true);
 
-                if (useInputDevice)
+                if (preferInputDevice)
                 {
                     inputDevice = new KeyboardDevice();
-                    inputDevice.Init(null, vid, pid, exclusiveLock:false, initAsGamepad:true);
+                    inputDevice.Init(null, vid, pid, exclusiveLock:true, initAsGamepad:true);
                     foreach (var gamepad in inputDevice.gamepads)
                     {
                         if (gamepad.buttons.Length == 14 && gamepad.axes.Length == 8)
