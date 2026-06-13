@@ -288,16 +288,18 @@ public unsafe class KeyboardDevice : IDisposable
                                 if (TestBit(a, abs_bits) != 0)
                                 {
                                     var absinfo = new input.input_absinfo();
-                                    float range = 1;
+                                    float range = 1, offset = 0;
                                     if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGABS(a)), &absinfo) >= 0)
                                     {
-                                        range = absinfo.maximum - absinfo.value;
+                                        range = absinfo.maximum;
+                                        offset = absinfo.value;
                                         Log.WriteLine($"Event Gamepad Axis info: {a} min:{absinfo.maximum} max:{absinfo.maximum} val:{absinfo.value} fuzz:{absinfo.fuzz} flat:{absinfo.flat} rez:{absinfo.resolution}");
                                     }
                                     var axis = new GamepadAxis()
                                     {
                                         code = a,
-                                        range = range
+                                        range = range,
+                                        offset = offset
                                     };
                                     axes.Add(axis);
                                 }
@@ -450,9 +452,10 @@ public unsafe class KeyboardDevice : IDisposable
                 {
                     for (int a = 0; a != gamepad.axes.Length; ++a)
                     {
-                        if (gamepad.axes[a].code == e.code)
+                        ref var axis = ref gamepad.axes[a];
+                        if (axis.code == e.code)
                         {
-                            gamepad.axes[a].tempState = e.value / gamepad.axes[a].range;
+                            axis.tempState = (e.value - axis.offset) / axis.range;
                             break;
                         }
                     }

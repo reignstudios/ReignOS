@@ -30,7 +30,7 @@ public struct GamepadButton
 public struct GamepadAxis
 {
     public int code;
-    public float tempState, range;
+    public float tempState, range, offset;
     public float value;
 
     public void Update(float value)
