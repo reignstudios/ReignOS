@@ -95,7 +95,7 @@ public unsafe class KeyboardDevice : IDisposable
     private KeyList keyList = new KeyList(32);
     private int keyListWaitCount;
 
-    private Gamepad[] gamepads;
+    public Gamepad[] gamepads;
 
     private static nint EVIOCGABS(int abs)
     {
@@ -125,7 +125,7 @@ public unsafe class KeyboardDevice : IDisposable
         return ioctl_num;
     }
 
-    public void Init(string name, bool useName, ushort vendorID, ushort productID, bool forceOpenAllEndpoints = false, bool exclusiveLock = false, bool initAsGamepad = false)
+    public void Init(string name, ushort vendorID, ushort productID, bool forceOpenAllEndpoints = false, bool exclusiveLock = false, bool initAsGamepad = false)
     {
         Log.WriteLine("Searching for input devices...");
         
@@ -168,7 +168,7 @@ public unsafe class KeyboardDevice : IDisposable
             }
             
             // validate hardware
-            if (useName)
+            if (name != null)
             {
                 byte[] infoPathEncoded = Encoding.UTF8.GetBytes($"/sys/class/input/event{i}/device/name");
                 int infoHandle;
@@ -333,7 +333,7 @@ public unsafe class KeyboardDevice : IDisposable
         }
     }
 
-    private bool TakeExclusiveLock(int handle)
+    public bool TakeExclusiveLock(int handle)
     {
         int grab = 1;
         if (c.ioctl(handle, c.EVIOCGRAB, grab) < 0)
@@ -353,8 +353,7 @@ public unsafe class KeyboardDevice : IDisposable
                 if (handle < 0) continue;
 
                 // release exclusive lock
-                int grab = 0;
-                c.ioctl(handle, c.EVIOCGRAB, grab);
+                c.ioctl(handle, c.EVIOCGRAB, null);
 
                 // close
                 c.close(handle);

@@ -56,10 +56,18 @@ namespace ReignOS.Service.Hardware
             {
                 Log.WriteLine($"Asus Gamepad init: VID={vid}, PID={pid}");
                 gamepadDevice = new GamepadDevice();
-                gamepadDevice.Init(vid, pid, exclusiveLock:false);
+                gamepadDevice.Init(vid, pid, exclusiveLock:true);
 
                 inputDevice = new KeyboardDevice();
-                inputDevice.Init(null, false, vid, pid, exclusiveLock:true, initAsGamepad:true);
+                inputDevice.Init(null, vid, pid, exclusiveLock:false, initAsGamepad:true);
+                foreach (var gamepad in inputDevice.gamepads)
+                {
+                    if (gamepad.buttons.Length == 14 && gamepad.axes.Length == 8)
+                    {
+                        inputDevice.TakeExclusiveLock(gamepad.handle);// only lock the one we need
+                        break;
+                    }
+                }
             }
         }
 

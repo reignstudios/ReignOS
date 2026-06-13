@@ -302,7 +302,7 @@ internal class Program
         if (keyboardInput == null)
         {
             keyboardInput = new KeyboardDevice();
-            keyboardInput.Init(null, false, 0, 0);
+            keyboardInput.Init(null, 0, 0);
         }
 
         // start Dbus monitor

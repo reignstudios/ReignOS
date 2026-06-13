@@ -101,7 +101,7 @@ class Program
     private static void Mode_Keyboard()
     {
         var keyboardDevice = new KeyboardDevice();
-        keyboardDevice.Init(null, false, vid, pid, forceOpenAllEndpoints: vid != 0 && pid != 0);
+        keyboardDevice.Init(null, vid, pid, forceOpenAllEndpoints: vid != 0 && pid != 0);
 
         while (true)
         {

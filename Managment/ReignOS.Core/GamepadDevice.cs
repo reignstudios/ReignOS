@@ -166,7 +166,7 @@ public unsafe class GamepadDevice : IDisposable
         }
     }
 
-    private bool TakeExclusiveLock(int handle)
+    public bool TakeExclusiveLock(int handle)
     {
         if (c.flock(handle, c.LOCK_EX | c.LOCK_NB) != 0)// lock with unblocking
         {
