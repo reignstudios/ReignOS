@@ -52,7 +52,7 @@ namespace ReignOS.Service.Hardware
                 pid = 0x1b4c;
             }
 
-            if (initGamepad && Program.inputMode != InputMode.ReignOS)
+            if (initGamepad && Program.inputMode == InputMode.ReignOS)
             {
                 Log.WriteLine($"Asus Gamepad init: VID={vid}, PID={pid}");
                 gamepadDevice = new GamepadDevice();
