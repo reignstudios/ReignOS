@@ -48,7 +48,7 @@ namespace ReignOS.Service.Hardware
             {
                 isEnabled = true;
                 initGamepad = true;
-                preferInputDevice = Program.hardwareType == HardwareType.RogXboxAllyX || Program.hardwareType == HardwareType.RogXboxAlly;
+                preferInputDevice = true;//Program.hardwareType == HardwareType.RogXboxAllyX || Program.hardwareType == HardwareType.RogXboxAlly;
                 vid = 0x0b05;
                 pid = 0x1b4c;
             }
