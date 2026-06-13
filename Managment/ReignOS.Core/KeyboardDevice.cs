@@ -426,10 +426,6 @@ public unsafe class KeyboardDevice : IDisposable
         for (int i = 0; i != gamepads.Length; ++i)
         {
             var gamepad = gamepads[i];
-            
-            // reset temp states
-            //for (int b = 0; b != gamepad.buttons.Length; ++b) gamepad.buttons[b].tempState = false;
-            //for (int a = 0; a != gamepad.axes.Length; ++a) gamepad.axes[a].tempState = 0;
 
             // grap avaliable temp input states
             var e = new input.input_event();
