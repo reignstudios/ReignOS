@@ -95,10 +95,10 @@ namespace ReignOS.Service.Hardware
             if (Program.inputMode != InputMode.ReignOS) return;
             
             // relay gamepad to virtual gamepad
+            Gamepad gamepad = null;
             if (inputDevice != null)
             {
                 var gamepads = inputDevice.ReadNextInputAsGamepad();
-                Gamepad gamepad = null;
                 foreach (var g in gamepads)
                 {
                     if (g.buttons.Length == 14 && g.axes.Length == 8)
@@ -107,18 +107,18 @@ namespace ReignOS.Service.Hardware
                         break;
                     }
                 }
+            }
 
+            if (gamepad != null)
+            {
+                ProcessGamepadInput(gamepad);
+            }
+            else if (gamepadDevice != null)
+            {
+                gamepad = gamepadDevice.ReadNextInput().FirstOrDefault();
                 if (gamepad != null)
                 {
                     ProcessGamepadInput(gamepad);
-                }
-                else if (gamepadDevice != null)
-                {
-                    gamepad = gamepadDevice.ReadNextInput().FirstOrDefault();
-                    if (gamepad != null)
-                    {
-                        ProcessGamepadInput(gamepad);
-                    }
                 }
             }
 
