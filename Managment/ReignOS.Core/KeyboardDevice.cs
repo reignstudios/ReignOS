@@ -291,7 +291,7 @@ public unsafe class KeyboardDevice : IDisposable
                                     float range = 1, offset = 0;
                                     if (c.ioctl(handle, unchecked((UIntPtr)EVIOCGABS(a)), &absinfo) >= 0)
                                     {
-                                        range = absinfo.maximum;
+                                        range = absinfo.maximum - absinfo.value;
                                         offset = absinfo.value;
                                         Log.WriteLine($"Event Gamepad Axis info: {a} min:{absinfo.maximum} max:{absinfo.maximum} val:{absinfo.value} fuzz:{absinfo.fuzz} flat:{absinfo.flat} rez:{absinfo.resolution}");
                                     }
