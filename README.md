@@ -6,6 +6,8 @@ ReignOS is a SteamOS / SteamDeck like Arch distro but with its own unique take f
 * Most handhelds should work
 * Dual-Boot with Windows
 
+If you want to consilize Windows instead, this tool might help on some systems [WBOX](https://github.com/reignstudios/WBOX)
+
 [Website](http://reign-os.com/)<br>
 [Discord](https://disboard.org/server/1344845464175902750)<br>
 [Website Repo](https://github.com/reignstudios/ReignOS.Website)<br>
