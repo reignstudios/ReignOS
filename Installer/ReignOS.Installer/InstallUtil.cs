@@ -707,7 +707,7 @@ static class InstallUtil
 
         // install compiler tools
         Run("pacman", "-S --noconfirm --needed git git-lfs");
-        Run("pacman", "-S --noconfirm --needed dotnet-sdk-8.0");
+        Run("pacman", "-S --noconfirm --needed dotnet-sdk");
         Run("dotnet", "workload update");
         UpdateProgress(65);
 
