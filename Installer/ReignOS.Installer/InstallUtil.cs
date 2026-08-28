@@ -477,9 +477,9 @@ static class InstallUtil
         fileBuilder.AppendLine("set -e");// enabled errors
         fileBuilder.AppendLine("sleep 1");
 
-        fileBuilder.AppendLine();// install video codex support
-        fileBuilder.AppendLine("echo \"Installing Legacy video codex...\"");
-        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed lib32-libvdpau");
+        fileBuilder.AppendLine();// install legacy 32-bit package support
+        fileBuilder.AppendLine("echo \"Installing Legacy 32-bit packages...\"");
+        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed lib32-libvdpau lib32-openal");
 
         fileBuilder.AppendLine();// install MUX support
         fileBuilder.AppendLine("echo \"Installing NUX support...\"");
@@ -719,7 +719,7 @@ static class InstallUtil
         Run("pacman", "-S --noconfirm --needed libxcomposite lib32-libxcomposite libxrandr lib32-libxrandr libgcrypt lib32-libgcrypt lib32-pipewire libpulse lib32-libpulse nss lib32-nss glib2 lib32-glib2");
         Run("pacman", "-S --noconfirm --needed gtk3 lib32-gtk3 gtk4");
         Run("pacman", "-S --noconfirm --needed libxss lib32-libxss libva lib32-libva libvdpau");
-        Run("pacman", "-S --noconfirm --needed gnutls lib32-gnutls openal lib32-openal sqlite lib32-sqlite libcurl-compat lib32-libcurl-compat");
+        Run("pacman", "-S --noconfirm --needed gnutls lib32-gnutls openal sqlite lib32-sqlite libcurl-compat lib32-libcurl-compat");
         Run("pacman", "-S --noconfirm --needed mangohud lib32-mangohud gamemode lib32-gamemode");
         Run("pacman", "-S --noconfirm --needed glibc lib32-glibc");// needed by cef
         Run("pacman", "-S --noconfirm --needed fontconfig lib32-fontconfig");// needed for fonts
