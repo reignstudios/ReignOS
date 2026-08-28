@@ -12,6 +12,9 @@ fi
 # add core pacman packages
 sudo pacman -S --noconfirm --needed linux-headers linux-tools
 
+# dotnet latest
+sudo pacman -S dotnet-sdk --noconfirm --needed
+
 # add pacman packages
 sudo pacman -S --noconfirm --needed jq
 sudo pacman -S --noconfirm --needed hwinfo

@@ -62,6 +62,6 @@ yay -Syyu --noconfirm
 
 echo ""
 echo "Install latest dotnet sdk"
-sudo pacman -S dotnet-sdk
+sudo pacman -S dotnet-sdk --noconfirm --needed
 
 exit 0
