@@ -3,7 +3,7 @@
 sudo pacman -Syu --noconfirm
 yay -Syu --noconfirm
 
-cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
+cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net10.0/linux-x64/publish
 ./Nvidia_Uninstall.sh
 
 echo "Installing Nvidia Proprietary drivers"

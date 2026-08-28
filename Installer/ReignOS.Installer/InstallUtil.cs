@@ -533,9 +533,9 @@ static class InstallUtil
 
         fileBuilder.AppendLine();// run main updates scripts at least once
         fileBuilder.AppendLine("echo \"Running main update script...\"");
-        fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Update.sh");
-        fileBuilder.AppendLine("chmod +x /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Update.sh");
-        fileBuilder.AppendLine("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Update.sh");
+        fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net10.0/linux-x64/publish/Update.sh");
+        fileBuilder.AppendLine("chmod +x /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net10.0/linux-x64/publish/Update.sh");
+        fileBuilder.AppendLine("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net10.0/linux-x64/publish/Update.sh");
         fileBuilder.AppendLine("reboot");
         File.WriteAllText(path, fileBuilder.ToString());
         UpdateProgress(29);
@@ -548,8 +548,8 @@ static class InstallUtil
         fileBuilder.AppendLine("sudo chown -R $USER /home/gamer/FirstRun.sh");
         fileBuilder.AppendLine("chmod +x /home/gamer/FirstRun.sh");
         fileBuilder.AppendLine("/home/gamer/FirstRun.sh");
-        fileBuilder.AppendLine("chmod +x /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh");
-        fileBuilder.AppendLine("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh --use-controlcenter");
+        fileBuilder.AppendLine("chmod +x /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net10.0/linux-x64/publish/Launch.sh");
+        fileBuilder.AppendLine("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net10.0/linux-x64/publish/Launch.sh --use-controlcenter");
         File.WriteAllText(path, fileBuilder.ToString());
         UpdateProgress(30);
 

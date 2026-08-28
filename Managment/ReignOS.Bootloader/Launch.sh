@@ -4,7 +4,7 @@
 sudo rfkill unblock all
 
 # run bootloader
-cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
+cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net10.0/linux-x64/publish
 ./ReignOS.Bootloader $@
 exit_code=$?
 
@@ -47,7 +47,7 @@ fi
 # check updates
 if [ $exit_code -eq 14 ]; then
   ./FixUpdates.sh
-  cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
+  cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net10.0/linux-x64/publish
   ./Update.sh
   ./InstallingMissingPackages.sh
   sudo reboot -f
@@ -463,12 +463,12 @@ fi
 if [ $exit_code -eq 100 ]; then
   echo ""
   echo "ReignOS (Installing missing packages)..."
-  cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/
+  cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net10.0/linux-x64/publish/
   chmod +x ./FixUpdates.sh
   ./FixUpdates.sh
 
   ./InstallingMissingPackages.sh
-  cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/
+  cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net10.0/linux-x64/publish/
   ./Update.sh
   sudo reboot -f
   exit 0

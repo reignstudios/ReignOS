@@ -351,7 +351,7 @@ internal class Program
                 else if (controlCenterCompositor == ControlCenterCompositor.X11)
                 {
                     Log.WriteLine("Starting X11 with ReignOS.ControlCenter...");
-                    ConfigureX11($"/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_ControlCenter.sh -x11{ayaneoArg}");
+                    ConfigureX11($"/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net10.0/linux-x64/publish/Start_ControlCenter.sh -x11{ayaneoArg}");
                     ProcessUtil.Run("startx", "", useBash:false, standardOut:ControlCenter_StandardOut);// start ControlCenter
                 }
                 else if (controlCenterCompositor == ControlCenterCompositor.KDE_G)
@@ -532,7 +532,7 @@ internal class Program
         string steamGPUArg = disableSteamGPU ? " --disable-steam-gpu" : "";
         string steamDeckArg = disableSteamDeck ? " --disable-steam-deck" : "";
         string gpuArg = GetGPUArg(gpu);
-        ConfigureX11($"{gpuArg}/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Start_X11.sh{useMangoHubArg}{steamGPUArg}{steamDeckArg}");
+        ConfigureX11($"{gpuArg}/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net10.0/linux-x64/publish/Start_X11.sh{useMangoHubArg}{steamGPUArg}{steamDeckArg}");
         ProcessUtil.Run("startx", "", useBash:false, verboseLog: true);
     }
 

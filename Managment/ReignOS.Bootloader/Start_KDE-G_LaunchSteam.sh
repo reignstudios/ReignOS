@@ -29,7 +29,7 @@ done
 
 # start monitor
 if [ "$REIGN_MONITOR" = "true" ]; then
-  /home/gamer/ReignOS/Managment/ReignOS.Monitor/bin/Release/net8.0/linux-x64/publish/ReignOS.Monitor &
+  /home/gamer/ReignOS/Managment/ReignOS.Monitor/bin/Release/net10.0/linux-x64/publish/ReignOS.Monitor &
 fi
 
 # start steam

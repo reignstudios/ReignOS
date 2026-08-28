@@ -3087,9 +3087,9 @@ public partial class MainView : UserControl
             {
                 string confPath;
                 #if DEBUG
-                confPath = "/home/gamer/Dev/ReignOS/Managment/ReignOS.Service/bin/Debug/net8.0/Gamescope/ReignOS.Custom.lua";
+                confPath = "/home/gamer/Dev/ReignOS/Managment/ReignOS.Service/bin/Debug/net10.0/Gamescope/ReignOS.Custom.lua";
                 #else
-                confPath = "/home/gamer/ReignOS/Managment/ReignOS.Service/bin/Debug/net8.0/linux-x64/publish/Gamescope/ReignOS.Custom.lua";
+                confPath = "/home/gamer/ReignOS/Managment/ReignOS.Service/bin/Debug/net10.0/linux-x64/publish/Gamescope/ReignOS.Custom.lua";
                 #endif
                 string conf = File.ReadAllText(confPath);
                 conf = conf.Replace("-- ReignOS Custom Settings for: ", $"-- ReignOS Custom Settings for: Manufacturer='{vendor}' Display Product Name='{model}'");

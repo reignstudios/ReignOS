@@ -87,7 +87,7 @@ if [ "$RUN_UPDATE" = "true" ] && [ "$CHECK" = "false" ] && [ "$HAS_UPDATES" = "t
   sudo pkill ReignOS.Bootloader
   
   # run ReignOS updates
-  cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish
+  cd /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net10.0/linux-x64/publish
   ./Update.sh
   
   (

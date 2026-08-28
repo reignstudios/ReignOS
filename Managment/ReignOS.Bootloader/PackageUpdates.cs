@@ -128,11 +128,11 @@ static class PackageUpdates
                 string reignOSLaunchLine = null;
                 foreach (string line in lines)
                 {
-                    if (line == "chmod +x /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh")
+                    if (line == "chmod +x /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net10.0/linux-x64/publish/Launch.sh")
                     {
                         bashText = bashText.Replace(line, "chmod +x /home/gamer/ReignOS_Launch.sh\n/home/gamer/ReignOS_Launch.sh");
                     }
-                    else if (line.StartsWith("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh"))
+                    else if (line.StartsWith("/home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net10.0/linux-x64/publish/Launch.sh"))
                     {
                         reignOSLaunchLine = line;
                         bashText = bashText.Replace(line, "");
@@ -144,7 +144,7 @@ static class PackageUpdates
                     File.WriteAllText(bash, bashText);
 
                     var builder = new StringBuilder();
-                    builder.AppendLine("chmod +x /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net8.0/linux-x64/publish/Launch.sh");
+                    builder.AppendLine("chmod +x /home/gamer/ReignOS/Managment/ReignOS.Bootloader/bin/Release/net10.0/linux-x64/publish/Launch.sh");
                     builder.AppendLine(reignOSLaunchLine);
                     File.WriteAllText(launch, builder.ToString());
                 }
