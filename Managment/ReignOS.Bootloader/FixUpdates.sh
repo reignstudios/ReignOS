@@ -26,6 +26,8 @@ echo "Deleting old package cache..."
 sudo pacman -Rns $(pacman -Qdtq) --noconfirm
 sudo pacman -Scc --noconfirm
 sudo rm -rf /var/cache/pacman/pkg/*
+sudo rm -rf /root/.nuget/packages/*
+sudo rm -rf /root/.local/share/NuGet/*
 
 echo ""
 echo "Sync Time..."

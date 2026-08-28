@@ -79,6 +79,13 @@ if [ "$HAS_UPDATES" = "true" ]; then
 
     # pacman
     echo ""
+    echo "ReignOS Removing cache..."
+    sudo pacman -Scc --noconfirm
+    sudo rm -rf /var/cache/pacman/pkg/*
+    sudo rm -rf /root/.nuget/packages/*
+    sudo rm -rf /root/.local/share/NuGet/*
+
+    echo ""
     echo "ReignOS Updating pacman pacages..."
     sudo pacman -Syyu --noconfirm
     pacman_exit_code=$?
