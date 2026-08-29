@@ -40,6 +40,7 @@ enum HardwareType
     AyaneoFlip,
     AyaneoFlip_1S,
     AyaneoSlide,
+    AyaneoNext2,
     AyaneoNextLite,
     AyaneoKun,
 
@@ -120,7 +121,7 @@ internal class Program
         {
             string vendorName = ProcessUtil.Run("dmidecode", "-s system-manufacturer").Trim();
             Log.WriteLine("Hardware Vendor: " + vendorName);
-            if (vendorName.StartsWith("AYANEO") || vendorName.StartsWith("AYADEVICE")) hardwareType = HardwareType.Ayaneo;
+            if (vendorName.StartsWith("AYA") || vendorName.StartsWith("AYANEO") || vendorName.StartsWith("AYADEVICE")) hardwareType = HardwareType.Ayaneo;
             else if (vendorName.StartsWith("AOKZOE")) hardwareType = HardwareType.AOKZOE;
 
             string productName = ProcessUtil.Run("dmidecode", "-s system-product-name").Trim();
@@ -139,6 +140,7 @@ internal class Program
             else if (productName.StartsWith("FLIP 1S ")) hardwareType = HardwareType.AyaneoFlip_1S;
             else if (productName.StartsWith("FLIP ")) hardwareType = HardwareType.AyaneoFlip;
             else if (productName.StartsWith("SLIDE")) hardwareType = HardwareType.AyaneoSlide;
+            else if (vendorName == "AYA" && productName == "AB09") hardwareType = HardwareType.AyaneoNext2;
             else if (productName.StartsWith("NEXT Lite")) hardwareType = HardwareType.AyaneoNextLite;
             else if (productName.StartsWith("AYA NEO FOUNDER")) hardwareType = HardwareType.Ayaneo1;
             else if (productName.StartsWith("AYANEO 2")) hardwareType = HardwareType.Ayaneo2;

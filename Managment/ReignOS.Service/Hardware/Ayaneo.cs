@@ -28,7 +28,7 @@ namespace ReignOS.Service.Hardware
                 Program.hardwareType == HardwareType.AyaneoAir1S ||
                 Program.hardwareType == HardwareType.AyaneoFlip || Program.hardwareType == HardwareType.AyaneoFlip_1S ||
                 Program.hardwareType == HardwareType.AyaneoSlide ||
-                Program.hardwareType == HardwareType.AyaneoNextLite ||
+                Program.hardwareType == HardwareType.AyaneoNext2 || Program.hardwareType == HardwareType.AyaneoNextLite ||
 				Program.hardwareType == HardwareType.AyaneoKun;
 
             if (Program.hardwareType == HardwareType.Ayaneo1 || Program.hardwareType == HardwareType.AyaneoAirPro)
@@ -75,13 +75,16 @@ namespace ReignOS.Service.Hardware
 				}
 			}
 
-            if (Program.hardwareType == HardwareType.Ayaneo3 || Program.hardwareType == HardwareType.AyaneoFlip_1S || Program.hardwareType == HardwareType.Ayaneo)
+            if (Program.hardwareType == HardwareType.Ayaneo3 || Program.hardwareType == HardwareType.AyaneoFlip_1S || Program.hardwareType == HardwareType.AyaneoNext2 || Program.hardwareType == HardwareType.Ayaneo)
             {
                 if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_F23, true)))
                 {
                     VirtualGamepad.Write_TriggerLeftSteamMenu();
                 }
+            }
 
+            if (Program.hardwareType == HardwareType.Ayaneo3 || Program.hardwareType == HardwareType.AyaneoFlip_1S || Program.hardwareType == HardwareType.Ayaneo)
+            {
                 if (KeyEvent.Pressed(keys, new KeyEvent(input.KEY_F24, true)))
                 {
                     VirtualGamepad.Write_TriggerRightSteamMenu();
@@ -112,7 +115,7 @@ namespace ReignOS.Service.Hardware
                 Program.hardwareType == HardwareType.AyaneoAir1S ||
                 Program.hardwareType == HardwareType.AyaneoFlip || Program.hardwareType == HardwareType.AyaneoFlip_1S ||
                 Program.hardwareType == HardwareType.AyaneoSlide ||
-                Program.hardwareType == HardwareType.AyaneoNextLite ||
+                Program.hardwareType == HardwareType.AyaneoNext2 || Program.hardwareType == HardwareType.AyaneoNextLite ||
 				Program.hardwareType == HardwareType.AyaneoKun ||
 				Program.hardwareType == HardwareType.Ayaneo
             )
