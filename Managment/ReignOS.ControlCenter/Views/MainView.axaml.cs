@@ -102,7 +102,7 @@ class DisplaySetting
 
 enum KernelSettingsCopy
 {
-    Bazzite,
+    OGC,
     Cachy
 }
 
@@ -510,7 +510,7 @@ public partial class MainView : UserControl
                     else if (parts[0] == "Kernel")
                     {
                         if (parts[1] == "Arch") kernelArchCheckbox.IsChecked = true;
-                        else if (parts[1] == "Bazzite") kernelBazziteCheckbox.IsChecked = true;
+                        else if (parts[1] == "OGC") kernelOGCCheckbox.IsChecked = true;
                         else if (parts[1] == "Cachy") kernelCachyCheckbox.IsChecked = true;
                     }
                     else if (parts[0] == "Rest")
@@ -673,7 +673,7 @@ public partial class MainView : UserControl
                 if (powerBoostCheckBox.IsChecked == true) writer.WriteLine("PowerBoost=True");
 
                 if (kernelArchCheckbox.IsChecked == true) writer.WriteLine("Kernel=Arch");
-                else if (kernelBazziteCheckbox.IsChecked == true) writer.WriteLine("Kernel=Bazzite");
+                else if (kernelOGCCheckbox.IsChecked == true) writer.WriteLine("Kernel=OGC");
                 else if (kernelCachyCheckbox.IsChecked == true) writer.WriteLine("Kernel=Cachy");
 
                 if (restSleepCheckbox.IsChecked == true) writer.WriteLine("Rest=Sleep");
@@ -1663,12 +1663,12 @@ public partial class MainView : UserControl
             loader += "\ndefault arch.conf";
             ProcessUtil.WriteAllTextAdmin("/boot/ReignOS_Kernel.txt", "Arch");
         }
-        else if (kernelBazziteCheckbox.IsChecked == true)
+        else if (kernelOGCCheckbox.IsChecked == true)
         {
             RemoveEntries(ref loader);
-            loader += "\ndefault bazzite.conf";
-            ProcessUtil.WriteAllTextAdmin("/boot/ReignOS_Kernel.txt", "Bazzite");
-            CopyKernelConf(KernelSettingsCopy.Bazzite);
+            loader += "\ndefault OGC.conf";
+            ProcessUtil.WriteAllTextAdmin("/boot/ReignOS_Kernel.txt", "OGC");
+            CopyKernelConf(KernelSettingsCopy.OGC);
         }
         else if (kernelCachyCheckbox.IsChecked == true)
         {
@@ -1749,7 +1749,7 @@ public partial class MainView : UserControl
                     segment = match.Groups[1].Value;
                     text = text.Replace(segment, "");
                     ProcessUtil.WriteAllTextAdmin(filename, text);
-                    CopyKernelConf(KernelSettingsCopy.Bazzite);
+                    CopyKernelConf(KernelSettingsCopy.OGC);
                     CopyKernelConf(KernelSettingsCopy.Cachy);
                 }
             }
@@ -1832,7 +1832,7 @@ public partial class MainView : UserControl
             {
                 text = text.Replace("rootwait", $"rootwait resume={segment} resume_offset={resumeOffset}");
                 ProcessUtil.WriteAllTextAdmin(filename, text);
-                CopyKernelConf(KernelSettingsCopy.Bazzite);
+                CopyKernelConf(KernelSettingsCopy.OGC);
                 CopyKernelConf(KernelSettingsCopy.Cachy);
             }
         }
@@ -2580,7 +2580,7 @@ public partial class MainView : UserControl
         string archConf = kernelArchConf;
         archConf = archConf.Replace(kernelArchConf_Options, kernelArchConfigTextBox.Text);
         ProcessUtil.WriteAllTextAdmin("/boot/loader/entries/arch.conf", archConf);
-        CopyKernelConf(KernelSettingsCopy.Bazzite);
+        CopyKernelConf(KernelSettingsCopy.OGC);
         CopyKernelConf(KernelSettingsCopy.Cachy);
 
         // reboot
@@ -2592,12 +2592,12 @@ public partial class MainView : UserControl
         try
         {
             const string archKernelConfig = "/boot/loader/entries/arch.conf";
-            if (target == KernelSettingsCopy.Bazzite)
+            if (target == KernelSettingsCopy.OGC)
             {
-                const string targetKernelConfig = "/boot/loader/entries/bazzite.conf";
+                const string targetKernelConfig = "/boot/loader/entries/ogc.conf";
                 string copyConf = File.ReadAllText(archKernelConfig);
-                copyConf = copyConf.Replace("linux /vmlinuz-linux", "linux vmlinuz-linux-bazzite");
-                copyConf = copyConf.Replace("initrd /initramfs-linux.img", "initrd /initramfs-linux-bazzite.img");
+                copyConf = copyConf.Replace("linux /vmlinuz-linux", "linux vmlinuz-linux-ogc");
+                copyConf = copyConf.Replace("initrd /initramfs-linux.img", "initrd /initramfs-linux-ogc.img");
                 ProcessUtil.WriteAllTextAdmin(targetKernelConfig, copyConf);
             }
             else if (target == KernelSettingsCopy.Cachy)

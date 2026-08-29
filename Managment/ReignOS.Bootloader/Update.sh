@@ -136,63 +136,31 @@ if [ "$HAS_UPDATES" = "true" ]; then
     fi
 fi
 
-# update or install Bazzite or Cachy Kernel
+# update or install OGC or Cachy Kernel
 KERNEL_USED=$(</boot/ReignOS_Kernel.txt)
 
 if [[ "$KERNEL_USED" == "Arch" ]]; then
   sudo pacman --noconfirm -R linux-chimeraos # remove chimera kernel
   yay --noconfirm -R linux-bazzite-bin # remove bazzite kernel
+  yay --noconfirm -R linux-ogc-bin linux-ogc-headers # remove ogc kernel
   yay --noconfirm -R linux-cachyos linux-cachyos-headers # remove cachy kernel
 fi
 
-#if [[ "$KERNEL_USED" == "Chimera" ]]; then
-#  echo ""
-#  echo "ReignOS Checking Chimera-Kernel for updates..."
-#  yay --noconfirm -R linux-bazzite-bin # remove bazzite kernel
-#  yay --noconfirm -R linux-cachyos linux-cachyos-headers # remove cachy kernel
-#  
-#  CHIMERA_KERNEL_RELEASE=$(curl -s 'https://api.github.com/repos/ChimeraOS/linux-chimeraos/releases' | jq -r "first(.[] | select(.prerelease == "false"))")
-#  CHIMERA_KERNEL_VERSION=$(jq -r '.tag_name' <<< ${CHIMERA_KERNEL_RELEASE})
-#  
-#  v1="${CHIMERA_KERNEL_VERSION#v}"
-#  v1=$(printf "%s" "$v1" | grep -oE '^[0-9]+\.[0-9]+\.[0-9]+')
-#  echo "Latest Chimera Kernel: $v1"
-#  
-#  CHIMERA_KERNEL_INSTALLED_VERSION=$(pacman -Q linux-chimeraos)
-#  v2="${CHIMERA_KERNEL_INSTALLED_VERSION#linux-chimeraos }"
-#  v2=$(printf "%s" "$v2" | grep -oE '^[0-9]+\.[0-9]+\.[0-9]+')
-#  echo "Installed Chimera Kernel: $v2"
-#  
-#  if [ "$v1" != "$v2" ]; then
-#      echo "ReignOS Updating Chimera-Kernel to: $CHIMERA_KERNEL_VERSION"
-#      CHIMERA_KERNEL_VERSION_LINK="${CHIMERA_KERNEL_VERSION/-chos/.chos}"
-#      CHIMERA_KERNEL_VERSION_LINK="${CHIMERA_KERNEL_VERSION_LINK#v}"
-#      echo "Kernel: linux-chimeraos-$CHIMERA_KERNEL_VERSION_LINK-x86_64.pkg.tar.zst"
-#      echo "Kernel-Headers: linux-chimeraos-headers-$CHIMERA_KERNEL_VERSION_LINK-x86_64.pkg.tar.zst"
-#      mkdir -p /home/gamer/ReignOS_Ext/Kernels
-#      wget -O /home/gamer/ReignOS_Ext/Kernels/chimera-kernel.pkg.tar.zst https://github.com/ChimeraOS/linux-chimeraos/releases/download/$CHIMERA_KERNEL_VERSION/linux-chimeraos-$CHIMERA_KERNEL_VERSION_LINK-x86_64.pkg.tar.zst
-#      wget -O /home/gamer/ReignOS_Ext/Kernels/chimera-kernel-headers.pkg.tar.zst https://github.com/ChimeraOS/linux-chimeraos/releases/download/$CHIMERA_KERNEL_VERSION/linux-chimeraos-headers-$CHIMERA_KERNEL_VERSION_LINK-x86_64.pkg.tar.zst
-#      sudo pacman -Syu --noconfirm
-#      sudo pacman -U --noconfirm /home/gamer/ReignOS_Ext/Kernels/chimera-kernel.pkg.tar.zst
-#      sudo pacman -U --noconfirm /home/gamer/ReignOS_Ext/Kernels/chimera-kernel-headers.pkg.tar.zst
-#      sudo mkinitcpio -P
-#      REBOOT=true
-#  fi
-#fi
-
-if [[ "$KERNEL_USED" == "Bazzite" ]]; then
+if [[ "$KERNEL_USED" == "OGC" ]]; then
   echo ""
-  echo "ReignOS Checking Bazzite-Kernel for updates..."
+  echo "ReignOS Checking OGC-Kernel for updates..."
   sudo pacman --noconfirm -R linux-chimeraos # remove chimera kernel
+  yay --noconfirm -R linux-bazzite-bin # remove bazzite kernel
   yay --noconfirm -R linux-cachyos linux-cachyos-headers # remove cachy kernel
-  yay --noconfirm --needed -S linux-bazzite-bin
+  yay --noconfirm --needed -S linux-ogc-bin linux-ogc-headers
 fi
 
 if [[ "$KERNEL_USED" == "Cachy" ]]; then
   echo ""
   echo "ReignOS Checking Cachy-Kernel for updates..."
   sudo pacman --noconfirm -R linux-chimeraos # remove chimera kernel
-  yay --noconfirm -R linux-bazzite-bin
+  yay --noconfirm -R linux-bazzite-bin # remove bazzite kernel
+  yay --noconfirm -R linux-ogc-bin linux-ogc-headers # remove ogc kernel
   yay --noconfirm --needed -S linux-cachyos linux-cachyos-headers
 fi
 
