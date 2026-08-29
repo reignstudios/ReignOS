@@ -224,7 +224,7 @@
 							<RadioButton Name="kernelArchCheckbox" Content="Arch" IsChecked="True" Margin="200,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="KernelOption_Click"/>
 							<RadioButton Name="kernelOGCCheckbox" Content="OGC" Margin="350,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="130" Click="KernelOption_Click"/>
 							<RadioButton Name="kernelCachyCheckbox" Content="Cachy" Margin="500,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="300" Click="KernelOption_Click"/>
-							<TextBlock Text="(Takes 30-60+, use AC power)" Margin="600,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="220" Foreground="Orange"/>
+							<TextBlock Text="(Takes 30-60+, use AC power)" Margin="650,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="220" Foreground="Orange"/>
 						</Grid>
 					</Grid>
 					
