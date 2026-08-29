@@ -846,11 +846,11 @@ public partial class MainView : UserControl
                 writer.WriteLine($"name={display}");
                 if (!string.IsNullOrEmpty(rotation)) writer.WriteLine($"transform={rotation}");
 
-                if (vrrCheckbox.IsChecked == true)
+                /*if (vrrCheckbox.IsChecked == true)
                 {
                     writer.WriteLine("enable_vrr=true");
                     writer.WriteLine("vrr-mode=game");
-                }
+                }*/
 
                 /*if (hdrCheckbox.IsChecked == true)
                 {
@@ -888,11 +888,11 @@ public partial class MainView : UserControl
                         writer.WriteLine($"mode={setting.widthOverride}x{setting.heightOverride}");
                     }
 
-                    if (vrrCheckbox.IsChecked == true)
+                    /*if (vrrCheckbox.IsChecked == true)
                     {
                         writer.WriteLine("enable_vrr=true");
                         writer.WriteLine("vrr-mode=game");
-                    }
+                    }*/
 
                     /*if (hdrCheckbox.IsChecked == true)
                     {
