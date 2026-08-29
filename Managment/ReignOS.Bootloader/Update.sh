@@ -142,7 +142,7 @@ KERNEL_USED=$(</boot/ReignOS_Kernel.txt)
 if [[ "$KERNEL_USED" == "Arch" ]]; then
   sudo pacman --noconfirm -R linux-chimeraos # remove chimera kernel
   yay --noconfirm -R linux-bazzite-bin # remove bazzite kernel
-  yay --noconfirm -R linux-ogc-bin linux-ogc-headers # remove ogc kernel
+  yay --noconfirm -R linux-ogc linux-ogc-headers # remove ogc kernel
   yay --noconfirm -R linux-cachyos linux-cachyos-headers # remove cachy kernel
 fi
 
@@ -152,7 +152,7 @@ if [[ "$KERNEL_USED" == "OGC" ]]; then
   sudo pacman --noconfirm -R linux-chimeraos # remove chimera kernel
   yay --noconfirm -R linux-bazzite-bin # remove bazzite kernel
   yay --noconfirm -R linux-cachyos linux-cachyos-headers # remove cachy kernel
-  yay --noconfirm --needed -S linux-ogc-bin linux-ogc-headers
+  yay --noconfirm --needed -S linux-ogc linux-ogc-headers
 fi
 
 if [[ "$KERNEL_USED" == "Cachy" ]]; then
@@ -160,7 +160,7 @@ if [[ "$KERNEL_USED" == "Cachy" ]]; then
   echo "ReignOS Checking Cachy-Kernel for updates..."
   sudo pacman --noconfirm -R linux-chimeraos # remove chimera kernel
   yay --noconfirm -R linux-bazzite-bin # remove bazzite kernel
-  yay --noconfirm -R linux-ogc-bin linux-ogc-headers # remove ogc kernel
+  yay --noconfirm -R linux-ogc linux-ogc-headers # remove ogc kernel
   yay --noconfirm --needed -S linux-cachyos linux-cachyos-headers
 fi
 
