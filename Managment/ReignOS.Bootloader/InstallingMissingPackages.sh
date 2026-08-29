@@ -76,6 +76,7 @@ sudo pacman -S --noconfirm --needed libvdpau-va-gl mesa-vdpau
 sudo pacman -S --noconfirm --needed libdvdread libdvdnav libdvdcss libbluray
 
 yay -S --noconfirm --needed lib32-libvdpau #NOTE: legacy 32-video codex support
+#yay -S --noconfirm --needed lib32-libvdpau #NOTE: legacy 32-audio support [this is not building correctly (try again later)]
 
 yay -S --noconfirm --needed ayaneo-platform-dkms-git
 yay -S --noconfirm --needed ayn-platform-dkms-git

@@ -479,7 +479,7 @@ static class InstallUtil
 
         fileBuilder.AppendLine();// install legacy 32-bit package support
         fileBuilder.AppendLine("echo \"Installing Legacy 32-bit packages...\"");
-        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed lib32-libvdpau lib32-openal");
+        fileBuilder.AppendLine("yay_retry -S --noconfirm --needed lib32-libvdpau");// NOTE: lib32-openal is not building correctly (try again later)
 
         fileBuilder.AppendLine();// install MUX support
         fileBuilder.AppendLine("echo \"Installing NUX support...\"");
